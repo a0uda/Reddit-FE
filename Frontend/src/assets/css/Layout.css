@@ -1,0 +1,18 @@
+
+body {
+
+  font: normal,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol",sans-serif;
+  margin: 0;
+  border: 0;
+  
+}
+
+
+:root {
+    --lightBlue: #0079D3;
+    --white: #FFFFFF;
+    --grey: #7C7C7C;
+    --black: #1C1C1C;
+    --dangerRed: #ff585b;
+    
+  }

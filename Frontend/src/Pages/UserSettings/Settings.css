@@ -1,0 +1,21 @@
+.userSettingsBody{
+    margin: 0  3rem;
+    padding:0 16px 40px 16px;
+
+    
+}
+
+.userSettingsNavbarButton{
+    padding: 1rem;
+    border-bottom: 3px;
+
+}
+
+.userSettingsNavbarButtonText{
+    color:var(--grey);
+    
+}
+.userSettingsNavbarButtonText:hover{
+    color:var(--black);
+    
+}
