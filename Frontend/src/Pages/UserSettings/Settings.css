@@ -1,21 +1,49 @@
-.userSettingsBody{
-    margin: 0  3rem;
-    padding:0 16px 40px 16px;
-
-    
+.userSettingsHeader {
+  padding-top: 16px;
+  padding-bottom: 8px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 22px;
 }
 
-.userSettingsNavbarButton{
-    padding: 1rem;
-    border-bottom: 3px;
-
+.userSettingsBody {
+  margin: 0 3rem;
+  padding: 0 16px 40px 16px;
 }
 
-.userSettingsNavbarButtonText{
-    color:var(--grey);
-    
+.userSettingsNavbarLink {
+  padding: 15px 12px 12px 12px;
+  margin-right: 8px;
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  color:var(--grey);
 }
-.userSettingsNavbarButtonText:hover{
-    color:var(--black);
-    
+
+.userSettingsNavbarLinkActive {
+  border-bottom: solid 3px;
+  border-color: var(--lightBlue);
+  color: var(--black);
+  
+}
+
+.userSettingsNavbarLinkText {
+  font-size: 14px;
+  font-weight: 700;
+}
+.userSettingsNavbarLink:hover {
+  color: var(--black);
+}
+
+.userSettingsContent{
+    width:60rem;
+}
+
+.userSettingsCardContent{
+    color:var(--grey)
+}
+
+.userSettingsCardHeader{
+    color: var(--black);
 }

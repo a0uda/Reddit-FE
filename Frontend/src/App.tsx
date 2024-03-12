@@ -6,12 +6,11 @@ import UserSettings from './Pages/UserSettings/UserSettings';
 function App() {
   return (
     <div className='App'>
-      <UserSettings />
-      {/* <Router>
+      <Router>
         <Routes>
-          <Route path='/login' element={<Login />} />
+          <Route path='/settings/:page' element={<UserSettings />} />
         </Routes>
-      </Router> */}
+      </Router>
     </div>
   );
 }
