@@ -2,6 +2,10 @@ import React, { ReactNode } from 'react';
 import Card from './Containers/Card';
 import './Settings.css';
 import { Link, useParams } from 'react-router-dom';
+import RoundedButton from '../../Components/RoundedButton';
+import Section from './Containers/Section';
+import DropDownButton from './Containers/DropDownButton';
+import SwitchButton from './Containers/SwitchButton';
 
 const NavButton = (props: {
   active?: boolean | undefined;
@@ -32,7 +36,7 @@ const SubNavBar = (props: {
     'messaging',
   ];
   return (
-    <div className='d-flex border-bottom flex-wrap'>
+    <div className='flex border-b-[1px] flex-wrap'>
       {props.buttonArray.map((butt, i) => (
         <NavButton
           key={`${i}${butt}`}
@@ -64,8 +68,45 @@ const UserSettings = () => {
         active={page}
       />
       <div className='userSettingsContent'>
-        <h2 className='fs-5 my-5'>Account Settings</h2>
-        <Card />
+        <h2 className='text-base my-5'>Account Settings</h2>
+        <Section sectionTitle='Account preferences'>
+          <Card title='Email' description='reem.khatab02@rng-st.cu.edu.eg'>
+            <RoundedButton
+              buttonBorderColor='blue'
+              buttonColor='white'
+              buttonText='change'
+              buttonTextColor='blue'
+            />
+          </Card>
+          <Card title='Email' description='Ahmed.khatab02@rng-st.cu.edu.eg'>
+            <RoundedButton
+              buttonBorderColor='blue'
+              buttonColor='white'
+              buttonText='change'
+              buttonTextColor='blue'
+            />
+          </Card>
+        </Section>
+        <Section sectionTitle='Account preferences'>
+          <Card title='Email' description='reem.khatab02@rng-st.cu.edu.eg'>
+            <RoundedButton
+              buttonBorderColor='blue'
+              buttonColor='white'
+              buttonText='change'
+              buttonTextColor='blue'
+            />
+          </Card>
+          <Card title='Email' description='Ahmed.khatab02@rng-st.cu.edu.eg'>
+            <RoundedButton
+              buttonBorderColor='blue'
+              buttonColor='white'
+              buttonText='change'
+              buttonTextColor='blue'
+            />
+          </Card>
+        </Section>
+        <DropDownButton />
+        <SwitchButton />
       </div>
     </div>
   );

@@ -1,25 +1,33 @@
-import React from 'react';
-import { Button } from 'react-bootstrap';
+import React, { ReactNode } from 'react';
 import RoundedButton from '../../../Components/RoundedButton';
 import imageSrc from '../../../assets/react.svg';
-function Card() {
+
+
+// const Button: React.FC = (props: { children: ReactNode }): JSX.Element => (
+//   <div>
+//     {/* <RoundedButton
+//       buttonBorderColor='blue'
+//       buttonColor='white'
+//       buttonText='change'
+//       buttonTextColor='blue'
+//       buttonImagePath={imageSrc}
+//     /> */}
+//     {props.children}
+//   </div>
+// );
+
+function Card(props: {
+  children: ReactNode;
+  title: string;
+  description: string;
+}) {
   return (
-    <div className='d-flex justify-content-between'>
+    <div className='flex justify-between'>
       <div>
-        <h5 className='userSettingsCardHeader'>email</h5>
-        <p className='userSettingsCardContent'>
-          reem.khatab02@eng-st.cu.edu.eg
-        </p>
+        <h5 className='userSettingsCardHeader'>{props.title}</h5>
+        <p className='userSettingsCardContent text-sm'>{props.description}</p>
       </div>
-      <div>
-        <RoundedButton
-          buttonBorderColor='blue'
-          buttonColor='white'
-          buttonText='change'
-          buttonTextColor='blue'
-          buttonImagePath={imageSrc}
-        />
-      </div>
+      <div>{props.children}</div>
     </div>
   );
 }

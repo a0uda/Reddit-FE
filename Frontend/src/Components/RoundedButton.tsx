@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import { Button } from '@material-tailwind/react';
+
 export default function RoundedButton(props: {
   buttonColor: string;
   buttonBorderColor: string;
@@ -14,7 +15,10 @@ export default function RoundedButton(props: {
         borderBlockColor: props.buttonBorderColor,
         color: props.buttonTextColor,
       }}
-      className='rounded-pill d-flex align-items-center'
+      className='rounded-full border-solid border-blue-400 hover:shadow-none focus:shadow-none shadow-none '
+      variant='outlined'
+      size='sm'
+      ripple={false}
     >
       {/* {props.buttonImagePath && (
         <img src={props.buttonImagePath} width='20px' height='auto'></img>
