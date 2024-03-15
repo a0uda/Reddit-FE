@@ -1,7 +1,7 @@
-// import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './assets/css/Layout.css';
 import NavigationBar from './components/NavigationBar';
+import Mainfeed from './Pages/Mainfeed';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <NavigationBar />
       <Router>
         <Routes>
-          {/* <Route path='/settings/:page' element={<UserSettings />} /> */}
+          <Route path='/' element={<Mainfeed />} />
         </Routes>
       </Router>
     </div>
