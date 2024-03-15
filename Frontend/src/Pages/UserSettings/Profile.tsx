@@ -10,7 +10,7 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 function Profile() {
   return (
     <div>
-      <h2 className='text-base my-8'>Customize profile</h2>
+      <h2 className='text-xl my-8 font-semibold'>Customize profile</h2>
       <Section sectionTitle='PROFILE INFORMATION'>
         <Card
           title='Display name (optional)'

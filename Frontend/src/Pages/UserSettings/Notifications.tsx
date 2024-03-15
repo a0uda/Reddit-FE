@@ -6,7 +6,7 @@ import SwitchButton from './Containers/SwitchButton';
 export default function Notifications() {
   return (
     <div>
-      <h2 className='text-base my-8'>Notification settings</h2>
+      <h2 className='text-xl my-8 font-semibold'>Notification settings</h2>
       <Section sectionTitle='MESSAGES'>
         <Card title='Private Messages' description=''>
           <SwitchButton />

@@ -5,13 +5,13 @@ import { Button, Input } from '@material-tailwind/react';
 function InputWButton(props: { label: string; buttonText: string }) {
   const [inputValue, setInputValue] = useState('');
   return (
-    <div>
-      <div className='relative flex w-full w-[40rem]'>
+    <>
+      <div className='relative flex w-full'>
         {/* comment : label text size */}
         <Input
           label={props.label}
           size='lg'
-          className='pr-20'
+          className='pr-20 w-full'
           color='blue'
           containerProps={{
             className: 'min-w-5 ',
@@ -30,7 +30,7 @@ function InputWButton(props: { label: string; buttonText: string }) {
           {props.buttonText}
         </Button>
       </div>
-    </div>
+    </>
   );
 }
 

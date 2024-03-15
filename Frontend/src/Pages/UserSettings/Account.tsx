@@ -9,7 +9,7 @@ import { TrashIcon } from '@heroicons/react/24/outline';
 function Account() {
   return (
     <div>
-      <h2 className='text-base my-8'>Account Settings</h2>
+      <h2 className='text-xl my-8 font-semibold'>Account Settings</h2>
       <Section sectionTitle='ACCOUNT PREFERENCES'>
         <Card title='Email' description='reem.khatab02@rng-st.cu.edu.eg'>
           <RoundedButton
@@ -31,7 +31,7 @@ function Account() {
           />
         </Card>
         <Card title='Location' description=''>
-          <DropDownButton />
+          <DropDownButton buttonText='MAN' />
         </Card>
       </Section>
       <Section sectionTitle='CONNECTED ACCOUNTS'>
@@ -82,7 +82,7 @@ function Account() {
         </Card>
       </Section>
       <Section sectionTitle='DELETE ACCOUNT'>
-        <Card title='' description=''>
+        <Card title=' '>
           <RoundedButton
             buttonBorderColor='none'
             buttonColor='white'

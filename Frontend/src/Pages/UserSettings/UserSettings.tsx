@@ -69,8 +69,20 @@ const UserSettings = () => {
         ]}
         active={page}
       />
-      <div className='userSettingsContent'>
-        <Account />
+      <div className='w-[46rem]'>
+        {page == 'account' ? (
+          <Account />
+        ) : page == 'profile' ? (
+          <Profile />
+        ) : page == 'email' ? (
+          <Email />
+        ) : page == 'notifications' ? (
+          <Notifications />
+        ) : page == 'privacy' ? (
+          <SafetyPrivacy />
+        ) : (
+          <Account />
+        )}
       </div>
     </div>
   );

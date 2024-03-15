@@ -6,7 +6,7 @@ import Section from './Containers/Section';
 function Email() {
   return (
     <div>
-      <h2 className='text-base my-8'>Manage Emails</h2>
+      <h2 className='text-xl my-8 font-semibold'>Manage Emails</h2>
       <Section sectionTitle='MESSAGES'>
         <Card title='Chat requests' description=''>
           <SwitchButton />
