@@ -8,6 +8,8 @@ import SafetyPrivacy from './SafetyPrivacy';
 import InputBox from './Containers/InputWButton';
 import Profile from './Profile';
 import Email from './Email';
+import FeedSettings from './FeedSettings';
+import ChatsandMessaging from './ChatsandMessaging';
 
 const NavButton = (props: {
   active?: boolean | undefined;
@@ -80,8 +82,10 @@ const UserSettings = () => {
           <Notifications />
         ) : page == 'privacy' ? (
           <SafetyPrivacy />
+        ) : page == 'feed' ? (
+          <FeedSettings />
         ) : (
-          <Account />
+          <ChatsandMessaging />
         )}
       </div>
     </div>

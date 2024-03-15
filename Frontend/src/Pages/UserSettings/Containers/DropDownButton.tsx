@@ -10,8 +10,8 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline';
 // import { Select, Option } from '@material-tailwind/react';
 
 export default function DropDownButton(props: {
-  buttonText: string;
-  buttonList: string[];
+  buttonText?: string;
+  buttonList?: string[];
 }) {
   return (
     <Menu>
