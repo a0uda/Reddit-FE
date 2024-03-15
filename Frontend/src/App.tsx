@@ -1,7 +1,5 @@
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './assets/css/Layout.css';
-// import UserSettings from './Pages/UserSettings/UserSettings';
 import Login from './Pages/credential/Login.tsx';
 import Signup from './Pages/credential/Signup.tsx';
 import RecoverUsername from './Pages/credential/RecoverUsername.tsx';

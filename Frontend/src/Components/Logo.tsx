@@ -845,7 +845,7 @@ export const LogoText = (props?: LogoProps) => {
     <>
       <svg
         xmlns='http://www.w3.org/2000/svg'
-        className={props?.className + ' h-[22px] text-primary'}
+        className={props?.className + ' h-[22px] text-orange'}
         viewBox='0 0 514 149'
         {...props}
       >
