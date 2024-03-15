@@ -17,11 +17,12 @@ import imageSrc from '../../../assets/react.svg';
 // );
 
 function Card(props: {
-  children: ReactNode;
+  children?: ReactNode;
   title: string;
   description: string;
 }) {
   return (
+    // comment : el justify between 3alshan safety and privacy and profile
     <div className='flex justify-between'>
       <div>
         <h5 className='userSettingsCardHeader'>{props.title}</h5>

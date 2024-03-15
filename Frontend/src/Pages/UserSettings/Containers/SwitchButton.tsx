@@ -13,6 +13,7 @@ export default function SwitchButton() {
       circleProps={{
         className: 'before:hidden left-0.5  border-none',
       }}
+      crossOrigin={undefined}
     />
   );
 }

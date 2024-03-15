@@ -1,11 +1,13 @@
 import React, { ReactNode } from 'react';
-import Card from './Containers/Card';
+
 import './Settings.css';
 import { Link, useParams } from 'react-router-dom';
-import RoundedButton from '../../Components/RoundedButton';
-import Section from './Containers/Section';
-import DropDownButton from './Containers/DropDownButton';
-import SwitchButton from './Containers/SwitchButton';
+import Account from './Account';
+import Notifications from './Notifications';
+import SafetyPrivacy from './SafetyPrivacy';
+import InputBox from './Containers/InputWButton';
+import Profile from './Profile';
+import Email from './Email';
 
 const NavButton = (props: {
   active?: boolean | undefined;
@@ -68,45 +70,7 @@ const UserSettings = () => {
         active={page}
       />
       <div className='userSettingsContent'>
-        <h2 className='text-base my-5'>Account Settings</h2>
-        <Section sectionTitle='Account preferences'>
-          <Card title='Email' description='reem.khatab02@rng-st.cu.edu.eg'>
-            <RoundedButton
-              buttonBorderColor='blue'
-              buttonColor='white'
-              buttonText='change'
-              buttonTextColor='blue'
-            />
-          </Card>
-          <Card title='Email' description='Ahmed.khatab02@rng-st.cu.edu.eg'>
-            <RoundedButton
-              buttonBorderColor='blue'
-              buttonColor='white'
-              buttonText='change'
-              buttonTextColor='blue'
-            />
-          </Card>
-        </Section>
-        <Section sectionTitle='Account preferences'>
-          <Card title='Email' description='reem.khatab02@rng-st.cu.edu.eg'>
-            <RoundedButton
-              buttonBorderColor='blue'
-              buttonColor='white'
-              buttonText='change'
-              buttonTextColor='blue'
-            />
-          </Card>
-          <Card title='Email' description='Ahmed.khatab02@rng-st.cu.edu.eg'>
-            <RoundedButton
-              buttonBorderColor='blue'
-              buttonColor='white'
-              buttonText='change'
-              buttonTextColor='blue'
-            />
-          </Card>
-        </Section>
-        <DropDownButton />
-        <SwitchButton />
+        <Account />
       </div>
     </div>
   );

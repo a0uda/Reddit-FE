@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Button } from '@material-tailwind/react';
 
 export default function RoundedButton(props: {
@@ -6,24 +6,23 @@ export default function RoundedButton(props: {
   buttonBorderColor: string;
   buttonText: string;
   buttonTextColor: string;
-  buttonImagePath?: string;
+  children?: ReactNode;
 }) {
   return (
     <Button
       style={{
-        backgroundColor: props.buttonColor,
-        borderBlockColor: props.buttonBorderColor,
+        //backgroundColor: props.buttonColor,
         color: props.buttonTextColor,
       }}
-      className='rounded-full border-solid border-blue-400 hover:shadow-none focus:shadow-none shadow-none '
-      variant='outlined'
+      color={props.buttonColor}
+      className={`!border !normal-case  border-${props.buttonBorderColor}  rounded-full  hover:shadow-none focus:shadow-none shadow-none `}
       size='sm'
       ripple={false}
     >
-      {/* {props.buttonImagePath && (
-        <img src={props.buttonImagePath} width='20px' height='auto'></img>
-      )} */}
-      {props.buttonText}
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        {props.children}
+        {props.buttonText}
+      </div>
     </Button>
   );
 }
