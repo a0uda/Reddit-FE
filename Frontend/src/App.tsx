@@ -1,16 +1,17 @@
-// import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './assets/css/Layout.css';
-import UserSettings from './Pages/UserSettings/UserSettings';
-import { Button } from '@material-tailwind/react';
+import NavigationBar from './Components/NavigationBar';
+import Mainfeed from './Pages/Mainfeed';
+import OfflineAlert from './Components/OfflineAlert';
 
 function App() {
   return (
     <div className='App'>
-      <Button size='sm'>Button</Button>
+      <NavigationBar />
+      <OfflineAlert />
       <Router>
         <Routes>
-          <Route path='/settings/:page' element={<UserSettings />} />
+          <Route path='/' element={<Mainfeed />} />
         </Routes>
       </Router>
     </div>

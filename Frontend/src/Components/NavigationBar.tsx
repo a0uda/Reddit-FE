@@ -1,111 +1,188 @@
+import { useEffect, useState } from 'react';
 import {
-  Col,
-  Container,
-  Form,
-  Image,
-  Nav,
-  NavDropdown,
-  Navbar,
-  Row,
-} from 'react-bootstrap';
-import './NavigationBar.css';
+  // Navbar,
+  // MobileNav,
+  Button,
+  IconButton,
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
+} from '@material-tailwind/react';
+import Logo from './Logo';
+import {
+  HiArrowRightOnRectangle,
+  HiCursorArrowRipple,
+  HiEllipsisHorizontal,
+  HiMagnifyingGlass,
+  HiQrCode,
+  HiShoppingBag,
+} from 'react-icons/hi2';
 
-const NavigationBar = () => {
-  const loggedIn = false;
+export function NavigationBar() {
+  const [openNav, setOpenNav] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener(
+      'resize',
+      () => window.innerWidth >= 960 && setOpenNav(false)
+    );
+  }, []);
+
+  const isLogged = false;
 
   return (
-    <>
-      <Navbar expand='md' className='bg-body-tertiary w-100'>
-        <Container fluid className='d-flex justify-content-between'>
-          <Row className='mx-auto w-100'>
-            <Col sm={4} className='d-flex align-items-center'>
-              <Navbar.Brand href='#home'>
-                <Image
-                  src='/images/Logo.png'
-                  alt='Reddit Logo'
-                  className='d-inline-block align-top'
+    <div className='px-4'>
+      <nav className='m-0 p-0 flex flex-row justify-end border-b-[1px] border-b-neutral-muted h-14 w-full lg:grid lg:grid-cols-12 lg:gap-4'>
+        <div className=' flex items-center col-span-4 p-0'>
+          <a
+            href='/'
+            className='flex items-center cursor-pointer font-medium h-12'
+          >
+            <Logo />
+          </a>
+        </div>
+        <div className='col-span-4 hidden lg:flex lg:items-center'>
+          <SearchBar />
+        </div>
+        <div className='col-span-4 flex justify-end'>
+          {isLogged ? <CampainLoggedIn /> : <CampainLoggedOut />}
+
+          <IconButton
+            variant='text'
+            className='ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden'
+            ripple={false}
+            onClick={() => setOpenNav(!openNav)}
+          >
+            {openNav ? (
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                className='h-6 w-6'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M6 18L18 6M6 6l12 12'
                 />
-              </Navbar.Brand>
-            </Col>
-            <Col md={6} className='d-flex align-items-center'>
-              <Form className='d-flex'>
-                <div className='d-flex gap-2 align-items-center bg-secondary rounded-pill px-3 py-2 w-100'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='16'
-                    height='16'
-                    fill='currentColor'
-                    className='bi bi-search'
-                    viewBox='0 0 16 16'
-                  >
-                    <path d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0' />
-                  </svg>
-                  <Form.Control
-                    type='search'
-                    placeholder='Search Reddit'
-                    className='p-0 bg-transparent border-0'
-                    aria-label='Search'
-                  />
-                </div>
-              </Form>
-            </Col>
-            <Col className='d-flex justify-content-end align-items-center'>
-              {loggedIn ? <CampainLoggedIn /> : <CampainLoggedOut />}
-            </Col>
-          </Row>
-        </Container>
-      </Navbar>
+              </svg>
+            ) : (
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='h-6 w-6'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M4 6h16M4 12h16M4 18h16'
+                />
+              </svg>
+            )}
+          </IconButton>
+        </div>
+        {/* {navList} */}
+        {/* <MobileNav open={openNav}>
+          <div className='container mx-auto'>
+            <div className='flex items-center gap-x-1'>
+              <Button fullWidth variant='text' size='sm' className=''>
+                <span>Log In</span>
+              </Button>
+              <Button fullWidth variant='gradient' size='sm' className=''>
+                <span>Sign in</span>
+              </Button>
+            </div>
+          </div>
+        </MobileNav> */}
+      </nav>
+    </div>
+  );
+}
+
+const SearchBar = () => {
+  const [isFocused, setIsFocused] = useState(false);
+  return (
+    <>
+      <div
+        // onClick={() => setIsFocused(true)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => {
+          console.log('blur');
+          setIsFocused(false);
+        }}
+        className={
+          'flex items-center space-x-2 px-3 py-2 rounded-full bg-neutral-muted w-full' +
+          (isFocused ? ' bg-white shadow-md shadow-black/25' : '')
+        }
+        tabIndex={0}
+      >
+        <HiMagnifyingGlass size={20} className='fill-black' />
+        <input
+          className='!border-0 bg-transparent w-full'
+          placeholder='Search in Reddit'
+          aria-label='Search in Reddit'
+          autoFocus={isFocused}
+        />
+      </div>
     </>
   );
 };
 
 const CampainLoggedOut = () => {
   return (
-    <div>
-      <Navbar.Toggle aria-controls='basic-navbar-nav' />
-      <Navbar.Collapse id='basic-navbar-nav'>
-        <Nav className='me-auto'>
-          <Nav.Link href='#home'>Get App</Nav.Link>
-          <Nav.Link href='#link'>Log In</Nav.Link>
-          <NavDropdown title='...' id='basic-nav-dropdown' drop='start'>
-            <NavDropdown.Item href='#action/3.1'>
-              Log In / Sign Up
-            </NavDropdown.Item>
-            <NavDropdown.Item href='#action/3.2'>
-              Advertise on Reddit
-            </NavDropdown.Item>
-            <NavDropdown.Item href='#action/3.3'>
-              Shop Collectible Avatars
-            </NavDropdown.Item>
-          </NavDropdown>
-        </Nav>
-      </Navbar.Collapse>
-    </div>
+    <>
+      <div className='flex items-center gap-x-1'>
+        <Button
+          variant='filled'
+          className='flex items-center gap-2 h-10 bg-neutral-500 text-neutral-black'
+        >
+          <span className='flex items-center gap-2 h-full'>
+            <HiQrCode size={20} />
+            Get App
+          </span>
+        </Button>
+        <Button variant='filled' className='bg-orange-dark'>
+          Log In
+        </Button>
+        <Menu placement='bottom-end'>
+          <MenuHandler>
+            <Button variant='text' className='p-2'>
+              <HiEllipsisHorizontal size={20} />
+            </Button>
+          </MenuHandler>
+          <MenuList className='p-0 py-2 text-foreground w-max shadow-lg shadow-black/25'>
+            <MenuItem className='py-2 flex gap-2 items-center'>
+              <HiArrowRightOnRectangle size={20} />
+              <a href='#'>Log In / Sign Up</a>
+            </MenuItem>
+            <MenuItem className='py-3 flex gap-2 items-center'>
+              <HiCursorArrowRipple size={20} />
+              <a href='#'>Advertise on Reddit</a>
+            </MenuItem>
+            <MenuItem className='py-3 flex gap-2 items-center'>
+              <HiShoppingBag size={20} />
+              <a href='#'>Shop Collectible Avatars</a>
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      </div>
+    </>
   );
 };
 
 const CampainLoggedIn = () => {
   return (
-    <>
-      <Navbar.Toggle aria-controls='basic-navbar-nav' />
-      <Navbar.Collapse id='basic-navbar-nav'>
-        <Nav className='me-auto'>
-          <Nav.Link href='#home'>Get App</Nav.Link>
-          <Nav.Link href='#link'>Log In</Nav.Link>
-          <NavDropdown title='...' id='basic-nav-dropdown'>
-            <NavDropdown.Item href='#action/3.1'>
-              Log In / Sign Up
-            </NavDropdown.Item>
-            <NavDropdown.Item href='#action/3.2'>
-              Advertise on Reddit
-            </NavDropdown.Item>
-            <NavDropdown.Item href='#action/3.3'>
-              Shop Collectible Avatars
-            </NavDropdown.Item>
-          </NavDropdown>
-        </Nav>
-      </Navbar.Collapse>
-    </>
+    // Get App
+    //         Log In
+    // Log In / Sign Up
+    // Advertise on Reddit
+    // Shop Collectible Avatars
+    <></>
   );
 };
 
