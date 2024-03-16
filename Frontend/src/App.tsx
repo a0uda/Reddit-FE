@@ -6,11 +6,13 @@ import RecoverUsername from './Pages/credential/RecoverUsername.tsx';
 import ResetPassword from './Pages/credential/ResetPassword.tsx';
 import UserSettings from './Pages/UserSettings/UserSettings';
 import NavigationBar from './Components/NavigationBar.tsx';
+import OfflineAlert from './Components/OfflineAlert.tsx';
 
 function App() {
   return (
     <div className='App'>
       <NavigationBar />
+      <OfflineAlert />
       <Router>
         <Routes>
           <Route path='/settings/:page' element={<UserSettings />} />
