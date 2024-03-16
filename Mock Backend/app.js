@@ -29,5 +29,4 @@ app.get("/users/profile-settings", (req, res) => {
   res.status(200).json(profileSettings);
 });
 
-
 module.exports = app;

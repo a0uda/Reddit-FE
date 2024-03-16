@@ -74,6 +74,8 @@ function Profile() {
   const { data, error, isLoading } = useQuery('profile data', () =>
     fetchUser('users/profile-settings')
   );
+  console.log(data);
+
   const {
     display_name,
     about,
@@ -86,122 +88,129 @@ function Profile() {
     allow_followers,
     content_visibility,
     active_communities_visibility,
-  } = data?.data.profile_settings;
-  const [displayName, setDisplayName] = React.useState(display_name);
-  const [aboutVal, setAbout] = React.useState(about);
+  } = data?.data.profile_settings || {};
+
+  const [displayName, setDisplayName] = React.useState('');
+  const [aboutVal, setAbout] = React.useState('');
+  React.useEffect(() => {
+    setDisplayName(display_name);
+    setAbout(about);
+  }, [display_name, about]);
   console.log(data);
   return (
-    <div>
-      <h2 className='text-xl my-8 font-semibold'>Customize profile</h2>
-      <Section sectionTitle='PROFILE INFORMATION'>
-        <Card
-          title='Display name (optional)'
-          description='Set a display name. This does not change your username.'
-        ></Card>
-        <Card title='' description=''>
-          {/* <InputBox placeHolder='Display name (optional)' /> */}
-          <input
-            onChange={(e) => {
-              setDisplayName(e.target.value);
-            }}
-            value={displayName}
-            placeholder='Display Name (Optional)'
-            className='!border border-[#EDEFF1] rounded bg-white text-gray-900 ring-4 ring-transparent placeholder:text-gray-500 w-full p-2 pt-3'
-          />
-        </Card>
-        <Card
-          title='About (Optional)'
-          description='A brief description of yourself shown on your profile.'
-        ></Card>
-        <Card title='' description=''>
-          {/* <Textarea
+    data && (
+      <div>
+        <h2 className='text-xl my-8 font-semibold'>Customize profile</h2>
+        <Section sectionTitle='PROFILE INFORMATION'>
+          <Card
+            title='Display name (optional)'
+            description='Set a display name. This does not change your username.'
+          ></Card>
+          <Card title='' description=''>
+            {/* <InputBox placeHolder='Display name (optional)' /> */}
+            <input
+              onChange={(e) => {
+                setDisplayName(e.target.value);
+              }}
+              value={displayName}
+              placeholder='Display Name (Optional)'
+              className='!border border-[#EDEFF1] rounded bg-white text-gray-900 ring-4 ring-transparent placeholder:text-gray-500 w-full p-2 pt-3'
+            />
+          </Card>
+          <Card
+            title='About (Optional)'
+            description='A brief description of yourself shown on your profile.'
+          ></Card>
+          <Card title='' description=''>
+            {/* <Textarea
             labelProps={{
               className: 'hidden',
             }}
             placeholder='About (optional)'
             className=' !resize !border !border-gray-300 bg-white text-gray-900  shadow-none ring-4 ring-transparent placeholder:text-gray-500   '
           /> */}
-          <textarea
-            onChange={(e) => {
-              setAbout(e.target.value);
-            }}
-            value={aboutVal}
-            placeholder='About (optional)'
-            className='!resize !border rounded border-[#EDEFF1] bg-white text-gray-900  shadow-none ring-4 ring-transparent placeholder:text-gray-500 w-full p-2 pt-3 h-28'
-          />
-        </Card>
-        <Card
-          title='Social links (5 max)'
-          description='People who visit your profile will see your social links.'
-        >
-          <RoundedButton
-            buttonBorderColor='none'
-            buttonColor='silver'
-            buttonText='Add social link'
-            buttonTextColor='black'
+            <textarea
+              onChange={(e) => {
+                setAbout(e.target.value);
+              }}
+              value={aboutVal}
+              placeholder='About (optional)'
+              className='!resize !border rounded border-[#EDEFF1] bg-white text-gray-900  shadow-none ring-4 ring-transparent placeholder:text-gray-500 w-full p-2 pt-3 h-28'
+            />
+          </Card>
+          <Card
+            title='Social links (5 max)'
+            description='People who visit your profile will see your social links.'
           >
-            <PlusIcon strokeWidth={2.5} className='h-3.5 w-3.5' />
-          </RoundedButton>
-        </Card>
-      </Section>
-      <Section sectionTitle='IMAGES'>
-        <Card
-          title='Banner Image'
-          description='Images must be .png or .jpg format'
-        />
-        <Card>
-          <div className='flex flex-start w-full gap-2'>
-            <ImageInput id='avatar' width='w-[30%]' image={profile_picture}>
-              Upload Image
-            </ImageInput>
-            <ImageInput id='banner' width='w-[50%]' image={banner_picture}>
-              Upload <strong>Banner</strong> Image
-            </ImageInput>
-          </div>
-        </Card>
-      </Section>
-      <Section sectionTitle='PROFILE CATEGORY'>
-        <Card
-          title='NSFW'
-          description='This content is NSFW (may contain nudity, pornography, profanity or inappropriate content for those under 18)'
-        >
-          <SwitchButton checked={nsfw_flag} />
-        </Card>
-      </Section>
-      <Section sectionTitle='ADVANCED'>
-        {/* comment: title is clicked as switched button */}
-        <Card
-          title='Allow people to follow you'
-          description='Followers will be notified about posts you make to your profile and see them in their home feed.'
-        >
-          <SwitchButton checked={allow_followers} />
-        </Card>
-        <Card
-          title='Content visibility '
-          //comment: r/all and /user are hyperlinks
-          description='Posts to this profile can appear in r/all and your profile can be discovered in /users'
-        >
-          <SwitchButton checked={content_visibility} />
-        </Card>
-        <Card
-          title='Active in communities visibility'
-          description='Show which communities I am active in on my profile.'
-        >
-          <SwitchButton checked={active_communities_visibility} />
-        </Card>
-        <Card
-          title='Clear history'
-          description='Delete your post views history.'
-        >
-          <RoundedButton
-            buttonBorderColor='border-blue-light'
-            buttonColor='white'
-            buttonText='Clear history'
-            buttonTextColor='text-blue-light'
+            <RoundedButton
+              buttonBorderColor='none'
+              buttonColor='silver'
+              buttonText='Add social link'
+              buttonTextColor='black'
+            >
+              <PlusIcon strokeWidth={2.5} className='h-3.5 w-3.5' />
+            </RoundedButton>
+          </Card>
+        </Section>
+        <Section sectionTitle='IMAGES'>
+          <Card
+            title='Banner Image'
+            description='Images must be .png or .jpg format'
           />
-        </Card>
-      </Section>
-    </div>
+          <Card>
+            <div className='flex flex-start w-full gap-2'>
+              <ImageInput id='avatar' width='w-[30%]' image={profile_picture}>
+                Upload Image
+              </ImageInput>
+              <ImageInput id='banner' width='w-[50%]' image={banner_picture}>
+                Upload <strong>Banner</strong> Image
+              </ImageInput>
+            </div>
+          </Card>
+        </Section>
+        <Section sectionTitle='PROFILE CATEGORY'>
+          <Card
+            title='NSFW'
+            description='This content is NSFW (may contain nudity, pornography, profanity or inappropriate content for those under 18)'
+          >
+            <SwitchButton checked={nsfw_flag} />
+          </Card>
+        </Section>
+        <Section sectionTitle='ADVANCED'>
+          {/* comment: title is clicked as switched button */}
+          <Card
+            title='Allow people to follow you'
+            description='Followers will be notified about posts you make to your profile and see them in their home feed.'
+          >
+            <SwitchButton checked={allow_followers} />
+          </Card>
+          <Card
+            title='Content visibility '
+            //comment: r/all and /user are hyperlinks
+            description='Posts to this profile can appear in r/all and your profile can be discovered in /users'
+          >
+            <SwitchButton checked={content_visibility} />
+          </Card>
+          <Card
+            title='Active in communities visibility'
+            description='Show which communities I am active in on my profile.'
+          >
+            <SwitchButton checked={active_communities_visibility} />
+          </Card>
+          <Card
+            title='Clear history'
+            description='Delete your post views history.'
+          >
+            <RoundedButton
+              buttonBorderColor='border-blue-light'
+              buttonColor='white'
+              buttonText='Clear history'
+              buttonTextColor='text-blue-light'
+            />
+          </Card>
+        </Section>
+      </div>
+    )
   );
 }
 
