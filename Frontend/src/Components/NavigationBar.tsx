@@ -146,7 +146,7 @@ const CampainLoggedOut = () => {
             Get App
           </span>
         </Button>
-        <Button variant='filled' className='bg-orange-dark'>
+        <Button variant='filled' className='bg-orange-muted'>
           Log In
         </Button>
         <Menu placement='bottom-end'>
