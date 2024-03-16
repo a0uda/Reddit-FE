@@ -12,11 +12,11 @@ export default function RoundedButton(props: {
     <Button
       style={{
         //backgroundColor: props.buttonColor,
-        color: props.buttonTextColor,
+        // color: props.buttonTextColor,
         width: 'max-content',
       }}
-      color={props.buttonColor}
-      className={`!border !normal-case  border-${props.buttonBorderColor}  rounded-full  hover:shadow-none focus:shadow-none shadow-none `}
+      // color='black'
+      className={`!border ${props.buttonColor} ${props.buttonBorderColor} !normal-case ${props.buttonTextColor} hover:bg-sky-600 active:bg-blue-900 rounded-full hover:shadow-none focus:shadow-none shadow-none `}
       size='sm'
       ripple={false}
     >

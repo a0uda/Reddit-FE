@@ -4,8 +4,48 @@ import Card from './Containers/Card';
 import RoundedButton from '../../Components/RoundedButton';
 import InputBox from './Containers/InputBox';
 import SwitchButton from './Containers/SwitchButton';
-import { Textarea } from '@material-tailwind/react';
+import { Textarea, Input } from '@material-tailwind/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
+
+function ImageInput(props: {
+  id: string;
+  children: React.ReactNode;
+  width: string;
+  image?: string;
+}) {
+  const [selectedImage, setSelectedImage] = React.useState(null);
+
+  return (
+    <>
+      <label
+        htmlFor={props.id}
+        className={`border ${props.width} border-[#d7d7d7] border-dashed rounded-lg bg-[#F6F7F8] p-[2rem] flex items-center justify-center flex-col text-blue-light cursor-pointer`}
+      >
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          fill='none'
+          viewBox='0 0 24 24'
+          strokeWidth={1.5}
+          stroke='currentColor'
+          className='w-10 h-10'
+        >
+          <path
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            d='M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
+          />
+        </svg>
+        <span className='text-xs'>{props.children}</span>
+      </label>
+      <input
+        id={props.id}
+        type='file'
+        accept='image/jpeg, image/png'
+        className='hidden'
+      />
+    </>
+  );
+}
 
 function Profile() {
   return (
@@ -17,19 +57,27 @@ function Profile() {
           description='Set a display name. This does not change your username.'
         ></Card>
         <Card title='' description=''>
-          <InputBox placeHolder='Display name (optional)' />
+          {/* <InputBox placeHolder='Display name (optional)' /> */}
+          <input
+            placeholder='Display Name (Optional)'
+            className='!border border-[#EDEFF1] rounded bg-white text-gray-900 ring-4 ring-transparent placeholder:text-gray-500 w-full p-2 pt-3'
+          />
         </Card>
         <Card
-          title='About (optional)'
+          title='About (Optional)'
           description='A brief description of yourself shown on your profile.'
         ></Card>
         <Card title='' description=''>
-          <Textarea
+          {/* <Textarea
             labelProps={{
               className: 'hidden',
             }}
             placeholder='About (optional)'
             className=' !resize !border !border-gray-300 bg-white text-gray-900  shadow-none ring-4 ring-transparent placeholder:text-gray-500   '
+          /> */}
+          <textarea
+            placeholder='About (optional)'
+            className='!resize !border rounded border-[#EDEFF1] bg-white text-gray-900  shadow-none ring-4 ring-transparent placeholder:text-gray-500 w-full p-2 pt-3 h-28'
           />
         </Card>
         <Card
@@ -51,7 +99,17 @@ function Profile() {
         <Card
           title='Banner Image'
           description='Images must be .png or .jpg format'
-        ></Card>
+        />
+        <Card>
+          <div className='flex flex-start w-full gap-2'>
+            <ImageInput id='avatar' width='w-[30%]'>
+              Upload Image
+            </ImageInput>
+            <ImageInput id='banner' width='w-[50%]'>
+              Upload <strong>Banner</strong> Image
+            </ImageInput>
+          </div>
+        </Card>
       </Section>
       <Section sectionTitle='PROFILE CATEGORY'>
         <Card
@@ -87,10 +145,10 @@ function Profile() {
           description='Delete your post views history.'
         >
           <RoundedButton
-            buttonBorderColor='blue-600'
+            buttonBorderColor='border-blue-light'
             buttonColor='white'
             buttonText='Clear history'
-            buttonTextColor='blue'
+            buttonTextColor='text-blue-light'
           />
         </Card>
       </Section>

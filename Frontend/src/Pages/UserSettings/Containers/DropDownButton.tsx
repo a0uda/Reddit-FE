@@ -7,20 +7,26 @@ import {
   Button,
 } from '@material-tailwind/react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import React from 'react';
 // import { Select, Option } from '@material-tailwind/react';
 
 export default function DropDownButton(props: {
   buttonText?: string;
   buttonList?: string[];
+  selected?: string;
 }) {
+  const [selectedItem, setSelectedItem] = React.useState(props.selected);
+  console.log(props.selected);
+  console.log(props.buttonList);
+
   return (
     <Menu>
       <MenuHandler>
         <Button
           ripple={false}
-          className='text-blue-500 flex items-center gap-3 text-xs font-extrabold uppercase bg-inherit p-3 hover:shadow-none focus:shadow-none shadow-none '
+          className='text-blue-light flex items-center gap-3 text-xs font-extrabold uppercase bg-inherit p-3 hover:shadow-none focus:shadow-none shadow-none '
         >
-          {props.buttonText}
+          {selectedItem || props.buttonText}
           <ChevronDownIcon
             color='gray'
             strokeWidth={2.5}
@@ -29,15 +35,24 @@ export default function DropDownButton(props: {
         </Button>
       </MenuHandler>
       <MenuList className='m-0 p-0'>
-        <MenuItem className='border-b rounded-none text-blue-500 focus:text-blue-500 active:text-blue-500 hover:text-blue-500 font-medium'>
-          Menu Item 1
-        </MenuItem>
-        <MenuItem className='border-b rounded-none font-medium'>
+        {props.buttonList?.map((item, i) => (
+          <MenuItem
+            value={item}
+            className={`border-b border-[#EDEFF1] uppercase rounded-none focus:text-blue-500 active:text-blue-500 hover:text-black font-medium ${selectedItem == item && 'text-blue-light hover:!text-blue-light'} `}
+            key={`${item}${i}`}
+            onClick={() => {
+              setSelectedItem(item);
+            }}
+          >
+            {item}
+          </MenuItem>
+        ))}
+        {/* <MenuItem className='border-b rounded-none font-medium'>
           Menu Item 2
         </MenuItem>
         <MenuItem className='border-b rounded-none font-medium'>
           Menu Item 3
-        </MenuItem>
+        </MenuItem> */}
       </MenuList>
     </Menu>
   );

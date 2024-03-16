@@ -13,21 +13,20 @@ function Account() {
       <Section sectionTitle='ACCOUNT PREFERENCES'>
         <Card title='Email' description='reem.khatab02@rng-st.cu.edu.eg'>
           <RoundedButton
-            buttonBorderColor='blue-600'
-            buttonColor='white'
+            buttonBorderColor='border-blue-light'
+            buttonColor='bg-white'
             buttonText='Change'
-            buttonTextColor='blue'
+            buttonTextColor='text-blue-light'
           />
         </Card>
         <Card
           title='Gender'
           description='This information may be used to improve your recommendations and ads.'
         >
-          <RoundedButton
-            buttonBorderColor='blue-600'
-            buttonColor='white'
-            buttonText='Change'
-            buttonTextColor='blue'
+          <DropDownButton
+            // buttonText='MAN'
+            buttonList={['man', 'woman']}
+            selected='man'
           />
         </Card>
         <Card title='Location' description=''>
@@ -40,10 +39,10 @@ function Account() {
           description='Connect a Twitter account to enable the choice to tweet your new posts and display a link on your profile. We will never post to Twitter without your permission.'
         >
           <RoundedButton
-            buttonBorderColor='none'
-            buttonColor='light-blue'
+            buttonBorderColor='border-none'
+            buttonColor='bg-[#1da1f2]'
             buttonText='Connect to Twitter'
-            buttonTextColor='white'
+            buttonTextColor='text-white'
           >
             <img
               src='https://docs.material-tailwind.com/icons/twitter.svg'
@@ -57,10 +56,10 @@ function Account() {
           description='Connect account to log in to Reddit with Apple'
         >
           <RoundedButton
-            buttonBorderColor='none'
-            buttonColor='black'
+            buttonBorderColor='border-black'
+            buttonColor='bg-black'
             buttonText='Connect to Apple'
-            buttonTextColor='white'
+            buttonTextColor='text-white'
           />
         </Card>
         <Card
@@ -68,10 +67,10 @@ function Account() {
           description='Connect account to log in to Reddit with Google'
         >
           <RoundedButton
-            buttonBorderColor='gray'
-            buttonColor='white'
+            buttonBorderColor='border-gray'
+            buttonColor='bg-white'
             buttonText='Connect to Google'
-            buttonTextColor='black'
+            buttonTextColor='text-black'
           >
             <img
               src='https://docs.material-tailwind.com/icons/google.svg'
@@ -84,10 +83,10 @@ function Account() {
       <Section sectionTitle='DELETE ACCOUNT'>
         <Card title=' '>
           <RoundedButton
-            buttonBorderColor='none'
-            buttonColor='white'
+            buttonBorderColor='border-none'
+            buttonColor='bg-white'
             buttonText='DELETE ACCOUNT'
-            buttonTextColor='red'
+            buttonTextColor='text-danger-red'
           >
             <TrashIcon strokeWidth={1.5} className='h-4 w-4 mx-2' />
           </RoundedButton>

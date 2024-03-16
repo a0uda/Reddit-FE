@@ -40,7 +40,7 @@ const SubNavBar = (props: {
     'messaging',
   ];
   return (
-    <div className='flex border-b-[1px] flex-wrap'>
+    <div className='flex border-b-[1px] border-[#EDEFF1] flex-wrap'>
       {props.buttonArray.map((butt, i) => (
         <NavButton
           key={`${i}${butt}`}
