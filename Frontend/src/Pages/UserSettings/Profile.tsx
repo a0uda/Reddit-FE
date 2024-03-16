@@ -6,6 +6,7 @@ import InputBox from './Containers/InputBox';
 import SwitchButton from './Containers/SwitchButton';
 import { Textarea, Input } from '@material-tailwind/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import { redirect } from 'react-router-dom';
 
 function ImageInput(props: {
   id: string;
@@ -13,41 +14,79 @@ function ImageInput(props: {
   width: string;
   image?: string;
 }) {
-  const [selectedImage, setSelectedImage] = React.useState(null);
+  const [selectedImage, setSelectedImage] = React.useState(props.image);
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <>
-      <label
-        htmlFor={props.id}
-        className={`border ${props.width} border-[#d7d7d7] border-dashed rounded-lg bg-[#F6F7F8] p-[2rem] flex items-center justify-center flex-col text-blue-light cursor-pointer`}
-      >
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
-          strokeWidth={1.5}
-          stroke='currentColor'
-          className='w-10 h-10'
+      <div className={props.width}>
+        {/* {selectedImage ? (
+          <img src={selectedImage} />
+        ) : (
+          <> */}
+        <label
+          style={{
+            backgroundImage: `url(${selectedImage})`,
+            backgroundSize: 'cover',
+          }}
+          htmlFor={props.id}
+          className={`border  border-[#d7d7d7] border-dashed rounded-lg bg-[#F6F7F8] p-[2rem] flex items-center justify-center flex-col text-blue-light cursor-pointer`}
         >
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            d='M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
-          />
-        </svg>
-        <span className='text-xs'>{props.children}</span>
-      </label>
-      <input
-        id={props.id}
-        type='file'
-        accept='image/jpeg, image/png'
-        className='hidden'
-      />
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='w-10 h-10'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
+            />
+          </svg>
+          <span className='text-xs'>{props.children}</span>
+        </label>
+
+        <input
+          id={props.id}
+          type='file'
+          accept='image/jpeg, image/png'
+          className='hidden'
+          onChange={handleImageChange}
+        />
+        {/* </> */}
+      </div>
     </>
   );
 }
 
 function Profile() {
+  const backend = {
+    profile_settings: {
+      display_name: 'string',
+      about: 'string',
+      social_links: ['string'],
+      country: 'string',
+      gender: 'Male',
+      profile_picture: 'string',
+      banner_picture: 'string',
+      nsfw_flag: true,
+      allow_followers: true,
+      content_visibility: true,
+      active_communities_visibility: true,
+    },
+  };
   return (
     <div>
       <h2 className='text-xl my-8 font-semibold'>Customize profile</h2>
@@ -95,7 +134,6 @@ function Profile() {
         </Card>
       </Section>
       <Section sectionTitle='IMAGES'>
-        {/* comment : missing */}
         <Card
           title='Banner Image'
           description='Images must be .png or .jpg format'

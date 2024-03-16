@@ -47,12 +47,6 @@ export default function DropDownButton(props: {
             {item}
           </MenuItem>
         ))}
-        {/* <MenuItem className='border-b rounded-none font-medium'>
-          Menu Item 2
-        </MenuItem>
-        <MenuItem className='border-b rounded-none font-medium'>
-          Menu Item 3
-        </MenuItem> */}
       </MenuList>
     </Menu>
   );

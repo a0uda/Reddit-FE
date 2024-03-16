@@ -21,7 +21,7 @@ function Card(props: {
   description?: string;
 }) {
   return (
-    // comment : el justify between 3alshan safety and privacy and profile
+    
     <div className='flex justify-between items-center'>
       {props.title && (
         <div className=' w-[65%]'>
