@@ -2,12 +2,11 @@ import React from 'react';
 import { Switch } from '@material-tailwind/react';
 
 export default function SwitchButton(props: { checked: boolean }) {
-  // const [val, setVal] = React.useState(props.checked);
-  // console.log(val);
+  const [val, setVal] = React.useState(props.checked);
 
   return (
     <Switch
-      id='custom-switch-component'
+      // id='custom-switch-component'
       ripple={false}
       className='h-full w-full checked:bg-[#0079D3]'
       containerProps={{
@@ -17,10 +16,12 @@ export default function SwitchButton(props: { checked: boolean }) {
         className: 'before:hidden left-0.5  border-none',
       }}
       crossOrigin={undefined}
-      // checked={val}
-      // onChange={() => {
-      //   setVal(!val);
-      // }}
+      checked={val}
+      onClick={(e) => {
+        setVal(!val);
+        console.log(e.currentTarget.checked, 'val');
+        console.log(props.checked, 'checked');
+      }}
     />
   );
 }

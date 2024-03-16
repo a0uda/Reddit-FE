@@ -14,7 +14,7 @@ app.get("/users/profile-settings", (req, res) => {
     profile_settings: {
       display_name: "string",
       about: "string",
-      social_links: ["string"],
+      social_links: [{icon: "Instagram", username:"ahmedtoaima_"}, {icon: "Facebook", username:"ahmedkhaled"}],
       country: "string",
       gender: "Male",
       profile_picture: "string",
@@ -22,7 +22,7 @@ app.get("/users/profile-settings", (req, res) => {
       nsfw_flag: true,
       allow_followers: true,
       content_visibility: true,
-      active_communities_visibility: true,
+      active_communities_visibility: false,
     },
   };
 

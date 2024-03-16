@@ -6,6 +6,7 @@ export default function RoundedButton(props: {
   buttonBorderColor: string;
   buttonText: string;
   buttonTextColor: string;
+  imgRight?: any;
   children?: ReactNode;
 }) {
   return (
@@ -20,9 +21,10 @@ export default function RoundedButton(props: {
       size='sm'
       ripple={false}
     >
-      <div className='flex justify-between items-center'>
+      <div className='flex justify-between items-center gap-1'>
         {props.children}
         {props.buttonText}
+        {props.imgRight}
       </div>
     </Button>
   );
