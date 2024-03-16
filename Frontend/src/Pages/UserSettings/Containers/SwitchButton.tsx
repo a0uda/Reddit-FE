@@ -1,7 +1,10 @@
 import React from 'react';
 import { Switch } from '@material-tailwind/react';
 
-export default function SwitchButton() {
+export default function SwitchButton(props: { checked: boolean }) {
+  const [val, setVal] = React.useState(props.checked);
+  console.log(val);
+  
   return (
     <Switch
       id='custom-switch-component'
@@ -14,6 +17,7 @@ export default function SwitchButton() {
         className: 'before:hidden left-0.5  border-none',
       }}
       crossOrigin={undefined}
+      checked={val}
     />
   );
 }

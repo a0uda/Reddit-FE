@@ -74,6 +74,21 @@ function Profile() {
   const { data, error, isLoading } = useQuery('profile data', () =>
     fetchUser('users/profile-settings')
   );
+  const {
+    display_name,
+    about,
+    social_links,
+    country,
+    gender,
+    profile_picture,
+    banner_picture,
+    nsfw_flag,
+    allow_followers,
+    content_visibility,
+    active_communities_visibility,
+  } = data?.data.profile_settings;
+  const [displayName, setDisplayName] = React.useState(display_name);
+  const [aboutVal, setAbout] = React.useState(about);
   console.log(data);
   return (
     <div>
@@ -86,6 +101,10 @@ function Profile() {
         <Card title='' description=''>
           {/* <InputBox placeHolder='Display name (optional)' /> */}
           <input
+            onChange={(e) => {
+              setDisplayName(e.target.value);
+            }}
+            value={displayName}
             placeholder='Display Name (Optional)'
             className='!border border-[#EDEFF1] rounded bg-white text-gray-900 ring-4 ring-transparent placeholder:text-gray-500 w-full p-2 pt-3'
           />
@@ -103,6 +122,10 @@ function Profile() {
             className=' !resize !border !border-gray-300 bg-white text-gray-900  shadow-none ring-4 ring-transparent placeholder:text-gray-500   '
           /> */}
           <textarea
+            onChange={(e) => {
+              setAbout(e.target.value);
+            }}
+            value={aboutVal}
             placeholder='About (optional)'
             className='!resize !border rounded border-[#EDEFF1] bg-white text-gray-900  shadow-none ring-4 ring-transparent placeholder:text-gray-500 w-full p-2 pt-3 h-28'
           />
@@ -128,10 +151,10 @@ function Profile() {
         />
         <Card>
           <div className='flex flex-start w-full gap-2'>
-            <ImageInput id='avatar' width='w-[30%]'>
+            <ImageInput id='avatar' width='w-[30%]' image={profile_picture}>
               Upload Image
             </ImageInput>
-            <ImageInput id='banner' width='w-[50%]'>
+            <ImageInput id='banner' width='w-[50%]' image={banner_picture}>
               Upload <strong>Banner</strong> Image
             </ImageInput>
           </div>
@@ -142,7 +165,7 @@ function Profile() {
           title='NSFW'
           description='This content is NSFW (may contain nudity, pornography, profanity or inappropriate content for those under 18)'
         >
-          <SwitchButton />
+          <SwitchButton checked={nsfw_flag} />
         </Card>
       </Section>
       <Section sectionTitle='ADVANCED'>
@@ -151,20 +174,20 @@ function Profile() {
           title='Allow people to follow you'
           description='Followers will be notified about posts you make to your profile and see them in their home feed.'
         >
-          <SwitchButton />
+          <SwitchButton checked={allow_followers} />
         </Card>
         <Card
           title='Content visibility '
           //comment: r/all and /user are hyperlinks
           description='Posts to this profile can appear in r/all and your profile can be discovered in /users'
         >
-          <SwitchButton />
+          <SwitchButton checked={content_visibility} />
         </Card>
         <Card
           title='Active in communities visibility'
           description='Show which communities I am active in on my profile.'
         >
-          <SwitchButton />
+          <SwitchButton checked={active_communities_visibility} />
         </Card>
         <Card
           title='Clear history'
