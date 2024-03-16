@@ -2,11 +2,10 @@ import React from 'react';
 import Section from './Containers/Section';
 import Card from './Containers/Card';
 import RoundedButton from '../../Components/RoundedButton';
-import InputBox from './Containers/InputBox';
 import SwitchButton from './Containers/SwitchButton';
-import { Textarea, Input } from '@material-tailwind/react';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import { redirect } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { fetchUser } from '../../API/User';
 
 function ImageInput(props: {
   id: string;
@@ -72,21 +71,10 @@ function ImageInput(props: {
 }
 
 function Profile() {
-  const backend = {
-    profile_settings: {
-      display_name: 'string',
-      about: 'string',
-      social_links: ['string'],
-      country: 'string',
-      gender: 'Male',
-      profile_picture: 'string',
-      banner_picture: 'string',
-      nsfw_flag: true,
-      allow_followers: true,
-      content_visibility: true,
-      active_communities_visibility: true,
-    },
-  };
+  const { data, error, isLoading } = useQuery('profile data', () =>
+    fetchUser('users/profile-settings')
+  );
+  console.log(data);
   return (
     <div>
       <h2 className='text-xl my-8 font-semibold'>Customize profile</h2>

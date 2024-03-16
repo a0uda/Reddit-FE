@@ -1,8 +1,11 @@
 import axios from 'axios';
 
 const baseUrl = 'http://localhost:3000/';
-const fetchUser = (endPoint: string) => {
-  return axios.get(baseUrl + endPoint, { withCredentials: true });
+const fetchUser = async (endPoint: string) => {
+  return await axios.get(baseUrl + endPoint, {
+    withCredentials: false,
+    headers: { 'Content-Type': 'application/json' },
+  });
 };
 
 export { fetchUser };
