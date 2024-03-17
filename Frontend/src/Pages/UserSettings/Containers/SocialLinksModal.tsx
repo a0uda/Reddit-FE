@@ -10,13 +10,18 @@ import facebookIcon from '../../../assets/facebookIcon.svg';
 import instagramIcon from '../../../assets/instagramIcon.svg';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
-const SocialLinksModal = (props: { handleOpen; open; setSocialLinkType }) => {
+const SocialLinksModal = (props: {
+  handleOpen;
+  open;
+  setSocialLinkType;
+  handleOpenNextModal;
+}) => {
   return (
     <>
       {/* <Button onClick={props.handleOpen} variant='gradient'>
         Open Dialog
       </Button> */}
-      <Dialog size='md' open={props.open} handler={props.handleOpen}>
+      <Dialog size='sm' open={props.open} handler={props.handleOpen}>
         <DialogHeader className='!block text-center relative border-b border-linesColor'>
           <h2>Add Social Link</h2>
           <IconButton
@@ -50,6 +55,8 @@ const SocialLinksModal = (props: { handleOpen; open; setSocialLinkType }) => {
             buttonTextColor='text-black'
             onClick={() => {
               props.setSocialLinkType('Facebook');
+              props.handleOpen();
+              props.handleOpenNextModal();
             }}
           >
             <img src={facebookIcon} className='h-3.5 w-3.5' />
@@ -61,24 +68,13 @@ const SocialLinksModal = (props: { handleOpen; open; setSocialLinkType }) => {
             buttonTextColor='text-black'
             onClick={() => {
               props.setSocialLinkType('Instagram');
+              props.handleOpen();
+              props.handleOpenNextModal();
             }}
           >
             <img src={instagramIcon} className='h-3.5 w-3.5' />
           </RoundedButton>
         </DialogBody>
-        {/* <DialogFooter>
-          <Button
-            variant='text'
-            color='red'
-            onClick={handleOpen}
-            className='mr-1'
-          >
-            <span>Cancel</span>
-          </Button>
-          <Button variant='gradient' color='green' onClick={handleOpen}>
-            <span>Confirm</span>
-          </Button>
-        </DialogFooter> */}
       </Dialog>
     </>
   );
@@ -87,16 +83,22 @@ const SocialLinksModal = (props: { handleOpen; open; setSocialLinkType }) => {
 export const EnterLinkDetails = (props: {
   handleOpen;
   open;
-  childern?: React.ReactNode;
+  children: React.ReactNode;
   openBackModal;
+  saveDisabled: boolean;
 }) => {
   return (
     <>
-      <Dialog size='sm' open={props.open} handler={props.handleOpen}>
+      <Dialog
+        size='sm'
+        open={props.open}
+        handler={props.handleOpen}
+        className='pb-5'
+      >
         <DialogHeader className=' text-center justify-between border-b border-linesColor'>
           <ArrowLeftIcon
             strokeWidth={1.5}
-            className='h-5 w-5 mx-2'
+            className='h-5 w-5 mx-2 cursor-pointer'
             onClick={props.openBackModal}
           />
           <h2>Add Social Link</h2>
@@ -105,9 +107,12 @@ export const EnterLinkDetails = (props: {
             buttonColor='bg-blue-light'
             buttonText='Save'
             buttonTextColor='text-white'
+            disabled={props.saveDisabled}
           ></RoundedButton>
         </DialogHeader>
-        <DialogBody className='flex-col gap-2'>{props.childern}</DialogBody>
+        <DialogBody className='flex flex-col gap-2'>
+          {props.children}
+        </DialogBody>
       </Dialog>
     </>
   );

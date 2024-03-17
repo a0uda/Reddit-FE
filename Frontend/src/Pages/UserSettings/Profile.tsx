@@ -13,8 +13,6 @@ import SocialLinksModal, {
   EnterLinkDetails,
 } from './Containers/SocialLinksModal';
 
-function SocialLinkButton() {}
-
 function ImageInput(props: {
   id: string;
   children: React.ReactNode;
@@ -85,9 +83,10 @@ function Profile() {
   const [openSLModal, setOpenSLModal] = React.useState(false);
   const [enterLinkDetails, setEnterLinkDetails] = React.useState(false);
   const [socialLinkType, setSocialLinkType] = React.useState('');
-  const handleEnterLinkDetails = () =>
-    setEnterLinkDetails(!handleEnterLinkDetails);
+  const [nameInput, setNameInput] = React.useState('');
+  const [usernameInput, setUsernameInput] = React.useState('');
 
+  const handleEnterLinkDetails = () => setEnterLinkDetails(!enterLinkDetails);
   const handleOpenSLModal = () => setOpenSLModal(!openSLModal);
 
   const {
@@ -104,10 +103,17 @@ function Profile() {
 
   const [displayName, setDisplayName] = React.useState('');
   const [aboutVal, setAbout] = React.useState('');
+
   React.useEffect(() => {
     setDisplayName(display_name);
     setAbout(about);
   }, [display_name, about]);
+
+  React.useEffect(() => {
+    setNameInput('');
+    setUsernameInput('');
+  }, [enterLinkDetails]);
+
   return isLoading ? (
     <div className='w-full h-[30rem] flex items-center justify-center'>
       <Spinner className='h-16 w-16 text-gray-200' />
@@ -136,13 +142,6 @@ function Profile() {
           description='A brief description of yourself shown on your profile.'
         ></Card>
         <Card title='' description=''>
-          {/* <Textarea
-            labelProps={{
-              className: 'hidden',
-            }}
-            placeholder='About (optional)'
-            className=' !resize !border !border-gray-300 bg-white text-gray-900  shadow-none ring-4 ring-transparent placeholder:text-gray-500   '
-          /> */}
           <textarea
             onChange={(e) => {
               setAbout(e.target.value);
@@ -178,7 +177,12 @@ function Profile() {
                 </RoundedButton>
               );
             })}
-          <SocialLinksModal handleOpen={handleOpenSLModal} open={openSLModal} />
+          <SocialLinksModal
+            handleOpen={handleOpenSLModal}
+            open={openSLModal}
+            setSocialLinkType={setSocialLinkType}
+            handleOpenNextModal={handleEnterLinkDetails}
+          />
           <EnterLinkDetails
             handleOpen={handleEnterLinkDetails}
             open={enterLinkDetails}
@@ -186,7 +190,58 @@ function Profile() {
               handleOpenSLModal();
               handleEnterLinkDetails();
             }}
-          />
+            saveDisabled={
+              (!usernameInput && socialLinkType != 'Facebook') ||
+              ((!usernameInput || !nameInput) && socialLinkType == 'Facebook')
+            }
+          >
+            <RoundedButton
+              buttonBorderColor='none'
+              buttonColor='bg-[#EDEFF1]'
+              buttonText={socialLinkType}
+              buttonTextColor='text-black'
+            >
+              <img
+                src={
+                  socialLinkType == 'Facebook' ? facebookIcon : instagramIcon
+                }
+                className='h-3.5 w-3.5'
+              />
+            </RoundedButton>
+            {socialLinkType != 'Facebook' ? (
+              <input
+                value={usernameInput}
+                onChange={(e) => {
+                  setUsernameInput(e.target.value);
+                  console.log(usernameInput);
+                }}
+                type='text'
+                placeholder='@username'
+                className='w-full border border-linesColor outline-0 focus-visible:border-blue-light rounded px-2 py-1'
+              />
+            ) : (
+              <>
+                <input
+                  value={nameInput}
+                  onChange={(e) => {
+                    setNameInput(e.target.value);
+                  }}
+                  type='text'
+                  placeholder='Display Text'
+                  className='w-full border border-linesColor outline-0 focus-visible:border-blue-light rounded px-2 py-1'
+                />
+                <input
+                  value={usernameInput}
+                  onChange={(e) => {
+                    setUsernameInput(e.target.value);
+                  }}
+                  type='text'
+                  placeholder='https://facebook.com'
+                  className='w-full border border-linesColor outline-0 focus-visible:border-blue-light rounded px-2 py-1'
+                />{' '}
+              </>
+            )}
+          </EnterLinkDetails>
           <RoundedButton
             buttonBorderColor='none'
             buttonColor='bg-[#EDEFF1]'

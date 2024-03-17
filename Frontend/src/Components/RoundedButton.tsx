@@ -9,6 +9,7 @@ export default function RoundedButton(props: {
   imgRight?: any;
   children?: ReactNode;
   onClick?: MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
 }) {
   return (
     <Button
@@ -19,9 +20,10 @@ export default function RoundedButton(props: {
         width: 'max-content',
       }}
       // color='black'
-      className={`!border ${props.buttonColor} ${props.buttonBorderColor} !normal-case ${props.buttonTextColor} hover:bg-sky-600 active:bg-blue-900 rounded-full hover:shadow-none focus:shadow-none shadow-none `}
+      className={`!border ${props.buttonColor} ${props.buttonBorderColor} !normal-case ${props.buttonTextColor} hover:opacity-50 active:brightness-150 rounded-full hover:shadow-none focus:shadow-none shadow-none `}
       size='sm'
       ripple={false}
+      disabled={props.disabled || false}
     >
       <div className='flex justify-between items-center gap-1'>
         {props.children}
