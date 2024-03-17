@@ -80,6 +80,7 @@ function Profile() {
   const { data, error, isLoading } = useQuery('profile data', () =>
     fetchUser('users/profile-settings')
   );
+
   const [openSLModal, setOpenSLModal] = React.useState(false);
   const [enterLinkDetails, setEnterLinkDetails] = React.useState(false);
   const [socialLinkType, setSocialLinkType] = React.useState('');
@@ -100,7 +101,7 @@ function Profile() {
     content_visibility,
     active_communities_visibility,
   } = data?.data.profile_settings || {};
-
+  
   const [displayName, setDisplayName] = React.useState('');
   const [aboutVal, setAbout] = React.useState('');
 

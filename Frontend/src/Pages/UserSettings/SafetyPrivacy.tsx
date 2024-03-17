@@ -4,7 +4,7 @@ import Card from './Containers/Card';
 
 import InputWButton from './Containers/InputWButton';
 
-export default function SafetyPrivacy() {
+function SafetyPrivacy() {
   return (
     <>
       <h2 className='text-xl my-8 font-semibold'>Safety & Privacy</h2>
@@ -28,3 +28,5 @@ export default function SafetyPrivacy() {
     </>
   );
 }
+
+export default SafetyPrivacy;

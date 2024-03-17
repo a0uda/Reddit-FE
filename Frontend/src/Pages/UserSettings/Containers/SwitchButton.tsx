@@ -1,9 +1,17 @@
 import React from 'react';
 import { Switch } from '@material-tailwind/react';
 
-export default function SwitchButton(props: { checked: boolean }) {
+export default function SwitchButton(props: {
+  checked: boolean;
+  onChange: (newValue: boolean) => void;
+}) {
   const [val, setVal] = React.useState(props.checked);
 
+  const handleChange = (event) => {
+    const newValue = event.target.checked;
+    setVal(newValue);
+    props.onChange(newValue);
+  };
   return (
     <Switch
       ripple={false}
@@ -16,11 +24,12 @@ export default function SwitchButton(props: { checked: boolean }) {
       }}
       crossOrigin={undefined}
       checked={val}
-      onClick={(e) => {
-        setVal(!val);
-        console.log(e.currentTarget.checked, 'val');
-        console.log(props.checked, 'checked');
-      }}
+      // onClick={(e) => {
+      //   setVal(!val);
+      //   console.log(e.currentTarget.checked, 'val');
+      //   console.log(props.checked, 'checked');
+      // }}
+      onChange={handleChange}
     />
   );
 }

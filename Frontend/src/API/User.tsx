@@ -8,4 +8,17 @@ const fetchUser = async (endPoint: string) => {
   });
 };
 
-export { fetchUser };
+const patchUser = async ({ newSettings, endPoint }) => {
+  try {
+    const response = await axios.patch(baseUrl + endPoint, newSettings, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to update user settings');
+  }
+};
+
+export { fetchUser, patchUser };
