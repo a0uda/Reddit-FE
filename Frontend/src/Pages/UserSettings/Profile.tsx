@@ -9,6 +9,7 @@ import { fetchUser } from '../../API/User';
 import { Spinner } from '@material-tailwind/react';
 import facebookIcon from '../../assets/facebookIcon.svg';
 import instagramIcon from '../../assets/instagramIcon.svg';
+import SocialLinksModal from './Containers/SocialLinksModal';
 
 function SocialLinkButton() {}
 
@@ -79,14 +80,14 @@ function Profile() {
   const { data, error, isLoading } = useQuery('profile data', () =>
     fetchUser('users/profile-settings')
   );
-  console.log(data);
+  const [openSLModal, setOpenSLModal] = React.useState(false);
+
+  const handleOpenSLModal = () => setOpenSLModal(!openSLModal);
 
   const {
     display_name,
     about,
     social_links,
-    country,
-    gender,
     profile_picture,
     banner_picture,
     nsfw_flag,
@@ -101,7 +102,6 @@ function Profile() {
     setDisplayName(display_name);
     setAbout(about);
   }, [display_name, about]);
-  console.log(data);
   return isLoading ? (
     <div className='w-full h-[30rem] flex items-center justify-center'>
       <Spinner className='h-16 w-16 text-gray-200' />
@@ -172,12 +172,13 @@ function Profile() {
                 </RoundedButton>
               );
             })}
-
+          <SocialLinksModal handleOpen={handleOpenSLModal} open={openSLModal} />
           <RoundedButton
             buttonBorderColor='none'
             buttonColor='bg-[#EDEFF1]'
             buttonText='Add social link'
             buttonTextColor='text-black'
+            onClick={handleOpenSLModal}
           >
             <PlusIcon strokeWidth={2.5} className='h-3.5 w-3.5' />
           </RoundedButton>

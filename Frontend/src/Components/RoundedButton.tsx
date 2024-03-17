@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { MouseEventHandler, ReactNode } from 'react';
 import { Button } from '@material-tailwind/react';
 
 export default function RoundedButton(props: {
@@ -8,9 +8,11 @@ export default function RoundedButton(props: {
   buttonTextColor: string;
   imgRight?: any;
   children?: ReactNode;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 }) {
   return (
     <Button
+      onClick={props.onClick}
       style={{
         //backgroundColor: props.buttonColor,
         // color: props.buttonTextColor,
