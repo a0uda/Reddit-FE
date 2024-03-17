@@ -6,7 +6,6 @@ export default function SwitchButton(props: { checked: boolean }) {
 
   return (
     <Switch
-      // id='custom-switch-component'
       ripple={false}
       className='h-full w-full checked:bg-[#0079D3]'
       containerProps={{

@@ -9,7 +9,9 @@ import { fetchUser } from '../../API/User';
 import { Spinner } from '@material-tailwind/react';
 import facebookIcon from '../../assets/facebookIcon.svg';
 import instagramIcon from '../../assets/instagramIcon.svg';
-import SocialLinksModal from './Containers/SocialLinksModal';
+import SocialLinksModal, {
+  EnterLinkDetails,
+} from './Containers/SocialLinksModal';
 
 function SocialLinkButton() {}
 
@@ -81,6 +83,10 @@ function Profile() {
     fetchUser('users/profile-settings')
   );
   const [openSLModal, setOpenSLModal] = React.useState(false);
+  const [enterLinkDetails, setEnterLinkDetails] = React.useState(false);
+  const [socialLinkType, setSocialLinkType] = React.useState('');
+  const handleEnterLinkDetails = () =>
+    setEnterLinkDetails(!handleEnterLinkDetails);
 
   const handleOpenSLModal = () => setOpenSLModal(!openSLModal);
 
@@ -173,6 +179,14 @@ function Profile() {
               );
             })}
           <SocialLinksModal handleOpen={handleOpenSLModal} open={openSLModal} />
+          <EnterLinkDetails
+            handleOpen={handleEnterLinkDetails}
+            open={enterLinkDetails}
+            openBackModal={() => {
+              handleOpenSLModal();
+              handleEnterLinkDetails();
+            }}
+          />
           <RoundedButton
             buttonBorderColor='none'
             buttonColor='bg-[#EDEFF1]'
