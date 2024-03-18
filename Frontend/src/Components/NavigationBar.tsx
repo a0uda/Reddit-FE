@@ -33,7 +33,7 @@ export function NavigationBar() {
 
   return (
     <div className='px-4'>
-      <nav className='m-0 p-0 flex flex-row justify-end border-b-[1px] border-b-neutral-muted h-14 w-full lg:grid lg:grid-cols-12 lg:gap-4'>
+      <nav className='m-0 px-4 flex flex-row justify-between border-b-[1px] border-b-neutral-muted h-14 w-full lg:grid lg:grid-cols-12 lg:gap-4'>
         <div className=' flex items-center col-span-4 p-0'>
           <a
             href='/'

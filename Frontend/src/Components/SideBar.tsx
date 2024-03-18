@@ -21,7 +21,7 @@ import {
 import { ReactNode, useState } from 'react';
 import { CommunityIcon } from '../assets/icons/Icons';
 
-const SideBar = () => {
+const SideBar = ({ className }: { className?: string }) => {
   const moderation = [
     {
       title: 'Mod Queue',
@@ -78,8 +78,13 @@ const SideBar = () => {
   ];
   return (
     <>
-      <Card className='lg-max:hidden h-[calc(100vh-3.5rem)] overflow-x-auto w-full max-w-[272px] p-4 shadow-xl shadow-blue-gray-900/5 '>
-        <List className='text-black *:text-black'>
+      <Card
+        className={
+          'lg-max:hidden h-[calc(100vh-3.5rem)] overflow-x-auto w-full py-4 px-0 shadow-none ' +
+          className
+        }
+      >
+        <List className='text-black *:text-black px-0 min-w-0'>
           {/* Home... */}
           <ListItem>
             <ListItemPrefix>

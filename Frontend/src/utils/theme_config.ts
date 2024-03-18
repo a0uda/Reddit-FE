@@ -8,6 +8,15 @@ const button: ButtonStyleTypes = {
   },
 };
 
+const iconButton: ButtonStyleTypes = {
+  defaultProps: {
+    // variant: string,
+    size: 'sm',
+    className: 'rounded-full font-medium p-3 normal-case',
+  },
+};
+
 export const theme = {
   button,
+  iconButton,
 };

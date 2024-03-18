@@ -9,13 +9,27 @@ export default withMT({
       center: true,
       padding: {
         DEFAULT: '1rem',
-        sm: '2rem',
-        lg: '3rem',
-        xl: '5rem',
-        '2xl': '6rem',
+        sm: '1rem',
+        lg: '2rem',
+        xl: '3rem',
+        '2xl': '3rem',
       },
     },
     extend: {
+      gridTemplateColumns: {
+        // Simple 16 row grid
+        16: 'repeat(16, minmax(0, 1fr))',
+
+        // Complex site-specific row configuration
+        layout: '300px minmax(400px, 1fr) 400px',
+      },
+      gridTemplateRows: {
+        // Simple 16 row grid
+        16: 'repeat(16, minmax(0, 1fr))',
+
+        // Complex site-specific row configuration
+        layout: '300px minmax(400px, 1fr) 400px',
+      },
       colors: {
         'neutral-white': '#FFFFFF',
         'neutral-muted': '#e2e7e9',
