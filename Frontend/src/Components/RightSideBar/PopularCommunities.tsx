@@ -10,14 +10,6 @@ export function PopularCommunities() {
     ? communityList
     : communityList.slice(0, 5);
 
-  const handleSeeMore = () => {
-    setShowAll(true);
-  };
-
-  const handleSeeLess = () => {
-    setShowAll(false);
-  };
-
   return (
     <div
       style={{ maxHeight: '88vh', overflowY: 'auto', scrollbarWidth: 'thin' }}
@@ -44,7 +36,7 @@ export function PopularCommunities() {
             <button
               style={{ width: '75px', height: '35px' }}
               className='hover:bg-gray-300 rounded-full font-body font-thin -tracking-tight text-xs text-gray-900'
-              onClick={handleSeeMore}
+              onClick={() => setShowAll(true)}
             >
               See more
             </button>
@@ -53,7 +45,7 @@ export function PopularCommunities() {
             <button
               style={{ width: '75px', height: '35px' }}
               className='hover:bg-gray-300 rounded-full font-body font-thin -tracking-tight text-xs text-gray-900'
-              onClick={handleSeeLess}
+              onClick={() => setShowAll(false)}
             >
               See less
             </button>

@@ -38,26 +38,28 @@ export default function OfflineAlert() {
 
   return (
     <>
-      <Alert
-        variant='gradient'
-        open={open}
-        icon={<Icon />}
-        className='w-auto mx-16 my-3 p-2 text-sm flex items-center'
-        color='red'
-        action={
-          <Button
-            variant='text'
-            color='white'
-            size='sm'
-            className='right-1 !absolute'
-            onClick={() => setOpen(false)}
-          >
-            <TfiClose className='' />
-          </Button>
-        }
-      >
-        You seem to be offline. Connect to the internet to reload.
-      </Alert>
+      <div className='absolute w-full z-50'>
+        <Alert
+          variant='gradient'
+          open={open}
+          icon={<Icon />}
+          className='w-auto mx-16 my-3 p-2 text-sm flex items-center'
+          color='red'
+          action={
+            <Button
+              variant='text'
+              color='white'
+              size='sm'
+              className='right-1 !absolute'
+              onClick={() => setOpen(false)}
+            >
+              <TfiClose className='' />
+            </Button>
+          }
+        >
+          You seem to be offline. Connect to the internet to reload.
+        </Alert>
+      </div>
     </>
   );
 }
