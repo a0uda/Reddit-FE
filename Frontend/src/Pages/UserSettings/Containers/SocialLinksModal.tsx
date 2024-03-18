@@ -22,7 +22,7 @@ const SocialLinksModal = (props: {
         Open Dialog
       </Button> */}
       <Dialog size='sm' open={props.open} handler={props.handleOpen}>
-        <DialogHeader className='!block text-center relative border-b border-linesColor'>
+        <DialogHeader className='!block text-center relative border-b border-lines-color'>
           <h2>Add Social Link</h2>
           <IconButton
             color='blue-gray'
@@ -96,7 +96,7 @@ export const EnterLinkDetails = (props: {
         handler={props.handleOpen}
         className='pb-5'
       >
-        <DialogHeader className=' text-center justify-between border-b border-linesColor'>
+        <DialogHeader className=' text-center justify-between border-b border-lines-color'>
           <ArrowLeftIcon
             strokeWidth={1.5}
             className='h-5 w-5 mx-2 cursor-pointer'

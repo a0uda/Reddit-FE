@@ -6,6 +6,7 @@ import DropDownButton from './Containers/DropDownButton';
 import { Spinner } from '@material-tailwind/react';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest } from '../../API/User';
+import LoadingProvider from './Containers/LoadingProvider';
 
 function FeedSettings() {
   const { data, error, isLoading, refetch } = useQuery(
@@ -33,12 +34,8 @@ function FeedSettings() {
     Open_posts_in_new_tab,
     community_themes,
   } = data?.data || {};
-  return isLoading ? (
-    <div className='w-full h-[30rem] flex items-center justify-center'>
-      <Spinner className='h-16 w-16 text-gray-200' />
-    </div>
-  ) : data ? (
-    <div>
+  return (
+    <LoadingProvider error={error} isLoading={isLoading}>
       <h2 className='text-xl my-8 font-semibold'>Feed Settings</h2>
       <Section sectionTitle='CONTENT PREFERENCES'>
         <Card
@@ -78,14 +75,14 @@ function FeedSettings() {
         >
           <DropDownButton
             buttonText='HOT'
-            buttonList={community_content_sort.type}
+            buttonList={community_content_sort?.type}
           />
           <Card
             title='Remember per community'
             description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
           >
             <SwitchButton
-              checked={community_content_sort.sort_remember_per_community}
+              checked={community_content_sort?.sort_remember_per_community}
               onChange={(value) =>
                 handleToggleSwitch({
                   community_content_sort: {
@@ -103,7 +100,7 @@ function FeedSettings() {
           <DropDownButton
             buttonText='Card'
             //comment : missing icons
-            buttonList={global_content.global_content_view}
+            buttonList={global_content?.global_content_view}
           />
           {/* comment:check again */}
           <Card
@@ -111,11 +108,11 @@ function FeedSettings() {
             description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
           >
             <SwitchButton
-              checked={global_content.global_remember_per_community}
+              checked={global_content?.global_remember_per_community}
               onChange={(value) =>
                 handleToggleSwitch({
-                  'global_content': {
-                    'global_remember_per_community': value,
+                  global_content: {
+                    global_remember_per_community: value,
                   },
                 })
               }
@@ -129,14 +126,12 @@ function FeedSettings() {
           <SwitchButton
             checked={Open_posts_in_new_tab}
             onChange={(value) =>
-              handleToggleSwitch({ 'Open_posts_in_new_tab': value })
+              handleToggleSwitch({ Open_posts_in_new_tab: value })
             }
           />
         </Card>
       </Section>
-    </div>
-  ) : (
-    <></>
+    </LoadingProvider>
   );
 }
 

@@ -13,6 +13,7 @@ import instagramIcon from '../../assets/instagramIcon.svg';
 import SocialLinksModal, {
   EnterLinkDetails,
 } from './Containers/SocialLinksModal';
+import LoadingProvider from './Containers/LoadingProvider';
 
 function ImageInput(props: {
   id: string;
@@ -127,12 +128,8 @@ function Profile() {
     setUsernameInput('');
   }, [enterLinkDetails]);
 
-  return isLoading ? (
-    <div className='w-full h-[30rem] flex items-center justify-center'>
-      <Spinner className='h-16 w-16 text-gray-200' />
-    </div>
-  ) : data ? (
-    <div>
+  return (
+    <LoadingProvider error={error} isLoading={isLoading}>
       <h2 className='text-xl my-8 font-semibold'>Customize profile</h2>
       <Section sectionTitle='PROFILE INFORMATION'>
         <Card
@@ -289,7 +286,7 @@ function Profile() {
                 }}
                 type='text'
                 placeholder='@username'
-                className='w-full border border-linesColor outline-0 focus-visible:border-blue-light rounded px-2 py-1'
+                className='w-full border border-lines-color outline-0 focus-visible:border-blue-light rounded px-2 py-1'
               />
             ) : (
               <>
@@ -300,7 +297,7 @@ function Profile() {
                   }}
                   type='text'
                   placeholder='Display Text'
-                  className='w-full border border-linesColor outline-0 focus-visible:border-blue-light rounded px-2 py-1'
+                  className='w-full border border-lines-color outline-0 focus-visible:border-blue-light rounded px-2 py-1'
                 />
                 <input
                   value={usernameInput}
@@ -309,7 +306,7 @@ function Profile() {
                   }}
                   type='text'
                   placeholder='https://facebook.com'
-                  className='w-full border border-linesColor outline-0 focus-visible:border-blue-light rounded px-2 py-1'
+                  className='w-full border border-lines-color outline-0 focus-visible:border-blue-light rounded px-2 py-1'
                 />{' '}
               </>
             )}
@@ -320,7 +317,7 @@ function Profile() {
             buttonText='Add social link'
             buttonTextColor='text-black'
             onClick={handleOpenSLModal}
-            disabled={social_links.length == 5}
+            disabled={social_links?.length == 5}
           >
             <PlusIcon strokeWidth={2.5} className='h-3.5 w-3.5' />
           </RoundedButton>
@@ -419,9 +416,7 @@ function Profile() {
           />
         </Card>
       </Section>
-    </div>
-  ) : (
-    <></>
+    </LoadingProvider>
   );
 }
 

@@ -5,6 +5,7 @@ import SwitchButton from './Containers/SwitchButton';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest } from '../../API/User';
 import { Spinner } from '@material-tailwind/react';
+import LoadingProvider from './Containers/LoadingProvider';
 
 function Notifications() {
   const { data, error, isLoading, refetch } = useQuery(
@@ -42,12 +43,8 @@ function Notifications() {
     posts,
   } = data?.data || {};
 
-  return isLoading ? (
-    <div className='w-full h-[30rem] flex items-center justify-center'>
-      <Spinner className='h-16 w-16 text-gray-200' />
-    </div>
-  ) : data ? (
-    <div>
+  return (
+    <LoadingProvider error={error} isLoading={isLoading}>
       <h2 className='text-xl my-8 font-semibold'>Notification settings</h2>
       <Section sectionTitle='MESSAGES'>
         <Card title='Private Messages' description=''>
@@ -119,9 +116,7 @@ function Notifications() {
           />
         </Card>
       </Section>
-    </div>
-  ) : (
-    <></>
+    </LoadingProvider>
   );
 }
 
