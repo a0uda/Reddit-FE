@@ -1,5 +1,6 @@
 import SideBar from '../Components/SideBar';
 import { PopularCommunities } from '../Components/RightSideBar/PopularCommunities';
+// import { RecentPosts } from '../Components/RightSideBar/RecentPosts';
 
 const Mainfeed = () => {
   return (
@@ -10,6 +11,9 @@ const Mainfeed = () => {
           <h1>Mainfeed</h1>
         </div>
         <div></div>
+        {/* <div className='py-5'>
+          <RecentPosts />
+        </div> */}
         <div className='py-5'>
           <PopularCommunities />
         </div>
