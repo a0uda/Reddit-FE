@@ -28,7 +28,7 @@ export default function DropDownButton(props: {
       <MenuHandler>
         <Button
           ripple={false}
-          className='text-blue-light flex items-center gap-3 text-xs font-extrabold uppercase bg-inherit p-3 hover:shadow-none focus:shadow-none shadow-none '
+          className='text-blue-light flex items-center outline-none gap-3 text-xs font-extrabold uppercase bg-inherit p-3 hover:shadow-none focus:shadow-none shadow-none '
         >
           {selectedItem || props.buttonText}
           <ChevronDownIcon

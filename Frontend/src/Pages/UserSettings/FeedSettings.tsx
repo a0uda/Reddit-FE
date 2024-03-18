@@ -74,7 +74,7 @@ function FeedSettings() {
           description='Choose how you would like content organized in communities you visit. This will not affect global feeds such as Home, or Popular.'
         >
           <DropDownButton
-            buttonText={community_content_sort.type}
+            selected={community_content_sort?.type}
             buttonList={['hot', 'new', 'top', 'rising']}
             handleSelectionChange={(selectedItem) =>
               handleToggleSwitch({
@@ -84,28 +84,29 @@ function FeedSettings() {
               })
             }
           />
-          <Card
-            title='Remember per community'
-            description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
-          >
-            <SwitchButton
-              checked={community_content_sort?.sort_remember_per_community}
-              onChange={(value) =>
-                handleToggleSwitch({
-                  community_content_sort: {
-                    sort_remember_per_community: value,
-                  },
-                })
-              }
-            />
-          </Card>
+        </Card>
+        <Card
+          className='pl-10'
+          title='Remember per community'
+          description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
+        >
+          <SwitchButton
+            checked={community_content_sort?.sort_remember_per_community}
+            onChange={(value) =>
+              handleToggleSwitch({
+                community_content_sort: {
+                  sort_remember_per_community: value,
+                },
+              })
+            }
+          />
         </Card>
         <Card
           title='Global content view'
           description='Choose how you would like content displayed in feeds. This control is also found above your feed.'
         >
           <DropDownButton
-            buttonText={global_content.global_content_view}
+            selected={global_content?.global_content_view}
             buttonList={['card', 'classic', 'compact']}
             handleSelectionChange={(selectedItem) =>
               handleToggleSwitch({
@@ -115,22 +116,22 @@ function FeedSettings() {
               })
             }
           />
-          {/* comment:check again */}
-          <Card
-            title='Remember per community'
-            description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
-          >
-            <SwitchButton
-              checked={global_content?.global_remember_per_community}
-              onChange={(value) =>
-                handleToggleSwitch({
-                  global_content: {
-                    global_remember_per_community: value,
-                  },
-                })
-              }
-            />
-          </Card>
+        </Card>
+        <Card
+          className='pl-10'
+          title='Remember per community'
+          description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
+        >
+          <SwitchButton
+            checked={global_content?.global_remember_per_community}
+            onChange={(value) =>
+              handleToggleSwitch({
+                global_content: {
+                  global_remember_per_community: value,
+                },
+              })
+            }
+          />
         </Card>
         <Card
           title='Open posts in new tab'
