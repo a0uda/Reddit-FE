@@ -17,7 +17,7 @@ export function RecentPosts() {
             scrollbarWidth: 'thin',
           }}
         >
-          <Card className='w-80 bg-gray-100 rounded-lg shadow-none p-0 pt-3 pb-3'>
+          <Card className='w-full bg-gray-100 rounded-lg shadow-none p-0 pt-3 pb-3 min-w-0'>
             <div className='flex flex-row justify-between p-4 py-3'>
               <Typography
                 variant='small'

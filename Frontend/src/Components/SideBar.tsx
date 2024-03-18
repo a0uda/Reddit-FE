@@ -15,7 +15,6 @@ import {
   ChartBarSquareIcon,
   ChevronDownIcon,
   ShieldCheckIcon,
-  EnvelopeIcon,
   PlusIcon,
 } from '@heroicons/react/24/solid';
 import { ReactNode, useState } from 'react';
@@ -26,10 +25,6 @@ const SideBar = ({ className }: { className?: string }) => {
     {
       title: 'Mod Queue',
       icon: <ShieldCheckIcon className='h-5 w-5' />,
-    },
-    {
-      title: 'Mod Mail',
-      icon: <EnvelopeIcon className='h-5 w-5' />,
     },
     {
       title: 'r/Mod',
@@ -85,7 +80,6 @@ const SideBar = ({ className }: { className?: string }) => {
         }
       >
         <List className='text-black *:text-black px-0 min-w-0'>
-          {/* Home... */}
           <ListItem>
             <ListItemPrefix>
               <HomeIcon className='h-5 w-5' />

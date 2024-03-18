@@ -9,7 +9,6 @@ import {
   MenuList,
   MenuItem,
 } from '@material-tailwind/react';
-import Logo from './Logo';
 import {
   HiArrowRightOnRectangle,
   HiCursorArrowRipple,
@@ -18,6 +17,7 @@ import {
   HiQrCode,
   HiShoppingBag,
 } from 'react-icons/hi2';
+import Logo from './Logo';
 
 export function NavigationBar() {
   const [openNav, setOpenNav] = useState(false);

@@ -14,7 +14,7 @@ export function PopularCommunities() {
     <div
       style={{ maxHeight: '88vh', overflowY: 'auto', scrollbarWidth: 'thin' }}
     >
-      <Card className='w-80 bg-gray-100 rounded-lg shadow-none p-2 pt-4 pb-4'>
+      <Card className='w-full bg-gray-100 rounded-lg shadow-none p-2 pt-4 pb-4 min-w-0'>
         <Typography
           variant='small'
           className='p-2 font-body font-semibold uppercase -tracking-tight text-xs text-gray-600'
