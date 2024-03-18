@@ -1,11 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Section from './Containers/Section';
 import Card from './Containers/Card';
 import RoundedButton from '../../Components/RoundedButton';
 import SwitchButton from './Containers/SwitchButton';
 import { PlusIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import { useQuery } from 'react-query';
-import { fetchUser } from '../../API/User';
+import { useMutation, useQuery } from 'react-query';
+import { fetchRequest, patchRequest, postRequest } from '../../API/User';
 import { Spinner } from '@material-tailwind/react';
 import facebookIcon from '../../assets/facebookIcon.svg';
 import instagramIcon from '../../assets/instagramIcon.svg';
@@ -77,18 +78,20 @@ function ImageInput(props: {
 }
 
 function Profile() {
-  const { data, error, isLoading } = useQuery('profile data', () =>
-    fetchUser('users/profile-settings')
+  const { data, error, isLoading, refetch } = useQuery('profile data', () =>
+    fetchRequest('users/profile-settings')
   );
-
-  const [openSLModal, setOpenSLModal] = React.useState(false);
-  const [enterLinkDetails, setEnterLinkDetails] = React.useState(false);
-  const [socialLinkType, setSocialLinkType] = React.useState('');
-  const [nameInput, setNameInput] = React.useState('');
-  const [usernameInput, setUsernameInput] = React.useState('');
-
-  const handleEnterLinkDetails = () => setEnterLinkDetails(!enterLinkDetails);
-  const handleOpenSLModal = () => setOpenSLModal(!openSLModal);
+  const postReq = useMutation(postRequest, {
+    onSuccess: () => {
+      refetch();
+    },
+  });
+  const patchReq = useMutation(patchRequest, {
+    onSuccess: () => {
+      refetch();
+    },
+  });
+  // console.log(data);
 
   const {
     display_name,
@@ -101,7 +104,16 @@ function Profile() {
     content_visibility,
     active_communities_visibility,
   } = data?.data.profile_settings || {};
-  
+
+  const [openSLModal, setOpenSLModal] = React.useState(false);
+  const [enterLinkDetails, setEnterLinkDetails] = React.useState(false);
+  const [socialLinkType, setSocialLinkType] = React.useState('');
+  const [nameInput, setNameInput] = React.useState('');
+  const [usernameInput, setUsernameInput] = React.useState('');
+
+  const handleEnterLinkDetails = () => setEnterLinkDetails(!enterLinkDetails);
+  const handleOpenSLModal = () => setOpenSLModal(!openSLModal);
+
   const [displayName, setDisplayName] = React.useState('');
   const [aboutVal, setAbout] = React.useState('');
 
@@ -130,6 +142,17 @@ function Profile() {
         <Card title='' description=''>
           {/* <InputBox placeHolder='Display name (optional)' /> */}
           <input
+            onBlur={() => {
+              console.log(display_name, displayName);
+
+              if (display_name == displayName) {
+                return;
+              }
+              patchReq.mutate({
+                endPoint: 'users/change-profile-settings',
+                newSettings: { display_name: displayName },
+              });
+            }}
             onChange={(e) => {
               setDisplayName(e.target.value);
             }}
@@ -144,6 +167,17 @@ function Profile() {
         ></Card>
         <Card title='' description=''>
           <textarea
+            onBlur={() => {
+              // console.log(display_name, displayName);
+
+              if (about == aboutVal) {
+                return;
+              }
+              patchReq.mutate({
+                endPoint: 'users/change-profile-settings',
+                newSettings: { about: aboutVal },
+              });
+            }}
             onChange={(e) => {
               setAbout(e.target.value);
             }}
@@ -161,21 +195,46 @@ function Profile() {
           {social_links &&
             social_links.map((link, i: number) => {
               return (
-                <RoundedButton
-                  buttonBorderColor='none'
-                  buttonColor='bg-[#EDEFF1]'
-                  buttonText={link.username}
-                  buttonTextColor='text-black'
-                  imgRight={
-                    <XCircleIcon strokeWidth={2.5} className='h-3.5 w-3.5' />
-                  }
+                <Link
                   key={link + i}
+                  to={
+                    link.icon != 'Facebook'
+                      ? 'https://www.' +
+                        link.icon.toLowerCase() +
+                        '.com/' +
+                        link.username +
+                        '/'
+                      : link.username
+                  }
+                  target='_blank'
                 >
-                  <img
-                    src={link.icon == 'Facebook' ? facebookIcon : instagramIcon}
-                    className='h-3.5 w-3.5'
-                  />
-                </RoundedButton>
+                  <RoundedButton
+                    buttonBorderColor='none'
+                    buttonColor='bg-[#EDEFF1]'
+                    buttonText={link.displayName || link.username}
+                    buttonTextColor='text-black'
+                    imgRight={
+                      <XCircleIcon
+                        strokeWidth={2.5}
+                        className='h-3.5 w-3.5'
+                        onClick={() => {
+                          console.log(link);
+                          postReq.mutate({
+                            endPoint: 'users/delete-social-link',
+                            data: link,
+                          });
+                        }}
+                      />
+                    }
+                  >
+                    <img
+                      src={
+                        link.icon == 'Facebook' ? facebookIcon : instagramIcon
+                      }
+                      className='h-3.5 w-3.5'
+                    />
+                  </RoundedButton>
+                </Link>
               );
             })}
           <SocialLinksModal
@@ -195,6 +254,18 @@ function Profile() {
               (!usernameInput && socialLinkType != 'Facebook') ||
               ((!usernameInput || !nameInput) && socialLinkType == 'Facebook')
             }
+            handleSaveButton={() => {
+              console.log(nameInput, usernameInput);
+              postReq.mutate({
+                endPoint: 'users/add-social-link',
+                data: {
+                  icon: socialLinkType,
+                  username: usernameInput,
+                  displayName: nameInput,
+                },
+              });
+              handleEnterLinkDetails();
+            }}
           >
             <RoundedButton
               buttonBorderColor='none'
@@ -249,6 +320,7 @@ function Profile() {
             buttonText='Add social link'
             buttonTextColor='text-black'
             onClick={handleOpenSLModal}
+            disabled={social_links.length == 5}
           >
             <PlusIcon strokeWidth={2.5} className='h-3.5 w-3.5' />
           </RoundedButton>
@@ -276,7 +348,15 @@ function Profile() {
           title='NSFW'
           description='This content is NSFW (may contain nudity, pornography, profanity or inappropriate content for those under 18)'
         >
-          <SwitchButton checked={nsfw_flag} />
+          <SwitchButton
+            checked={nsfw_flag}
+            onChange={(value) => {
+              patchReq.mutate({
+                endPoint: 'users/change-profile-settings',
+                newSettings: { nsfw_flag: value },
+              });
+            }}
+          />
         </Card>
       </Section>
       <Section sectionTitle='ADVANCED'>
@@ -285,20 +365,44 @@ function Profile() {
           title='Allow people to follow you'
           description='Followers will be notified about posts you make to your profile and see them in their home feed.'
         >
-          <SwitchButton checked={allow_followers} />
+          <SwitchButton
+            checked={allow_followers}
+            onChange={(value) => {
+              patchReq.mutate({
+                endPoint: 'users/change-profile-settings',
+                newSettings: { allow_followers: value },
+              });
+            }}
+          />
         </Card>
         <Card
           title='Content visibility '
           //comment: r/all and /user are hyperlinks
           description='Posts to this profile can appear in r/all and your profile can be discovered in /users'
         >
-          <SwitchButton checked={content_visibility} />
+          <SwitchButton
+            checked={content_visibility}
+            onChange={(value) => {
+              patchReq.mutate({
+                endPoint: 'users/change-profile-settings',
+                newSettings: { content_visibility: value },
+              });
+            }}
+          />
         </Card>
         <Card
           title='Active in communities visibility'
           description='Show which communities I am active in on my profile.'
         >
-          <SwitchButton checked={active_communities_visibility} />
+          <SwitchButton
+            checked={active_communities_visibility}
+            onChange={(value) => {
+              patchReq.mutate({
+                endPoint: 'users/change-profile-settings',
+                newSettings: { active_communities_visibility: value },
+              });
+            }}
+          />
         </Card>
         <Card
           title='Clear history'
@@ -309,6 +413,9 @@ function Profile() {
             buttonColor='bg-white'
             buttonText='Clear history'
             buttonTextColor='text-blue-light'
+            onClick={() => {
+              postReq.mutate({ endPoint: 'users/clear-history', data: {} });
+            }}
           />
         </Card>
       </Section>

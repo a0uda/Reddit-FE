@@ -5,27 +5,21 @@ import SwitchButton from './Containers/SwitchButton';
 import DropDownButton from './Containers/DropDownButton';
 import { Spinner } from '@material-tailwind/react';
 import { useMutation, useQuery } from 'react-query';
-import { fetchUser, patchUser } from '../../API/User';
+import { fetchRequest, patchRequest } from '../../API/User';
 
 function FeedSettings() {
   const { data, error, isLoading, refetch } = useQuery(
     'feed settings data',
-    () => fetchUser('users/feed-settings')
+    () => fetchRequest('users/feed-settings')
   );
   console.log(data);
-  const mutation = useMutation(patchUser, {
+  const mutation = useMutation(patchRequest, {
     onSuccess: () => {
       refetch();
     },
   });
 
-  const handleToggleSwitch = (settingName, value) => {
-    const feedSettings = data?.data || {};
-    const newSettings = {
-      ...feedSettings,
-      [settingName]: value,
-    };
-
+  const handleToggleSwitch = (newSettings: object) => {
     mutation.mutate({
       endPoint: 'users/change-feed-settings',
       newSettings: newSettings,
@@ -34,7 +28,7 @@ function FeedSettings() {
   const {
     Adult_content_flag,
     autoplay_media,
-    communitiy_content_sort,
+    community_content_sort,
     global_content,
     Open_posts_in_new_tab,
     community_themes,
@@ -54,7 +48,7 @@ function FeedSettings() {
           <SwitchButton
             checked={Adult_content_flag}
             onChange={(value) =>
-              handleToggleSwitch('Adult_content_flag', value)
+              handleToggleSwitch({ Adult_content_flag: value })
             }
           />
         </Card>
@@ -64,7 +58,7 @@ function FeedSettings() {
         >
           <SwitchButton
             checked={autoplay_media}
-            onChange={(value) => handleToggleSwitch('autoplay_media', value)}
+            onChange={(value) => handleToggleSwitch({ autoplay_media: value })}
           />
         </Card>
         <Card
@@ -73,7 +67,9 @@ function FeedSettings() {
         >
           <SwitchButton
             checked={community_themes}
-            onChange={(value) => handleToggleSwitch('community_themes', value)}
+            onChange={(value) =>
+              handleToggleSwitch({ community_themes: value })
+            }
           />
         </Card>
         <Card
@@ -82,19 +78,20 @@ function FeedSettings() {
         >
           <DropDownButton
             buttonText='HOT'
-            buttonList={communitiy_content_sort.type}
+            buttonList={community_content_sort.type}
           />
           <Card
             title='Remember per community'
             description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
           >
             <SwitchButton
-              checked={communitiy_content_sort.sort_remember_per_community}
+              checked={community_content_sort.sort_remember_per_community}
               onChange={(value) =>
-                handleToggleSwitch(
-                  'communitiy_content_sort.sort_remember_per_community',
-                  value
-                )
+                handleToggleSwitch({
+                  community_content_sort: {
+                    sort_remember_per_community: value,
+                  },
+                })
               }
             />
           </Card>
@@ -116,10 +113,11 @@ function FeedSettings() {
             <SwitchButton
               checked={global_content.global_remember_per_community}
               onChange={(value) =>
-                handleToggleSwitch(
-                  'global_content.global_remember_per_community',
-                  value
-                )
+                handleToggleSwitch({
+                  'global_content': {
+                    'global_remember_per_community': value,
+                  },
+                })
               }
             />
           </Card>
@@ -131,7 +129,7 @@ function FeedSettings() {
           <SwitchButton
             checked={Open_posts_in_new_tab}
             onChange={(value) =>
-              handleToggleSwitch('Open_posts_in_new_tab', value)
+              handleToggleSwitch({ 'Open_posts_in_new_tab': value })
             }
           />
         </Card>

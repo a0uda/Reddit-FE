@@ -25,7 +25,7 @@ function InputWButton(props: { label: string; buttonText: string }) {
           color='white'
           ripple={false}
           disabled={!inputValue}
-          className='!absolute right-1 top-1 text-blue-600  hover:shadow-none focus:shadow-none shadow-none hover:inherit'
+          className='!absolute right-1 top-[0.38rem] text-blue-light  hover:shadow-none focus:shadow-none shadow-none hover:inherit'
         >
           {props.buttonText}
         </Button>

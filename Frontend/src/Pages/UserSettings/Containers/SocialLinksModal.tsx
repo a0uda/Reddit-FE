@@ -86,6 +86,7 @@ export const EnterLinkDetails = (props: {
   children: React.ReactNode;
   openBackModal;
   saveDisabled: boolean;
+  handleSaveButton: Function;
 }) => {
   return (
     <>
@@ -108,6 +109,7 @@ export const EnterLinkDetails = (props: {
             buttonText='Save'
             buttonTextColor='text-white'
             disabled={props.saveDisabled}
+            onClick={props.handleSaveButton}
           ></RoundedButton>
         </DialogHeader>
         <DialogBody className='flex flex-col gap-2'>

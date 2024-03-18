@@ -4,33 +4,51 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-app.use(cors());
+app.use(cors({
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Add PATCH method here
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+let profileSettings = {
+  profile_settings: {
+    display_name: "string",
+    about: "string",
+    social_links: [
+      { icon: "Instagram", username: "ahmedtoaima_" },
+      { icon: "Facebook", username: "ahmedkhaled", displayName: "Ahmed Khaled" },
+    ],
+    country: "string",
+    gender: "Male",
+    profile_picture: "string",
+    banner_picture: "string",
+    nsfw_flag: false,
+    allow_followers: true,
+    content_visibility: true,
+    active_communities_visibility: false,
+  },
+};
+
 app.get("/users/profile-settings", (req, res) => {
-  const profileSettings = {
-    profile_settings: {
-      display_name: "string",
-      about: "string",
-      social_links: [
-        { icon: "Instagram", username: "ahmedtoaima_" },
-        { icon: "Facebook", username: "ahmedkhaled" },
-      ],
-      country: "string",
-      gender: "Male",
-      profile_picture: "string",
-      banner_picture: "string",
-      nsfw_flag: false,
-      allow_followers: true,
-      content_visibility: true,
-      active_communities_visibility: false,
-    },
-  };
+
 
   res.status(200).json(profileSettings);
 });
+
+
+app.patch("/users/change-profile-settings", (req, res) => {
+  console.log(req.body)
+  profileSettings.profile_settings[Object.keys(req.body)[0]] = Object.values(req.body)[0]
+  res.status(200).json(profileSettings);
+});
+
+app.post('/users/clear-history', (req, res) => {
+  res.sendStatus(200);
+})
+
+
+
 
 let notificationSettings = {
   private_messages: false,
@@ -79,12 +97,12 @@ app.patch("/users/change-email-settings", (req, res) => {
 let feedSettings = {
   Adult_content_flag: true,
   autoplay_media: true,
-  communitiy_content_sort: {
-    type: ["top","hot","new","reem"],
+  community_content_sort: {
+    type: ["top", "hot", "new", "reem"],
     sort_remember_per_community: true,
   },
   global_content: {
-    global_content_view: ["classic","compact"],
+    global_content_view: ["classic", "compact"],
     global_remember_per_community: true,
   },
   Open_posts_in_new_tab: true,
@@ -95,12 +113,24 @@ app.get("/users/feed-settings", (req, res) => {
 });
 app.patch("/users/change-feed-settings", (req, res) => {
   const updatedSettings = req.body;
-  console.log(updatedSettings);
   feedSettings = {
     ...feedSettings,
     ...updatedSettings,
   };
-  res.status(200).json(feedSettings);
+  console.log(feedSettings);
+  res.sendStatus(200);
 });
+
+app.post("/users/add-social-link", (req, res) => {
+  const { icon, username, displayName } = req.body;
+  profileSettings.profile_settings.social_links.push({ icon: icon, username: username, displayName: displayName })
+  res.sendStatus(200);
+})
+
+app.post("/users/delete-social-link", (req, res) => {
+  const { icon, username, displayName } = req.body;
+  profileSettings.profile_settings.social_links.pop({ icon: icon, username: username, displayName: displayName })
+  res.sendStatus(200);
+})
 
 module.exports = app;

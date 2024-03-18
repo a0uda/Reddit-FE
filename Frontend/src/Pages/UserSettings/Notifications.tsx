@@ -3,25 +3,23 @@ import Section from './Containers/Section';
 import Card from './Containers/Card';
 import SwitchButton from './Containers/SwitchButton';
 import { useMutation, useQuery } from 'react-query';
-import { fetchUser, patchUser } from '../../API/User';
+import { fetchRequest, patchRequest } from '../../API/User';
 import { Spinner } from '@material-tailwind/react';
 
 function Notifications() {
   const { data, error, isLoading, refetch } = useQuery(
     'notifications data',
-    () => fetchUser('users/notification-settings')
+    () => fetchRequest('users/notification-settings')
   );
-  console.log(data);
-  const mutation = useMutation(patchUser, {
+
+  const mutation = useMutation(patchRequest, {
     onSuccess: () => {
       refetch();
     },
   });
 
   const handleToggleSwitch = (settingName, value) => {
-    const notificationsSettings = data?.data || {};
     const newSettings = {
-      ...notificationsSettings,
       [settingName]: value,
     };
 

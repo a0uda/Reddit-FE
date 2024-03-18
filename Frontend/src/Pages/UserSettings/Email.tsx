@@ -2,16 +2,16 @@ import React from 'react';
 import SwitchButton from './Containers/SwitchButton';
 import Card from './Containers/Card';
 import Section from './Containers/Section';
-import { fetchUser, patchUser } from '../../API/User';
+import { fetchRequest, patchRequest } from '../../API/User';
 import { useMutation, useQuery } from 'react-query';
 import { Spinner } from '@material-tailwind/react';
 
 function Email() {
   const { data, error, isLoading, refetch } = useQuery('email data', () =>
-    fetchUser('users/email-settings')
+    fetchRequest('users/email-settings')
   );
   console.log(data);
-  const mutation = useMutation(patchUser, {
+  const mutation = useMutation(patchRequest, {
     onSuccess: () => {
       refetch();
     },
