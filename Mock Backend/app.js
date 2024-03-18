@@ -97,11 +97,11 @@ let feedSettings = {
   Adult_content_flag: true,
   autoplay_media: true,
   community_content_sort: {
-    type: ["top", "hot", "new", "reem"],
+    type: "top",
     sort_remember_per_community: true,
   },
   global_content: {
-    global_content_view: ["classic", "compact"],
+    global_content_view: "classic",
     global_remember_per_community: true,
   },
   Open_posts_in_new_tab: true,
@@ -219,4 +219,16 @@ app.post("/users/mute-unmute-community", (req, res) => {
   res.sendStatus(200);
 });
 
+let chatSettings = {
+  who_send_chat_request_flag: "Everyone",
+  who_send_private_messages_flag: "Everyone",
+};
+app.get("/users/chats-and-msgs-settings", (req, res) => {
+  res.status(200).json(chatSettings);
+});
+app.patch("/users/change-chats-and-msgs-settings", (req, res) => {
+  chatSettings[Object.keys(req.body)[0]] = Object.values(req.body)[0];
+  console.log(chatSettings);
+  res.sendStatus(200);
+});
 module.exports = app;

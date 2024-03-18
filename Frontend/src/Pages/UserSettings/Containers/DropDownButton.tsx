@@ -14,11 +14,15 @@ export default function DropDownButton(props: {
   buttonText?: string;
   buttonList?: string[];
   selected?: string;
+  handleSelectionChange?: (selectedItem: string) => void;
 }) {
   const [selectedItem, setSelectedItem] = React.useState(props.selected);
-  console.log(props.selected);
-  console.log(props.buttonList);
-
+  const handleItemClick = (item: string) => {
+    setSelectedItem(item);
+    if (props.handleSelectionChange) {
+      props.handleSelectionChange(item);
+    }
+  };
   return (
     <Menu>
       <MenuHandler>
@@ -41,7 +45,7 @@ export default function DropDownButton(props: {
             className={`border-b border-[#EDEFF1] uppercase rounded-none focus:text-blue-500 active:text-blue-500 hover:text-black font-medium ${selectedItem == item && 'text-blue-light hover:!text-blue-light'} `}
             key={`${item}${i}`}
             onClick={() => {
-              setSelectedItem(item);
+              handleItemClick(item);
             }}
           >
             {item}

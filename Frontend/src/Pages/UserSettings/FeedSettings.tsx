@@ -74,8 +74,15 @@ function FeedSettings() {
           description='Choose how you would like content organized in communities you visit. This will not affect global feeds such as Home, or Popular.'
         >
           <DropDownButton
-            buttonText='HOT'
-            buttonList={community_content_sort?.type}
+            buttonText={community_content_sort.type}
+            buttonList={['hot', 'new', 'top', 'rising']}
+            handleSelectionChange={(selectedItem) =>
+              handleToggleSwitch({
+                community_content_sort: {
+                  type: selectedItem,
+                },
+              })
+            }
           />
           <Card
             title='Remember per community'
@@ -98,9 +105,15 @@ function FeedSettings() {
           description='Choose how you would like content displayed in feeds. This control is also found above your feed.'
         >
           <DropDownButton
-            buttonText='Card'
-            //comment : missing icons
-            buttonList={global_content?.global_content_view}
+            buttonText={global_content.global_content_view}
+            buttonList={['card', 'classic', 'compact']}
+            handleSelectionChange={(selectedItem) =>
+              handleToggleSwitch({
+                global_content: {
+                  global_content_view: selectedItem,
+                },
+              })
+            }
           />
           {/* comment:check again */}
           <Card

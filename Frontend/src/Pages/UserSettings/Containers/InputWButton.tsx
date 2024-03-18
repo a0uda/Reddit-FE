@@ -17,7 +17,6 @@ function InputWButton(props: {
           label={props.label}
           size='lg'
           className='pr-20 w-full'
-          color='blue'
           containerProps={{
             className: 'min-w-5 ',
           }}
