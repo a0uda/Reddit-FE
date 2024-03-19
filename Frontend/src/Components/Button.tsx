@@ -7,7 +7,7 @@ interface ButtonProps {
   className?: string;
   content?: string;
   onSubmit?: (event: React.FormEvent<HTMLButtonElement>) => void;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Button: React.FC<ButtonProps> = ({

@@ -60,7 +60,8 @@ function Signup() {
     email: '',
   };
 
-  const handleButton = () => {
+  const handleButton = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     setStep(2);
   };
   return (
@@ -81,14 +82,16 @@ function Signup() {
       handleBackSign={step === 1 ? undefined : () => setStep(1)}
     >
       {step === 1 ? (
-        <div className='m-3 mb-5'>
-          <p>
-            Already a redditor?{' '}
-            <Link to='/login' className='text-decoration-none text-blue-500'>
-              Log In
-            </Link>
-          </p>
-        </div>
+        <>
+          <div className='m-3 mb-5'>
+            <p>
+              Already a redditor?{' '}
+              <Link to='/login' className='text-decoration-none text-blue-500'>
+                Log In
+              </Link>
+            </p>
+          </div>
+        </>
       ) : (
         <></>
       )}

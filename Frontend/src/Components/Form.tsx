@@ -9,6 +9,7 @@ import Button from './Button';
 import LoginWithGoogle from './LoginWithGoogle';
 import { IoArrowBackCircleOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
+import { FaCheckCircle } from 'react-icons/fa';
 type FormSchema = {
   login: {
     userName: string;
@@ -52,7 +53,7 @@ interface InputProps {
   LogWithGoogle?: string;
   formTitle?: string;
   formParagraph?: string;
-  handleButton?: () => void;
+  handleButton?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   backButton?: string;
   linkBackButton?: string;
   handleBackSign?: () => void;
@@ -91,23 +92,23 @@ const MyForm: React.FC<InputProps> = ({
           onSubmit={formik.handleSubmit}
         >
           <div className='flex justify-center'>
-            <div className='lg:w-96'>
+            <div className='lg:w-96  '>
               {backButton ? (
                 <div className='float-left'>
                   {handleBackSign ? (
                     <span onClick={handleBackSign}>
-                      <IoArrowBackCircleOutline />
+                      <IoArrowBackCircleOutline size={32} />
                     </span>
                   ) : (
                     <Link to={linkBackButton || '/'}>
-                      <IoArrowBackCircleOutline />
+                      <IoArrowBackCircleOutline size={32} />
                     </Link>
                   )}
                 </div>
               ) : null}
               <div className='float-right'>
                 {' '}
-                <AiOutlineCloseCircle />
+                <AiOutlineCloseCircle size={32} />
               </div>
               <FormHeader title={title} paragraph={paragraph} />
 
@@ -124,20 +125,34 @@ const MyForm: React.FC<InputProps> = ({
 
               {inputArr &&
                 inputArr.map((inp, i) => (
-                  <Input
-                    key={i}
-                    id={inp.id}
-                    type={inp.type}
-                    className={inp.className}
-                    placeholder={inp.placeholder}
-                    style={
-                      inp.style ? inp.style : { backgroundColor: '#DCDCDC' }
-                    }
-                    {...formik.getFieldProps(inp.id)}
-                    onChange={(e) => {
-                      formik.setFieldValue(inp.id, e.target.value);
-                    }}
-                  />
+                  <div key={i} className='relative'>
+                    <Input
+                      id={inp.id}
+                      type={inp.type}
+                      className={inp.className}
+                      placeholder={inp.placeholder}
+                      style={
+                        inp.style ? inp.style : { backgroundColor: '#DCDCDC' }
+                      }
+                      {...formik.getFieldProps(inp.id)}
+                      onChange={(e) => {
+                        formik.setFieldValue(inp.id, e.target.value);
+                      }}
+                    />
+                    {Object.keys(formik.errors).length === 0 &&
+                    Object.values(formik.values).every(
+                      (value) => value.trim() !== ''
+                    ) ? (
+                      <FaCheckCircle className='absolute right-3  top-1/2 -translate-y-1/2 text-green-500 ' />
+                    ) : null}
+                    {formik.touched[inp.id as keyof typeof formik.touched] &&
+                      formik.errors[inp.id as keyof typeof formik.errors] && (
+                        <div className='text-red-500 ps-3'>
+                          {formik.errors[inp.id as keyof typeof formik.errors]}
+                          {'*'}
+                        </div>
+                      )}
+                  </div>
                 ))}
               {children}
 
@@ -146,25 +161,38 @@ const MyForm: React.FC<InputProps> = ({
                   <Button
                     key={i}
                     style={
-                      Object.keys(formik.errors).length > 0 ||
-                      !Object.values(formik.values).every(
-                        (value) => value.trim() !== ''
-                      )
-                        ? { backgroundColor: '#DCDCDC' }
+                      typeof handleButton !== 'function'
+                        ? Object.keys(formik.errors).length > 0 ||
+                          !Object.values(formik.values).every(
+                            (value) => value.trim() !== ''
+                          )
+                          ? { backgroundColor: '#DCDCDC' }
+                          : { backgroundColor: '#FF4500' }
                         : { backgroundColor: '#FF4500' }
                     }
                     type={button.type}
                     className={
                       button.className +
-                      (Object.keys(formik.errors).length > 0 ||
-                      !Object.values(formik.values).every(
-                        (value) => value.trim() !== ''
-                      )
-                        ? ' text-gray-500'
+                      (typeof handleButton !== 'function'
+                        ? Object.keys(formik.errors).length > 0 ||
+                          !Object.values(formik.values).every(
+                            (value) => value.trim() !== ''
+                          )
+                          ? ' text-gray-500'
+                          : ' text-white'
                         : ' text-white')
                     }
                     content={button.content}
-                    onClick={handleButton}
+                    onClick={
+                      Object.values(formik.values).filter(
+                        (value) => value === ''
+                      ).length < 3 &&
+                      !Object.values(formik.errors).some(
+                        (error) => error === 'Invalid email'
+                      )
+                        ? handleButton
+                        : undefined
+                    }
                   />
                 ))}
             </div>
