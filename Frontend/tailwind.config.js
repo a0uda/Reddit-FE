@@ -52,7 +52,7 @@ export default withMT({
         pink: '#FF66AC',
         'pink-muted': '#CC5289',
         'danger-red': '#ff585b',
-        'lines- color': '#EDEFF1',
+        'lines-color': '#EDEFF1',
         'gray-light': '#7C7C7C',
     },
   },

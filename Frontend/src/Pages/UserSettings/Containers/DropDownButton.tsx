@@ -42,7 +42,7 @@ export default function DropDownButton(props: {
         {props.buttonList?.map((item, i) => (
           <MenuItem
             value={item}
-            className={`border-b border-[#EDEFF1] uppercase rounded-none focus:text-blue-500 active:text-blue-500 hover:text-black font-medium ${selectedItem == item && 'text-blue-light hover:!text-blue-light'} `}
+            className={`border-b border-lines-color uppercase rounded-none focus:text-blue-500 active:text-blue-500 hover:text-black font-[500] ${selectedItem == item && 'text-blue-light hover:!text-blue-light'} `}
             key={`${item}${i}`}
             onClick={() => {
               handleItemClick(item);
