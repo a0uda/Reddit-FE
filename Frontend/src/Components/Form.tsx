@@ -9,7 +9,10 @@ import Button from './Button';
 import LoginWithGoogle from './LoginWithGoogle';
 import { IoArrowBackCircleOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
+<<<<<<< HEAD
 import { FaCheckCircle } from 'react-icons/fa';
+=======
+>>>>>>> 236df0c (update cradentials)
 type FormSchema = {
   login: {
     userName: string;
@@ -53,7 +56,11 @@ interface InputProps {
   LogWithGoogle?: string;
   formTitle?: string;
   formParagraph?: string;
+<<<<<<< HEAD
   handleButton?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+=======
+  handleButton?: () => void;
+>>>>>>> 236df0c (update cradentials)
   backButton?: string;
   linkBackButton?: string;
   handleBackSign?: () => void;
@@ -97,18 +104,30 @@ const MyForm: React.FC<InputProps> = ({
                 <div className='float-left'>
                   {handleBackSign ? (
                     <span onClick={handleBackSign}>
+<<<<<<< HEAD
                       <IoArrowBackCircleOutline size={32} />
                     </span>
                   ) : (
                     <Link to={linkBackButton || '/'}>
                       <IoArrowBackCircleOutline size={32} />
+=======
+                      <IoArrowBackCircleOutline />
+                    </span>
+                  ) : (
+                    <Link to={linkBackButton || '/'}>
+                      <IoArrowBackCircleOutline />
+>>>>>>> 236df0c (update cradentials)
                     </Link>
                   )}
                 </div>
               ) : null}
               <div className='float-right'>
                 {' '}
+<<<<<<< HEAD
                 <AiOutlineCloseCircle size={32} />
+=======
+                <AiOutlineCloseCircle />
+>>>>>>> 236df0c (update cradentials)
               </div>
               <FormHeader title={title} paragraph={paragraph} />
 
@@ -125,6 +144,7 @@ const MyForm: React.FC<InputProps> = ({
 
               {inputArr &&
                 inputArr.map((inp, i) => (
+<<<<<<< HEAD
                   <div key={i} className='relative'>
                     <Input
                       id={inp.id}
@@ -153,6 +173,22 @@ const MyForm: React.FC<InputProps> = ({
                         </div>
                       )}
                   </div>
+=======
+                  <Input
+                    key={i}
+                    id={inp.id}
+                    type={inp.type}
+                    className={inp.className}
+                    placeholder={inp.placeholder}
+                    style={
+                      inp.style ? inp.style : { backgroundColor: '#DCDCDC' }
+                    }
+                    {...formik.getFieldProps(inp.id)}
+                    onChange={(e) => {
+                      formik.setFieldValue(inp.id, e.target.value);
+                    }}
+                  />
+>>>>>>> 236df0c (update cradentials)
                 ))}
               {children}
 
@@ -161,6 +197,7 @@ const MyForm: React.FC<InputProps> = ({
                   <Button
                     key={i}
                     style={
+<<<<<<< HEAD
                       typeof handleButton !== 'function'
                         ? Object.keys(formik.errors).length > 0 ||
                           !Object.values(formik.values).every(
@@ -168,11 +205,19 @@ const MyForm: React.FC<InputProps> = ({
                           )
                           ? { backgroundColor: '#DCDCDC' }
                           : { backgroundColor: '#FF4500' }
+=======
+                      Object.keys(formik.errors).length > 0 ||
+                      !Object.values(formik.values).every(
+                        (value) => value.trim() !== ''
+                      )
+                        ? { backgroundColor: '#DCDCDC' }
+>>>>>>> 236df0c (update cradentials)
                         : { backgroundColor: '#FF4500' }
                     }
                     type={button.type}
                     className={
                       button.className +
+<<<<<<< HEAD
                       (typeof handleButton !== 'function'
                         ? Object.keys(formik.errors).length > 0 ||
                           !Object.values(formik.values).every(
@@ -193,6 +238,17 @@ const MyForm: React.FC<InputProps> = ({
                         ? handleButton
                         : undefined
                     }
+=======
+                      (Object.keys(formik.errors).length > 0 ||
+                      !Object.values(formik.values).every(
+                        (value) => value.trim() !== ''
+                      )
+                        ? ' text-gray-500'
+                        : ' text-white')
+                    }
+                    content={button.content}
+                    onClick={handleButton}
+>>>>>>> 236df0c (update cradentials)
                   />
                 ))}
             </div>

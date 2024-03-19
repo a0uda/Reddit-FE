@@ -7,7 +7,11 @@ interface ButtonProps {
   className?: string;
   content?: string;
   onSubmit?: (event: React.FormEvent<HTMLButtonElement>) => void;
+<<<<<<< HEAD
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+=======
+  onClick?: () => void;
+>>>>>>> 236df0c (update cradentials)
 }
 
 const Button: React.FC<ButtonProps> = ({
