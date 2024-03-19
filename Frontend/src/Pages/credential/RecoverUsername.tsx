@@ -1,16 +1,8 @@
-<<<<<<< HEAD
 import MyForm from '../../Components/Form';
 import { ButtonType } from '../../validate/buttonType';
 import { Link } from 'react-router-dom';
 
 export default function RecoverUsername() {
-=======
-import { Link } from 'react-router-dom';
-import MyForm from '../../Components/Form';
-import { ButtonType } from '../../validate/buttonType';
-
-function RecoverUsername() {
->>>>>>> 236df0c (update cradentials)
   const inputArr = [
     {
       placeholder: 'Email*',
