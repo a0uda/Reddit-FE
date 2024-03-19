@@ -35,34 +35,6 @@ function Account() {
       </Section>
       <Section sectionTitle='CONNECTED ACCOUNTS'>
         <Card
-          title='Connect to Twitter'
-          description='Connect a Twitter account to enable the choice to tweet your new posts and display a link on your profile. We will never post to Twitter without your permission.'
-        >
-          <RoundedButton
-            buttonBorderColor='border-none'
-            buttonColor='bg-[#1da1f2]'
-            buttonText='Connect to Twitter'
-            buttonTextColor='text-white'
-          >
-            <img
-              src='https://docs.material-tailwind.com/icons/twitter.svg'
-              alt='metamask'
-              className='h-4 w-4 mx-2'
-            />
-          </RoundedButton>
-        </Card>
-        <Card
-          title='Connect to Apple'
-          description='Connect account to log in to Reddit with Apple'
-        >
-          <RoundedButton
-            buttonBorderColor='border-black'
-            buttonColor='bg-black'
-            buttonText='Connect to Apple'
-            buttonTextColor='text-white'
-          />
-        </Card>
-        <Card
           title='Connect to Google'
           description='Connect account to log in to Reddit with Google'
         >
