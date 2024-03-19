@@ -7,14 +7,14 @@ import Signup from './Pages/credential/Signup.tsx';
 import RecoverUsername from './Pages/credential/RecoverUsername.tsx';
 import ResetPassword from './Pages/credential/ResetPassword.tsx';
 import { Button } from '@material-tailwind/react';
+import UserSettings from './Pages/UserSettings/UserSettings';
 
 function App() {
   return (
     <div className='App'>
-      {/* <Button size='sm'>Button</Button> */}
       <Router>
         <Routes>
-          {/* <Route path='/settings/:page' element={<UserSettings />} /> */}
+          <Route path='/settings/:page' element={<UserSettings />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
           <Route path='/recoverUsername' element={<RecoverUsername />} />

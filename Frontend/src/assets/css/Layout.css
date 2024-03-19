@@ -1,18 +1,15 @@
-
 body {
- 
-  font-family:  "Segoe UI",Roboto,"Helvetica Neue",Arial,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol",sans-serif;
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif !important;
   margin: 0;
   border: 0;
-  
+  /* font-family: ''; */
 }
 
-
 :root {
-    --lightBlue: #0079D3;
-    --white: #FFFFFF;
-    --grey: #7C7C7C;
-    --black: #1C1C1C;
-    --dangerRed: #ff585b;
-    
-  }
+  --lightBlue: #0079d3;
+  --white: #ffffff;
+  --grey: #7c7c7c;
+  --black: #1c1c1c;
+  --dangerRed: #ff585b;
+}
