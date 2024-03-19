@@ -2,21 +2,22 @@ import React from 'react';
 import { Formik } from 'formik';
 import PropTypes from 'prop-types';
 import Validation from '../validate/validate';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { MdOutlineClose } from 'react-icons/md';
 import FormHeader from './FormHeader';
 import Input from './Input';
 import Button from './Button';
 import LoginWithGoogle from './LoginWithGoogle';
-import { IoArrowBackCircleOutline } from 'react-icons/io5';
+import { IoMdArrowBack } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 import { FaCheckCircle } from 'react-icons/fa';
+
 type FormSchema = {
   login: {
-    userName: string;
+    username: string;
     password: string;
   };
   signup: {
-    userName: string;
+    username: string;
     password: string;
     email: string;
   };
@@ -24,7 +25,7 @@ type FormSchema = {
     email: string;
   };
   resetPassword: {
-    userName: string;
+    username: string;
     email: string;
   };
 };
@@ -57,6 +58,8 @@ interface InputProps {
   backButton?: string;
   linkBackButton?: string;
   handleBackSign?: () => void;
+  HandleOnSubmitFunction: (values: unknown) => void;
+  errorMessage?: string;
 }
 
 const MyForm: React.FC<InputProps> = ({
@@ -72,6 +75,8 @@ const MyForm: React.FC<InputProps> = ({
   backButton,
   linkBackButton,
   handleBackSign,
+  HandleOnSubmitFunction,
+  errorMessage,
 }) => {
   const validateSchema = Validation(type || 'login');
 
@@ -80,6 +85,9 @@ const MyForm: React.FC<InputProps> = ({
       validationSchema={validateSchema}
       initialValues={initVal || {}}
       onSubmit={(values, { setSubmitting }) => {
+        if (HandleOnSubmitFunction) {
+          HandleOnSubmitFunction(values);
+        }
         setTimeout(() => {
           alert(JSON.stringify(values, null, 2));
           setSubmitting(false);
@@ -97,18 +105,18 @@ const MyForm: React.FC<InputProps> = ({
                 <div className='float-left'>
                   {handleBackSign ? (
                     <span onClick={handleBackSign}>
-                      <IoArrowBackCircleOutline size={32} />
+                      <IoMdArrowBack size={32} />
                     </span>
                   ) : (
                     <Link to={linkBackButton || '/'}>
-                      <IoArrowBackCircleOutline size={32} />
+                      <IoMdArrowBack size={32} />
                     </Link>
                   )}
                 </div>
               ) : null}
               <div className='float-right'>
                 {' '}
-                <AiOutlineCloseCircle size={32} />
+                <MdOutlineClose size={32} />
               </div>
               <FormHeader title={title} paragraph={paragraph} />
 
@@ -143,17 +151,20 @@ const MyForm: React.FC<InputProps> = ({
                     Object.values(formik.values).every(
                       (value) => value.trim() !== ''
                     ) ? (
-                      <FaCheckCircle className='absolute right-3  top-1/2 -translate-y-1/2 text-green-500 ' />
+                      <FaCheckCircle className='absolute right-3  top-1/2 -translate-y-1/2 text-green ' />
                     ) : null}
                     {formik.touched[inp.id as keyof typeof formik.touched] &&
                       formik.errors[inp.id as keyof typeof formik.errors] && (
-                        <div className='text-red-500 ps-3'>
+                        <div className='text-red ps-3'>
                           {formik.errors[inp.id as keyof typeof formik.errors]}
                           {'*'}
                         </div>
                       )}
                   </div>
                 ))}
+              {errorMessage ? (
+                <div className='text-red ps-3 mt-5'>{errorMessage}</div>
+              ) : null}
               {children}
 
               {ButtArr &&

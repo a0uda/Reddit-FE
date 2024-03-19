@@ -1,8 +1,13 @@
 import MyForm from '../../Components/Form';
 import { ButtonType } from '../../validate/buttonType';
 import { Link } from 'react-router-dom';
-
+import PopUp from '../../Components/PopUp';
+import { postRequest } from '../../API/User';
+import { useState } from 'react';
+import CheckEmail from './CheckEmail';
 export default function RecoverUsername() {
+  const [errorMessage, seterrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const inputArr = [
     {
       placeholder: 'Email*',
@@ -24,29 +29,57 @@ export default function RecoverUsername() {
     email: string;
   }
   const initialValues: InitialValues = { email: '' };
-  return (
-    <MyForm
-      type='recoverUsername'
-      title='Recover your username'
-      paragraph='Tell us the email address associated with your Reddit account,
-                    and we’ll send you an email with your username.'
-      inputArr={inputArr}
-      initVal={initialValues}
-      ButtArr={buttons}
-      backButton='backbutton'
-      linkBackButton='/login'
-    >
-      <div className='m-3 mt-10'>
-        <p>Don&apos;t have an email or need assistance logging in?</p>
-        <p>
-          <Link to='/login' className='text-decoration-none text-blue-500'>
-            Log In .
-          </Link>
-          <Link to='/signup' className='text-decoration-none text-blue-500'>
-            Sign Up
-          </Link>
-        </p>
-      </div>
-    </MyForm>
+  const handleOnSubmit = async (values: unknown) => {
+    try {
+      const response = await postRequest({
+        endPoint: 'users/forget-username',
+        data: values,
+      });
+      setSuccessMessage(response.message);
+      seterrorMessage('');
+    } catch (error) {
+      seterrorMessage('Invalid in sending Email');
+    }
+  };
+  return successMessage ? (
+    <CheckEmail
+      handleButtonEmail={() => setSuccessMessage('')}
+      handleBackArrow={() => setSuccessMessage('')}
+    />
+  ) : (
+    <PopUp>
+      <MyForm
+        type='recoverUsername'
+        title='Recover your username'
+        paragraph='Tell us the email address associated with your Reddit account, and we’ll send you an email with your username.'
+        inputArr={inputArr}
+        initVal={initialValues}
+        ButtArr={buttons}
+        backButton='backbutton'
+        linkBackButton='/login'
+        HandleOnSubmitFunction={handleOnSubmit}
+        errorMessage={errorMessage}
+      >
+        <div className='m-3 mt-10'>
+          <p>Don&apos;t have an email or need assistance logging in?</p>
+          <p>
+            <Link
+              to='/login'
+              className='text-decoration-none text-blue-500'
+              style={{ color: '#6366f1' }}
+            >
+              Log In .
+            </Link>
+            <Link
+              to='/signup'
+              className='text-decoration-none text-blue-500'
+              style={{ color: '#6366f1' }}
+            >
+              Sign Up
+            </Link>
+          </p>
+        </div>
+      </MyForm>
+    </PopUp>
   );
 }

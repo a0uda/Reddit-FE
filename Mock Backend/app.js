@@ -3,6 +3,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 
 app.use(
   cors({
@@ -231,4 +232,43 @@ app.patch("/users/change-chats-and-msgs-settings", (req, res) => {
   console.log(chatSettings);
   res.sendStatus(200);
 });
+
+let users = [];
+
+app.post("/users/signup", (req, res) => {
+  const { username, email, password } = req.body;
+
+  const newUser = {
+    username,
+    email,
+    password,
+  };
+  users.push(newUser);
+  const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1h" });
+  res.status(201).json({ message: "User created successfully", token });
+});
+
+app.post("/users/login", (req, res) => {
+  const { username, password } = req.body;
+  const user = users.find(
+    (user) => user.username === username && user.password === password
+  );
+
+  if (user) {
+    const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1h" });
+    res.status(200).json({ message: "Login successful", token });
+  } else {
+    res.status(401).json({ error: "Invalid username or password" });
+  }
+});
+
+app.post("/users/forget-username", (req, res) => {
+  const { email } = req.body;
+  res.status(200).json({ message: "Email sent successfully" });
+});
+app.post("/users/forget-password", (req, res) => {
+  const { username, email } = req.body;
+  res.status(200).json({ message: "Email sent successfully" });
+});
+
 module.exports = app;
