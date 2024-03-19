@@ -51,8 +51,11 @@ export default withMT({
         'violet-muted': '#5A74CC',
         pink: '#FF66AC',
         'pink-muted': '#CC5289',
-      },
+        'danger-red': '#ff585b',
+        'lines-color': '#EDEFF1',
+        'gray-light': '#7C7C7C',
     },
   },
+},
   plugins: [],
 });

@@ -1,25 +1,22 @@
-import React from 'react';
-import { Button } from 'react-bootstrap';
+import React, { ReactNode } from 'react';
 import RoundedButton from '../../../Components/RoundedButton';
 import imageSrc from '../../../assets/react.svg';
-function Card() {
+
+function Card(props: {
+  children?: ReactNode;
+  title?: string;
+  description?: string;
+  className?: string;
+}) {
   return (
-    <div className='d-flex justify-content-between'>
-      <div>
-        <h5 className='userSettingsCardHeader'>email</h5>
-        <p className='userSettingsCardContent'>
-          reem.khatab02@eng-st.cu.edu.eg
-        </p>
-      </div>
-      <div>
-        <RoundedButton
-          buttonBorderColor='blue'
-          buttonColor='white'
-          buttonText='change'
-          buttonTextColor='blue'
-          buttonImagePath={imageSrc}
-        />
-      </div>
+    <div className={`flex justify-between items-center ${props.className}`}>
+      {props.title && (
+        <div className=' w-[65%]'>
+          <h5 className='userSettingsCardHeader'>{props.title}</h5>
+          <p className='userSettingsCardContent text-sm'>{props.description}</p>
+        </div>
+      )}
+      {props.children}
     </div>
   );
 }

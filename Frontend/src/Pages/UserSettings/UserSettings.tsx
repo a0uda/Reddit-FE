@@ -1,7 +1,15 @@
 import React, { ReactNode } from 'react';
-import Card from './Containers/Card';
+
 import './Settings.css';
 import { Link, useParams } from 'react-router-dom';
+import Account from './Account';
+import Notifications from './Notifications';
+import SafetyPrivacy from './SafetyPrivacy';
+import InputBox from './Containers/InputWButton';
+import Profile from './Profile';
+import Email from './Email';
+import FeedSettings from './FeedSettings';
+import ChatsandMessaging from './ChatsandMessaging';
 
 const NavButton = (props: {
   active?: boolean | undefined;
@@ -32,7 +40,7 @@ const SubNavBar = (props: {
     'messaging',
   ];
   return (
-    <div className='d-flex border-bottom flex-wrap'>
+    <div className='flex border-b-[1px] border-[#EDEFF1] flex-wrap'>
       {props.buttonArray.map((butt, i) => (
         <NavButton
           key={`${i}${butt}`}
@@ -63,9 +71,22 @@ const UserSettings = () => {
         ]}
         active={page}
       />
-      <div className='userSettingsContent'>
-        <h2 className='fs-5 my-5'>Account Settings</h2>
-        <Card />
+      <div className='w-[46rem]'>
+        {page == 'account' ? (
+          <Account />
+        ) : page == 'profile' ? (
+          <Profile />
+        ) : page == 'email' ? (
+          <Email />
+        ) : page == 'notifications' ? (
+          <Notifications />
+        ) : page == 'privacy' ? (
+          <SafetyPrivacy />
+        ) : page == 'feed' ? (
+          <FeedSettings />
+        ) : (
+          <ChatsandMessaging />
+        )}
       </div>
     </div>
   );

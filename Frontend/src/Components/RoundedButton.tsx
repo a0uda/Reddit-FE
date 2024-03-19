@@ -1,25 +1,35 @@
-import React from 'react';
-import { Button } from 'react-bootstrap';
+import React, { MouseEventHandler, ReactNode } from 'react';
+import { Button } from '@material-tailwind/react';
+
 export default function RoundedButton(props: {
   buttonColor: string;
   buttonBorderColor: string;
   buttonText: string;
   buttonTextColor: string;
-  buttonImagePath?: string;
+  imgRight?: any;
+  children?: ReactNode;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
 }) {
   return (
     <Button
+      onClick={props.onClick}
       style={{
-        backgroundColor: props.buttonColor,
-        borderBlockColor: props.buttonBorderColor,
-        color: props.buttonTextColor,
+        //backgroundColor: props.buttonColor,
+        // color: props.buttonTextColor,
+        width: 'max-content',
       }}
-      className='rounded-pill d-flex align-items-center'
+      // color='black'
+      className={`!border ${props.buttonColor} ${props.buttonBorderColor} !normal-case ${props.buttonTextColor} hover:opacity-50 active:brightness-150 rounded-full hover:shadow-none focus:shadow-none shadow-none `}
+      size='sm'
+      ripple={false}
+      disabled={props.disabled || false}
     >
-      {/* {props.buttonImagePath && (
-        <img src={props.buttonImagePath} width='20px' height='auto'></img>
-      )} */}
-      {props.buttonText}
+      <div className='flex justify-between items-center gap-1'>
+        {props.children}
+        {props.buttonText}
+        {props.imgRight}
+      </div>
     </Button>
   );
 }
