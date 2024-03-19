@@ -1,14 +1,19 @@
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './assets/css/Layout.css';
-import UserSettings from './Pages/UserSettings/UserSettings';
+import Login from './Pages/credential/Login';
+import Signup from './Pages/credential/Signup';
+import RecoverUsername from './Pages/credential/RecoverUsername';
+import ResetPassword from './Pages/credential/ResetPassword';
 
 function App() {
   return (
     <div className='App'>
       <Router>
         <Routes>
-          <Route path='/settings/:page' element={<UserSettings />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/signup' element={<Signup />} />
+          <Route path='/recoverUsername' element={<RecoverUsername />} />
+          <Route path='/resetPassword' element={<ResetPassword />} />
         </Routes>
       </Router>
     </div>
