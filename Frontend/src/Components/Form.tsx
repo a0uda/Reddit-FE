@@ -100,7 +100,7 @@ const MyForm: React.FC<InputProps> = ({
           onSubmit={formik.handleSubmit}
         >
           <div className='flex justify-center'>
-            <div className='lg:w-96'>
+            <div className='lg:w-96  '>
               {backButton ? (
                 <div className='float-left'>
                   {handleBackSign ? (
