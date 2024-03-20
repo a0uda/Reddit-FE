@@ -55,9 +55,10 @@ const SubNavBar = (props: {
 
 const UserSettings = () => {
   const { page } = useParams();
+  console.log(page, 'hi');
 
   return (
-    <div className='userSettingsBody'>
+    <div className='px-[16px] pb-[40px] mx-0 md:!mx-[3rem]'>
       <h3 className='userSettingsHeader'>User settings</h3>
       <SubNavBar
         buttonArray={[

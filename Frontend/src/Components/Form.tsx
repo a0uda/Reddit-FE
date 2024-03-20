@@ -27,9 +27,12 @@ type FormSchema = {
     userName: string;
     email: string;
   };
+  disconnectGoogle: {
+    password: string;
+  }
 };
 
-interface InputProps {
+export interface InputProps {
   type?: keyof FormSchema;
   initVal?: object;
   title?: string;
@@ -41,7 +44,7 @@ interface InputProps {
     className: string;
     style?: React.CSSProperties;
   }>;
-  children: React.ReactElement<
+  children?: React.ReactElement<
     JSX.IntrinsicElements[keyof JSX.IntrinsicElements]
   >;
   ButtArr?: {
