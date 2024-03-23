@@ -25,7 +25,7 @@ export function PopularCommunities() {
           <List>
             {displayedCommunities.map((community, index) => (
               <CommunityItem
-                key={index} // You may need to change this key based on your data structure
+                key={index}
                 src={community.src}
                 name={community.name}
                 membersNumber={community.membersNumber}
