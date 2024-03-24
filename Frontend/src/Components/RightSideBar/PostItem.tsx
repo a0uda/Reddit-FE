@@ -1,20 +1,11 @@
 import React from 'react';
-import { useState } from 'react';
-import CommunityPopup from './CommunityPopup';
-import {
-  Avatar,
-  Typography,
-  Card,
-  CardBody,
-  CardFooter,
-  Popover,
-  PopoverHandler,
-  PopoverContent,
-} from '@material-tailwind/react';
+import { Avatar, Card, CardBody, CardFooter } from '@material-tailwind/react';
+import CommunityBadge from '../CommunityBadge';
 
 interface PostItemProps {
   //community data
-  communityAvatarSrc: string;
+  communityCoverImage: string;
+  communityIcon: string;
   communityName: string;
   joined: boolean;
   communityDescription: string;
@@ -28,13 +19,6 @@ interface PostItemProps {
 }
 
 const PostItem: React.FC<PostItemProps> = (props) => {
-  const [openPopover, setOpenPopover] = useState(false);
-
-  const triggers = {
-    onMouseEnter: () => setOpenPopover(true),
-    onMouseLeave: () => setOpenPopover(false),
-  };
-
   return (
     <div>
       <Card
@@ -47,39 +31,15 @@ const PostItem: React.FC<PostItemProps> = (props) => {
           className='mx-0 flex items-start gap-4 pt-0 pb-2 p-0 m-0'
         >
           <div className='flex flex-col justify-start gap-2 pt-0 m-0'>
-            <Popover open={openPopover} handler={setOpenPopover}>
-              <PopoverHandler {...triggers}>
-                <div className='flex justify-start items-center gap-2 pt-0'>
-                  <Avatar
-                    variant='circular'
-                    alt='candice'
-                    src={props.communityAvatarSrc}
-                    style={{ width: '25px', height: '25px' }}
-                  />
-                  <Typography
-                    variant='small'
-                    className='font-body font-thin -tracking-tight text-xs text-gray-600'
-                  >
-                    <a href='' className='hover:underline'>
-                      {props.communityName}
-                    </a>
-                  </Typography>
-                </div>
-              </PopoverHandler>
-              <PopoverContent
-                {...triggers}
-                className='z-50 max-w-[24rem] rounded-2xl'
-              >
-                <CommunityPopup
-                  communityAvatarSrc={props.communityAvatarSrc}
-                  communityName={props.communityName}
-                  joined={props.joined}
-                  communityDescription={props.communityDescription}
-                  communityMembers={props.communityMembers}
-                  communityOnline={props.communityOnline}
-                />
-              </PopoverContent>
-            </Popover>
+            <CommunityBadge
+              name={props.communityName}
+              joined={props.joined}
+              icon={props.communityIcon}
+              coverImage={props.communityCoverImage}
+              description={props.communityDescription}
+              members={props.communityMembers}
+              online={props.communityOnline}
+            />
             <p className='font-body font-bold -tracking-tight text-xs text-gray-700 line-clamp-2 overflow-hidden text-ellipsis'>
               {props.postDescription}
             </p>

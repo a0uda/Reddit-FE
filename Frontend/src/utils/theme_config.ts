@@ -7,7 +7,7 @@ const button: ButtonStyleTypes = {
     // color: string,
     // fullWidth: boolean,
     // ripple: boolean,
-    className: 'rounded-full font-medium p-3',
+    className: 'rounded-full font-medium p-3 normal-case',
   },
   valid: {
     variants: ['filled'],

@@ -36,7 +36,8 @@ export function RecentPosts() {
             {postList.map((post, index) => (
               <div key={index}>
                 <PostItem
-                  communityAvatarSrc={post.communityAvatarSrc}
+                  communityCoverImage={post.communityAvatarSrc}
+                  communityIcon={post.communityAvatarSrc}
                   communityName={post.communityName}
                   joined={post.joined}
                   communityDescription={post.communityDescription}
