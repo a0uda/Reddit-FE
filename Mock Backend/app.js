@@ -12,6 +12,45 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
+const accountSettings = {
+  account_settings: {
+    email: "ahmedkhaled1029@gmail.com",
+    verified_email_flag: "string",
+    country: "Egypt",
+    gender: "Male",
+    gmail: "ahmedkhaled1029@gmail.com",
+    connected_google: true,
+  },
+};
+
+app.get("/users/account-settings", (req, res) => {
+  res.status(200).json(accountSettings);
+});
+
+app.patch("/users/change-account-settings", (req, res) => {
+  accountSettings.account_settings[Object.keys(req.body)[0]] = Object.values(
+    req.body
+  )[0];
+});
+app.post("/users/disconnect-google", (req, res) => {
+  const { password } = req.body;
+  console.log(password);
+  accountSettings.account_settings.connected_google = false;
+  console.log(accountSettings);
+  res.sendStatus(200);
+});
+
+app.patch("/users/change-email", (req, res) => {
+  const { password, new_email } = req.body;
+  accountSettings.account_settings.email = new_email;
+  res.sendStatus(200);
+});
+
+app.post("/users/delete-account", (req, res) => {
+  accountSettings.account_settings = {};
+  console.log(accountSettings)
+  res.sendStatus(200);
+});
 
 let profileSettings = {
   profile_settings: {

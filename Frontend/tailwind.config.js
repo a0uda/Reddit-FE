@@ -26,7 +26,7 @@ export default withMT({
         'neutral-900': '#7A9299',
         foreground: '#000000',
         background: '#FFFFFF',
-        red: '#EA0027',
+        // red: '#EA0027',
         'red-muted': '#B8001F',
         orange: '#FF4500',
         'orange-muted': '#CC3600',
@@ -54,8 +54,11 @@ export default withMT({
         'danger-red': '#ff585b',
         'lines-color': '#EDEFF1',
         'gray-light': '#7C7C7C',
+      },
+      width: {
+        'fit-content': 'fit-content',
+      },
     },
   },
-},
   plugins: [],
 });

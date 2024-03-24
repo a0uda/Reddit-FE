@@ -38,7 +38,7 @@ export default function DropDownButton(props: {
           />
         </Button>
       </MenuHandler>
-      <MenuList className='m-0 p-0'>
+      <MenuList className='m-0 p-0 max-h-[15rem]'>
         {props.buttonList?.map((item, i) => (
           <MenuItem
             value={item}
