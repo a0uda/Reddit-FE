@@ -9,13 +9,13 @@ import {
   Typography,
 } from '@material-tailwind/react';
 import {
-  UserCircleIcon,
   HomeIcon,
-  ArrowTrendingUpIcon,
-  ChartBarSquareIcon,
   ChevronDownIcon,
   ShieldCheckIcon,
   PlusIcon,
+  DocumentTextIcon,
+  PhotoIcon,
+  LinkIcon,
 } from '@heroicons/react/24/solid';
 import { ReactNode, useState } from 'react';
 import { CommunityIcon } from '../assets/icons/Icons';
@@ -23,52 +23,44 @@ import { CommunityIcon } from '../assets/icons/Icons';
 const SideBar = ({ className }: { className?: string }) => {
   const moderation = [
     {
-      title: 'Mod Queue',
-      icon: <ShieldCheckIcon className='h-5 w-5' />,
-    },
-    {
       title: 'r/Mod',
       icon: <ShieldCheckIcon className='h-5 w-5' />,
+      link: '/r/Mod',
     },
   ];
+  // BE
   const recent = [
     {
       title: 'r/SWECommunity',
       icon: <CommunityIcon className='h-5 w-5' />,
+      link: '/r/SWECommunity',
     },
     {
       title: 'r/gamming',
       icon: <CommunityIcon className='h-5 w-5' />,
+      link: '/r/gamming',
     },
     {
       title: 'r/AhayEveryDay',
       icon: <CommunityIcon className='h-5 w-5' />,
+      link: '/r/AhayEveryDay',
     },
   ];
-  const resources = [
+  const createPost = [
     {
-      title: 'About Reddit',
-      icon: <CommunityIcon className='h-5 w-5' />,
+      title: 'Input Text',
+      icon: <DocumentTextIcon className='h-5 w-5' />,
+      link: '/submit?type=text',
     },
     {
-      title: 'Advertise',
-      icon: <CommunityIcon className='h-5 w-5' />,
+      title: 'Image & Video',
+      icon: <PhotoIcon className='h-5 w-5' />,
+      link: '/submit?type=media',
     },
     {
-      title: 'Help',
-      icon: <CommunityIcon className='h-5 w-5' />,
-    },
-    {
-      title: 'Blog',
-      icon: <CommunityIcon className='h-5 w-5' />,
-    },
-    {
-      title: 'Careers',
-      icon: <CommunityIcon className='h-5 w-5' />,
-    },
-    {
-      title: 'Press',
-      icon: <CommunityIcon className='h-5 w-5' />,
+      title: 'Link',
+      icon: <LinkIcon className='h-5 w-5' />,
+      link: '/submit?type=link',
     },
   ];
   return (
@@ -80,79 +72,46 @@ const SideBar = ({ className }: { className?: string }) => {
         }
       >
         <List className='text-black *:text-black px-0 min-w-0'>
-          <ListItem>
-            <ListItemPrefix>
-              <HomeIcon className='h-5 w-5' />
-            </ListItemPrefix>
-            Home
-          </ListItem>
-          <ListItem>
-            <ListItemPrefix>
-              <ArrowTrendingUpIcon className='h-5 w-5' />
-            </ListItemPrefix>
-            Popular
-          </ListItem>
-          <ListItem>
-            <ListItemPrefix>
-              <ChartBarSquareIcon className='h-5 w-5' />
-            </ListItemPrefix>
-            All
-          </ListItem>
+          <ListItemComponent
+            icon={<HomeIcon className='h-5 w-5' />}
+            title='Home'
+            link='/'
+          />
           <hr className='my-2 border-blue-gray-50' />
-          {/* Moderation: Accordion */}
           <AccordionDropDown title='Moderation' list={moderation} />
           <hr className='my-2 border-blue-gray-50' />
-          <ListItem>
-            <ListItemPrefix>
-              <PlusIcon className='h-5 w-5' />
-            </ListItemPrefix>
-            Create Community
-          </ListItem>
           <AccordionDropDown title='Recent' list={recent} />
           <hr className='my-2 border-blue-gray-50' />
-          <AccordionDropDown title='Resources' list={resources} />
+          {/* BE */}
+          <AccordionDropDown title='Communities' list={recent}>
+            <ListItemComponent
+              icon={<PlusIcon className='h-5 w-5' />}
+              title='Create Community'
+            />
+          </AccordionDropDown>
           <hr className='my-2 border-blue-gray-50' />
-          <ListItem>
-            <ListItemPrefix>
-              <UserCircleIcon className='h-5 w-5' />
-            </ListItemPrefix>
-            Communities
-          </ListItem>
-          <ListItem>
-            <ListItemPrefix>
-              <UserCircleIcon className='h-5 w-5' />
-            </ListItemPrefix>
-            Best of Reddit
-          </ListItem>
-          <ListItem>
-            <ListItemPrefix>
-              <UserCircleIcon className='h-5 w-5' />
-            </ListItemPrefix>
-            Topics
-          </ListItem>
-          <hr className='my-2 border-blue-gray-50' />
-          <ListItem>
-            <ListItemPrefix>
-              <UserCircleIcon className='h-5 w-5' />
-            </ListItemPrefix>
-            Content Policy
-          </ListItem>
-          <ListItem>
-            <ListItemPrefix>
-              <UserCircleIcon className='h-5 w-5' />
-            </ListItemPrefix>
-            Privacy Policy
-          </ListItem>
-          <ListItem>
-            <ListItemPrefix>
-              <UserCircleIcon className='h-5 w-5' />
-            </ListItemPrefix>
-            User Agreement
-          </ListItem>
+          <AccordionDropDown title='Create Post' list={createPost} />
           <hr className='my-2 border-blue-gray-50' />
         </List>
       </Card>
     </>
+  );
+};
+
+type ListItemProps = {
+  icon: ReactNode;
+  title: string;
+  link?: string;
+};
+
+const ListItemComponent = ({ icon, title, link }: ListItemProps) => {
+  return (
+    <a href={link}>
+      <ListItem>
+        <ListItemPrefix>{icon}</ListItemPrefix>
+        {title}
+      </ListItem>
+    </a>
   );
 };
 
@@ -161,10 +120,16 @@ type AccordionDropDownProps = {
   list: {
     title: string;
     icon: ReactNode;
+    link?: string;
   }[];
+  children?: ReactNode;
 };
 
-const AccordionDropDown = ({ title, list }: AccordionDropDownProps) => {
+const AccordionDropDown = ({
+  title,
+  list,
+  children,
+}: AccordionDropDownProps) => {
   const [open, setOpen] = useState(true);
 
   return (
@@ -190,12 +155,16 @@ const AccordionDropDown = ({ title, list }: AccordionDropDownProps) => {
         </ListItem>
         <AccordionBody className='py-1'>
           <List className='p-0 text-black'>
+            {children}
             {list.map((item, index) => (
               <div key={index}>
-                <ListItem>
-                  <ListItemPrefix>{item.icon}</ListItemPrefix>
-                  {item.title}
-                </ListItem>
+                <a href={item.link}>
+                  <ListItem>
+                    <ListItemPrefix>{item.icon}</ListItemPrefix>
+
+                    {item.title}
+                  </ListItem>
+                </a>
               </div>
             ))}
           </List>
