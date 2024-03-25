@@ -1,3 +1,10 @@
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 export const dateDuration = (date: Date) => {
   const now: Date = new Date(Date.now());
   const durationInMilliseconds = now.getTime() - date.getTime();

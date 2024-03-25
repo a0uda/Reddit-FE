@@ -9,12 +9,35 @@ const Mainfeed = () => {
   return (
     <>
       <div className='mx-16 grid grid-col-1 lg:grid-cols-16 gap-6'>
-        <SideBar className='col-span-3' />
+        <div className='lg-max:hidden col-span-3'>
+          <SideBar />
+        </div>
         <Card className='shadow-none col-span-9'>
-          <CardBody className='px-0 h-full overflow-auto'>
+          <CardBody className='px-0 h-[calc(100vh-3.5rem)] overflow-auto'>
             {/* Sort by dropdown */}
             <SortOptions />
             <hr className='border-neutral-muted' />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
             <Post />
           </CardBody>
         </Card>
