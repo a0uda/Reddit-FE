@@ -7,6 +7,7 @@ import ResetPassword from './Pages/credential/ResetPassword.tsx';
 import UserSettings from './Pages/UserSettings/UserSettings';
 import NavigationBar from './Components/NavigationBar.tsx';
 import OfflineAlert from './Components/OfflineAlert.tsx';
+import Mainfeed from './Pages/Mainfeed.tsx';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Router>
         <NavigationBar />
         <Routes>
+          <Route path='/' element={<Mainfeed />} />
           <Route path='/settings/:page' element={<UserSettings />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />

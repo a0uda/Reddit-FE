@@ -115,7 +115,7 @@ export function NavigationBar() {
         <Drawer
           open={openNav}
           onClose={() => setOpenNav(false)}
-          className='absolute left-0 mt-14 p-4'
+          className='absolute left-0 p-4'
         >
           <div className='flex items-center justify-between'>
             <LogoMark />
@@ -343,6 +343,8 @@ const CampainLoggedIn = () => {
 
   const [avatarDrawer, setAvatarDrawer] = useState(false);
 
+  const numberOfMessages = 2;
+
   const avatarMenu = (
     <>
       <List className='p-0 text-foreground w-full'>
@@ -396,21 +398,23 @@ const CampainLoggedIn = () => {
     <>
       <div className='flex items-center gap-x-1'>
         <MobileSearchBar />
-        <Badge overlap='circular'>
+        <Badge
+          overlap='circular'
+          content={numberOfMessages}
+          className={numberOfMessages === 0 ? 'hidden' : ''}
+        >
           <a href='/chat'>
             <IconButton variant='text'>
               <ChatBubbleOvalLeftEllipsisIcon className='w-6 h-6' />
             </IconButton>
           </a>
         </Badge>
-        <Badge overlap='circular' color='red'>
-          <a href='/submit'>
-            <Button variant='text' className='flex items-center gap-1.5'>
-              <PlusIcon className='w-6 h-6' />
-              Create
-            </Button>
-          </a>
-        </Badge>
+        <a href='/submit'>
+          <Button variant='text' className='flex items-center gap-1.5'>
+            <PlusIcon className='w-6 h-6' />
+            Create
+          </Button>
+        </a>
         <Menu
           dismiss={{
             itemPress: false,
