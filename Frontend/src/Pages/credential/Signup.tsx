@@ -83,7 +83,7 @@ function Signup() {
     >
       {step === 1 ? (
         <>
-          <div className='m-3 mb-5'>
+          <div className='m-3 mb-5 w-full'>
             <p>
               Already a redditor?{' '}
               <Link to='/login' className='text-decoration-none text-blue-500'>

@@ -21,6 +21,11 @@ type FormSchema = {
   disconnectGoogle: {
     password: yup.Schema<string>;
   };
+  changePassword: {
+    password: yup.Schema<string>;
+    newPassword: yup.Schema<string>;
+    confirmNewPassword: yup.Schema<string>;
+  };
 };
 
 const Validation = (type: keyof FormSchema) => {
@@ -43,6 +48,11 @@ const Validation = (type: keyof FormSchema) => {
     },
     disconnectGoogle: {
       password: validationSchema['password'],
+    },
+    changePassword: {
+      password: validationSchema['password'],
+      newPassword: validationSchema['newPassword'],
+      confirmNewPassword: validationSchema['confirmNewPassword'],
     },
   };
 

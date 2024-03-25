@@ -72,7 +72,7 @@ const UserSettings = () => {
         ]}
         active={page}
       />
-      <div className='w-[46rem]'>
+      <div className='max-w-[46rem]'>
         {page == 'account' ? (
           <Account />
         ) : page == 'profile' ? (

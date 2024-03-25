@@ -12,6 +12,7 @@ import {
   ChangeEmailModal,
   ChangeEmailModalError,
   DisconnectGoogleModal,
+  ChangePasswordModal,
 } from './Containers/AccountModals';
 
 function Account() {
@@ -27,6 +28,10 @@ function Account() {
   const [changeEmailModal, setChangeEmailModal] = React.useState(false);
   const toggleEmailModal = () => {
     setChangeEmailModal(!changeEmailModal);
+  };
+  const [changePasswordModal, setChangePasswordModal] = React.useState(false);
+  const togglePasswordModal = () => {
+    setChangePasswordModal(!changePasswordModal);
   };
   const [disconnectGoogleModal, setDisconnectGoogleModal] =
     React.useState(false);
@@ -51,6 +56,7 @@ function Account() {
     gmail,
     gender,
     country,
+    hasPassword,
   } = data?.data.account_settings || {};
 
   return (
@@ -68,13 +74,30 @@ function Account() {
       />
       <h2 className='text-xl my-8 font-semibold'>Account Settings</h2>
       <Section sectionTitle='ACCOUNT PREFERENCES'>
-        <Card title='Email' description={email}>
+        <Card title='Email address' description={email}>
           <RoundedButton
             buttonBorderColor='border-blue-light'
             buttonColor='bg-white'
             buttonText='Change'
             buttonTextColor='text-blue-light'
-            onClick={toggleEmailModal}
+            onClick={hasPassword ? toggleEmailModal : toggleEmailModalError}
+          />
+        </Card>
+        <ChangePasswordModal
+          handleOpen={togglePasswordModal}
+          open={changePasswordModal}
+          refetch={refetch}
+        />
+        <Card
+          title='Change password'
+          description='Password must be at least 8 characters long'
+        >
+          <RoundedButton
+            buttonBorderColor='border-blue-light'
+            buttonColor='bg-white'
+            buttonText='Change'
+            buttonTextColor='text-blue-light'
+            onClick={togglePasswordModal}
           />
         </Card>
         <Card

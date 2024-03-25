@@ -44,6 +44,8 @@ function ImageInput(props: {
           style={{
             backgroundImage: `url(${selectedImage})`,
             backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
           }}
           htmlFor={props.id}
           className={`border  border-[#d7d7d7] border-dashed rounded-lg bg-[#F6F7F8] p-[2rem] flex items-center justify-center flex-col text-blue-light cursor-pointer`}

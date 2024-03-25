@@ -20,6 +20,7 @@ const accountSettings = {
     gender: "Male",
     gmail: "ahmedkhaled1029@gmail.com",
     connected_google: true,
+    hasPassword: true
   },
 };
 
@@ -43,6 +44,12 @@ app.post("/users/disconnect-google", (req, res) => {
 app.patch("/users/change-email", (req, res) => {
   const { password, new_email } = req.body;
   accountSettings.account_settings.email = new_email;
+  res.sendStatus(200);
+});
+app.patch("/users/change-password", (req, res) => {
+
+  const { current_password, new_password, verified_new_password } = req.body;
+  // accountSettings.account_settings.email = new_email;
   res.sendStatus(200);
 });
 
