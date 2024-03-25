@@ -20,6 +20,7 @@ const accountSettings = {
     gender: "Male",
     gmail: "ahmedkhaled1029@gmail.com",
     connected_google: true,
+    hasPassword: true,
   },
 };
 
@@ -45,10 +46,15 @@ app.patch("/users/change-email", (req, res) => {
   accountSettings.account_settings.email = new_email;
   res.sendStatus(200);
 });
+app.patch("/users/change-password", (req, res) => {
+  const { current_password, new_password, verified_new_password } = req.body;
+  // accountSettings.account_settings.email = new_email;
+  res.sendStatus(200);
+});
 
 app.post("/users/delete-account", (req, res) => {
   accountSettings.account_settings = {};
-  console.log(accountSettings)
+  console.log(accountSettings);
   res.sendStatus(200);
 });
 
@@ -271,3 +277,228 @@ app.patch("/users/change-chats-and-msgs-settings", (req, res) => {
   res.sendStatus(200);
 });
 module.exports = app;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+let popularComunities = [
+  {
+    id: 1,
+    src: "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    name: "r/sports",
+    membersNumber: 1234,
+  },
+  {
+    id: 2,
+    src: "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    name: "r/programming",
+    membersNumber: 2000,
+  },
+  {
+    id: 3,
+    src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+    name: "r/Music",
+    membersNumber: 1500,
+  },
+  {
+    id: 4,
+    src: "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    name: "r/sports",
+    membersNumber: 1000,
+  },
+  {
+    id: 5,
+    src: "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    name: "r/programming",
+    membersNumber: 2000,
+  },
+  {
+    id: 6,
+    src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+    name: "r/Music",
+    membersNumber: 1500,
+  },
+  {
+    id: 7,
+    src: "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    name: "r/sports",
+    membersNumber: 1000,
+  },
+  {
+    id: 8,
+    src: "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    name: "r/programming",
+    membersNumber: 2000,
+  },
+  {
+    id: 9,
+    src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+    name: "r/Music",
+    membersNumber: 1500,
+  },
+];
+app.get("/communities/get-popular-communities", (req, res) => {
+  res.status(200).json(popularComunities);
+});
+
+let recentPostsList = [
+  {
+    id: "1",
+    user_id: "user123",
+    username: "john_doe",
+    title: "My First Post",
+    description:
+      "This is how Kellyn Acosta won it for the Chicago Fire in the 99th minute",
+    created_at: "2024-03-25",
+    edited_at: "2024-03-25",
+    deleted_at: "2024-03-25",
+    type: "image_and_videos",
+    link_url: "https://example.com",
+    images: [
+      {
+        path: "image1.jpg",
+        caption: "Image caption 1",
+        link: "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+      },
+      {
+        path: "image2.jpg",
+        caption: "Image caption 2",
+        link: "https://example.com/image2",
+      },
+    ],
+    videos: [
+      {
+        path: "video1.mp4",
+        caption: "Video caption 1",
+        link: "https://example.com/video1",
+      },
+    ],
+    poll: {
+      options: ["Option 1", "Option 2", "Option 3"],
+      votes: [10, 5, 7],
+    },
+    community_id: "community123",
+    "community-name": "r/sports",
+    comments_count: 9,
+    // added //
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    communityCoverSrc:
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    joined: true,
+    communityDescription:
+      "Sports news and discussion about sports culture and sports history",
+    communityMembers: 356,
+    communityOnline: 12,
+    //
+    views_count: 100,
+    shares_count: 20,
+    upvotes_count: 8,
+    downvotes_count: 5,
+    oc_flag: true,
+    spoiler_flag: false,
+    nsfw_flag: false,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "None (Recommended)",
+    moderator_details: {
+      approved_by: "moderator1",
+      approved_date: "2024-03-25",
+      removed_by: null,
+      removed_date: null,
+      spammed_by: null,
+      spammed_type: null,
+    },
+    user_details: {
+      total_views: 1000,
+      upvote_rate: 0.5,
+      total_shares: 30,
+    },
+  },
+  {
+    id: "2",
+    user_id: "user123",
+    username: "john_doe",
+    title: "My First Post",
+    description:
+      "This is how Kellyn Acosta won it for the Chicago Fire in the 99th minute",
+    created_at: "2024-03-25",
+    edited_at: "2024-03-25",
+    deleted_at: "2024-03-25",
+    type: "image_and_videos",
+    link_url: "https://example.com",
+    images: [
+      {
+        path: "image1.jpg",
+        caption: "Image caption 1",
+        link: "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+      },
+      {
+        path: "image2.jpg",
+        caption: "Image caption 2",
+        link: "https://example.com/image2",
+      },
+    ],
+    videos: [
+      {
+        path: "video1.mp4",
+        caption: "Video caption 1",
+        link: "https://example.com/video1",
+      },
+    ],
+    poll: {
+      options: ["Option 1", "Option 2", "Option 3"],
+      votes: [10, 5, 7],
+    },
+    community_id: "community123",
+    "community-name": "r/programming",
+    comments_count: 20,
+    // added //
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    communityCoverSrc:
+      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    joined: false,
+    communityDescription:
+      "programming news and discussion about programming culture and programming history",
+    communityMembers: 2114,
+    communityOnline: 63,
+    //
+    views_count: 100,
+    shares_count: 20,
+    upvotes_count: 57,
+    downvotes_count: 5,
+    oc_flag: true,
+    spoiler_flag: false,
+    nsfw_flag: false,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "None (Recommended)",
+    moderator_details: {
+      approved_by: "moderator1",
+      approved_date: "2024-03-25",
+      removed_by: null,
+      removed_date: null,
+      spammed_by: null,
+      spammed_type: null,
+    },
+    user_details: {
+      total_views: 1000,
+      upvote_rate: 0.5,
+      total_shares: 30,
+    },
+  },
+];
+
+app.get("/communities/get-history-posts", (req, res) => {
+  res.status(200).json(recentPostsList);
+});
+
+app.post("/users/join-community", (req, res) => {
+  const { joined } = req.body;
+  joined.push({
+    joined: joined,
+  });
+  res.sendStatus(200);
+});

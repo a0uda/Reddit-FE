@@ -1,14 +1,32 @@
 import { useState } from 'react';
 import { List, Card, Typography } from '@material-tailwind/react';
 import CommunityItem from './CommunityItem';
-import communityList from './CommunityList.ts';
+// import communityList from './CommunityList.ts';
+import { useQuery } from 'react-query';
+import { fetchRequest } from '../../API/User';
+import LoadingProvider from '../LoadingProvider';
+
+interface CommunityItemProps {
+  src: string;
+  name: string;
+  membersNumber: number;
+}
 
 export function PopularCommunities() {
   const [showAll, setShowAll] = useState(false);
 
+  const { data, error, isLoading } = useQuery('popular communities data', () =>
+    fetchRequest('communities/get-popular-communities')
+  );
+  console.log(data);
+
+  const communityList = data?.data ?? [];
+
   const displayedCommunities = showAll
     ? communityList
     : communityList.slice(0, 5);
+
+  console.log(displayedCommunities);
 
   return (
     <div
@@ -21,36 +39,40 @@ export function PopularCommunities() {
         >
           POPULAR COMMUNITIES
         </Typography>
-        <div>
-          <List>
-            {displayedCommunities.map((community, index) => (
-              <CommunityItem
-                key={index}
-                src={community.src}
-                name={community.name}
-                membersNumber={community.membersNumber}
-              />
-            ))}
-          </List>
-          {!showAll && (
-            <button
-              style={{ width: '75px', height: '35px' }}
-              className='hover:bg-gray-300 rounded-full font-body font-thin -tracking-tight text-xs text-gray-900'
-              onClick={() => setShowAll(true)}
-            >
-              See more
-            </button>
-          )}
-          {showAll && (
-            <button
-              style={{ width: '75px', height: '35px' }}
-              className='hover:bg-gray-300 rounded-full font-body font-thin -tracking-tight text-xs text-gray-900'
-              onClick={() => setShowAll(false)}
-            >
-              See less
-            </button>
-          )}
-        </div>
+        <LoadingProvider error={error} isLoading={isLoading}>
+          <div>
+            <List>
+              {displayedCommunities.map(
+                (community: CommunityItemProps, index: number) => (
+                  <CommunityItem
+                    key={index}
+                    src={community.src}
+                    name={community.name}
+                    membersNumber={community.membersNumber}
+                  />
+                )
+              )}
+            </List>
+            {!showAll && (
+              <button
+                style={{ width: '75px', height: '35px' }}
+                className='hover:bg-gray-300 rounded-full font-body font-thin -tracking-tight text-xs text-gray-900'
+                onClick={() => setShowAll(true)}
+              >
+                See more
+              </button>
+            )}
+            {showAll && (
+              <button
+                style={{ width: '75px', height: '35px' }}
+                className='hover:bg-gray-300 rounded-full font-body font-thin -tracking-tight text-xs text-gray-900'
+                onClick={() => setShowAll(false)}
+              >
+                See less
+              </button>
+            )}
+          </div>
+        </LoadingProvider>
       </Card>
     </div>
   );
