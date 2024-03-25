@@ -11,9 +11,9 @@ import OfflineAlert from './Components/OfflineAlert.tsx';
 function App() {
   return (
     <div className='App'>
-      <NavigationBar />
       <OfflineAlert />
       <Router>
+        <NavigationBar />
         <Routes>
           <Route path='/settings/:page' element={<UserSettings />} />
           <Route path='/login' element={<Login />} />

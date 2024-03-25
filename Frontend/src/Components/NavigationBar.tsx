@@ -13,6 +13,11 @@ import {
   Drawer,
   List,
   ListItem,
+  ListItemPrefix,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  ListItemSuffix,
 } from '@material-tailwind/react';
 import {
   HiArrowRightOnRectangle,
@@ -24,15 +29,20 @@ import {
 import { LogoMark, LogoText } from '../assets/icons/Logo';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import {
+  ArrowLeftIcon,
   ArrowRightEndOnRectangleIcon,
   BellIcon,
   ChatBubbleOvalLeftEllipsisIcon,
+  ClockIcon,
   Cog8ToothIcon,
   ShieldCheckIcon,
+  XCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import SideBar from './SideBar';
 import { cn } from '../utils/helper_functions';
+import { CommunityIcon } from '../assets/icons/Icons';
+import { useNavigate } from 'react-router-dom';
 
 export function NavigationBar() {
   const [openNav, setOpenNav] = useState(false);
@@ -48,7 +58,7 @@ export function NavigationBar() {
 
   return (
     <div className='px-4'>
-      <nav className='m-0 px-4 flex flex-row justify-between border-b-[1px] border-b-neutral-muted h-14 w-full'>
+      <nav className='m-0 p-0 flex flex-row justify-between border-b-[1px] border-b-neutral-muted h-14 w-full'>
         <div className=' flex items-center col-span-4 gap-2 p-0'>
           <IconButton
             variant='text'
@@ -127,48 +137,166 @@ const SearchBar = () => {
 
   return (
     <>
-      <div
+      {/* <div
         onFocus={() => {
           setIsFocused(true);
           inputRef.current?.focus();
         }}
-        onBlur={() => {
-          console.log('blur');
-          setIsFocused(false);
-        }}
+        // onBlur={() => {
+        //   console.log('blur');
+        //   setIsFocused(false);
+        // }}
         className={cn(
-          'flex items-center space-x-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-50 max-w-[550px] w-full',
+          'flex flex-col gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-50 max-w-[550px] w-full',
           isFocused
-            ? ' bg-white shadow-md shadow-black/25 absolute top-3 items-start rounded-xl  h-[calc(100vh-3.5rem)]'
+            ? ' bg-white shadow-md shadow-black/25 absolute top-3 items-start rounded-xl overflow-y-auto overflow-x-hidden min-h-40 max-h-[calc(100vh-3.5rem)]'
             : ''
         )}
         tabIndex={0}
       >
-        <HiMagnifyingGlass size={20} className='fill-black' />
-        <input
-          className='!border-0 bg-transparent w-full focus:outline-none placeholder:text-black/80 placeholder:font-light'
-          placeholder='Search Reddit'
-          aria-label='Search Reddit'
-          ref={inputRef}
-        />
+        <div className='flex items-center gap-2'>
+          <HiMagnifyingGlass size={20} className='fill-black' />
+          <input
+            className='!border-0 bg-transparent w-full focus:outline-none placeholder:text-black/80 placeholder:font-light'
+            placeholder='Search Reddit'
+            aria-label='Search Reddit'
+            ref={inputRef}
+          />
+        </div>
+        {isFocused && (
+          <Collapse open={isFocused}>
+            <SearchList />
+          </Collapse>
+        )}
       </div>
+       */}
+      <Menu
+        open={isFocused}
+        handler={() => setIsFocused((cur) => !cur)}
+        offset={{ mainAxis: -0 }}
+        placement='bottom'
+      >
+        <MenuHandler>
+          <div
+            className={cn(
+              'flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-50 max-w-[550px] w-full',
+              isFocused
+                ? ' bg-white shadow-md shadow-black/25 border-b-2 border-neutral-muted absolute top-3 items-start rounded-none rounded-t-xl overflow-y-auto overflow-x-hidden'
+                : ''
+            )}
+          >
+            <HiMagnifyingGlass size={20} className='fill-black' />
+            <input
+              className='!border-0 bg-transparent w-full focus:outline-none placeholder:text-black/80 placeholder:font-light'
+              placeholder='Search Reddit'
+              aria-label='Search Reddit'
+              ref={inputRef}
+            />
+          </div>
+        </MenuHandler>
+        <MenuList className='hidden z-50 shadow-md shadow-black/25 max-w-[550px] w-full rounded-none rounded-b-xl lg:block min-h-24 max-h-[calc(100vh-3.5rem)]'>
+          <SearchList />
+        </MenuList>
+      </Menu>
     </>
   );
 };
 
 const MobileSearchBar = () => {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
+
   return (
-    <>
+    <div className='lg:hidden'>
       {/* Use Dialog as a fullscreen */}
-      <div className='flex items-center space-x-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-50 max-w-[550px] w-full'>
+      <IconButton variant='text' onClick={() => setOpen(!open)}>
         <HiMagnifyingGlass size={20} className='fill-black' />
-        <input
-          className='!border-0 bg-transparent w-full focus:outline-none placeholder:text-black/80 placeholder:font-light'
-          placeholder='Search Reddit'
-          aria-label='Search Reddit'
-        />
-      </div>
-    </>
+      </IconButton>
+
+      <Dialog open={open} handler={() => setOpen(!open)} size='xxl'>
+        <DialogHeader className='px-4 space-x-5'>
+          <IconButton variant='text' onClick={() => setOpen(!open)}>
+            <ArrowLeftIcon className='w-6 h-6' />
+          </IconButton>
+          <div className='flex items-center space-x-2 rounded-full z-50 w-full'>
+            <HiMagnifyingGlass size={20} className='fill-black' />
+            <input
+              className='!border-0 bg-transparent w-full font-normal focus:outline-none placeholder:text-black/80 placeholder:font-light'
+              placeholder='Search Reddit'
+              aria-label='Search Reddit'
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  setOpen(false);
+                  navigate(`/r/AskReddit/search/?q=${search}&type=link`);
+                }
+              }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </DialogHeader>
+        <DialogBody className='p-0'>
+          <SearchList />
+        </DialogBody>
+      </Dialog>
+    </div>
+  );
+};
+
+const SearchList = () => {
+  const [recent, setRecent] = useState([
+    {
+      title: 'programming',
+      icon: 'https://www.redditstatic.com/avatars/avatar_default_07_24A0ED.png',
+    },
+    {
+      title: 'test',
+    },
+  ]);
+
+  return (
+    <List className='p-0'>
+      {recent.length > 0 ? (
+        recent.map((item, index) => (
+          <ListItem ripple={false} key={index}>
+            <ListItemPrefix>
+              {item.icon ? (
+                <img
+                  src={item.icon}
+                  alt={item.title}
+                  className='w-6 h-6 rounded-full'
+                />
+              ) : (
+                <ClockIcon className='h-6 w-6' />
+              )}
+            </ListItemPrefix>
+            {item.title}
+            <ListItemSuffix>
+              <IconButton
+                variant='text'
+                onClick={() => setRecent(recent.filter((_, i) => i !== index))}
+              >
+                <XCircleIcon className='h-6 w-6' />
+              </IconButton>
+            </ListItemSuffix>
+          </ListItem>
+        ))
+      ) : (
+        <ListItem className='p-0 flex flex-col items-center justify-center text-center hover:bg-transparent focus:bg-transparent'>
+          <img
+            className='max-h-[150px] mb-xl'
+            role='presentation'
+            src='https://www.redditstatic.com/shreddit/assets/snoovatar-full-hi.png'
+            alt='Image for an empty inbox'
+          />
+          <Typography variant='lead'>No Recent Searches</Typography>
+          <Typography variant='small'>
+            Your recent searches will appear here.
+          </Typography>
+        </ListItem>
+      )}
+    </List>
   );
 };
 
@@ -241,8 +369,7 @@ const CampainLoggedIn = () => {
             <a href='#'>Mod Mode</a>
           </div>
           <Switch
-            crossOrigin
-            id='custom-switch-component'
+            crossOrigin={''}
             className='h-full w-full checked:bg-blue-light-muted'
             containerProps={{
               className: 'w-11 h-6',
@@ -268,9 +395,7 @@ const CampainLoggedIn = () => {
   return (
     <>
       <div className='flex items-center gap-x-1'>
-        <IconButton variant='text'>
-          <HiMagnifyingGlass size={20} className='fill-black' />
-        </IconButton>
+        <MobileSearchBar />
         <Badge overlap='circular'>
           <a href='/chat'>
             <IconButton variant='text'>
@@ -299,36 +424,8 @@ const CampainLoggedIn = () => {
             </IconButton>
             {/* </Badge> */}
           </MenuHandler>
-          <MenuList className='p-0 py-2 text-foreground w-96 shadow-lg *:hover:bg-none shadow-black/25 overflow-hidden'>
-            <List className='p-0 text-foreground w-full'>
-              <ListItem className='py-2 flex gap-2 items-center justify-around hover:bg-none  '>
-                <Button variant='text' className='text-neutral-900'>
-                  Notifications
-                </Button>
-                <Button variant='text' className='text-neutral-900'>
-                  Messages
-                </Button>
-              </ListItem>
-              <div className='bg-blue w-1/2 h-1 rounded-full' />
-              <ListItem className='py-2 flex flex-col items-center justify-center hover:bg-none text-center'>
-                <Typography variant='lead'>Recent Notifications</Typography>
-                <Typography variant='small'>
-                  Turn on email digest Stay in the loop on content from
-                  communities you love right in your email inbox.
-                </Typography>
-              </ListItem>
-              <ListItem className='py-2  hover:bg-none'>
-                <Button
-                  variant='filled'
-                  className='w-full bg-neutral-muted text-black'
-                >
-                  See All
-                </Button>
-                {/* <Button variant='text' className='text-neutral-900'>
-                    <a href='/settings/account'>View Settings</a>
-                  </Button> */}
-              </ListItem>
-            </List>
+          <MenuList className='p-0 py-2 text-foreground w-[346px] rounded-2xl shadow-lg *:hover:bg-none shadow-black/25 overflow-hidden'>
+            <NotificationMenu />
           </MenuList>
         </Menu>
         {/* Avatar Dropdown */}
@@ -375,6 +472,125 @@ const CampainLoggedIn = () => {
         </div>
       </div>
     </>
+  );
+};
+
+const NotificationMenu = () => {
+  const notifications = [
+    {
+      icon: 'https://www.redditstatic.com/avatars/avatar_default_07_24A0ED.png',
+      name: 'New Message',
+      description: 'You have a new message from u/ahmedtarek',
+      time: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7), // 2 hours ago
+      read: false,
+    },
+  ];
+
+  return (
+    <List className='p-0 text-foreground w-full'>
+      <ListItem className='p-0 flex gap-2 items-center justify-around hover:bg-transparent focus:bg-transparent'>
+        <Button variant='text' className='text-neutral-900'>
+          Notifications
+        </Button>
+        <Button variant='text' className='text-neutral-900'>
+          Messages
+        </Button>
+      </ListItem>
+      <div className='bg-blue w-1/2 h-1 rounded-full' />
+      {notifications.length > 0 ? (
+        <>
+          <div className='px-5'>
+            <div className='flex items-center justify-between'>
+              <Typography
+                variant='small'
+                className='text-neutral-900 font-medium uppercase'
+              >
+                Recent
+              </Typography>
+              <div className='flex items-center gap-2'>
+                <Typography
+                  variant='small'
+                  className='border-neutral-muted border-r-2 pr-2 font-medium'
+                >
+                  Mark all as Read
+                </Typography>
+                <Cog8ToothIcon className='w-6 h-6 stroke-neutral-900' />
+              </div>
+            </div>
+            {notifications.map((notification, index) => (
+              <ListItem
+                key={index}
+                className='py-2 flex gap-2 h-10 items-center justify-between hover:bg-transparent focus:bg-transparent'
+              >
+                <ListItemPrefix>
+                  {notification.icon ? (
+                    <>
+                      <Avatar
+                        size='sm'
+                        variant='circular'
+                        alt={notification.name}
+                        src={notification.icon}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <CommunityIcon />
+                    </>
+                  )}
+                </ListItemPrefix>
+                <div>
+                  <Typography variant='small' color='blue-gray'>
+                    {notification.name}
+                  </Typography>
+                  <Typography
+                    variant='small'
+                    color='gray'
+                    className='font-normal text-xs'
+                  >
+                    {notification.description}
+                  </Typography>
+                </div>
+              </ListItem>
+            ))}
+          </div>
+          <hr className='border-neutral-muted' />
+          <div className='px-5 p-2'>
+            <a href='/settings/account'>
+              <Button
+                variant='filled'
+                className='w-full h-10 bg-neutral-muted text-black'
+              >
+                See All
+              </Button>
+            </a>
+          </div>
+        </>
+      ) : (
+        <>
+          <ListItem className='px-5 py-2 flex flex-col items-center justify-center text-center hover:bg-transparent focus:bg-transparent'>
+            <img
+              className='max-h-[150px] mb-xl'
+              role='presentation'
+              src='https://www.redditstatic.com/shreddit/assets/snoovatar-full-hi.png'
+              alt='Image for an empty inbox'
+            />
+            <Typography variant='lead'>No Notifications</Typography>
+            <Typography variant='small'>
+              All caught up! Check back later for new notifications.
+            </Typography>
+          </ListItem>
+          <hr className='border-neutral-muted' />
+          <div className='px-5 p-2'>
+            <Button
+              variant='filled'
+              className='w-full h-10 bg-neutral-muted text-black'
+            >
+              View Settings
+            </Button>
+          </div>
+        </>
+      )}
+    </List>
   );
 };
 

@@ -8,7 +8,7 @@ import SortOptions from '../Components/SortOptions';
 const Mainfeed = () => {
   return (
     <>
-      <div className='mx-16 grid grid-col-1 lg:grid-cols-16 gap-6'>
+      <div className='mx-8 grid grid-col-1 lg:grid-cols-16 gap-6'>
         <div className='lg-max:hidden col-span-3'>
           <SideBar />
         </div>
