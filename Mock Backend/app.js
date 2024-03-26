@@ -22,6 +22,7 @@ const accountSettings = {
     gender: "Male",
     gmail: "ahmedkhaled1029@gmail.com",
     connected_google: true,
+    hasPassword: true,
   },
 };
 
@@ -47,10 +48,15 @@ app.patch("/users/change-email", (req, res) => {
   accountSettings.account_settings.email = new_email;
   res.sendStatus(200);
 });
+app.patch("/users/change-password", (req, res) => {
+  const { current_password, new_password, verified_new_password } = req.body;
+  // accountSettings.account_settings.email = new_email;
+  res.sendStatus(200);
+});
 
 app.post("/users/delete-account", (req, res) => {
   accountSettings.account_settings = {};
-  console.log(accountSettings)
+  console.log(accountSettings);
   res.sendStatus(200);
 });
 
@@ -349,3 +355,695 @@ app.post("/users/signup-google", (req, res) => {
 });
 
 module.exports = app;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+let popularComunities = [
+  {
+    id: 1,
+    src: "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    name: "r/sports",
+    membersNumber: 1234,
+  },
+  {
+    id: 2,
+    src: "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    name: "r/programming",
+    membersNumber: 2000,
+  },
+  {
+    id: 3,
+    src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+    name: "r/Music",
+    membersNumber: 1500,
+  },
+  {
+    id: 4,
+    src: "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    name: "r/sports",
+    membersNumber: 1000,
+  },
+  {
+    id: 5,
+    src: "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    name: "r/programming",
+    membersNumber: 2000,
+  },
+  {
+    id: 6,
+    src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+    name: "r/Music",
+    membersNumber: 1500,
+  },
+  {
+    id: 7,
+    src: "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    name: "r/sports",
+    membersNumber: 1000,
+  },
+  {
+    id: 8,
+    src: "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    name: "r/programming",
+    membersNumber: 2000,
+  },
+  {
+    id: 9,
+    src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+    name: "r/Music",
+    membersNumber: 1500,
+  },
+];
+app.get("/communities/get-popular-communities", (req, res) => {
+  res.status(200).json(popularComunities);
+});
+
+let recentPostsList = [
+  {
+    id: "1",
+    user_id: "user123",
+    username: "john_doe",
+    title: "My First Post",
+    description:
+      "This is how Kellyn Acosta won it for the Chicago Fire in the 99th minute",
+    created_at: "2024-03-29",
+    edited_at: "2024-03-29",
+    deleted_at: "2024-03-29",
+    type: "image_and_videos",
+    link_url: "https://example.com",
+    images: [
+      {
+        path: "image1.jpg",
+        caption: "Image caption 1",
+        link: "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+      },
+      {
+        path: "image2.jpg",
+        caption: "Image caption 2",
+        link: "https://example.com/image2",
+      },
+    ],
+    videos: [
+      {
+        path: "video1.mp4",
+        caption: "Video caption 1",
+        link: "https://example.com/video1",
+      },
+    ],
+    poll: {
+      options: ["Option 1", "Option 2", "Option 3"],
+      votes: [10, 5, 7],
+    },
+    community_id: "community123",
+    "community-name": "r/sports",
+    comments_count: 9,
+    // added //
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    communityCoverSrc:
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    joined: true,
+    communityDescription:
+      "Sports news and discussion about sports culture and sports history",
+    communityMembers: 356,
+    communityOnline: 12,
+    //
+    views_count: 100,
+    shares_count: 20,
+    upvotes_count: 8,
+    downvotes_count: 5,
+    oc_flag: true,
+    spoiler_flag: false,
+    nsfw_flag: false,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "None (Recommended)",
+    moderator_details: {
+      approved_by: "moderator1",
+      approved_date: "2024-03-29",
+      removed_by: null,
+      removed_date: null,
+      spammed_by: null,
+      spammed_type: null,
+    },
+    user_details: {
+      total_views: 1000,
+      upvote_rate: 0.5,
+      total_shares: 30,
+    },
+  },
+  {
+    id: "2",
+    user_id: "user123",
+    username: "john_doe",
+    title: "My First Post",
+    description:
+      "This is how Kellyn Acosta won it for the Chicago Fire in the 99th minute",
+    created_at: "2024-03-29",
+    edited_at: "2024-03-29",
+    deleted_at: "2024-03-29",
+    type: "image_and_videos",
+    link_url: "https://example.com",
+    images: [
+      {
+        path: "image1.jpg",
+        caption: "Image caption 1",
+        link: "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+      },
+      {
+        path: "image2.jpg",
+        caption: "Image caption 2",
+        link: "https://example.com/image2",
+      },
+    ],
+    videos: [
+      {
+        path: "video1.mp4",
+        caption: "Video caption 1",
+        link: "https://example.com/video1",
+      },
+    ],
+    poll: {
+      options: ["Option 1", "Option 2", "Option 3"],
+      votes: [10, 5, 7],
+    },
+    community_id: "community123",
+    "community-name": "r/programming",
+    comments_count: 20,
+    // added //
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    communityCoverSrc:
+      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    joined: false,
+    communityDescription:
+      "programming news and discussion about programming culture and programming history",
+    communityMembers: 2114,
+    communityOnline: 63,
+    //
+    views_count: 100,
+    shares_count: 20,
+    upvotes_count: 57,
+    downvotes_count: 5,
+    oc_flag: true,
+    spoiler_flag: false,
+    nsfw_flag: false,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "None (Recommended)",
+    moderator_details: {
+      approved_by: "moderator1",
+      approved_date: "2024-03-29",
+      removed_by: null,
+      removed_date: null,
+      spammed_by: null,
+      spammed_type: null,
+    },
+    user_details: {
+      total_views: 1000,
+      upvote_rate: 0.5,
+      total_shares: 30,
+    },
+  },
+];
+
+app.get("/communities/get-history-posts", (req, res) => {
+  res.status(200).json(recentPostsList);
+});
+
+let notifications = [
+  {
+    id: "1",
+    created_at: "2024-03-26",
+    post_id: "post123",
+    comment_id: "comment456",
+    sending_user_username: "osama_youssef",
+    description: "first notification description",
+    unread_flag: true,
+    hidden_flag: false,
+    type: "message",
+    // added //
+    community_id: "community123",
+    community_name: "r/sports",
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+  },
+  {
+    id: "2",
+    created_at: "2024-03-25",
+    post_id: "post789",
+    comment_id: "comment012",
+    sending_user_username: "ahmed_tarek",
+    description: "You have a new comment",
+    unread_flag: false,
+    hidden_flag: false,
+    type: "comment",
+    // added //
+    community_id: "community123",
+    community_name: "r/programming",
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+  },
+  {
+    id: "3",
+    created_at: "2024-03-24",
+    post_id: "post345",
+    comment_id: "comment678",
+    sending_user_username: "osama_youssef",
+    description: "You have a new reply",
+    unread_flag: true,
+    hidden_flag: false,
+    type: "reply",
+    // added //
+    community_id: "community123",
+    community_name: "r/sports",
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+  },
+];
+
+app.get("/notifications", (req, res) => {
+  res.status(200).json(notifications);
+});
+
+app.patch("/notifications/mark-all-as-read", (req, res) => {
+  notifications = notifications.map((notification) => ({
+    ...notification,
+    unread_flag: false,
+  }));
+  // console.log("Notifications marked as read:", notifications);
+  res.sendStatus(200);
+});
+
+app.patch("/notifications/hide/:id", (req, res) => {
+  const { id } = req.params;
+  const notificationIndex = notifications.findIndex((notif) => notif.id === id);
+  if (notificationIndex === -1) {
+    return res.status(404).json({ message: "Notification not found" });
+  }
+  notifications[notificationIndex].hidden_flag = true;
+  notifications.splice(notificationIndex, 1);
+  // console.log("Notifications marked as read:", notifications);
+  res.sendStatus(200);
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+let postsListings = [
+  {
+    id: "15",
+    user_id: "user1",
+    username: "john_doe",
+    title: "First Post",
+    description: "This is the first post",
+    created_at: "2024-03-29",
+    edited_at: "2024-03-29",
+    deleted_at: "2024-03-29",
+    type: "image_and_videos",
+    link_url: "https://example.com",
+    images: [
+      {
+        path: "image1.jpg",
+        caption: "Image 1",
+        link: "https://source.unsplash.com/random",
+      },
+    ],
+    videos: [
+      {
+        path: "video1.mp4",
+        caption: "Video 1",
+        link: "https://example.com/video1.mp4",
+      },
+    ],
+    poll: {
+      options: ["Option 1", "Option 2", "Option 3"],
+      votes: [0, 0, 0],
+    },
+    community_id: "community1",
+    "community-name": "Community 1",
+    comments_count: 0,
+    views_count: 0,
+    shares_count: 0,
+    upvotes_count: 0,
+    downvotes_count: 0,
+    oc_flag: true,
+    spoiler_flag: true,
+    nsfw_flag: true,
+    locked_flag: true,
+    allowreplies_flag: true,
+    set_suggested_sort: "None (Recommended)",
+    moderator_details: {
+      approved_by: "moderator1",
+      approved_date: "2024-03-29",
+      removed_by: "moderator2",
+      removed_date: "2024-03-29",
+      spammed_by: "moderator3",
+      spammed_type: "spam",
+    },
+    user_details: {
+      total_views: 0,
+      upvote_rate: 0,
+      total_shares: 0,
+    },
+  },
+  {
+    id: "18",
+    user_id: "user2",
+    username: "jane_smith",
+    title: "Second Post",
+    description: "This is the second post",
+    created_at: "2024-03-26",
+    edited_at: "2024-03-26",
+    deleted_at: "2024-03-26",
+    type: "image_and_videos",
+    link_url: "https://example.com",
+    images: [
+      {
+        path: "image2.jpg",
+        caption: "Image 2",
+        link: "https://source.unsplash.com/random",
+      },
+    ],
+    videos: [
+      {
+        path: "video2.mp4",
+        caption: "Video 2",
+        link: "https://example.com/video2.mp4",
+      },
+    ],
+    poll: {
+      options: ["Option 1", "Option 2", "Option 3"],
+      votes: [0, 0, 0],
+    },
+    community_id: "community2",
+    "community-name": "Community 2",
+    comments_count: 0,
+    views_count: 0,
+    shares_count: 0,
+    upvotes_count: 0,
+    downvotes_count: 0,
+    oc_flag: true,
+    spoiler_flag: true,
+    nsfw_flag: true,
+    locked_flag: true,
+    allowreplies_flag: true,
+    set_suggested_sort: "None (Recommended)",
+    moderator_details: {
+      approved_by: "moderator1",
+      approved_date: "2024-03-26",
+      removed_by: "moderator2",
+      removed_date: "2024-03-26",
+      spammed_by: "moderator3",
+      spammed_type: "spam",
+    },
+    user_details: {
+      total_views: 0,
+      upvote_rate: 0,
+      total_shares: 0,
+    },
+  },
+  {
+    id: "3",
+    user_id: "user3",
+    username: "joe_bloggs",
+    title: "Third Post",
+    description: "This is the third post",
+    created_at: "2024-03-27",
+    edited_at: "2024-03-27",
+    deleted_at: "2024-03-27",
+    type: "image_and_videos",
+    link_url: "https://example.com",
+    images: [
+      {
+        path: "image3.jpg",
+        caption: "Image 3",
+        link: "https://source.unsplash.com/random",
+      },
+    ],
+    videos: [
+      {
+        path: "video3.mp4",
+        caption: "Video 3",
+        link: "https://example.com/video3.mp4",
+      },
+    ],
+    poll: {
+      options: ["Option 1", "Option 2", "Option 3"],
+      votes: [0, 0, 0],
+    },
+    community_id: "community3",
+    "community-name": "Community 3",
+    comments_count: 0,
+    views_count: 0,
+    shares_count: 0,
+    upvotes_count: 0,
+    downvotes_count: 0,
+    oc_flag: true,
+    spoiler_flag: true,
+    nsfw_flag: true,
+    locked_flag: true,
+    allowreplies_flag: true,
+    set_suggested_sort: "None (Recommended)",
+    moderator_details: {
+      approved_by: "moderator1",
+      approved_date: "2024-03-27",
+      removed_by: "moderator2",
+      removed_date: "2024-03-27",
+      spammed_by: "moderator3",
+      spammed_type: "spam",
+    },
+    user_details: {
+      total_views: 0,
+      upvote_rate: 0,
+      total_shares: 0,
+    },
+  },
+  {
+    id: "4",
+    user_id: "user4",
+    username: "john_doe",
+    title: "First Post",
+    description: "This is the first post",
+    created_at: "2024-03-29",
+    edited_at: "2024-03-29",
+    deleted_at: "2024-03-29",
+    type: "image_and_videos",
+    link_url: "https://example.com",
+    images: [
+      {
+        path: "image4.jpg",
+        caption: "Image 4",
+        link: "https://source.unsplash.com/random",
+      },
+    ],
+    videos: [
+      {
+        path: "video4.mp4",
+        caption: "Video 4",
+        link: "https://example.com/video4.mp4",
+      },
+    ],
+    poll: {
+      options: ["Option 4", "Option 2", "Option 3"],
+      votes: [0, 0, 0],
+    },
+    community_id: "community4",
+    "community-name": "Community 4",
+    comments_count: 0,
+    views_count: 0,
+    shares_count: 0,
+    upvotes_count: 0,
+    downvotes_count: 0,
+    oc_flag: true,
+    spoiler_flag: true,
+    nsfw_flag: true,
+    locked_flag: true,
+    allowreplies_flag: true,
+    set_suggested_sort: "None (Recommended)",
+    moderator_details: {
+      approved_by: "moderator4",
+      approved_date: "2024-03-29",
+      removed_by: "moderator2",
+      removed_date: "2024-03-29",
+      spammed_by: "moderator3",
+      spammed_type: "spam",
+    },
+    user_details: {
+      total_views: 0,
+      upvote_rate: 0,
+      total_shares: 0,
+    },
+  },
+  {
+    id: "5",
+    user_id: "user5",
+    username: "joe_bloggs",
+    title: "Third Post",
+    description: "This is the third post",
+    created_at: "2024-05-27",
+    edited_at: "2024-05-27",
+    deleted_at: "2024-05-27",
+    type: "image_and_videos",
+    link_url: "https://example.com",
+    images: [
+      {
+        path: "image5.jpg",
+        caption: "Image 5",
+        link: "https://source.unsplash.com/random",
+      },
+    ],
+    videos: [
+      {
+        path: "video5.mp4",
+        caption: "Video 5",
+        link: "https://example.com/video5.mp4",
+      },
+    ],
+    poll: {
+      options: ["Option 1", "Option 2", "Option 3"],
+      votes: [0, 0, 0],
+    },
+    community_id: "community3",
+    "community-name": "Community 3",
+    comments_count: 0,
+    views_count: 0,
+    shares_count: 0,
+    upvotes_count: 0,
+    downvotes_count: 0,
+    oc_flag: true,
+    spoiler_flag: true,
+    nsfw_flag: true,
+    locked_flag: true,
+    allowreplies_flag: true,
+    set_suggested_sort: "None (Recommended)",
+    moderator_details: {
+      approved_by: "moderator1",
+      approved_date: "2024-03-27",
+      removed_by: "moderator2",
+      removed_date: "2024-03-27",
+      spammed_by: "moderator3",
+      spammed_type: "spam",
+    },
+    user_details: {
+      total_views: 0,
+      upvote_rate: 0,
+      total_shares: 0,
+    },
+  },
+  {
+    id: "6",
+    user_id: "user6",
+    username: "jane_smith",
+    title: "Second Post",
+    description: "This is the second post",
+    created_at: "2024-03-26",
+    edited_at: "2024-03-26",
+    deleted_at: "2024-03-26",
+    type: "image_and_videos",
+    link_url: "https://example.com",
+    images: [
+      {
+        path: "image2.jpg",
+        caption: "Image 2",
+        link: "https://source.unsplash.com/random",
+      },
+    ],
+    videos: [
+      {
+        path: "video2.mp4",
+        caption: "Video 2",
+        link: "https://example.com/video2.mp4",
+      },
+    ],
+    poll: {
+      options: ["Option 1", "Option 2", "Option 3"],
+      votes: [0, 0, 0],
+    },
+    community_id: "community2",
+    "community-name": "Community 2",
+    comments_count: 0,
+    views_count: 0,
+    shares_count: 0,
+    upvotes_count: 0,
+    downvotes_count: 0,
+    oc_flag: true,
+    spoiler_flag: true,
+    nsfw_flag: true,
+    locked_flag: true,
+    allowreplies_flag: true,
+    set_suggested_sort: "None (Recommended)",
+    moderator_details: {
+      approved_by: "moderator1",
+      approved_date: "2024-03-26",
+      removed_by: "moderator2",
+      removed_date: "2024-03-26",
+      spammed_by: "moderator3",
+      spammed_type: "spam",
+    },
+    user_details: {
+      total_views: 0,
+      upvote_rate: 0,
+      total_shares: 0,
+    },
+  },
+].concat(recentPostsList); // m3 haget osama
+
+function shuffleList(list) {
+  let currentIndex = list.length,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [list[currentIndex], list[randomIndex]] = [
+      list[randomIndex],
+      list[currentIndex],
+    ];
+  }
+
+  return list;
+}
+
+app.get("/listings/posts/random", (req, res) => {
+  res.status(200).json(postsListings);
+});
+
+app.get("/listings/posts/best", (req, res) => {
+  res.status(200).json([...postsListings].reverse());
+});
+
+app.get("/listings/posts/hot", (req, res) => {
+  res.status(200).json(shuffleList(postsListings));
+});
+
+app.get("/listings/posts/new", (req, res) => {
+  res.status(200).json(shuffleList(postsListings));
+});
+
+app.get("/listings/posts/top", (req, res) => {
+  res.status(200).json(shuffleList(postsListings));
+});
+
+app.post("/posts-or-comments/vote", (req, res) => {
+  const { id, isPost, rank } = req.body;
+  if (isPost) {
+    postsListings = postsListings.map((post) => {
+      if (post.id === id) {
+        if (rank === 1) {
+          post.upvotes_count++;
+        } else {
+          post.downvotes_count++;
+        }
+        console.log(post);
+      }
+      return post;
+    });
+  } else {
+  }
+  res.sendStatus(200);
+});
