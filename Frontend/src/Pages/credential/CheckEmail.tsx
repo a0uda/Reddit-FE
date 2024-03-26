@@ -1,29 +1,32 @@
 import Button from '../../Components/Button';
 import { MdOutlineEmail } from 'react-icons/md';
-import { Dialog, DialogBody } from '@material-tailwind/react';
+import { Dialog, DialogBody, IconButton } from '@material-tailwind/react';
 import { IoMdArrowBack } from 'react-icons/io';
 import { MdOutlineClose } from 'react-icons/md';
-import { Link } from 'react-router-dom';
 
 interface InputProps {
   handleBackArrow?: () => void;
   handleButtonEmail: () => void;
+  open: boolean;
+  handleOpen: () => void;
 }
 
 export default function CheckEmail({
   handleBackArrow,
   handleButtonEmail,
+  open,
+  handleOpen,
 }: InputProps) {
   return (
-    <Dialog size='sm' open={true} handler={() => {}}>
+    <Dialog size='sm' open={open} handler={handleOpen}>
       <DialogBody className='text-black'>
         <div className='my-4 m-2'>
           <div className='float-left ' onClick={handleBackArrow}>
             <IoMdArrowBack size={32} />
           </div>
-          <Link to='/' className='float-right'>
+          <IconButton onClick={handleOpen} className='float-right'>
             <MdOutlineClose size={32} />
-          </Link>
+          </IconButton>
         </div>
         <div className='container mx-auto lg:p-5 '>
           <div className='flex justify-center mt-20'>

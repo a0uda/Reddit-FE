@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import MyForm from '../../Components/Form';
 import { ButtonType } from '../../validate/buttonType';
 import { postRequest } from '../../API/User';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogBody } from '@material-tailwind/react';
+import { Dialog, DialogBody, IconButton } from '@material-tailwind/react';
 import { IoMdClose } from 'react-icons/io';
 import { IoMdArrowBack } from 'react-icons/io';
 import { useMutation } from 'react-query';
 
-export default function Signup() {
+export default function Signup(props: {
+  open: boolean;
+  handleOpen: () => void;
+  openLogin: () => void;
+}) {
   const [step, setStep] = useState(1);
   const [errorMessage, seterrorMessage] = useState('');
   const navigate = useNavigate();
@@ -75,7 +78,8 @@ export default function Signup() {
       const { token } = response;
       localStorage.setItem('token', token);
       seterrorMessage('');
-      navigate('/');
+      props.handleOpen();
+      location.reload();
     },
     onError: () => {
       seterrorMessage('Failed to signup');
@@ -90,7 +94,7 @@ export default function Signup() {
   };
 
   return (
-    <Dialog size='sm' open={true} handler={() => {}}>
+    <Dialog size='sm' open={props.open} handler={props.handleOpen}>
       <DialogBody className='text-black'>
         <div className='my-4 m-2'>
           {step == 2 ? (
@@ -98,9 +102,9 @@ export default function Signup() {
               <IoMdArrowBack size={32} />
             </span>
           ) : null}
-          <Link to='/' className='float-right'>
+          <IconButton onClick={props.handleOpen} className='float-right'>
             <IoMdClose size={32} />
-          </Link>
+          </IconButton>
         </div>
 
         <MyForm
@@ -118,19 +122,24 @@ export default function Signup() {
           handleButton={step === 1 ? handleButton : undefined}
           HandleOnSubmitFunction={handleOnSubmit}
           errorMessage={errorMessage}
+          handleModal={() => {
+            props.handleOpen();
+          }}
         >
           {step === 1 ? (
             <>
               <div className='m-3 mb-5'>
                 <p>
                   Already a redditor?{' '}
-                  <Link
-                    to='/login'
-                    className='text-decoration-none'
-                    style={{ color: '#6366f1' }}
+                  <span
+                    onClick={() => {
+                      props.handleOpen();
+                      props.openLogin();
+                    }}
+                    className='text-decoration-none text-[#6366f1] cursor-pointer'
                   >
                     Log In
-                  </Link>
+                  </span>
                 </p>
               </div>
             </>

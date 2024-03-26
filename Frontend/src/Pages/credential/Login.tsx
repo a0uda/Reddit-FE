@@ -1,16 +1,20 @@
-import { Link } from 'react-router-dom';
 import MyForm from '../../Components/Form';
 import { ButtonType } from '../../validate/buttonType';
 import { postRequest } from '../../API/User';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogBody } from '@material-tailwind/react';
+import { Dialog, DialogBody, IconButton } from '@material-tailwind/react';
 import { IoMdClose } from 'react-icons/io';
 import { useMutation } from 'react-query';
 
-export default function Login() {
+export default function Login(props: {
+  open: boolean;
+  handleOpen: () => void;
+  openSignup: () => void;
+  openPassword: () => void;
+  openUsername: () => void;
+}) {
   const [errorMessage, seterrorMessage] = useState('');
-  const navigate = useNavigate();
   const inputArr = [
     {
       placeholder: 'Username*',
@@ -44,7 +48,8 @@ export default function Login() {
       const { token } = response;
       localStorage.setItem('token', token);
       seterrorMessage('');
-      navigate('/');
+      props.handleOpen();
+      location.reload();
     },
     onError: () => {
       seterrorMessage('Invalid Login');
@@ -57,14 +62,18 @@ export default function Login() {
       data: values,
     });
   };
+  console.log(props.handleOpen);
 
   return (
     <>
-      <Dialog size='sm' open={true} handler={() => {}}>
+      <Dialog size='sm' open={props.open} handler={props.handleOpen}>
         <DialogBody className='text-black'>
-          <Link to='/' className='float-right my-4 m-2'>
+          <IconButton
+            onClick={props.handleOpen}
+            className='float-right my-4 m-2'
+          >
             <IoMdClose size={32} />
-          </Link>
+          </IconButton>
           <MyForm
             type='login'
             title='Log in'
@@ -76,25 +85,46 @@ export default function Login() {
             LogWithGoogle='logwithgoogle'
             HandleOnSubmitFunction={handleOnSubmit}
             errorMessage={errorMessage}
+            handleModal={() => {
+              props.handleOpen();
+            }}
           >
             <>
               <div className='m-3'>
                 <p>
                   Forget your{' '}
-                  <Link to='/forget-username' style={{ color: '#6366f1' }}>
+                  <span
+                    onClick={() => {
+                      props.handleOpen();
+                      props.openUsername();
+                    }}
+                    className='cursor-pointer text-[#6366f1]'
+                  >
                     username
-                  </Link>
+                  </span>{' '}
                   or{' '}
-                  <Link to='/forget-password' style={{ color: '#6366f1' }}>
+                  <span
+                    onClick={() => {
+                      props.handleOpen();
+                      props.openPassword();
+                    }}
+                    className='cursor-pointer text-[#6366f1]'
+                  >
                     password
-                  </Link>
+                  </span>
                   ?
                 </p>
                 <p>
                   New to Reddit?{' '}
-                  <Link to='/signup' style={{ color: '#6366f1' }}>
+                  <span
+                    onClick={() => {
+                      props.handleOpen();
+                      props.openSignup();
+                    }}
+                    className='cursor-pointer text-[#6366f1]'
+                  >
                     Sign Up
-                  </Link>
+                  </span>
                 </p>
               </div>
             </>

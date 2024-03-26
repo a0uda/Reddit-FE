@@ -6,6 +6,7 @@ console.log(baseUrl);
 const config = {
   headers: {
     'Content-Type': 'application/json',
+    token: localStorage.getItem('token'),
   },
   withCredentials: false,
 };
@@ -19,6 +20,8 @@ const fetchRequest = async (endPoint: string) => {
 const patchRequest = async ({ newSettings, endPoint }) => {
   try {
     const response = await axios.patch(baseUrl + endPoint, newSettings, config);
+    console.log(response);
+    
     return response.data;
   } catch (error) {
     console.log('Error', error.response.data);
