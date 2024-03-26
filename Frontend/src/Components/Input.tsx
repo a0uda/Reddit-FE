@@ -35,8 +35,12 @@ const Input: React.FC<InputProps> = ({
           crossOrigin={undefined}
           id={id}
           type={type}
-          className={`!border !border-t-[rgb(176,190,197)]
-       bg-white text-gray-900 rounded-full placeholder:text-gray-500 placeholder:opacity-100 focus:!border-gray-900 ${error && '!border-t-danger-red'}  `}
+          className={
+            !className
+              ? `!border !border-t-[rgb(176,190,197)]
+       bg-white text-gray-900 rounded-full placeholder:text-gray-500 placeholder:opacity-100 focus:!border-gray-900 ${error && '!border-t-danger-red'}  `
+              : className
+          }
           placeholder={placeholder}
           style={style}
           value={value}
@@ -54,7 +58,7 @@ const Input: React.FC<InputProps> = ({
         />
 
         {!error && showTick && (
-          <FaCheckCircle className='absolute right-3  top-1/2 -translate-y-1/2 text-green-500 ' />
+          <FaCheckCircle className='absolute right-3  top-1/2 -translate-y-1/2 text-green ' />
         )}
       </div>
       {errorMsg && (
@@ -62,7 +66,6 @@ const Input: React.FC<InputProps> = ({
           variant='small'
           color='gray'
           className={'ps-2 font-normal text-danger-red mt-1'}
-          // hidden={!validateEmail(email)}
         >
           {errorMsg}
         </Typography>
