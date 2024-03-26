@@ -1,16 +1,18 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Avatar, Typography, Card, CardBody } from '@material-tailwind/react';
+import { postRequest } from '../../API/User';
+import { useMutation } from 'react-query';
 
 interface CommunityPopupItemProps {
   //community data
-  communityCoverImage: string;
-  communityIcon: string;
+  communityCoverImage?: string;
+  communityIcon?: string;
   communityName: string;
-  joined: boolean;
-  communityDescription: string;
-  communityMembers: number;
-  communityOnline: number;
+  joined?: boolean;
+  communityDescription?: string;
+  communityMembers?: number;
+  communityOnline?: number;
 }
 
 const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
@@ -24,16 +26,46 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
     }
   }, [isJoined]);
 
+  const joinMutation = useMutation(
+    (communityName: string) =>
+      postRequest({
+        endPoint: 'users/join-community',
+        data: { communityName: communityName },
+      }),
+    {
+      onError: () => {
+        // Perform any actions on error, like showing an error message
+        console.log('Error');
+      },
+    }
+  );
+
+  const leaveMutation = useMutation(
+    (communityName: string) =>
+      postRequest({
+        endPoint: 'users/leave-community',
+        data: { communityName: communityName },
+      }),
+    {
+      onError: () => {
+        // Perform any actions on error, like showing an error message
+        console.log('Error');
+      },
+    }
+  );
+
   return (
     <Card className='shadow-none'>
       {/* the content of popup only and you should handle PopoverHandler outside this component*/}
-      <div className='relative w-full'>
-        <img
-          src={props.communityCoverImage}
-          alt='Community Cover'
-          className='w-full h-32 object-cover rounded-t-lg'
-        />
-      </div>
+      {props.communityCoverImage && (
+        <div className='relative w-full'>
+          <img
+            src={props.communityCoverImage}
+            alt='Community Cover'
+            className='w-full h-32 object-cover rounded-t-lg'
+          />
+        </div>
+      )}
       <CardBody className=''>
         <div className='mb-2 flex items-center justify-between gap-4'>
           <div className='flex justify-start items-center gap-2 pt-0'>
@@ -55,7 +87,10 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
           {!isJoined && JustJoined && (
             <button
               className='bg-gray-200 rounded-full font-body font-semibold text-black -tracking-tight text-xs m-0 px-3 py-1 selection:border-0'
-              onClick={() => setIsJoined(!isJoined)}
+              onClick={() => {
+                setIsJoined(!isJoined);
+                joinMutation.mutate(props.communityName);
+              }}
             >
               Join
             </button>
@@ -66,6 +101,7 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
               onClick={() => {
                 setIsJoined(!isJoined);
                 setJustJoined(false);
+                leaveMutation.mutate(props.communityName);
               }}
             >
               Leave

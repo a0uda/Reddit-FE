@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const dateDuration = (date: Date) => {
   const now: Date = new Date(Date.now());
-  const durationInMilliseconds = now.getTime() - date.getTime();
+  const durationInMilliseconds = Math.abs(now.getTime() - date.getTime());
   const durationInSeconds = Math.floor(durationInMilliseconds / 1000);
   const durationInMinutes = Math.floor(durationInSeconds / 60);
   const durationInHours = Math.floor(durationInMinutes / 60);
@@ -18,10 +18,10 @@ export const dateDuration = (date: Date) => {
   } else if (durationInDays > 0) {
     return `${durationInDays} day${durationInDays > 1 ? 's' : ''} ago`;
   } else if (durationInHours > 0) {
-    return `${durationInHours} hr.${durationInHours > 1 ? 's' : ''} ago`;
+    return `${durationInHours} hr${durationInHours > 1 ? 's.' : ''} ago`;
   } else if (durationInMinutes > 0) {
-    return `${durationInMinutes} min.${durationInMinutes > 1 ? 's' : ''} ago`;
+    return `${durationInMinutes} min${durationInMinutes > 1 ? 's.' : ''} ago`;
   } else {
-    return `${durationInSeconds} sec.${durationInSeconds > 1 ? 's' : ''} ago`;
+    return `${durationInSeconds} sec${durationInSeconds > 1 ? 's.' : ''} ago`;
   }
 };

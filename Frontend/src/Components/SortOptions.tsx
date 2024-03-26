@@ -8,9 +8,17 @@ import {
 } from '@material-tailwind/react';
 import { useState } from 'react';
 
-const SortOptions = () => {
-  const sortOptions = ['Best', 'Hot', 'New', 'Top', 'Rising'];
-  const [sortOption, setSortOption] = useState(sortOptions[0]);
+type SortOptionsProps = {
+  sortOptions: string[];
+  sortOption: string;
+  setSortOption: (option: string) => void;
+};
+
+const SortOptions = ({
+  sortOptions,
+  sortOption,
+  setSortOption,
+}: SortOptionsProps) => {
   const [openMenu, setOpenMenu] = useState(false);
 
   return (

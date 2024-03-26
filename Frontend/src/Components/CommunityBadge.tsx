@@ -10,19 +10,19 @@ import { useState } from 'react';
 
 type Community = {
   name: string;
-  joined: boolean;
-  icon: string;
-  coverImage: string;
-  description: string;
-  members: number;
-  online: number;
+  joined?: boolean;
+  icon?: string;
+  coverImage?: string;
+  description?: string;
+  members?: number;
+  online?: number;
 };
 
 type CommunityBadgeProps = Community;
 
 const CommunityBadge = ({
   name,
-  joined,
+  joined = false,
   icon,
   coverImage,
   description,
@@ -59,7 +59,7 @@ const CommunityBadge = ({
         </PopoverHandler>
         <PopoverContent
           {...triggers}
-          className='z-50 max-w-[24rem] rounded-2xl p-0'
+          className='z-50 max-w-[24rem] rounded-2xl p-0 transition-all delay-200'
         >
           <CommunityPopup
             communityCoverImage={coverImage}

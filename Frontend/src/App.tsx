@@ -16,7 +16,8 @@ function App() {
       <Router>
         <NavigationBar />
         <Routes>
-          <Route path='/' element={<Mainfeed />} />
+          <Route path={'/'} element={<Mainfeed />} />
+          <Route path={'/:sortOption'} element={<Mainfeed />} />
           <Route path='/settings/:page' element={<UserSettings />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
