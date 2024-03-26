@@ -561,11 +561,12 @@ app.patch("/notifications/mark-all-as-read", (req, res) => {
 
 app.patch("/notifications/hide/:id", (req, res) => {
   const { id } = req.params;
-  const notification = notifications.find((notif) => notif.id === id);
-  if (!notification) {
+  const notificationIndex = notifications.findIndex((notif) => notif.id === id);
+  if (notificationIndex === -1) {
     return res.status(404).json({ message: "Notification not found" });
   }
-  notification.hidden_flag = true;
+  notifications[notificationIndex].hidden_flag = true;
+  notifications.splice(notificationIndex, 1);
   // console.log("Notifications marked as read:", notifications);
   res.sendStatus(200);
 });
