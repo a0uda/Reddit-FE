@@ -32,6 +32,8 @@
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^5.0.5",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.2",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.19",

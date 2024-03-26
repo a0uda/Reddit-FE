@@ -18,8 +18,8 @@ const FormHeader: React.FC<InputProps> = ({ title, paragraph }) => {
 };
 
 FormHeader.propTypes = {
-  title: PropTypes.string,
-  paragraph: PropTypes.string,
+  title: PropTypes?.string,
+  paragraph: PropTypes?.string,
 };
 
 export default FormHeader;

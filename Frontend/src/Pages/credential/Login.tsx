@@ -2,7 +2,6 @@ import MyForm from '../../Components/Form';
 import { ButtonType } from '../../validate/buttonType';
 import { postRequest } from '../../API/User';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogBody, IconButton } from '@material-tailwind/react';
 import { IoMdClose } from 'react-icons/io';
 import { useMutation } from 'react-query';
