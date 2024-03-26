@@ -5,6 +5,8 @@ import { postRequest } from '../../API/User';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogBody } from '@material-tailwind/react';
+import { IoMdClose } from 'react-icons/io';
+import { useMutation } from 'react-query';
 
 export default function Login() {
   const [errorMessage, seterrorMessage] = useState('');
@@ -14,14 +16,12 @@ export default function Login() {
       placeholder: 'Username*',
       type: 'text',
       id: 'username',
-      className: 'form-control rounded-full text-left p-3 m-2 w-full',
       style: { backgroundColor: '#DCDCDC' },
     },
     {
       placeholder: 'password',
       type: 'password',
       id: 'password',
-      className: 'form-control rounded-full text-left p-3 m-2 w-full',
       style: { backgroundColor: '#DCDCDC' },
     },
   ];
@@ -33,31 +33,38 @@ export default function Login() {
       style: { backgroundColor: '#FF4500' },
     },
   ];
-
   interface InitialValues {
     username: string;
     password: string;
   }
   const initialValues: InitialValues = { username: '', password: '' };
 
-  const handleOnSubmit = async (values: unknown) => {
-    try {
-      const response = await postRequest({
-        endPoint: 'users/login',
-        data: values,
-      });
+  const mutation = useMutation(postRequest, {
+    onSuccess: (response) => {
       const { token } = response;
       localStorage.setItem('token', token);
       seterrorMessage('');
       navigate('/');
-    } catch (error) {
+    },
+    onError: () => {
       seterrorMessage('Invalid Login');
-    }
+    },
+  });
+
+  const handleOnSubmit = (values: object) => {
+    mutation.mutate({
+      endPoint: 'users/login',
+      data: values,
+    });
   };
+
   return (
     <>
       <Dialog size='sm' open={true} handler={() => {}}>
         <DialogBody className='text-black'>
+          <Link to='/' className='float-right my-4 m-2'>
+            <IoMdClose size={32} />
+          </Link>
           <MyForm
             type='login'
             title='Log in'

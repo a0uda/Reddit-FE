@@ -9,7 +9,7 @@ interface InputProps {
 const FormHeader: React.FC<InputProps> = ({ title, paragraph }) => {
   return (
     <>
-      <div className='my-4 mt-10 text-black'>
+      <div className='my-10 text-black'>
         <h1 className='m-2 pl-3 font-bold text-2xl'>{title}</h1>
         <p className='m-2 pl-2 mb-3'>{paragraph}</p>
       </div>

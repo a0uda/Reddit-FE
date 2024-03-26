@@ -5,6 +5,10 @@ import { ButtonType } from '../../validate/buttonType';
 import { postRequest } from '../../API/User';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogBody } from '@material-tailwind/react';
+import { IoMdClose } from 'react-icons/io';
+import { IoMdArrowBack } from 'react-icons/io';
+import { useMutation } from 'react-query';
+
 export default function Signup() {
   const [step, setStep] = useState(1);
   const [errorMessage, seterrorMessage] = useState('');
@@ -14,14 +18,12 @@ export default function Signup() {
       placeholder: 'Username*',
       type: 'text',
       id: 'username',
-      className: 'form-control rounded-full text-left p-3 m-2 w-full',
       style: { backgroundColor: '#DCDCDC' },
     },
     {
       placeholder: 'password',
       type: 'password',
       id: 'password',
-      className: 'form-control rounded-full text-left p-3 m-2 w-full',
       style: { backgroundColor: '#DCDCDC' },
     },
   ];
@@ -30,7 +32,6 @@ export default function Signup() {
       placeholder: 'Email*',
       type: 'email',
       id: 'email',
-      className: 'form-control rounded-full text-left p-3 m-2 w-full',
       style: { backgroundColor: '#DCDCDC' },
     },
   ];
@@ -69,24 +70,39 @@ export default function Signup() {
     setStep(2);
   };
 
-  const handleOnSubmit = async (values: unknown) => {
-    try {
-      const response = await postRequest({
-        endPoint: 'users/signup',
-        data: values,
-      });
+  const mutation = useMutation(postRequest, {
+    onSuccess: (response) => {
       const { token } = response;
       localStorage.setItem('token', token);
       seterrorMessage('');
       navigate('/');
-    } catch (error) {
+    },
+    onError: () => {
       seterrorMessage('Failed to signup');
-    }
+    },
+  });
+
+  const handleOnSubmit = (values: object) => {
+    mutation.mutate({
+      endPoint: 'users/signup',
+      data: values,
+    });
   };
 
   return (
     <Dialog size='sm' open={true} handler={() => {}}>
       <DialogBody className='text-black'>
+        <div className='my-4 m-2'>
+          {step == 2 ? (
+            <span onClick={() => setStep(1)} className='float-left'>
+              <IoMdArrowBack size={32} />
+            </span>
+          ) : null}
+          <Link to='/' className='float-right'>
+            <IoMdClose size={32} />
+          </Link>
+        </div>
+
         <MyForm
           type='signup'
           title={step == 1 ? 'Sign up' : ' Create your username and password'}
@@ -100,8 +116,6 @@ export default function Signup() {
           ButtArr={step == 1 ? button1 : button2}
           LogWithGoogle={step == 1 ? 'logwithgoogle' : ''}
           handleButton={step === 1 ? handleButton : undefined}
-          backButton={step === 1 ? '' : 'backbutton'}
-          handleBackSign={step === 1 ? undefined : () => setStep(1)}
           HandleOnSubmitFunction={handleOnSubmit}
           errorMessage={errorMessage}
         >

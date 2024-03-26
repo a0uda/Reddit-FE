@@ -3,6 +3,7 @@ import { MdOutlineEmail } from 'react-icons/md';
 import { Dialog, DialogBody } from '@material-tailwind/react';
 import { IoMdArrowBack } from 'react-icons/io';
 import { MdOutlineClose } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 interface InputProps {
   handleBackArrow?: () => void;
@@ -16,13 +17,15 @@ export default function CheckEmail({
   return (
     <Dialog size='sm' open={true} handler={() => {}}>
       <DialogBody className='text-black'>
-        <div className='container mx-auto lg:p-5 my-5'>
-          <div className='float-left' onClick={handleBackArrow}>
+        <div className='my-4 m-2'>
+          <div className='float-left ' onClick={handleBackArrow}>
             <IoMdArrowBack size={32} />
           </div>
-          <div className='float-right'>
+          <Link to='/' className='float-right'>
             <MdOutlineClose size={32} />
-          </div>
+          </Link>
+        </div>
+        <div className='container mx-auto lg:p-5 '>
           <div className='flex justify-center mt-20'>
             <div className='lg:w-96 text-center'>
               <div className='flex justify-center items-center'>

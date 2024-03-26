@@ -2,14 +2,11 @@ import React from 'react';
 import { Formik } from 'formik';
 import PropTypes from 'prop-types';
 import Validation from '../validate/validate';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
 import FormHeader from './FormHeader';
 import Input from './Input';
 import Button from './Button';
 import LoginWithGoogle from './LoginWithGoogle';
-import { IoArrowBackCircleOutline } from 'react-icons/io5';
-import { Link } from 'react-router-dom';
-import { FaCheckCircle } from 'react-icons/fa';
+
 type FormSchema = {
   login: {
     userName: string;
@@ -38,7 +35,6 @@ interface InputProps {
     placeholder: string;
     type: string;
     id: string;
-    className: string;
     style?: React.CSSProperties;
   }>;
   children: React.ReactElement<
@@ -57,6 +53,8 @@ interface InputProps {
   backButton?: string;
   linkBackButton?: string;
   handleBackSign?: () => void;
+  errorMessage?: string;
+  HandleOnSubmitFunction?: (values: object) => void;
 }
 
 const MyForm: React.FC<InputProps> = ({
@@ -69,9 +67,8 @@ const MyForm: React.FC<InputProps> = ({
   ButtArr,
   LogWithGoogle,
   handleButton,
-  backButton,
-  linkBackButton,
-  handleBackSign,
+  HandleOnSubmitFunction,
+  errorMessage,
 }) => {
   const validateSchema = Validation(type || 'login');
 
@@ -80,36 +77,21 @@ const MyForm: React.FC<InputProps> = ({
       validationSchema={validateSchema}
       initialValues={initVal || {}}
       onSubmit={(values, { setSubmitting }) => {
+        if (HandleOnSubmitFunction) {
+          HandleOnSubmitFunction(values);
+        }
         setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
           setSubmitting(false);
         }, 400);
       }}
     >
       {(formik) => (
         <form
-          className='container mx-auto lg:p-5 my-5'
+          className='container mx-auto lg:p-5 ms-4'
           onSubmit={formik.handleSubmit}
         >
           <div className='flex justify-center'>
             <div className='lg:w-96'>
-              {backButton ? (
-                <div className='float-left'>
-                  {handleBackSign ? (
-                    <span onClick={handleBackSign}>
-                      <IoArrowBackCircleOutline size={32} />
-                    </span>
-                  ) : (
-                    <Link to={linkBackButton || '/'}>
-                      <IoArrowBackCircleOutline size={32} />
-                    </Link>
-                  )}
-                </div>
-              ) : null}
-              <div className='float-right'>
-                {' '}
-                <AiOutlineCloseCircle size={32} />
-              </div>
               <FormHeader title={title} paragraph={paragraph} />
 
               {LogWithGoogle ? (
@@ -129,7 +111,7 @@ const MyForm: React.FC<InputProps> = ({
                     <Input
                       id={inp.id}
                       type={inp.type}
-                      className={inp.className}
+                      key={i + inp.id}
                       placeholder={inp.placeholder}
                       style={
                         inp.style ? inp.style : { backgroundColor: '#DCDCDC' }
@@ -138,22 +120,20 @@ const MyForm: React.FC<InputProps> = ({
                       onChange={(e) => {
                         formik.setFieldValue(inp.id, e.target.value);
                       }}
+                      error={
+                        !!formik.errors[
+                          inp.id as keyof typeof formik.errors
+                        ] as keyof typeof formik.errors
+                      }
+                      errorMsg={
+                        formik.errors[inp.id as keyof typeof formik.errors]
+                      }
                     />
-                    {Object.keys(formik.errors).length === 0 &&
-                    Object.values(formik.values).every(
-                      (value) => value.trim() !== ''
-                    ) ? (
-                      <FaCheckCircle className='absolute right-3  top-1/2 -translate-y-1/2 text-green-500 ' />
-                    ) : null}
-                    {formik.touched[inp.id as keyof typeof formik.touched] &&
-                      formik.errors[inp.id as keyof typeof formik.errors] && (
-                        <div className='text-red-500 ps-3'>
-                          {formik.errors[inp.id as keyof typeof formik.errors]}
-                          {'*'}
-                        </div>
-                      )}
                   </div>
                 ))}
+              {errorMessage ? (
+                <div className='text-red ps-3'>{errorMessage}</div>
+              ) : null}
               {children}
 
               {ButtArr &&
