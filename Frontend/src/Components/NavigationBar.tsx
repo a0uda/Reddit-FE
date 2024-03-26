@@ -40,9 +40,11 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import SideBar from './SideBar';
-import { cn } from '../utils/helper_functions';
+import { cn, getTimeDifference } from '../utils/helper_functions';
 import { CommunityIcon } from '../assets/icons/Icons';
 import { Link, useNavigate } from 'react-router-dom';
+import { useQuery, useMutation } from 'react-query';
+import { fetchRequest, patchRequest } from './../API/User';
 
 export function NavigationBar() {
   const [openNav, setOpenNav] = useState(false);
@@ -480,89 +482,206 @@ const CampainLoggedIn = () => {
 };
 
 const NotificationMenu = () => {
-  const notifications = [
-    {
-      icon: 'https://www.redditstatic.com/avatars/avatar_default_07_24A0ED.png',
-      name: 'New Message',
-      description: 'You have a new message from u/ahmedtarek',
-      time: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7), // 2 hours ago
-      read: false,
-    },
-  ];
+  const { data, refetch } = useQuery('notifications data', () =>
+    fetchRequest('notifications')
+  );
+  // console.log(data);
+  const notifications = data?.data ?? [];
+
+  // handle mark all as read
+  const markAllAsReadMutation = useMutation(patchRequest);
+  const markAllAsRead = async () => {
+    try {
+      await markAllAsReadMutation.mutateAsync({
+        endPoint: 'notifications/mark-all-as-read',
+        newSettings: {
+          read_flag: true,
+        },
+      });
+      refetch();
+    } catch (error) {
+      console.error('Failed to mark all notifications as read:', error);
+    }
+  };
+
+  // handle hide notification
+  const hideNotification = useMutation(
+    (id) =>
+      new Promise((resolve, reject) => {
+        patchRequest({ endPoint: `notifications/hide/${id}`, newSettings: {} })
+          .then((data) => {
+            resolve(data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      })
+  );
+  const handleHideNotification = async (id) => {
+    try {
+      await hideNotification.mutateAsync(id);
+      refetch();
+    } catch (error) {
+      console.error('Failed to hide notification:', error);
+    }
+  };
+
+  type Notification = {
+    // to avoid the any type error
+    id: string;
+    created_at: string;
+    post_id: string;
+    comment_id: string;
+    sending_user_username: string;
+    description: string;
+    unread_flag: boolean;
+    hidden_flag: boolean;
+    type: string;
+    //Added
+    community_id: string;
+    community_name: string;
+    communityAvatarSrc: string;
+  };
+
+  const renderNotificationItems = (notificationList: Notification[]) => {
+    // renders the first two unhidden notifications of today and eralier
+    const unhiddenNotifications = notificationList.filter(
+      (notification) => !notification.hidden_flag
+    );
+    const firstTwoUnhiddenNotifications = unhiddenNotifications.slice(0, 2);
+
+    return firstTwoUnhiddenNotifications.map(
+      (notification: Notification, index: number) => (
+        <ListItem
+          key={index}
+          className='py-2 flex gap-2 h-10 items-center hover:bg-transparent focus:bg-transparent'
+        >
+          <ListItemPrefix className='mr-0'>
+            {notification.communityAvatarSrc ? (
+              <Avatar
+                size='sm'
+                variant='circular'
+                alt={notification.communityAvatarSrc}
+                src={notification.communityAvatarSrc}
+              />
+            ) : (
+              <CommunityIcon />
+            )}
+          </ListItemPrefix>
+          <div>
+            <div className='flex items-center gap-2'>
+              <Typography variant='small' color='blue-gray'>
+                {notification.community_name}
+              </Typography>
+              <Typography variant='paragraph' className='text-xs text-gray-600'>
+                {getTimeDifference(notification.created_at)}
+              </Typography>
+            </div>
+            <Typography
+              variant='small'
+              className='font-normal text-xs text-gray-600'
+            >
+              {notification.description}
+            </Typography>
+          </div>
+          <div className='ml-auto'>
+            <Menu placement='bottom-end'>
+              <MenuHandler>
+                <Button variant='text' className='p-2'>
+                  <HiEllipsisHorizontal size={20} />
+                </Button>
+              </MenuHandler>
+              <MenuList className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'>
+                <MenuItem
+                  className='py-3 flex gap-2 items-center'
+                  onClick={() => {
+                    handleHideNotification(notification.id);
+                  }}
+                >
+                  <Typography variant='small' color='blue-gray'>
+                    Hide this notification
+                  </Typography>
+                </MenuItem>
+                <MenuItem className='py-3 flex gap-2 items-center'>
+                  <Typography variant='small' color='blue-gray'>
+                    Disable updates from this community
+                  </Typography>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </div>
+        </ListItem>
+      )
+    );
+  };
+
+  const today = notifications.filter((notification: Notification) => {
+    const todayDate = new Date();
+    const createdAt = new Date(notification.created_at);
+    return createdAt.toDateString() === todayDate.toDateString();
+  });
+
+  const earlier = notifications.filter((notification: Notification) => {
+    const createdAt = new Date(notification.created_at);
+    const todayDate = new Date();
+    return createdAt.toDateString() !== todayDate.toDateString();
+  });
+
+  // console.log(today);
+  // console.log(earlier);
 
   return (
     <List className='p-0 text-foreground w-full'>
       <ListItem className='p-0 flex gap-2 items-center justify-around hover:bg-transparent focus:bg-transparent'>
-        <Button variant='text' className='text-neutral-900'>
+        <Button variant='text' className='text-gray-700 hover:bg-transparent'>
           Notifications
         </Button>
-        <Button variant='text' className='text-neutral-900'>
-          Messages
-        </Button>
+        <a href='/message/messages'>
+          <Button variant='text' className='text-gray-600 hover:bg-transparent'>
+            {/* // TODO: update the link after creating the messages page */}
+            Messages
+          </Button>
+        </a>
       </ListItem>
       <div className='bg-blue w-1/2 h-1 rounded-full' />
       {notifications.length > 0 ? (
         <>
-          <div className='px-5'>
-            <div className='flex items-center justify-between'>
+          <div className='flex items-center justify-between p-3'>
+            <Typography
+              variant='small'
+              className='text-neutral-900 uppercase font-medium'
+            >
+              Today
+            </Typography>
+            <div className='flex items-center gap-2'>
               <Typography
                 variant='small'
-                className='text-neutral-900 font-medium uppercase'
+                className='border-neutral-muted border-r-2 pr-2 cursor-pointer font-medium text-gray-800'
+                onClick={markAllAsRead}
               >
-                Recent
+                Mark all as Read
               </Typography>
-              <div className='flex items-center gap-2'>
-                <Typography
-                  variant='small'
-                  className='border-neutral-muted border-r-2 pr-2 font-medium'
-                >
-                  Mark all as Read
-                </Typography>
+              <a href='/settings/notifications'>
                 <Cog8ToothIcon className='w-6 h-6 stroke-neutral-900' />
-              </div>
+              </a>
             </div>
-            {notifications.map((notification, index) => (
-              <ListItem
-                key={index}
-                className='py-2 flex gap-2 h-10 items-center justify-between hover:bg-transparent focus:bg-transparent'
-              >
-                <ListItemPrefix>
-                  {notification.icon ? (
-                    <>
-                      <Avatar
-                        size='sm'
-                        variant='circular'
-                        alt={notification.name}
-                        src={notification.icon}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <CommunityIcon />
-                    </>
-                  )}
-                </ListItemPrefix>
-                <div>
-                  <Typography variant='small' color='blue-gray'>
-                    {notification.name}
-                  </Typography>
-                  <Typography
-                    variant='small'
-                    color='gray'
-                    className='font-normal text-xs'
-                  >
-                    {notification.description}
-                  </Typography>
-                </div>
-              </ListItem>
-            ))}
           </div>
+          {renderNotificationItems(today)}
+          <div className='flex items-center justify-between p-3'>
+            <Typography
+              variant='small'
+              className='text-neutral-900 uppercase font-medium'
+            >
+              Earlier
+            </Typography>
+          </div>
+          {renderNotificationItems(earlier)}
           <hr className='border-neutral-muted' />
           <div className='px-5 p-2'>
             <Link to='/settings/account'>
               <Button
                 variant='filled'
-                className='w-full h-10 bg-neutral-muted text-black'
+                className='w-full h-10 bg-neutral-muted text-black text-sm'
               >
                 See All
               </Button>

@@ -495,27 +495,78 @@ app.get("/communities/get-history-posts", (req, res) => {
   res.status(200).json(recentPostsList);
 });
 
-app.post("/users/join-community", (req, res) => {
-  const { communityName } = req.body;
-  recentPostsList = recentPostsList.map((post) => {
-    if (post["community-name"] === communityName) {
-      post.joined = true;
-      console.log(post);
-    }
-    return post;
-  });
+let notifications = [
+  {
+    id: "1",
+    created_at: "2024-03-26",
+    post_id: "post123",
+    comment_id: "comment456",
+    sending_user_username: "osama_youssef",
+    description: "first notification description",
+    unread_flag: true,
+    hidden_flag: false,
+    type: "message",
+    // added //
+    community_id: "community123",
+    community_name: "r/sports",
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+  },
+  {
+    id: "2",
+    created_at: "2024-03-25",
+    post_id: "post789",
+    comment_id: "comment012",
+    sending_user_username: "ahmed_tarek",
+    description: "You have a new comment",
+    unread_flag: false,
+    hidden_flag: false,
+    type: "comment",
+    // added //
+    community_id: "community123",
+    community_name: "r/programming",
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+  },
+  {
+    id: "3",
+    created_at: "2024-03-24",
+    post_id: "post345",
+    comment_id: "comment678",
+    sending_user_username: "osama_youssef",
+    description: "You have a new reply",
+    unread_flag: true,
+    hidden_flag: false,
+    type: "reply",
+    // added //
+    community_id: "community123",
+    community_name: "r/sports",
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+  },
+];
+
+app.get("/notifications", (req, res) => {
+  res.status(200).json(notifications);
+});
+
+app.patch("/notifications/mark-all-as-read", (req, res) => {
+  notifications = notifications.map((notification) => ({
+    ...notification,
+    unread_flag: false,
+  }));
+  // console.log("Notifications marked as read:", notifications);
   res.sendStatus(200);
 });
 
-app.post("/users/leave-community", (req, res) => {
-  const { communityName } = req.body;
-  recentPostsList = recentPostsList.map((post) => {
-    if (post["community-name"] === communityName) {
-      post.joined = false;
-      console.log(post);
-    }
-    return post;
-  });
+app.patch("/notifications/hide/:id", (req, res) => {
+  const { id } = req.params;
+  const notification = notifications.find((notif) => notif.id === id);
+  if (!notification) {
+    return res.status(404).json({ message: "Notification not found" });
+  }
+  notification.hidden_flag = true;
+  // console.log("Notifications marked as read:", notifications);
   res.sendStatus(200);
 });
 
