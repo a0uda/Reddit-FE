@@ -486,10 +486,23 @@ const NotificationMenu = () => {
       console.error('Failed to mark all notifications as read:', error);
     }
   };
+  const markAsRead = async (id: string) => {
+    try {
+      await markAllAsReadMutation.mutateAsync({
+        endPoint: `notifications/mark-as-read/${id}`,
+        newSettings: {
+          read_flag: false,
+        },
+      });
+      refetch();
+    } catch (error) {
+      console.error('Failed to mark all notifications as read:', error);
+    }
+  };
 
   // handle hide notification
   const hideNotification = useMutation(
-    (id) =>
+    (id: string) =>
       new Promise((resolve, reject) => {
         patchRequest({ endPoint: `notifications/hide/${id}`, newSettings: {} })
           .then((data) => {
@@ -540,6 +553,7 @@ const NotificationMenu = () => {
           className={`py-2 flex gap-2 h-10 items-center ${
             notification.unread_flag ? 'bg-light-blue-50' : 'bg-transparent'
           }`}
+          onClick={() => markAsRead(notification.id)}
         >
           <ListItemPrefix className='mr-0'>
             {notification.communityAvatarSrc ? (
@@ -612,6 +626,10 @@ const NotificationMenu = () => {
     return createdAt.toDateString() !== todayDate.toDateString();
   });
 
+  const unreadNotifications = notifications.filter(
+    (notification: Notification) => notification.unread_flag
+  );
+
   // console.log(today);
   // console.log(earlier);
 
@@ -624,13 +642,17 @@ const NotificationMenu = () => {
     >
       <MenuHandler>
         <IconButton variant='text' className='!overflow-visible'>
-          <Badge
-            overlap='circular'
-            className='text-xs p-0 min-w-4 min-h-4'
-            content={<div>{notifications.length}</div>}
-          >
+          {unreadNotifications.length > 0 ? (
+            <Badge
+              overlap='circular'
+              className='text-xs p-0 min-w-4 min-h-4'
+              content={<div>{unreadNotifications.length}</div>}
+            >
+              <BellIcon className='w-6 h-6' />
+            </Badge>
+          ) : (
             <BellIcon className='w-6 h-6' />
-          </Badge>
+          )}
         </IconButton>
       </MenuHandler>
       <MenuList className='p-0 py-2 text-foreground w-[346px] rounded-2xl shadow-lg *:hover:bg-none shadow-black/25 overflow-hidden'>

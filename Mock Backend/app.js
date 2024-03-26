@@ -559,6 +559,18 @@ app.patch("/notifications/mark-all-as-read", (req, res) => {
   res.sendStatus(200);
 });
 
+app.patch("/notifications/mark-as-read/:id", (req, res) => {
+  const { id } = req.params;
+  const { read_flag } = req.body;
+  const notification = notifications.find((notif) => notif.id === id);
+  if (!notification) {
+    return res.status(404).json({ message: "Notification not found" });
+  }
+  notification.unread_flag = read_flag;
+  // console.log("Notifications marked as read:", notifications);
+  res.sendStatus(200);
+});
+
 app.patch("/notifications/hide/:id", (req, res) => {
   const { id } = req.params;
   const notification = notifications.find((notif) => notif.id === id);
