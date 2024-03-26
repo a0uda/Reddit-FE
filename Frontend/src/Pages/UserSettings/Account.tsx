@@ -98,18 +98,20 @@ function Account() {
           open={changePasswordModal}
           refetch={refetch}
         />
-        <Card
-          title='Change password'
-          description='Password must be at least 8 characters long'
-        >
-          <RoundedButton
-            buttonBorderColor='border-blue-light'
-            buttonColor='bg-white'
-            buttonText='Change'
-            buttonTextColor='text-blue-light'
-            onClick={togglePasswordModal}
-          />
-        </Card>
+        {hasPassword && (
+          <Card
+            title='Change password'
+            description='Password must be at least 8 characters long'
+          >
+            <RoundedButton
+              buttonBorderColor='border-blue-light'
+              buttonColor='bg-white'
+              buttonText='Change'
+              buttonTextColor='text-blue-light'
+              onClick={togglePasswordModal}
+            />
+          </Card>
+        )}
         <Card
           title='Gender'
           description='This information may be used to improve your recommendations and ads.'

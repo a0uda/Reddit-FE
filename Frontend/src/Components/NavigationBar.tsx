@@ -662,17 +662,32 @@ const NotificationMenu = () => {
     );
   };
 
-  const today = notifications.filter((notification: Notification) => {
-    const todayDate = new Date();
-    const createdAt = new Date(notification.created_at);
-    return createdAt.toDateString() === todayDate.toDateString();
-  });
+  const [today, setToday] = useState([]);
+  const [earlier, setEarlier] = useState([]);
+  console.log(notifications);
 
-  const earlier = notifications.filter((notification: Notification) => {
-    const createdAt = new Date(notification.created_at);
-    const todayDate = new Date();
-    return createdAt.toDateString() !== todayDate.toDateString();
-  });
+  useEffect(() => {
+    if (notifications) {
+      setToday(
+        notifications?.filter((notification: Notification) => {
+          const todayDate = new Date();
+          const createdAt = new Date(notification.created_at);
+          return createdAt.toDateString() === todayDate.toDateString();
+        })
+      );
+
+      setEarlier(
+        notifications?.filter((notification: Notification) => {
+          const createdAt = new Date(notification.created_at);
+          const todayDate = new Date();
+          return createdAt.toDateString() !== todayDate.toDateString();
+        })
+      );
+    }
+    console.log(notifications);
+
+    console.log(today);
+  }, [notifications]);
 
   // console.log(today);
   // console.log(earlier);
