@@ -14,8 +14,6 @@ const PostsListings = () => {
     queryFn: () => fetchRequest(`listings/posts/random`),
   });
 
-  console.log(data);
-
   return (
     <>
       {/* Sort by dropdown */}

@@ -23,28 +23,6 @@ import PostInteractionButtons from './PostInteractionButtons';
 import { PostType } from '../types/types';
 
 const Post = ({ post }: { post: PostType }) => {
-  // const post = {
-  //   title: 'UI/UX Review Check',
-  //   time: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7), // 2 hours ago
-  //   image: 'https://source.unsplash.com/random',
-  //   community: {
-  //     name: 'r/SWECommunity',
-  //     joined: false,
-  //     icon: 'https://styles.redditmedia.com/t5_3sr5cq/styles/communityIcon_k635u93wwaw81.jpg?format=pjpg&s=37cc0c3373c2fea56541a221efbc2452cf7bd606',
-  //     coverImage:
-  //       'https://styles.redditmedia.com/t5_3sr5cq/styles/bannerBackgroundImage_auewfmsfxn191.png',
-  //     description:
-  //       'The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to "Naviglio" where you can enjoy the main night life in Barcelona.',
-  //     members: 1000,
-  //     online: 100,
-  //   },
-  //   saved: false,
-  //   hidden: false,
-  //   votes: 1000,
-  //   comments: 100,
-  // };
-
-  console.log(dateDuration(new Date(post.created_at)));
 
   // TODO Fetch Community
   // const data = useQuery({

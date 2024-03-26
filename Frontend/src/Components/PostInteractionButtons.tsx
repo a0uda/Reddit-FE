@@ -30,17 +30,12 @@ const PostInteractionButtons = ({
         data: { id: postId, isPost: true, rank: rank },
       }),
     {
-      onSuccess: (data) => {
-        console.log('Done', data);
-      },
       onError: () => {
         // Perform any actions on error, like showing an error message
         console.log('Error');
       },
     }
   );
-
-  console.log('Upvote', upvote);
 
   return (
     <>

@@ -42,7 +42,7 @@ import {
 import SideBar from './SideBar';
 import { cn } from '../utils/helper_functions';
 import { CommunityIcon } from '../assets/icons/Icons';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function NavigationBar() {
   const [openNav, setOpenNav] = useState(false);
@@ -97,14 +97,14 @@ export function NavigationBar() {
               </svg>
             )}
           </IconButton>
-          <a href='/'>
+          <Link to='/'>
             <div className='flex gap-2 items-center justify-center h-12'>
               <LogoMark />
               <div className='hidden lg:flex'>
                 <LogoText />
               </div>
             </div>
-          </a>
+          </Link>
         </div>
         <div className='col-span-4 hidden w-full relative lg:flex lg:items-center lg:justify-center'>
           <SearchBar />
@@ -132,56 +132,44 @@ export function NavigationBar() {
 }
 
 const SearchBar = () => {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
-      {/* <div
-        onFocus={() => {
-          setIsFocused(true);
-          inputRef.current?.focus();
-        }}
-        // onBlur={() => {
-        //   console.log('blur');
-        //   setIsFocused(false);
-        // }}
-        className={cn(
-          'flex flex-col gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-50 max-w-[550px] w-full',
-          isFocused
-            ? ' bg-white shadow-md shadow-black/25 absolute top-3 items-start rounded-xl overflow-y-auto overflow-x-hidden min-h-40 max-h-[calc(100vh-3.5rem)]'
-            : ''
-        )}
-        tabIndex={0}
-      >
-        <div className='flex items-center gap-2'>
-          <HiMagnifyingGlass size={20} className='fill-black' />
-          <input
-            className='!border-0 bg-transparent w-full focus:outline-none placeholder:text-black/80 placeholder:font-light'
-            placeholder='Search Reddit'
-            aria-label='Search Reddit'
-            ref={inputRef}
-          />
-        </div>
-        {isFocused && (
-          <Collapse open={isFocused}>
-            <SearchList />
-          </Collapse>
-        )}
-      </div>
-       */}
       <Menu
         open={isFocused}
-        handler={() => setIsFocused((cur) => !cur)}
-        offset={{ mainAxis: -0 }}
+        handler={() => {
+          setIsFocused((cur) => !cur);
+        }}
+        offset={{ mainAxis: -41 }}
         placement='bottom'
+        dismiss={{
+          itemPress: false,
+        }}
       >
         <MenuHandler>
           <div
             className={cn(
-              'flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-50 max-w-[550px] w-full',
+              'flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-50 max-w-[550px] w-full'
+            )}
+          >
+            <HiMagnifyingGlass size={20} className='fill-black' />
+            <input
+              className='!border-0 bg-transparent w-full focus:outline-none placeholder:text-black/80 placeholder:font-light'
+              placeholder='Search Reddit'
+              aria-label='Search Reddit'
+            />
+          </div>
+        </MenuHandler>
+        <MenuList className='*:focus:bg-transparent *:hover:bg-transparent p-0 pt-1 hidden z-50 shadow-md shadow-black/25 max-w-[550px] w-full rounded-3xl lg:block min-h-24 max-h-[calc(100vh-3.5rem)]'>
+          <div
+            className={cn(
+              'flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-50 max-w-[550px] w-full h-10',
               isFocused
-                ? ' bg-white shadow-md shadow-black/25 border-b-2 border-neutral-muted absolute top-3 items-start rounded-none rounded-t-xl overflow-y-auto overflow-x-hidden'
+                ? ' bg-white border-b-2 border-neutral-muted relative items-start rounded-none rounded-t-xl overflow-y-auto overflow-x-hidden'
                 : ''
             )}
           >
@@ -190,12 +178,23 @@ const SearchBar = () => {
               className='!border-0 bg-transparent w-full focus:outline-none placeholder:text-black/80 placeholder:font-light'
               placeholder='Search Reddit'
               aria-label='Search Reddit'
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  setIsFocused(false);
+                  setSearch('');
+                  navigate(`/r/AskReddit/search/?q=${search}&type=link`);
+                }
+              }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               ref={inputRef}
+              // onFocus={() => inputRef.current?.focus()}
+              onBlur={() => inputRef.current?.focus()}
             />
           </div>
-        </MenuHandler>
-        <MenuList className='hidden z-50 shadow-md shadow-black/25 max-w-[550px] w-full rounded-none rounded-b-xl lg:block min-h-24 max-h-[calc(100vh-3.5rem)]'>
-          <SearchList />
+          <div className='hidden z-50 max-w-[550px] w-full rounded-none rounded-b-xl lg:block'>
+            <SearchList />
+          </div>
         </MenuList>
       </Menu>
     </>
@@ -317,15 +316,15 @@ const CampainLoggedOut = () => {
           <MenuList className='p-0 py-2 text-foreground w-max shadow-lg shadow-black/25'>
             <MenuItem className='py-2 flex gap-2 items-center'>
               <HiArrowRightOnRectangle size={20} />
-              <a href='#'>Log In / Sign Up</a>
+              <Link to='#'>Log In / Sign Up</Link>
             </MenuItem>
             <MenuItem className='py-3 flex gap-2 items-center'>
               <HiCursorArrowRipple size={20} />
-              <a href='#'>Advertise on Reddit</a>
+              <Link to='#'>Advertise on Reddit</Link>
             </MenuItem>
             <MenuItem className='py-3 flex gap-2 items-center'>
               <HiShoppingBag size={20} />
-              <a href='#'>Shop Collectible Avatars</a>
+              <Link to='#'>Shop Collectible Avatars</Link>
             </MenuItem>
           </MenuList>
         </Menu>
@@ -342,8 +341,7 @@ const CampainLoggedIn = () => {
   };
 
   const [avatarDrawer, setAvatarDrawer] = useState(false);
-
-  const numberOfMessages = 2;
+  const [numberOfMessages, setNumberOfMessages] = useState(false);
 
   const avatarMenu = (
     <>
@@ -368,7 +366,7 @@ const CampainLoggedIn = () => {
         <ListItem className='py-3 flex gap-2 items-center justify-between'>
           <div className='flex gap-2 items-center'>
             <ShieldCheckIcon className='w-6 h-6' />
-            <a href='#'>Mod Mode</a>
+            <Link to='#'>Mod Mode</Link>
           </div>
           <Switch
             crossOrigin={''}
@@ -383,13 +381,15 @@ const CampainLoggedIn = () => {
         </ListItem>
         <ListItem className='py-3 flex gap-2 items-center'>
           <ArrowRightEndOnRectangleIcon className='w-6 h-6' />
-          <a href='#'>Log Out</a>
+          <Link to='#'>Log Out</Link>
         </ListItem>
         <hr className='border-neutral-muted pb-2' />
-        <ListItem className='py-3 flex gap-2 items-center'>
-          <Cog8ToothIcon className='w-6 h-6' />
-          <a href='#'>Settings</a>
-        </ListItem>
+        <Link to='/settings/account'>
+          <ListItem className='py-3 flex gap-2 items-center'>
+            <Cog8ToothIcon className='w-6 h-6' />
+            Settings
+          </ListItem>
+        </Link>
       </List>
     </>
   );
@@ -403,18 +403,18 @@ const CampainLoggedIn = () => {
           content={numberOfMessages}
           className={numberOfMessages === 0 ? 'hidden' : ''}
         >
-          <a href='/chat'>
+          <Link to='/chat'>
             <IconButton variant='text'>
               <ChatBubbleOvalLeftEllipsisIcon className='w-6 h-6' />
             </IconButton>
-          </a>
+          </Link>
         </Badge>
-        <a href='/submit'>
+        <Link to='/submit'>
           <Button variant='text' className='flex items-center gap-1.5'>
             <PlusIcon className='w-6 h-6' />
             Create
           </Button>
-        </a>
+        </Link>
         <Menu
           dismiss={{
             itemPress: false,
@@ -559,14 +559,14 @@ const NotificationMenu = () => {
           </div>
           <hr className='border-neutral-muted' />
           <div className='px-5 p-2'>
-            <a href='/settings/account'>
+            <Link to='/settings/account'>
               <Button
                 variant='filled'
                 className='w-full h-10 bg-neutral-muted text-black'
               >
                 See All
               </Button>
-            </a>
+            </Link>
           </div>
         </>
       ) : (
