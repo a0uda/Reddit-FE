@@ -10,7 +10,7 @@ import { useAlert } from '../../Providers/AlertProvider';
 
 function Notifications() {
   const { data, error, isLoading, refetch } = useQuery(
-    'notifications data',
+    'notifications settings',
     () => fetchRequest('users/notification-settings')
   );
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
