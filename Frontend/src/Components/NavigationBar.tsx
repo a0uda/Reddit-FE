@@ -343,7 +343,6 @@ const CampainLoggedIn = () => {
   };
 
   const [avatarDrawer, setAvatarDrawer] = useState(false);
-  const [numberOfMessages, setNumberOfMessages] = useState(false);
 
   const avatarMenu = (
     <>
@@ -400,40 +399,18 @@ const CampainLoggedIn = () => {
     <>
       <div className='flex items-center gap-x-1'>
         <MobileSearchBar />
-        <Badge
-          overlap='circular'
-          content={numberOfMessages}
-          className={numberOfMessages === 0 ? 'hidden' : ''}
-        >
-          <Link to='/chat'>
-            <IconButton variant='text'>
-              <ChatBubbleOvalLeftEllipsisIcon className='w-6 h-6' />
-            </IconButton>
-          </Link>
-        </Badge>
+        <Link to='/chat'>
+          <IconButton variant='text'>
+            <ChatBubbleOvalLeftEllipsisIcon className='w-6 h-6' />
+          </IconButton>
+        </Link>
         <Link to='/submit'>
           <Button variant='text' className='flex items-center gap-1.5'>
             <PlusIcon className='w-6 h-6' />
             Create
           </Button>
         </Link>
-        <Menu
-          dismiss={{
-            itemPress: false,
-          }}
-          placement='bottom-end'
-        >
-          <MenuHandler>
-            {/* <Badge overlap='circular'> */}
-            <IconButton variant='text'>
-              <BellIcon className='w-6 h-6' />
-            </IconButton>
-            {/* </Badge> */}
-          </MenuHandler>
-          <MenuList className='p-0 py-2 text-foreground w-[346px] rounded-2xl shadow-lg *:hover:bg-none shadow-black/25 overflow-hidden'>
-            <NotificationMenu />
-          </MenuList>
-        </Menu>
+        <NotificationMenu />
         {/* Avatar Dropdown */}
         <div className='hidden lg:block'>
           <Menu
@@ -482,11 +459,17 @@ const CampainLoggedIn = () => {
 };
 
 const NotificationMenu = () => {
-  const { data, refetch } = useQuery('notifications data', () =>
-    fetchRequest('notifications')
+  const { data, refetch } = useQuery(
+    'notifications data',
+    async () => await fetchRequest('notifications'),
+    {
+      onSuccess: (data) => {
+        setNotifications(data?.data ?? []);
+      },
+    }
   );
-  // console.log(data);
-  const notifications = data?.data ?? [];
+  console.log(data);
+  const [notifications, setNotifications] = useState(data?.data ?? []);
 
   // handle mark all as read
   const markAllAsReadMutation = useMutation(patchRequest);
@@ -517,7 +500,7 @@ const NotificationMenu = () => {
           });
       })
   );
-  const handleHideNotification = async (id) => {
+  const handleHideNotification = async (id: string) => {
     try {
       await hideNotification.mutateAsync(id);
       refetch();
@@ -554,7 +537,9 @@ const NotificationMenu = () => {
       (notification: Notification, index: number) => (
         <ListItem
           key={index}
-          className='py-2 flex gap-2 h-10 items-center hover:bg-transparent focus:bg-transparent'
+          className={`py-2 flex gap-2 h-10 items-center ${
+            notification.unread_flag ? 'bg-light-blue-50' : 'bg-transparent'
+          }`}
         >
           <ListItemPrefix className='mr-0'>
             {notification.communityAvatarSrc ? (
@@ -631,89 +616,115 @@ const NotificationMenu = () => {
   // console.log(earlier);
 
   return (
-    <List className='p-0 text-foreground w-full'>
-      <ListItem className='p-0 flex gap-2 items-center justify-around hover:bg-transparent focus:bg-transparent'>
-        <Button variant='text' className='text-gray-700 hover:bg-transparent'>
-          Notifications
-        </Button>
-        <a href='/message/messages'>
-          <Button variant='text' className='text-gray-600 hover:bg-transparent'>
-            {/* // TODO: update the link after creating the messages page */}
-            Messages
-          </Button>
-        </a>
-      </ListItem>
-      <div className='bg-blue w-1/2 h-1 rounded-full' />
-      {notifications.length > 0 ? (
-        <>
-          <div className='flex items-center justify-between p-3'>
-            <Typography
-              variant='small'
-              className='text-neutral-900 uppercase font-medium'
-            >
-              Today
-            </Typography>
-            <div className='flex items-center gap-2'>
-              <Typography
-                variant='small'
-                className='border-neutral-muted border-r-2 pr-2 cursor-pointer font-medium text-gray-800'
-                onClick={markAllAsRead}
-              >
-                Mark all as Read
-              </Typography>
-              <a href='/settings/notifications'>
-                <Cog8ToothIcon className='w-6 h-6 stroke-neutral-900' />
-              </a>
-            </div>
-          </div>
-          {renderNotificationItems(today)}
-          <div className='flex items-center justify-between p-3'>
-            <Typography
-              variant='small'
-              className='text-neutral-900 uppercase font-medium'
-            >
-              Earlier
-            </Typography>
-          </div>
-          {renderNotificationItems(earlier)}
-          <hr className='border-neutral-muted' />
-          <div className='px-5 p-2'>
-            <Link to='/settings/account'>
-              <Button
-                variant='filled'
-                className='w-full h-10 bg-neutral-muted text-black text-sm'
-              >
-                See All
-              </Button>
-            </Link>
-          </div>
-        </>
-      ) : (
-        <>
-          <ListItem className='px-5 py-2 flex flex-col items-center justify-center text-center hover:bg-transparent focus:bg-transparent'>
-            <img
-              className='max-h-[150px] mb-xl'
-              role='presentation'
-              src='https://www.redditstatic.com/shreddit/assets/snoovatar-full-hi.png'
-              alt='Image for an empty inbox'
-            />
-            <Typography variant='lead'>No Notifications</Typography>
-            <Typography variant='small'>
-              All caught up! Check back later for new notifications.
-            </Typography>
-          </ListItem>
-          <hr className='border-neutral-muted' />
-          <div className='px-5 p-2'>
+    <Menu
+      dismiss={{
+        itemPress: false,
+      }}
+      placement='bottom-end'
+    >
+      <MenuHandler>
+        <IconButton variant='text' className='!overflow-visible'>
+          <Badge
+            overlap='circular'
+            className='text-xs p-0 min-w-4 min-h-4'
+            content={<div>{notifications.length}</div>}
+          >
+            <BellIcon className='w-6 h-6' />
+          </Badge>
+        </IconButton>
+      </MenuHandler>
+      <MenuList className='p-0 py-2 text-foreground w-[346px] rounded-2xl shadow-lg *:hover:bg-none shadow-black/25 overflow-hidden'>
+        <List className='p-0 text-foreground w-full'>
+          <ListItem className='p-0 flex gap-2 items-center justify-around hover:bg-transparent focus:bg-transparent'>
             <Button
-              variant='filled'
-              className='w-full h-10 bg-neutral-muted text-black'
+              variant='text'
+              className='text-gray-700 hover:bg-transparent'
             >
-              View Settings
+              Notifications
             </Button>
-          </div>
-        </>
-      )}
-    </List>
+            <a href='/message/messages'>
+              <Button
+                variant='text'
+                className='text-gray-600 hover:bg-transparent'
+              >
+                {/* // TODO: update the link after creating the messages page */}
+                Messages
+              </Button>
+            </a>
+          </ListItem>
+          <div className='bg-blue w-1/2 h-1 rounded-full' />
+          {notifications.length > 0 ? (
+            <>
+              <div className='flex items-center justify-between p-3'>
+                <Typography
+                  variant='small'
+                  className='text-neutral-900 uppercase font-medium'
+                >
+                  Today
+                </Typography>
+                <div className='flex items-center gap-2'>
+                  <Typography
+                    variant='small'
+                    className='border-neutral-muted border-r-2 pr-2 cursor-pointer font-medium text-gray-800'
+                    onClick={markAllAsRead}
+                  >
+                    Mark all as Read
+                  </Typography>
+                  <a href='/settings/notifications'>
+                    <Cog8ToothIcon className='w-6 h-6 stroke-neutral-900' />
+                  </a>
+                </div>
+              </div>
+              {renderNotificationItems(today)}
+              <div className='flex items-center justify-between p-3'>
+                <Typography
+                  variant='small'
+                  className='text-neutral-900 uppercase font-medium'
+                >
+                  Earlier
+                </Typography>
+              </div>
+              {renderNotificationItems(earlier)}
+              <hr className='border-neutral-muted' />
+              <div className='px-5 p-2'>
+                <Link to='/settings/account'>
+                  <Button
+                    variant='filled'
+                    className='w-full h-10 bg-neutral-muted text-black text-sm'
+                  >
+                    See All
+                  </Button>
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              <ListItem className='px-5 py-2 flex flex-col items-center justify-center text-center hover:bg-transparent focus:bg-transparent'>
+                <img
+                  className='max-h-[150px] mb-xl'
+                  role='presentation'
+                  src='https://www.redditstatic.com/shreddit/assets/snoovatar-full-hi.png'
+                  alt='Image for an empty inbox'
+                />
+                <Typography variant='lead'>No Notifications</Typography>
+                <Typography variant='small'>
+                  All caught up! Check back later for new notifications.
+                </Typography>
+              </ListItem>
+              <hr className='border-neutral-muted' />
+              <div className='px-5 p-2'>
+                <Button
+                  variant='filled'
+                  className='w-full h-10 bg-neutral-muted text-black'
+                >
+                  View Settings
+                </Button>
+              </div>
+            </>
+          )}
+        </List>
+      </MenuList>
+    </Menu>
   );
 };
 
