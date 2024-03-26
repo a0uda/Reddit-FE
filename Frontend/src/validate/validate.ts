@@ -46,9 +46,6 @@ const Validation = (type: keyof FormSchema) => {
       userName: validationSchema['username'],
       email: validationSchema['email'],
     },
-    disconnectGoogle: {
-      password: validationSchema['password'],
-    },
     changePassword: {
       password: validationSchema['password'],
       newPassword: validationSchema['newPassword'],
