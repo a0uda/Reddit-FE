@@ -40,7 +40,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import SideBar from './SideBar';
-import { cn } from '../utils/helper_functions';
+import { cn, getTimeDifference } from '../utils/helper_functions';
 import { CommunityIcon } from '../assets/icons/Icons';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from 'react-query';
@@ -569,9 +569,14 @@ const NotificationMenu = () => {
             )}
           </ListItemPrefix>
           <div>
-            <Typography variant='small' color='blue-gray'>
-              {notification.community_name}{' '}
-            </Typography>
+            <div className='flex items-center gap-2'>
+              <Typography variant='small' color='blue-gray'>
+                {notification.community_name}
+              </Typography>
+              <Typography variant='paragraph' className='text-xs text-gray-600'>
+                {getTimeDifference(notification.created_at)}
+              </Typography>
+            </div>
             <Typography
               variant='small'
               className='font-normal text-xs text-gray-600'

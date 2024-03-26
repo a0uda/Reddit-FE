@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import moment from 'moment';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -25,3 +26,23 @@ export const dateDuration = (date: Date) => {
     return `${durationInSeconds} sec.${durationInSeconds > 1 ? 's' : ''} ago`;
   }
 };
+
+export function getTimeDifference(date: string) {
+  const currentTime = moment();
+  const srcTime = moment(date);
+  const duration = moment.duration(currentTime.diff(srcTime));
+
+  if (duration.asYears() >= 1) {
+    return `${Math.floor(duration.asYears())}y`;
+  } else if (duration.asMonths() >= 1) {
+    return `${Math.floor(duration.asMonths())}M`;
+  } else if (duration.asDays() >= 1) {
+    return `${Math.floor(duration.asDays())}d`;
+  } else if (duration.asHours() >= 1) {
+    return `${Math.floor(duration.asHours())}h`;
+  } else if (duration.asMinutes() >= 1) {
+    return `${Math.floor(duration.asMinutes())}m`;
+  } else {
+    return 'Less than a minute';
+  }
+}
