@@ -6,16 +6,26 @@ import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest } from '../../API/User';
 import { Spinner } from '@material-tailwind/react';
 import LoadingProvider from './Containers/LoadingProvider';
+import { useAlert } from '../../Providers/AlertProvider';
 
 function Notifications() {
   const { data, error, isLoading, refetch } = useQuery(
     'notifications data',
     () => fetchRequest('users/notification-settings')
   );
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
 
   const mutation = useMutation(patchRequest, {
     onSuccess: () => {
       refetch();
+      setTrigger(!trigger);
+      setIsError(false);
+      setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error.message);
     },
   });
 

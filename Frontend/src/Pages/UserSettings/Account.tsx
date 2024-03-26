@@ -12,9 +12,12 @@ import {
   ChangeEmailModal,
   ChangeEmailModalError,
   DisconnectGoogleModal,
+  ChangePasswordModal,
 } from './Containers/AccountModals';
+import { useAlert } from '../../Providers/AlertProvider';
 
 function Account() {
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
   const [deleteAccountModal, setDeleteAccountModal] = React.useState(false);
   const toggleDeleteAccountModal = () => {
     setDeleteAccountModal(!deleteAccountModal);
@@ -28,6 +31,10 @@ function Account() {
   const toggleEmailModal = () => {
     setChangeEmailModal(!changeEmailModal);
   };
+  const [changePasswordModal, setChangePasswordModal] = React.useState(false);
+  const togglePasswordModal = () => {
+    setChangePasswordModal(!changePasswordModal);
+  };
   const [disconnectGoogleModal, setDisconnectGoogleModal] =
     React.useState(false);
   const toggleGoogleModal = () => {
@@ -37,8 +44,16 @@ function Account() {
     fetchRequest('users/account-settings')
   );
   const patchReq = useMutation(patchRequest, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       refetch();
+      setTrigger(!trigger);
+      setIsError(false);
+      setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error.message);
     },
   });
   const handleChange = (endPoint, newSettings) => {
@@ -51,6 +66,7 @@ function Account() {
     gmail,
     gender,
     country,
+    hasPassword,
   } = data?.data.account_settings || {};
 
   return (
@@ -68,13 +84,30 @@ function Account() {
       />
       <h2 className='text-xl my-8 font-semibold'>Account Settings</h2>
       <Section sectionTitle='ACCOUNT PREFERENCES'>
-        <Card title='Email' description={email}>
+        <Card title='Email address' description={email}>
           <RoundedButton
             buttonBorderColor='border-blue-light'
             buttonColor='bg-white'
             buttonText='Change'
             buttonTextColor='text-blue-light'
-            onClick={toggleEmailModal}
+            onClick={hasPassword ? toggleEmailModal : toggleEmailModalError}
+          />
+        </Card>
+        <ChangePasswordModal
+          handleOpen={togglePasswordModal}
+          open={changePasswordModal}
+          refetch={refetch}
+        />
+        <Card
+          title='Change password'
+          description='Password must be at least 8 characters long'
+        >
+          <RoundedButton
+            buttonBorderColor='border-blue-light'
+            buttonColor='bg-white'
+            buttonText='Change'
+            buttonTextColor='text-blue-light'
+            onClick={togglePasswordModal}
           />
         </Card>
         <Card

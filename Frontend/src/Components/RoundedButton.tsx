@@ -10,6 +10,7 @@ export default function RoundedButton(props: {
   children?: ReactNode;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
 }) {
   return (
     <Button
@@ -19,6 +20,7 @@ export default function RoundedButton(props: {
         // color: props.buttonTextColor,
         width: 'max-content',
       }}
+      type={props.type || 'button'}
       // color='black'
       className={`!border ${props.buttonColor} ${props.buttonBorderColor} !normal-case ${props.buttonTextColor} hover:opacity-50 active:brightness-150 rounded-full hover:shadow-none focus:shadow-none shadow-none `}
       size='sm'

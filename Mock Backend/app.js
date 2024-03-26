@@ -30,10 +30,17 @@ app.get("/users/account-settings", (req, res) => {
   res.status(200).json(accountSettings);
 });
 
+let c = 0
 app.patch("/users/change-account-settings", (req, res) => {
   accountSettings.account_settings[Object.keys(req.body)[0]] = Object.values(
     req.body
   )[0];
+  if (c < 5) {
+    c++;
+    res.sendStatus(200);
+  } else {
+    res.status(404).send('Error')
+  }
 });
 app.post("/users/disconnect-google", (req, res) => {
   const { password } = req.body;
@@ -49,6 +56,7 @@ app.patch("/users/change-email", (req, res) => {
   res.sendStatus(200);
 });
 app.patch("/users/change-password", (req, res) => {
+
   const { current_password, new_password, verified_new_password } = req.body;
   // accountSettings.account_settings.email = new_email;
   res.sendStatus(200);

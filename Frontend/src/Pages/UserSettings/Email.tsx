@@ -6,15 +6,26 @@ import { fetchRequest, patchRequest } from '../../API/User';
 import { useMutation, useQuery } from 'react-query';
 import { Spinner } from '@material-tailwind/react';
 import LoadingProvider from './Containers/LoadingProvider';
+import { useAlert } from '../../Providers/AlertProvider';
 
 function Email() {
   const { data, error, isLoading, refetch } = useQuery('email data', () =>
     fetchRequest('users/email-settings')
   );
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+
   console.log(data);
   const mutation = useMutation(patchRequest, {
     onSuccess: () => {
       refetch();
+      setTrigger(!trigger);
+      setIsError(false);
+      setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error.message);
     },
   });
 
