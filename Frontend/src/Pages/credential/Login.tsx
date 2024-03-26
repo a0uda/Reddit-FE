@@ -4,7 +4,7 @@ import { ButtonType } from '../../validate/buttonType';
 import { postRequest } from '../../API/User';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PopUp from '../../Components/PopUp';
+import { Dialog, DialogBody } from '@material-tailwind/react';
 
 export default function Login() {
   const [errorMessage, seterrorMessage] = useState('');
@@ -55,53 +55,45 @@ export default function Login() {
     }
   };
   return (
-    <PopUp>
-      <MyForm
-        type='login'
-        title='Log in'
-        paragraph=' By continuing, you agree to our User Agreement and acknowledge
+    <>
+      <Dialog size='sm' open={true} handler={() => {}}>
+        <DialogBody className='text-black'>
+          <MyForm
+            type='login'
+            title='Log in'
+            paragraph=' By continuing, you agree to our User Agreement and acknowledge
                  that you understand the Privacy Policy.'
-        inputArr={inputArr}
-        initVal={initialValues}
-        ButtArr={buttons}
-        LogWithGoogle='logwithgoogle'
-        HandleOnSubmitFunction={handleOnSubmit}
-        errorMessage={errorMessage}
-      >
-        <>
-          <div className='m-3'>
-            <p>
-              Forget your{' '}
-              <Link
-                to='/forget-username'
-                className='text-decoration-none'
-                style={{ color: '#6366f1' }}
-              >
-                username
-              </Link>
-              or{' '}
-              <Link
-                to='/forget-password'
-                className='text-decoration-none'
-                style={{ color: '#6366f1' }}
-              >
-                password
-              </Link>
-              ?
-            </p>
-            <p>
-              New to Reddit?{' '}
-              <Link
-                to='/signup'
-                className='text-decoration-none'
-                style={{ color: '#6366f1' }}
-              >
-                Sign Up
-              </Link>
-            </p>
-          </div>
-        </>
-      </MyForm>
-    </PopUp>
+            inputArr={inputArr}
+            initVal={initialValues}
+            ButtArr={buttons}
+            LogWithGoogle='logwithgoogle'
+            HandleOnSubmitFunction={handleOnSubmit}
+            errorMessage={errorMessage}
+          >
+            <>
+              <div className='m-3'>
+                <p>
+                  Forget your{' '}
+                  <Link to='/forget-username' style={{ color: '#6366f1' }}>
+                    username
+                  </Link>
+                  or{' '}
+                  <Link to='/forget-password' style={{ color: '#6366f1' }}>
+                    password
+                  </Link>
+                  ?
+                </p>
+                <p>
+                  New to Reddit?{' '}
+                  <Link to='/signup' style={{ color: '#6366f1' }}>
+                    Sign Up
+                  </Link>
+                </p>
+              </div>
+            </>
+          </MyForm>
+        </DialogBody>
+      </Dialog>
+    </>
   );
 }
