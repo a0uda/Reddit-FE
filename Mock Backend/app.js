@@ -3,6 +3,8 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
+const fetch = require("node-fetch");
 
 app.use(
   cors({
@@ -276,6 +278,82 @@ app.patch("/users/change-chats-and-msgs-settings", (req, res) => {
   console.log(chatSettings);
   res.sendStatus(200);
 });
+
+let users = [];
+
+app.post("/users/signup", (req, res) => {
+  const { username, email, password } = req.body;
+
+  const newUser = {
+    username,
+    email,
+    password,
+  };
+  users.push(newUser);
+  const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1h" });
+  res.status(201).json({ message: "User created successfully", token });
+});
+
+app.post("/users/login", (req, res) => {
+  const { username, password } = req.body;
+  const user = users.find(
+    (user) => user.username === username && user.password === password
+  );
+
+  if (user) {
+    const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1h" });
+    res.status(200).json({ message: "Login successful", token });
+  } else {
+    res.status(401).json({ error: "Invalid username or password" });
+  }
+});
+
+app.post("/users/forget-username", (req, res) => {
+  const { email } = req.body;
+  res.status(200).json({ message: "Email sent successfully" });
+});
+app.post("/users/forget-password", (req, res) => {
+  const { username, email } = req.body;
+  res.status(200).json({ message: "Email sent successfully" });
+});
+
+app.post("/users/signup-google", (req, res) => {
+  const { code } = req.body;
+  username = "llllllllll";
+  const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1h" });
+  res
+    .status(200)
+    .json({ message: "User logged in with Google successfully", token });
+  // const { code } = req.body;
+  // const client_id =
+  //   "178664293995-s6s92s28mme4eu54lg367sqhnj8bonff.apps.googleusercontent.com";
+  // const client_secret = "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";
+  // const redirect_uri = "http://localhost";
+  // const grant_type = "authorization_code";
+
+  // fetch("<https://oauth2.googleapis.com/token>", {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/x-www-form-urlencoded",
+  //   },
+  //   body: new URLSearchParams({
+  //     code,
+  //     client_id,
+  //     client_secret,
+  //     redirect_uri,
+  //     grant_type,
+  //   }),
+  // })
+  //   .then((response) => response.json())
+  //   .then((tokens) => {
+  //     res.json(tokens);
+  //   })
+  //   .catch((error) => {
+  //     console.error("Token exchange error:", error);
+  //     res.status(500).json({ error: "Internal Server Error" });
+  //   });
+});
+
 module.exports = app;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
