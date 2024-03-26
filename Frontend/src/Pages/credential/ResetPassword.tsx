@@ -66,6 +66,8 @@ export default function ResetPassword(props: {
     <CheckEmail
       handleButtonEmail={() => setSuccessMessage('')}
       handleBackArrow={() => setSuccessMessage('')}
+      open={props.open}
+      handleOpen={props.handleOpen}
     />
   ) : (
     <Dialog size='sm' open={props.open} handler={props.handleOpen}>
