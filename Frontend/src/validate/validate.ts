@@ -3,11 +3,11 @@ import { validationSchema } from './validateSchema';
 
 type FormSchema = {
   login: {
-    userName: yup.Schema<string>;
+    username: yup.Schema<string>;
     password: yup.Schema<string>;
   };
   signup: {
-    userName: yup.Schema<string>;
+    username: yup.Schema<string>;
     password: yup.Schema<string>;
     email: yup.Schema<string>;
   };
@@ -15,7 +15,7 @@ type FormSchema = {
     email: yup.Schema<string>;
   };
   resetPassword: {
-    userName: yup.Schema<string>;
+    username: yup.Schema<string>;
     email: yup.Schema<string>;
   };
   disconnectGoogle: {
@@ -26,11 +26,11 @@ type FormSchema = {
 const Validation = (type: keyof FormSchema) => {
   const formSchema: FormSchema = {
     login: {
-      userName: validationSchema['username'],
+      username: validationSchema['username'],
       password: validationSchema['password'],
     },
     signup: {
-      userName: validationSchema['username'],
+      username: validationSchema['username'],
       password: validationSchema['password'],
       email: validationSchema['email'],
     },
@@ -38,7 +38,7 @@ const Validation = (type: keyof FormSchema) => {
       email: validationSchema['email'],
     },
     resetPassword: {
-      userName: validationSchema['username'],
+      username: validationSchema['username'],
       email: validationSchema['email'],
     },
     disconnectGoogle: {
