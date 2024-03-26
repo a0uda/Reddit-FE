@@ -14,6 +14,7 @@ import SocialLinksModal, {
   EnterLinkDetails,
 } from './Containers/SocialLinksModal';
 import LoadingProvider from './Containers/LoadingProvider';
+import { useAlert } from '../../Providers/AlertProvider';
 
 function ImageInput(props: {
   id: string;
@@ -84,14 +85,33 @@ function Profile() {
   const { data, error, isLoading, refetch } = useQuery('profile data', () =>
     fetchRequest('users/profile-settings')
   );
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+
   const postReq = useMutation(postRequest, {
     onSuccess: () => {
       refetch();
+      setTrigger(!trigger);
+      setIsError(false);
+      setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      console.log(error.message);
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error.message);
     },
   });
   const patchReq = useMutation(patchRequest, {
     onSuccess: () => {
       refetch();
+      setTrigger(!trigger);
+      setIsError(false);
+      setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error.message);
     },
   });
   // console.log(data);

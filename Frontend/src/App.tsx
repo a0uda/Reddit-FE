@@ -8,10 +8,12 @@ import RecoverUsername from './Pages/credential/RecoverUsername.tsx';
 import ResetPassword from './Pages/credential/ResetPassword.tsx';
 import { Button } from '@material-tailwind/react';
 import UserSettings from './Pages/UserSettings/UserSettings';
+// import Alert from './Components/Alert.tsx';
 
 function App() {
   return (
     <div className='App'>
+      {/* <Alert isError={false} message='da error' /> */}
       <Router>
         <Routes>
           <Route path='/settings/:page' element={<UserSettings />} />

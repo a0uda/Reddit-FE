@@ -14,8 +14,10 @@ import {
   DisconnectGoogleModal,
   ChangePasswordModal,
 } from './Containers/AccountModals';
+import { useAlert } from '../../Providers/AlertProvider';
 
 function Account() {
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
   const [deleteAccountModal, setDeleteAccountModal] = React.useState(false);
   const toggleDeleteAccountModal = () => {
     setDeleteAccountModal(!deleteAccountModal);
@@ -42,8 +44,16 @@ function Account() {
     fetchRequest('users/account-settings')
   );
   const patchReq = useMutation(patchRequest, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       refetch();
+      setTrigger(!trigger);
+      setIsError(false);
+      setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error.message);
     },
   });
   const handleChange = (endPoint, newSettings) => {

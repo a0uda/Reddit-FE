@@ -8,6 +8,8 @@ import { AxiosPromise } from 'axios';
 import moment from 'moment';
 import { Typography } from '@material-tailwind/react';
 import LoadingProvider from './Containers/LoadingProvider';
+import { useAlert } from '../../Providers/AlertProvider';
+
 const ListCard = (props: {
   avatar: string;
   name: string;
@@ -18,9 +20,19 @@ const ListCard = (props: {
   refetch?;
 }) => {
   // const [timeDifference, setTimeDifference] = React.useState('');
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+
   const postReq = useMutation(postRequest, {
     onSuccess: () => {
       props.refetch();
+      setTrigger(!trigger);
+      setIsError(false);
+      setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error.message);
     },
   });
   const momDate = moment(props.date);
@@ -52,6 +64,7 @@ const ListCard = (props: {
 function SafetyPrivacy() {
   const [blockVal, setBlockVal] = React.useState('');
   const [muteComm, setMuteComm] = React.useState('');
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
 
   const { data, error, isLoading, refetch } = useQuery('safety', () =>
     fetchRequest('users/safety-settings')
@@ -65,9 +78,16 @@ function SafetyPrivacy() {
   const postReq = useMutation(postRequest, {
     onSuccess: () => {
       refetch();
+      setTrigger(!trigger);
+      setIsError(false);
+      setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error.message);
     },
   });
-
   const handleAddButton = (endPoint, data) => {
     postReq.mutate({ endPoint: endPoint, data: data });
   };

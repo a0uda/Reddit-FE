@@ -17,6 +17,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useMutation } from 'react-query';
 import { patchRequest, postRequest } from '../../../API/User';
+import { useAlert } from '../../../Providers/AlertProvider';
 
 function validateEmail(email) {
   // Regular expression for validating email addresses
@@ -53,7 +54,10 @@ export const ChangeEmailModalError = (props: {
             color='blue-gray'
             size='sm'
             variant='text'
-            onClick={props.handleOpen}
+            onClick={() => {
+              props.handleOpen();
+              setModalNum(0);
+            }}
             className='!absolute right-[10px] top-[10px]'
           >
             <svg
@@ -85,7 +89,10 @@ export const ChangeEmailModalError = (props: {
                 buttonColor='bg-inherit'
                 buttonText='Cancel'
                 buttonTextColor='text-blue-light'
-                onClick={props.handleOpen}
+                onClick={() => {
+                  props.handleOpen();
+                  setModalNum(0);
+                }}
               />
               <RoundedButton
                 buttonBorderColor='border-blue-light'
@@ -121,12 +128,22 @@ export const ChangeEmailModal = (props: {
   refetch;
   email: string;
 }) => {
+  const [modalNum, setModalNum] = React.useState(0);
   const [pwd, setPwd] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [showError, setShowError] = React.useState(false);
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
   const patchReq = useMutation(patchRequest, {
     onSuccess: () => {
       props.refetch();
+      setTrigger(!trigger);
+      setIsError(false);
+      setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error.message);
     },
   });
 
@@ -147,13 +164,17 @@ export const ChangeEmailModal = (props: {
                 fill='red'
               />
             </div>
-            Update your Email
+            {modalNum == 0 ? 'Update your Email' : 'Check your Email'}
           </h2>
           <IconButton
             color='blue-gray'
             size='sm'
             variant='text'
-            onClick={props.handleOpen}
+            onClick={() => {
+              setModalNum(0);
+              setShowError(false);
+              props.handleOpen();
+            }}
             className='!absolute right-[10px] top-[10px]'
           >
             <svg
@@ -173,67 +194,91 @@ export const ChangeEmailModal = (props: {
           </IconButton>
         </DialogHeader>
         <DialogBody className='flex gap-6 p-5 flex-col'>
-          Update your email below. There will be a new verification email sent
-          that you will need to use to verify this new email.
-          <div className='flex flex-col gap-3'>
-            <Input
-              label='Current Password'
-              type='password'
-              value={pwd}
-              onChange={(e) => {
-                setPwd(e.target.value);
-                setShowError(true);
-              }}
-            />
-            <div>
-              <Input
-                label='New Email'
-                type='email'
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setShowError(true);
-                }}
-                // className='!border-danger-red'
-                error={
-                  (!validateEmail(email) || email == props.email) && showError
-                }
-                // error={true}
-                // crossOrigin={undefined}
-              />
-              {(!validateEmail(email) || email == props.email) && showError && (
-                <Typography
-                  variant='small'
-                  color='gray'
-                  className='mt-2 flex items-center gap-1 font-normal text-danger-red'
-                  // hidden={!validateEmail(email)}
-                >
-                  {email == props.email
-                    ? 'You entered the current email address. Please enter a different one to proceed'
-                    : 'Please enter a valid Email'}
-                </Typography>
-              )}
-            </div>
-          </div>
+          {modalNum == 0 ? (
+            <>
+              <p>
+                Update your email below. There will be a new verification email
+                sent that you will need to use to verify this new email.
+              </p>
+              <div className='flex flex-col gap-3'>
+                <Input
+                  label='Current Password'
+                  type='password'
+                  value={pwd}
+                  onChange={(e) => {
+                    setPwd(e.target.value);
+                    setShowError(true);
+                  }}
+                />
+                <div>
+                  <Input
+                    label='New Email'
+                    type='email'
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setShowError(true);
+                    }}
+                    // className='!border-danger-red'
+                    error={
+                      (!validateEmail(email) || email == props.email) &&
+                      showError
+                    }
+                    // error={true}
+                    // crossOrigin={undefined}
+                  />
+                  {(!validateEmail(email) || email == props.email) &&
+                    showError && (
+                      <Typography
+                        variant='small'
+                        color='gray'
+                        className='mt-2 flex items-center gap-1 font-normal text-danger-red'
+                        // hidden={!validateEmail(email)}
+                      >
+                        {email == props.email
+                          ? 'You entered the current email address. Please enter a different one to proceed'
+                          : 'Please enter a valid Email'}
+                      </Typography>
+                    )}
+                </div>
+              </div>
+            </>
+          ) : (
+            <p>
+              Reddit sent a confirmation email
+              <br />
+              to: <strong className='font-bold'>{email}</strong> <br />
+              Click the verify link in the email to secure your Reddit account{' '}
+            </p>
+          )}
         </DialogBody>
         <DialogFooter className='p-5 gap-2'>
           <RoundedButton
             buttonBorderColor='border-blue-light'
             buttonColor='bg-blue-light'
-            buttonText='Save Email'
+            buttonText={modalNum == 0 ? 'Save Email' : 'Got it'}
             buttonTextColor='text-white'
-            disabled={!validateEmail(email) || !pwd || email == props.email}
+            disabled={
+              (!validateEmail(email) || !pwd || email == props.email) &&
+              modalNum == 0
+            }
             onClick={() => {
-              patchReq.mutate({
-                endPoint: 'users/change-email',
-                newSettings: {
-                  password: pwd,
-                  new_email: email,
-                },
-              });
-              setEmail('');
-              setPwd('');
-              props.handleOpen();
+              if (modalNum == 0) {
+                patchReq.mutate({
+                  endPoint: 'users/change-email',
+                  newSettings: {
+                    password: pwd,
+                    new_email: email,
+                  },
+                });
+                setModalNum(1);
+              } else {
+                setEmail('');
+                setPwd('');
+                setModalNum(0);
+                setShowError(false);
+                props.handleOpen();
+              }
             }}
           />
         </DialogFooter>
@@ -248,9 +293,19 @@ export const DisconnectGoogleModal = (props: {
   refetch();
 }) => {
   const [pwd, setPwd] = React.useState('');
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+
   const postReq = useMutation(postRequest, {
     onSuccess: () => {
       props.refetch();
+      setTrigger(!trigger);
+      setIsError(false);
+      setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error.message);
     },
   });
 
@@ -342,9 +397,19 @@ export const DeleteAccountModal = (props: {
 }) => {
   const [pwd, setPwd] = React.useState('');
   const [username, setUsername] = React.useState('');
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+
   const postReq = useMutation(postRequest, {
     onSuccess: () => {
       props.refetch();
+      setTrigger(!trigger);
+      setIsError(false);
+      setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error.message);
     },
   });
 
@@ -443,9 +508,19 @@ export const DeleteAccountModal = (props: {
 
 export const ChangePasswordModal = (props: { handleOpen; open; refetch }) => {
   const [disableButt, setDisableButt] = React.useState(true);
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+
   const patchReq = useMutation(patchRequest, {
     onSuccess: () => {
       props.refetch();
+      setTrigger(!trigger);
+      setIsError(false);
+      setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error.message);
     },
   });
 
@@ -509,6 +584,7 @@ export const ChangePasswordModal = (props: { handleOpen; open; refetch }) => {
             initialValues={initVal}
             onSubmit={(values, { setSubmitting }) => {
               handleSubmit(values);
+              props.handleOpen();
               setSubmitting(false);
             }}
           >

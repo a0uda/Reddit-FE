@@ -37,7 +37,7 @@ export default withMT({
         'gold-muted': '#CCAC2B',
         'green-light': '#94E044',
         'green-light-muted': '#73AD34',
-        green: '#46D160',
+        // green: '#46D160',
         'green-muted': '#349E48',
         'mint-light': '#0DD3BB',
         'mint-light-muted': '#0AA18F',

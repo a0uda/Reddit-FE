@@ -21,7 +21,9 @@ const patchRequest = async ({ newSettings, endPoint }) => {
     const response = await axios.patch(baseUrl + endPoint, newSettings, config);
     return response.data;
   } catch (error) {
-    throw new Error('Failed to Update User Settings');
+    console.log('Error', error.response.data);
+
+    throw new Error(error.response.data);
   }
 };
 
@@ -32,7 +34,7 @@ const postRequest = async ({ endPoint, data }) => {
 
     return response.data;
   } catch (error) {
-    throw new Error('Failed to Update');
+    throw new Error(error.response.data);
   }
 };
 
