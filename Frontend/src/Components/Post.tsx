@@ -23,7 +23,6 @@ import PostInteractionButtons from './PostInteractionButtons';
 import { PostType } from '../types/types';
 
 const Post = ({ post }: { post: PostType }) => {
-
   // TODO Fetch Community
   // const data = useQuery({
   //   queryKey: ['community', post.community_id],
@@ -41,7 +40,7 @@ const Post = ({ post }: { post: PostType }) => {
           floated={false}
           className='flex flex-row items-center justify-between gap-2 m-0 bg-inherit'
         >
-          <div className='flex flex-row items-center justify-between gap-2 m-0'>
+          <div className='flex flex-row items-center justify-between gap-1 m-0'>
             <CommunityBadge
               name={post['community-name']}
               joined={post.joined}
@@ -51,7 +50,7 @@ const Post = ({ post }: { post: PostType }) => {
               online={post.communityOnline}
               description={post.description}
             />
-            <span>•</span>
+            <span className='relative -top-0.5'>•</span>
             <Typography variant='small' className=''>
               {dateDuration(new Date(post.created_at))}
             </Typography>

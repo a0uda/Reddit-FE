@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function capitalizeString(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 export const dateDuration = (date: Date) => {
   const now: Date = new Date(Date.now());
   const durationInMilliseconds = Math.abs(now.getTime() - date.getTime());
@@ -12,9 +16,13 @@ export const dateDuration = (date: Date) => {
   const durationInMinutes = Math.floor(durationInSeconds / 60);
   const durationInHours = Math.floor(durationInMinutes / 60);
   const durationInDays = Math.floor(durationInHours / 24);
+  const durationInMonths = Math.floor(durationInDays / 30);
+  const durationInYears = Math.floor(durationInMonths / 12);
 
-  if (durationInDays >= 7) {
-    return date.toISOString().split('T')[0];
+  if (durationInYears > 0) {
+    return `${durationInYears} year${durationInYears > 1 ? 's' : ''} ago`;
+  } else if (durationInMonths > 0) {
+    return `${durationInMonths} month${durationInMonths > 1 ? 's' : ''} ago`;
   } else if (durationInDays > 0) {
     return `${durationInDays} day${durationInDays > 1 ? 's' : ''} ago`;
   } else if (durationInHours > 0) {

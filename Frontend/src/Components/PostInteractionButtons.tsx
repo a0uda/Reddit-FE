@@ -6,8 +6,9 @@ import {
   ChatBubbleLeftIcon,
 } from '@heroicons/react/24/outline';
 import { postRequest } from '../API/User';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useState } from 'react';
+import { cn } from '../utils/helper_functions';
 
 const PostInteractionButtons = ({
   postId,
@@ -22,6 +23,7 @@ const PostInteractionButtons = ({
 }) => {
   const [upvote, setUpvote] = useState(false);
   const [downvote, setDownvote] = useState(false);
+  const queryClient = useQueryClient();
 
   const mutate = useMutation(
     ({ postId, rank }: { postId: string; rank: number }) =>
@@ -30,12 +32,19 @@ const PostInteractionButtons = ({
         data: { id: postId, isPost: true, rank: rank },
       }),
     {
+      onSuccess: () => {
+        // Invalidate or refetch a query on success
+        queryClient.invalidateQueries(['listings', 'all']);
+      },
       onError: () => {
         // Perform any actions on error, like showing an error message
         console.log('Error');
       },
     }
   );
+
+  console.log('upvote', upvote);
+  console.log('downvote', downvote);
 
   return (
     <>
@@ -45,21 +54,30 @@ const PostInteractionButtons = ({
         >
           <IconButton
             variant='text'
-            className={upvote ? 'bg-orange' : ''}
+            className={cn(
+              upvote ? 'bg-orange' : '',
+              upvote || downvote ? 'text-white' : ''
+            )}
             onClick={() => {
               setUpvote(!upvote);
               setDownvote(false);
               mutate.mutate({ postId, rank: upvote ? -1 : 1 });
             }}
           >
-            <VoteArrow className='h-5 w-5 hover:fill-orange-muted ' />
+            <VoteArrow className='h-5 w-5 hover:fill-orange-muted' />
           </IconButton>
-          <Typography variant='lead' className='text-sm'>
+          <Typography
+            variant='lead'
+            className={cn('text-sm', upvote || downvote ? 'text-white' : '')}
+          >
             {upvotes - downvotes}
           </Typography>
           <IconButton
             variant='text'
-            className={downvote ? 'bg-violet-muted' : ''}
+            className={cn(
+              downvote ? 'bg-violet-muted' : '',
+              upvote || downvote ? 'text-white' : ''
+            )}
             onClick={() => {
               setDownvote(!downvote);
               setUpvote(false);

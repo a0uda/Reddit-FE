@@ -857,10 +857,46 @@ let postsListings = [
       total_shares: 0,
     },
   },
-];
+].concat(recentPostsList); // m3 haget osama
+
+function shuffleList(list) {
+  let currentIndex = list.length,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [list[currentIndex], list[randomIndex]] = [
+      list[randomIndex],
+      list[currentIndex],
+    ];
+  }
+
+  return list;
+}
 
 app.get("/listings/posts/random", (req, res) => {
-  res.status(200).json(postsListings.concat(recentPostsList));
+  res.status(200).json(postsListings);
+});
+
+app.get("/listings/posts/best", (req, res) => {
+  res.status(200).json([...postsListings].reverse());
+});
+
+app.get("/listings/posts/hot", (req, res) => {
+  res.status(200).json(shuffleList(postsListings));
+});
+
+app.get("/listings/posts/new", (req, res) => {
+  res.status(200).json(shuffleList(postsListings));
+});
+
+app.get("/listings/posts/top", (req, res) => {
+  res.status(200).json(shuffleList(postsListings));
 });
 
 app.post("/posts-or-comments/vote", (req, res) => {
