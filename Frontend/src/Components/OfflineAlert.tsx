@@ -43,7 +43,7 @@ export default function OfflineAlert() {
           variant='gradient'
           open={open}
           icon={<Icon />}
-          className='w-auto mx-16 my-3 p-2 text-sm flex items-center bg-red'
+          className='fixed top-[35px] inset-x-[50%] translate-x-[-50%] translate-y-[-50%] w-[85%]  p-2 text-sm flex items-center z-50'
           color='red'
           action={
             <Button

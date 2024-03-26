@@ -1,10 +1,8 @@
 import { FcGoogle } from 'react-icons/fc';
 import { useGoogleLogin } from '@react-oauth/google';
 import { postRequest } from '../API/User';
-import { useNavigate } from 'react-router-dom';
 
-function LoginWithGoogle() {
-  const navigate = useNavigate();
+function LoginWithGoogle(props: { handleOpen: () => void }) {
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       console.log('Google login successful', tokenResponse);
@@ -15,7 +13,8 @@ function LoginWithGoogle() {
         });
         const { token } = response;
         localStorage.setItem('token', token);
-        navigate('/');
+        props.handleOpen();
+        location.reload();
       } catch (error) {
         console.log('errorrr');
       }
@@ -29,7 +28,7 @@ function LoginWithGoogle() {
   return (
     <div
       onClick={() => googleLogin()}
-      className='btn rounded-full w-full form-control text-decoration-none p-2 m-2 border flex items-center justify-center'
+      className='btn rounded-full w-full form-control text-decoration-none p-2 m-2 border flex items-center justify-center cursor-pointer'
     >
       <span>
         <FcGoogle className='mr-2' />

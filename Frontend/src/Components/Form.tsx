@@ -24,12 +24,9 @@ type FormSchema = {
     userName: string;
     email: string;
   };
-  disconnectGoogle: {
-    password: string;
-  };
 };
 
-export interface InputProps {
+interface InputProps {
   type?: keyof FormSchema;
   initVal?: object;
   title?: string;
@@ -40,7 +37,7 @@ export interface InputProps {
     id: string;
     style?: React.CSSProperties;
   }>;
-  children?: React.ReactElement<
+  children: React.ReactElement<
     JSX.IntrinsicElements[keyof JSX.IntrinsicElements]
   >;
   ButtArr?: {
@@ -58,6 +55,7 @@ export interface InputProps {
   handleBackSign?: () => void;
   errorMessage?: string;
   HandleOnSubmitFunction?: (values: object) => void;
+  handleModal?: () => void;
 }
 
 const MyForm: React.FC<InputProps> = ({
@@ -72,6 +70,7 @@ const MyForm: React.FC<InputProps> = ({
   handleButton,
   HandleOnSubmitFunction,
   errorMessage,
+  handleModal,
 }) => {
   const validateSchema = Validation(type || 'login');
 
@@ -88,7 +87,6 @@ const MyForm: React.FC<InputProps> = ({
         }, 400);
       }}
     >
-      {/* {({ handleSubmit, handleChange, values, touched, errors }) => ( */}
       {(formik) => (
         <form
           className='container mx-auto lg:p-5 ms-4'
@@ -100,8 +98,12 @@ const MyForm: React.FC<InputProps> = ({
 
               {LogWithGoogle ? (
                 <>
-                  <LoginWithGoogle />
-                  <div className='flex items-center justify-center my-2 w-full'>
+                  <LoginWithGoogle
+                    handleOpen={() => {
+                      if (handleModal) handleModal();
+                    }}
+                  />
+                  <div className='flex items-center justify-center my-2'>
                     <hr className='my-3 w-1/2' />
                     <span className='px-3'>OR</span>
                     <hr className='my-3 w-1/2' />
@@ -132,11 +134,14 @@ const MyForm: React.FC<InputProps> = ({
                       errorMsg={
                         formik.errors[inp.id as keyof typeof formik.errors]
                       }
+                      isEmpty={
+                        !formik.values[inp.id as keyof typeof formik.values]
+                      }
                     />
                   </div>
                 ))}
               {errorMessage ? (
-                <div className='text-red ps-3'>{errorMessage}</div>
+                <div className='text-danger-red ps-3'>{errorMessage}</div>
               ) : null}
               {children}
 
@@ -145,77 +150,40 @@ const MyForm: React.FC<InputProps> = ({
                   <Button
                     key={i}
                     style={
-                      inp.style ? inp.style : { backgroundColor: '#DCDCDC' }
+                      typeof handleButton !== 'function'
+                        ? Object.keys(formik.errors).length > 0 ||
+                          !Object.values(formik.values).every(
+                            (value) => value.trim() !== ''
+                          )
+                          ? { backgroundColor: '#DCDCDC' }
+                          : { backgroundColor: '#FF4500' }
+                        : { backgroundColor: '#FF4500' }
                     }
-                    // {...formik.getFieldProps(inp.id)}
-                    error={
-                      !!formik.errors[
-                        inp.id as keyof typeof formik.errors
-                      ] as keyof typeof formik.errors
+                    type={button.type}
+                    className={
+                      button.className +
+                      (typeof handleButton !== 'function'
+                        ? Object.keys(formik.errors).length > 0 ||
+                          !Object.values(formik.values).every(
+                            (value) => value.trim() !== ''
+                          )
+                          ? ' text-gray-500'
+                          : ' text-white'
+                        : ' text-white')
                     }
-                    onChange={formik.handleChange}
-                    errorMsg={
-                      formik.errors[inp.id as keyof typeof formik.errors]
+                    content={button.content}
+                    onClick={
+                      Object.values(formik.values).filter(
+                        (value) => value === ''
+                      ).length < 3 &&
+                      !Object.values(formik.errors).some(
+                        (error) => error === 'Invalid email'
+                      )
+                        ? handleButton
+                        : undefined
                     }
                   />
-
-                  // /* {Object.keys(formik.errors).length === 0 &&
-                  // Object.values(formik.values).every(
-                  //   (value) => value.trim() !== ''
-                  // ) ? (
-                  //   <FaCheckCircle className='absolute right-3  top-1/2 -translate-y-1/2 text-green-500 ' />
-                  // ) : null}
-                  // {formik.touched[inp.id as keyof typeof formik.touched] &&
-                  //   formik.errors[inp.id as keyof typeof formik.errors] && (
-                  //     <div className='text-red-500 ps-3'>
-                  //       {formik.errors[inp.id as keyof typeof formik.errors]}
-                  //       {'*'}
-                  //     </div>
-                  //   )} */
-                  // </div>
                 ))}
-              {children}
-              <div className='flex justify-center w-full'>
-                {ButtArr &&
-                  ButtArr.map((button, i) => (
-                    <Button
-                      key={i}
-                      style={
-                        typeof handleButton !== 'function'
-                          ? Object.keys(formik.errors).length > 0 ||
-                            !Object.values(formik.values).every(
-                              (value) => value.trim() !== ''
-                            )
-                            ? { backgroundColor: '#DCDCDC' }
-                            : { backgroundColor: '#FF4500' }
-                          : { backgroundColor: '#FF4500' }
-                      }
-                      type={button.type}
-                      className={
-                        button.className +
-                        (typeof handleButton !== 'function'
-                          ? Object.keys(formik.errors).length > 0 ||
-                            !Object.values(formik.values).every(
-                              (value) => value.trim() !== ''
-                            )
-                            ? ' text-gray-500'
-                            : ' text-white'
-                          : ' text-white')
-                      }
-                      content={button.content}
-                      onClick={
-                        Object.values(formik.values).filter(
-                          (value) => value === ''
-                        ).length < 3 &&
-                        !Object.values(formik.errors).some(
-                          (error) => error === 'Invalid email'
-                        )
-                          ? handleButton
-                          : undefined
-                      }
-                    />
-                  ))}
-              </div>
             </div>
           </div>
         </form>

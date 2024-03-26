@@ -56,7 +56,7 @@ export default function Alert(props: {
         variant='gradient'
         open={open}
         icon={<Icon isError={props.isError} />}
-        className='fixed top-[35px] inset-x-[50%] translate-x-[-50%] translate-y-[-50%] w-[85%]  p-2 text-sm flex items-center'
+        className='fixed top-[35px] inset-x-[50%] translate-x-[-50%] translate-y-[-50%] w-[85%]  p-2 text-sm flex items-center z-50'
         color={props.isError ? 'red' : 'green'}
         action={
           <Button

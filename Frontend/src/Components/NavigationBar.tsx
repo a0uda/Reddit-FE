@@ -45,10 +45,14 @@ import { CommunityIcon } from '../assets/icons/Icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from 'react-query';
 import { fetchRequest, patchRequest } from './../API/User';
+import Login from '../Pages/credential/Login';
+import RecoverUsername from '../Pages/credential/RecoverUsername';
+import ResetPassword from '../Pages/credential/ResetPassword';
+import Signup from '../Pages/credential/Signup';
 
 export function NavigationBar() {
   const [openNav, setOpenNav] = useState(false);
-
+  const [isLogged, setIsLogged] = useState(!!localStorage.getItem('token'));
   useEffect(() => {
     window.addEventListener(
       'resize',
@@ -56,8 +60,9 @@ export function NavigationBar() {
     );
   }, []);
 
-  const isLogged = true;
-
+  useEffect(() => {
+    setIsLogged(!!localStorage.getItem('token'));
+  }, [localStorage.getItem('token')]);
   return (
     <div className='px-4'>
       <nav className='m-0 p-0 flex flex-row justify-between border-b-[1px] border-b-neutral-muted h-14 w-full'>
@@ -155,21 +160,22 @@ const SearchBar = () => {
         <MenuHandler>
           <div
             className={cn(
-              'flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-50 max-w-[550px] w-full'
+              'flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute max-w-[550px] w-full'
             )}
           >
             <HiMagnifyingGlass size={20} className='fill-black' />
-            <input
+            {/* <input
               className='!border-0 bg-transparent w-full focus:outline-none placeholder:text-black/80 placeholder:font-light'
               placeholder='Search Reddit'
               aria-label='Search Reddit'
-            />
+            /> */}
+            <span className='text-black/80 font-light'>Search Reddit</span>
           </div>
         </MenuHandler>
-        <MenuList className='*:focus:bg-transparent *:hover:bg-transparent p-0 pt-1 hidden z-50 shadow-md shadow-black/25 max-w-[550px] w-full rounded-3xl lg:block min-h-24 max-h-[calc(100vh-3.5rem)]'>
+        <MenuList className='*:focus:bg-transparent *:hover:bg-transparent p-0 pt-1 hidden z-25 shadow-md shadow-black/25 max-w-[550px] w-full rounded-3xl lg:block min-h-24 max-h-[calc(100vh-3.5rem)]'>
           <div
             className={cn(
-              'flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-50 max-w-[550px] w-full h-10',
+              'flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-30 max-w-[550px] w-full h-10',
               isFocused
                 ? ' bg-white border-b-2 border-neutral-muted relative items-start rounded-none rounded-t-xl overflow-y-auto overflow-x-hidden'
                 : ''
@@ -302,13 +308,77 @@ const SearchList = () => {
 };
 
 const CampainLoggedOut = () => {
+  const [loginMod, setLoginMod] = useState(false);
+  const [recoverMod, setRecoverMod] = useState(false);
+  const [resetPwdMod, setResetPwdMod] = useState(false);
+  const [signupMod, setSignupMod] = useState(false);
+  console.log(loginMod);
+
   return (
     <>
       <div className='flex items-center gap-x-1'>
+        <Login
+          open={loginMod}
+          handleOpen={() => {
+            setLoginMod(!loginMod);
+          }}
+          openPassword={() => {
+            setResetPwdMod(true);
+          }}
+          openSignup={() => {
+            setSignupMod(true);
+          }}
+          openUsername={() => {
+            setRecoverMod(true);
+          }}
+        />
+        <RecoverUsername
+          open={recoverMod}
+          handleOpen={() => {
+            setRecoverMod(!recoverMod);
+          }}
+          handlePrevious={() => {
+            setLoginMod(true);
+          }}
+          openSignup={() => {
+            setSignupMod(true);
+          }}
+        />
+        <ResetPassword
+          open={resetPwdMod}
+          handleOpen={() => {
+            setResetPwdMod(!resetPwdMod);
+          }}
+          handlePrevious={() => {
+            setLoginMod(true);
+          }}
+          openSignup={() => {
+            setSignupMod(true);
+          }}
+          openUsername={() => {
+            setRecoverMod(true);
+          }}
+        />
+        <Signup
+          open={signupMod}
+          handleOpen={() => {
+            setSignupMod(!signupMod);
+          }}
+          openLogin={() => {
+            setLoginMod(true);
+          }}
+        />
         <IconButton variant='text'>
           <HiMagnifyingGlass size={20} className='fill-black' />
         </IconButton>
-        <Button className='bg-orange-muted'>Log In</Button>
+        <Button
+          className='bg-orange-muted'
+          onClick={() => {
+            setLoginMod(true);
+          }}
+        >
+          Log In
+        </Button>
         <Menu placement='bottom-end'>
           <MenuHandler>
             <Button variant='text' className='p-2'>
@@ -319,14 +389,6 @@ const CampainLoggedOut = () => {
             <MenuItem className='py-2 flex gap-2 items-center'>
               <HiArrowRightOnRectangle size={20} />
               <Link to='#'>Log In / Sign Up</Link>
-            </MenuItem>
-            <MenuItem className='py-3 flex gap-2 items-center'>
-              <HiCursorArrowRipple size={20} />
-              <Link to='#'>Advertise on Reddit</Link>
-            </MenuItem>
-            <MenuItem className='py-3 flex gap-2 items-center'>
-              <HiShoppingBag size={20} />
-              <Link to='#'>Shop Collectible Avatars</Link>
             </MenuItem>
           </MenuList>
         </Menu>

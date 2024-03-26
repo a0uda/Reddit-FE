@@ -1,7 +1,6 @@
 import MyForm from '../../Components/Form';
 import { ButtonType } from '../../validate/buttonType';
-import { Link } from 'react-router-dom';
-import { Dialog, DialogBody } from '@material-tailwind/react';
+import { Dialog, DialogBody, IconButton } from '@material-tailwind/react';
 import { postRequest } from '../../API/User';
 import { useState } from 'react';
 import CheckEmail from './CheckEmail';
@@ -9,7 +8,12 @@ import { IoMdClose } from 'react-icons/io';
 import { IoMdArrowBack } from 'react-icons/io';
 import { useMutation } from 'react-query';
 
-export default function RecoverUsername() {
+export default function RecoverUsername(props: {
+  open: boolean;
+  handleOpen: () => void;
+  handlePrevious: () => void;
+  openSignup: () => void;
+}) {
   const [errorMessage, seterrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const inputArr = [
@@ -54,17 +58,25 @@ export default function RecoverUsername() {
     <CheckEmail
       handleButtonEmail={() => setSuccessMessage('')}
       handleBackArrow={() => setSuccessMessage('')}
+      open={props.open}
+      handleOpen={props.handleOpen}
     />
   ) : (
-    <Dialog size='sm' open={true} handler={() => {}}>
+    <Dialog size='sm' open={props.open} handler={props.handleOpen}>
       <DialogBody className='text-black'>
         <div className='my-4 m-2'>
-          <Link to='/login' className='float-left'>
+          <IconButton
+            onClick={() => {
+              props.handleOpen();
+              props.handlePrevious();
+            }}
+            className='float-left'
+          >
             <IoMdArrowBack size={32} />
-          </Link>
-          <Link to='/' className='float-right'>
+          </IconButton>
+          <IconButton onClick={props.handleOpen} className='float-right'>
             <IoMdClose size={32} />
-          </Link>
+          </IconButton>
         </div>
         <MyForm
           type='recoverUsername'
@@ -81,20 +93,24 @@ export default function RecoverUsername() {
           <div className='m-3 mt-10'>
             <p>Don&apos;t have an email or need assistance logging in?</p>
             <p>
-              <Link
-                to='/login'
-                className='text-decoration-none text-blue-500'
-                style={{ color: '#6366f1' }}
+              <span
+                onClick={() => {
+                  props.handleOpen();
+                  props.handlePrevious();
+                }}
+                className='text-decoration-none text-[#6366f1] cursor-pointer'
               >
-                Log In .
-              </Link>
-              <Link
-                to='/signup'
-                className='text-decoration-none text-blue-500'
-                style={{ color: '#6366f1' }}
+                Log In
+              </span>{' '}
+              <span
+                onClick={() => {
+                  props.handleOpen();
+                  props.openSignup();
+                }}
+                className='text-decoration-none text-[#6366f1] cursor-pointer'
               >
                 Sign Up
-              </Link>
+              </span>
             </p>
           </div>
         </MyForm>

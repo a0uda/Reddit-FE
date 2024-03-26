@@ -311,7 +311,7 @@ export const DisconnectGoogleModal = (props: {
 
   return (
     <>
-      <Dialog size='xs' open={props.open} handler={props.handleOpen}>
+      <Dialog size='sm' open={props.open} handler={props.handleOpen}>
         <DialogHeader className='!block text-center border-b border-lines-color p-5'>
           <h2 className='flex items-center'>
             <div className='relative'>
