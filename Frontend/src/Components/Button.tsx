@@ -32,10 +32,10 @@ const Button: React.FC<ButtonProps> = ({
 };
 
 Button.propTypes = {
-  style: PropTypes.object,
-  type: PropTypes.oneOf(['button', 'submit', 'reset']),
-  className: PropTypes.string,
-  content: PropTypes.string,
+  style: PropTypes?.object,
+  type: PropTypes?.oneOf(['button', 'submit', 'reset']),
+  className: PropTypes?.string,
+  content: PropTypes?.string,
 };
 
 export default Button;

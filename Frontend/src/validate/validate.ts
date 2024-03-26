@@ -18,9 +18,6 @@ type FormSchema = {
     username: yup.Schema<string>;
     email: yup.Schema<string>;
   };
-  disconnectGoogle: {
-    password: yup.Schema<string>;
-  };
   changePassword: {
     password: yup.Schema<string>;
     newPassword: yup.Schema<string>;

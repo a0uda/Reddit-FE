@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 Frontend/.env.*
+Frontend/coverage
 
 Mock Backend/node_modules
 # Editor directories and files

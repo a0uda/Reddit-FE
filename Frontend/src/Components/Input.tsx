@@ -77,13 +77,13 @@ const Input: React.FC<InputProps> = ({
 };
 
 Input.propTypes = {
-  placeholder: PropTypes.string.isRequired,
-  style: PropTypes.object,
-  id: PropTypes.string,
-  type: PropTypes.string,
-  className: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func,
+  placeholder: PropTypes?.string?.isRequired,
+  style: PropTypes?.object,
+  id: PropTypes?.string,
+  type: PropTypes?.string,
+  className: PropTypes?.string,
+  value: PropTypes?.string,
+  onChange: PropTypes?.func,
 };
 
 export default Input;
