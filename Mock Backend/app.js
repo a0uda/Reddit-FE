@@ -573,10 +573,34 @@ app.get("/communities/get-history-posts", (req, res) => {
   res.status(200).json(recentPostsList);
 });
 
+app.post("/users/join-community", (req, res) => {
+  const { communityName } = req.body;
+  recentPostsList = recentPostsList.map((post) => {
+    if (post["community-name"] === communityName) {
+      post.joined = true;
+      console.log(post);
+    }
+    return post;
+  });
+  res.sendStatus(200);
+});
+
+app.post("/users/leave-community", (req, res) => {
+  const { communityName } = req.body;
+  recentPostsList = recentPostsList.map((post) => {
+    if (post["community-name"] === communityName) {
+      post.joined = false;
+      console.log(post);
+    }
+    return post;
+  });
+  res.sendStatus(200);
+});
+
 let notifications = [
   {
     id: "1",
-    created_at: "2024-03-26",
+    created_at: "2024-03-27",
     post_id: "post123",
     comment_id: "comment456",
     sending_user_username: "osama_youssef",
