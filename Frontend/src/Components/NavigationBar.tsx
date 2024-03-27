@@ -405,6 +405,7 @@ const CampainLoggedIn = () => {
   };
 
   const [avatarDrawer, setAvatarDrawer] = useState(false);
+  const navigate = useNavigate();
 
   const avatarMenu = (
     <>
@@ -442,9 +443,16 @@ const CampainLoggedIn = () => {
             }}
           />
         </ListItem>
-        <ListItem className='py-3 flex gap-2 items-center'>
+        <ListItem
+          className='py-3 flex gap-2 items-center'
+          onClick={() => {
+            localStorage.clear();
+            navigate('/');
+            location.reload();
+          }}
+        >
           <ArrowRightEndOnRectangleIcon className='w-6 h-6' />
-          <Link to='#'>Log Out</Link>
+          Log Out
         </ListItem>
         <hr className='border-neutral-muted pb-2' />
         <Link to='/settings/account'>
