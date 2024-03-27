@@ -581,6 +581,30 @@ app.get("/communities/get-history-posts", (req, res) => {
   res.status(200).json(recentPostsList);
 });
 
+app.post("/users/join-community", (req, res) => {
+  const { communityName } = req.body;
+  recentPostsList = recentPostsList.map((post) => {
+    if (post["community-name"] === communityName) {
+      post.joined = true;
+      console.log(post);
+    }
+    return post;
+  });
+  res.sendStatus(200);
+});
+
+app.post("/users/leave-community", (req, res) => {
+  const { communityName } = req.body;
+  recentPostsList = recentPostsList.map((post) => {
+    if (post["community-name"] === communityName) {
+      post.joined = false;
+      console.log(post);
+    }
+    return post;
+  });
+  res.sendStatus(200);
+});
+
 let notifications = [
   {
     id: "1",

@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { PostType } from '../types/types';
 import { useNavigate, useParams } from 'react-router-dom';
 import { capitalizeString } from '../utils/helper_functions';
+import LoadingProvider from './LoadingProvider';
 
 const PostsListings = () => {
   const { sortOption: initialSortOption } = useParams();
@@ -33,6 +34,8 @@ const PostsListings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption]);
 
+  console.log('response', response.isError);
+
   return (
     <>
       {/* Sort by dropdown */}
@@ -42,15 +45,15 @@ const PostsListings = () => {
         setSortOption={setSortOption}
       />
       <hr className='border-neutral-muted' />
-      {response.isLoading && <p>Loading...</p>}
-      {response.isError && <p>{response.isLoadingError}</p>}
-      {response.isSuccess && (
-        <>
-          {response.data.data.map((post: PostType) => (
-            <Post key={post.id} post={post} />
-          ))}
-        </>
-      )}
+      <LoadingProvider error={response.isError} isLoading={response.isLoading}>
+        {response.isSuccess && (
+          <>
+            {response.data.data.map((post: PostType) => (
+              <Post key={post.id} post={post} />
+            ))}
+          </>
+        )}
+      </LoadingProvider>
     </>
   );
 };

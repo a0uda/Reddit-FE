@@ -60,8 +60,9 @@ const PostInteractionButtons = ({
             )}
             onClick={() => {
               setUpvote(!upvote);
-              setDownvote(false);
+              downvote && mutate.mutate({ postId, rank: 1 });
               mutate.mutate({ postId, rank: upvote ? -1 : 1 });
+              setDownvote(false);
             }}
           >
             <VoteArrow className='h-5 w-5 hover:fill-orange-muted' />
@@ -80,8 +81,9 @@ const PostInteractionButtons = ({
             )}
             onClick={() => {
               setDownvote(!downvote);
-              setUpvote(false);
+              upvote && mutate.mutate({ postId, rank: -1 });
               mutate.mutate({ postId, rank: downvote ? 1 : -1 });
+              setUpvote(false);
             }}
           >
             <VoteArrow className='h-5 w-5 hover:fill-violet rotate-180' />
