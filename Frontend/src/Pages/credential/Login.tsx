@@ -56,6 +56,7 @@ export default function Login(props: {
   });
 
   const handleOnSubmit = (values: object) => {
+    console.log('ANA HENAAAA W VALUES', values);
     mutation.mutate({
       endPoint: 'users/login',
       data: values,
