@@ -65,21 +65,23 @@ export default function Login(props: {
   //   });
   // };
   const handleOnSubmit = async (values) => {
-    try{
+    try {
       console.log(values);
-      const response = await axios.post("https://redditech.me/backend/users/login", values);
-      if(response.status === 200){
+      const response = await axios.post(
+        'https://redditech.me/backend/users/login',
+        values
+      );
+      if (response.status === 200) {
         console.log(response);
-        console.log("ANA SUCCESS");
-      }else
-      {
-        console.log("ANA ERROR");
+        console.log('ANA SUCCESS');
+      } else {
+        console.log('ANA ERROR');
       }
-    }
-    catch(err){
-      console.log("ERROR HNAAA CATCH")
+    } catch (err) {
+      console.log('ERROR HNAAA CATCH');
       console.log(err);
     }
+  };
   console.log(props.handleOpen);
 
   return (
