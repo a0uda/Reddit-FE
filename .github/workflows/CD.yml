@@ -41,5 +41,5 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /home/aoudaa/docker
+            cd ~/docker
             sh deployFE.sh
