@@ -5,7 +5,7 @@ COPY ./Frontend/package.json ./
 RUN npm install
 RUN npm install --save-dev typescript
 RUN npm install --save-dev vite
-COPY . .
+COPY ./Frontend .
 RUN npm run buildDev
 
 FROM nginx
