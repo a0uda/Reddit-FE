@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Dialog, DialogBody, IconButton } from '@material-tailwind/react';
 import { IoMdClose } from 'react-icons/io';
 import { useMutation } from 'react-query';
+import { object } from 'yup';
 
 export default function Login(props: {
   open: boolean;
@@ -51,12 +52,13 @@ export default function Login(props: {
       location.reload();
     },
     onError: () => {
+      console.log('ana henaaa fe mutatoin on error');
       seterrorMessage('Invalid Login');
     },
   });
 
   const handleOnSubmit = (values: object) => {
-    console.log('ANA HENAAAA W VALUES', values);
+    console.log('ANA HENAAAA W VALUES');
     mutation.mutate({
       endPoint: 'users/login',
       data: values,
