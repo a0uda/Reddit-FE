@@ -6,6 +6,7 @@ import { Dialog, DialogBody, IconButton } from '@material-tailwind/react';
 import { IoMdClose } from 'react-icons/io';
 import { useMutation } from 'react-query';
 import { object } from 'yup';
+import { MdCatchingPokemon } from 'react-icons/md';
 
 export default function Login(props: {
   open: boolean;
@@ -52,18 +53,32 @@ export default function Login(props: {
       location.reload();
     },
     onError: () => {
-      console.log('ana henaaa fe mutatoin on error');
       seterrorMessage('Invalid Login');
     },
   });
 
-  const handleOnSubmit = (values: object) => {
-    console.log('ANA HENAAAA W VALUES');
-    mutation.mutate({
-      endPoint: 'users/login',
-      data: values,
-    });
-  };
+  // const handleOnSubmit = (values: object) => {
+  //   mutation.mutate({
+  //     endPoint: 'users/login',
+  //     data: values,
+  //   });
+  // };
+  const handleOnSubmit = async (values) => {
+    try{
+      console.log(values);
+      const response = await axios.post("https://redditech.me/backend/users/login", values);
+      if(response.status === 200){
+        console.log(response);
+        console.log("ANA SUCCESS");
+      }else
+      {
+        console.log("ANA ERROR");
+      }
+    }
+    catch(err){
+      console.log("ERROR HNAAA CATCH")
+      console.log(err);
+    }
   console.log(props.handleOpen);
 
   return (
