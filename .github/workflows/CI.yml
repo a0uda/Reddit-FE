@@ -3,13 +3,9 @@
 name: CI FE
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
-
 jobs:
   build_dev_test:
     name: Build Frontend For Dev files
