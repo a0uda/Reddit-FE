@@ -6,7 +6,7 @@ RUN npm install
 RUN npm install --save-dev typescript
 RUN npm install --save-dev vite
 COPY . .
-RUN npm run build || (echo "Build failed with exit code $?"; exit 1)
+RUN npm run buildDev
 
 FROM nginx
 EXPOSE 3000
