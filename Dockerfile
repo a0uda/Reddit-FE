@@ -4,7 +4,7 @@ WORKDIR /app
 COPY ./Frontend/package.json ./
 RUN npm install
 COPY . .
-RUN npm run build
+RUN npm run build || (echo "Build failed with exit code $?"; exit 1)
 
 FROM nginx
 EXPOSE 3000
