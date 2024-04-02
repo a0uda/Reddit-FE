@@ -3,6 +3,8 @@ FROM node:alpine as builder
 WORKDIR /app
 COPY ./Frontend/package.json ./
 RUN npm install
+RUN npm install --save-dev typescript
+RUN npm install --save-dev vite
 COPY . .
 RUN npm run build || (echo "Build failed with exit code $?"; exit 1)
 
