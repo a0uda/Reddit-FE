@@ -17,11 +17,17 @@ const fetchRequest = async (endPoint: string) => {
   });
 };
 
-const patchRequest = async ({ newSettings, endPoint }) => {
+const patchRequest = async ({
+  newSettings,
+  endPoint,
+}: {
+  newSettings: unknown;
+  endPoint: string;
+}) => {
   try {
     const response = await axios.patch(baseUrl + endPoint, newSettings, config);
     console.log(response);
-    
+
     return response.data;
   } catch (error) {
     console.log('Error', error.response.data);
@@ -30,7 +36,13 @@ const patchRequest = async ({ newSettings, endPoint }) => {
   }
 };
 
-const postRequest = async ({ endPoint, data }) => {
+const postRequest = async ({
+  endPoint,
+  data,
+}: {
+  endPoint: string;
+  data: unknown;
+}) => {
   try {
     const response = await axios.post(baseUrl + endPoint, data, config);
     console.log(response);

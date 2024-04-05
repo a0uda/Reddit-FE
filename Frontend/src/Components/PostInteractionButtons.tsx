@@ -43,8 +43,8 @@ const PostInteractionButtons = ({
     }
   );
 
-  console.log('upvote', upvote);
-  console.log('downvote', downvote);
+  // console.log('upvote', upvote);
+  // console.log('downvote', downvote);
 
   return (
     <>

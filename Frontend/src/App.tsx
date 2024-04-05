@@ -5,22 +5,25 @@ import NavigationBar from './Components/NavigationBar.tsx';
 import Mainfeed from './Pages/Mainfeed.tsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import OfflineAlert from './Components/OfflineAlert.tsx';
+import { AuthProvider } from './Providers/AuthProvider.tsx';
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId='178664293995-s6s92s28mme4eu54lg367sqhnj8bonff.apps.googleusercontent.com'>
-      <div className='App'>
-        <Router>
-          <OfflineAlert />
-          <NavigationBar />
-          <Routes>
-            <Route path={'/'} element={<Mainfeed />} />
-            <Route path={'/:sortOption'} element={<Mainfeed />} />
-            <Route path='/settings/:page' element={<UserSettings />} />
-          </Routes>
-        </Router>
-      </div>
-    </GoogleOAuthProvider>
+    <AuthProvider>
+      <GoogleOAuthProvider clientId='178664293995-s6s92s28mme4eu54lg367sqhnj8bonff.apps.googleusercontent.com'>
+        <div className='App'>
+          <Router>
+            <OfflineAlert />
+            <NavigationBar />
+            <Routes>
+              <Route path={'/'} element={<Mainfeed />} />
+              <Route path={'/:sortOption'} element={<Mainfeed />} />
+              <Route path='/settings/:page' element={<UserSettings />} />
+            </Routes>
+          </Router>
+        </div>
+      </GoogleOAuthProvider>
+    </AuthProvider>
   );
 }
 
