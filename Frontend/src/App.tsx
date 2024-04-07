@@ -5,6 +5,7 @@ import NavigationBar from './Components/NavigationBar.tsx';
 import Mainfeed from './Pages/Mainfeed.tsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import OfflineAlert from './Components/OfflineAlert.tsx';
+import CreatePost from './Pages/createPost/CreatePost.tsx';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path={'/'} element={<Mainfeed />} />
             <Route path={'/:sortOption'} element={<Mainfeed />} />
             <Route path='/settings/:page' element={<UserSettings />} />
+            <Route path={'/submit'} element={<CreatePost />} />
           </Routes>
         </Router>
       </div>

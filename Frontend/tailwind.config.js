@@ -16,6 +16,9 @@ export default withMT({
       },
     },
     extend: {
+      blur: {
+        'custom-blur': '10px',
+      },
       gridTemplateColumns: {
         // Simple 16 row grid
         16: 'repeat(16, minmax(0, 1fr))',

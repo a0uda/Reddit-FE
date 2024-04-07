@@ -6,6 +6,7 @@ import { ThemeProvider } from '@material-tailwind/react';
 import { theme } from './utils/theme_config.ts';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { AlertProvider } from './Providers/AlertProvider.tsx';
+import 'react-quill/dist/quill.snow.css';
 
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById('root')!).render(
