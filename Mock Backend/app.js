@@ -1085,7 +1085,6 @@ app.post("/posts-or-comments/vote", (req, res) => {
         } else {
           post.downvotes_count++;
         }
-        console.log(post);
       }
       return post;
     });

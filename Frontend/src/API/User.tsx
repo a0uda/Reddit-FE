@@ -6,10 +6,26 @@ console.log(baseUrl);
 const config = {
   headers: {
     'Content-Type': 'application/json',
-    token: localStorage.getItem('token'),
+    // token: localStorage.getItem('token'),
   },
   withCredentials: false,
 };
+
+// const api = axios.create({
+//   baseURL: baseUrl,
+// });
+
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 const fetchRequest = async (endPoint: string) => {
   return await axios.get(baseUrl + endPoint, {
     withCredentials: false,
