@@ -1,28 +1,17 @@
 import {
-  Button,
   Card,
   CardBody,
   CardHeader,
-  Menu,
-  MenuHandler,
-  MenuItem,
-  MenuList,
   Typography,
 } from '@material-tailwind/react';
-import { dateDuration } from '../utils/helper_functions';
-import CommunityBadge from './CommunityBadge';
-import { HiEllipsisHorizontal } from 'react-icons/hi2';
-import {
-  BookmarkIcon,
-  BookmarkSlashIcon,
-  EyeIcon,
-  EyeSlashIcon,
-  FlagIcon,
-} from '@heroicons/react/24/outline';
-import PostInteractionButtons from './PostInteractionButtons';
-import { PostType } from '../types/types';
+import { dateDuration } from '../../utils/helper_functions';
+import CommunityBadge from '../CommunityBadge';
 
-const Post = ({ post }: { post: PostType }) => {
+import PostInteractionButtons from './PostInteractionButtons';
+import { PostType } from '../../types/types';
+import PostOptions from './PostOptions';
+
+const PostPreview = ({ post }: { post: PostType }) => {
   // TODO Fetch Community
   // const data = useQuery({
   //   queryKey: ['community', post.community_id],
@@ -84,53 +73,4 @@ const Post = ({ post }: { post: PostType }) => {
   );
 };
 
-type PostOptionsProps = {
-  saved: boolean;
-  hidden: boolean;
-};
-
-const PostOptions = ({ saved, hidden }: PostOptionsProps) => {
-  return (
-    <Menu placement='bottom-end'>
-      <MenuHandler>
-        <Button variant='text' className='p-2'>
-          <HiEllipsisHorizontal size={20} />
-        </Button>
-      </MenuHandler>
-      <MenuList className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'>
-        <MenuItem className='py-3 flex gap-2 items-center'>
-          {saved ? (
-            <>
-              <BookmarkSlashIcon className='w-5 h-5' />
-              <a href='#'>Unsave</a>
-            </>
-          ) : (
-            <>
-              <BookmarkIcon className='w-5 h-5' />
-              <a href='#'>Save</a>
-            </>
-          )}
-        </MenuItem>
-        <MenuItem className='py-3 flex gap-2 items-center'>
-          {hidden ? (
-            <>
-              <EyeSlashIcon className='w-5 h-5' />
-              <a href='#'>Unhide</a>
-            </>
-          ) : (
-            <>
-              <EyeIcon className='w-5 h-5' />
-              <a href='#'>Hide</a>
-            </>
-          )}
-        </MenuItem>
-        <MenuItem className='py-3 flex gap-2 items-center'>
-          <FlagIcon className='w-5 h-5' />
-          <a href='#'>Report</a>
-        </MenuItem>
-      </MenuList>
-    </Menu>
-  );
-};
-
-export default Post;
+export default PostPreview;

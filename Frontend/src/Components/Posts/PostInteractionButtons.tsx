@@ -1,14 +1,14 @@
-import ButtonContainer from './ButtonContainer';
+import ButtonContainer from '../ButtonContainer';
 import { Button, IconButton, Typography } from '@material-tailwind/react';
-import { VoteArrow } from '../assets/icons/Icons';
+import { VoteArrow } from '../../assets/icons/Icons';
 import {
   ArrowUpTrayIcon,
   ChatBubbleLeftIcon,
 } from '@heroicons/react/24/outline';
-import { postRequest } from '../API/User';
+import { postRequest } from '../../API/User';
 import { useMutation, useQueryClient } from 'react-query';
 import { useState } from 'react';
-import { cn } from '../utils/helper_functions';
+import { cn } from '../../utils/helper_functions';
 
 const PostInteractionButtons = ({
   postId,

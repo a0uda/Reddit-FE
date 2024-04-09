@@ -2,7 +2,7 @@ import { Card, CardBody } from '@material-tailwind/react';
 import SideBar from '../Components/SideBar';
 import { PopularCommunities } from '../Components/RightSideBar/PopularCommunities';
 import { RecentPosts } from '../Components/RightSideBar/RecentPosts';
-import PostsListings from '../Components/PostsListings';
+import PostsListings from '../Components/Posts/PostsListings';
 
 const Mainfeed = () => {
   return (
