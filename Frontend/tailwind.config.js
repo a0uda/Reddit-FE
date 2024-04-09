@@ -16,12 +16,15 @@ export default withMT({
       },
     },
     extend: {
+      height: {
+        navbar: 'var(--navbar-height)',
+      },
       gridTemplateColumns: {
-        // Simple 16 row grid
+        // Simple 16 col grid
         16: 'repeat(16, minmax(0, 1fr))',
 
-        // Complex site-specific row configuration
-        layout: '300px minmax(400px, 1fr) 400px',
+        // Complex site-specific col configuration
+        layout: '272px minmax(400px, 1fr)',
       },
       gridTemplateRows: {
         // Simple 16 row grid

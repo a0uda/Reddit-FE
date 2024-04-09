@@ -64,8 +64,8 @@ export function NavigationBar() {
     setIsLogged(!!localStorage.getItem('token'));
   }, [localStorage.getItem('token')]);
   return (
-    <div className='px-4'>
-      <nav className='m-0 p-0 flex flex-row justify-between border-b-[1px] border-b-neutral-muted h-14 w-full'>
+    <div className='px-4 sticky top-0 z-20 w-full bg-white'>
+      <nav className='m-0 p-0 flex flex-row justify-between border-b-[1px] border-b-neutral-muted h-navbar w-full'>
         <div className=' flex items-center col-span-4 gap-2 p-0'>
           <IconButton
             variant='text'
