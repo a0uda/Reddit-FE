@@ -8,7 +8,7 @@ const Mainfeed = () => {
   return (
     <>
       <div className='flex justify-between'>
-        <div className='xl:block lg:hidden md:hidden sm:hidden border-r'>
+        <div className='xl:block hidden border-r'>
           <SideBar />
         </div>
         {/* <div className='lg-max:block grid mx-5 grid-col-1 lg:grid-cols-16 gap-6 flex-grow'> */}
@@ -17,7 +17,7 @@ const Mainfeed = () => {
             <PostsListings />
           </CardBody>
         </Card>
-        <Card className='lg:block md:hidden sm:hidden shadow-none ml-auto px-3'>
+        <Card className='lg:block hidden shadow-none ml-auto px-3'>
           <CardBody className='space-y-4 px-0 overflow-auto h-[calc(100vh-3.5rem)]'>
             <RecentPosts />
             <PopularCommunities />
