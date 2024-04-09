@@ -1,12 +1,12 @@
 import { useQuery } from 'react-query';
-import SortOptions from './SortOptions';
-import Post from './Post';
-import { fetchRequest } from '../API/User';
+import SortOptions from '../SortOptions';
+import { fetchRequest } from '../../API/User';
 import { useEffect, useRef, useState } from 'react';
-import { PostType } from '../types/types';
+import { PostType } from '../../types/types';
 import { useNavigate, useParams } from 'react-router-dom';
-import { capitalizeString } from '../utils/helper_functions';
-import LoadingProvider from './LoadingProvider';
+import { capitalizeString } from '../../utils/helper_functions';
+import LoadingProvider from '../LoadingProvider';
+import PostPreview from './PostPreview';
 
 const PostsListings = () => {
   const { sortOption: initialSortOption } = useParams();
@@ -49,7 +49,7 @@ const PostsListings = () => {
         {response.isSuccess && (
           <>
             {response.data.data.map((post: PostType) => (
-              <Post key={post.id} post={post} />
+              <PostPreview key={post.id} post={post} />
             ))}
           </>
         )}
