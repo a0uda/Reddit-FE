@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react';
 import { Avatar, Typography, Card, CardBody } from '@material-tailwind/react';
 import { postRequest } from '../../API/User';
 import { useMutation } from 'react-query';
+import { CommunityIcon } from '../../assets/icons/Icons';
 
 interface CommunityPopupItemProps {
   //community data
   communityCoverImage?: string;
-  communityIcon?: string;
+  communityAvatar?: string;
   communityName: string;
   joined?: boolean;
   communityDescription?: string;
@@ -69,12 +70,16 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
       <CardBody className=''>
         <div className='mb-2 flex items-center justify-between gap-4'>
           <div className='flex justify-start items-center gap-2 pt-0'>
-            <Avatar
-              variant='circular'
-              alt={props.communityName}
-              src={props.communityIcon}
-              style={{ width: '45px', height: '45px' }}
-            />
+            {props.communityAvatar ? (
+              <Avatar
+                variant='circular'
+                alt={props.communityName}
+                src={props.communityAvatar}
+                style={{ width: '45px', height: '45px' }}
+              />
+            ) : (
+              <CommunityIcon className='h-5 w-5' />
+            )}
             <Typography
               variant='small'
               className='font-body font-bold -tracking-tight text-lg text-black'

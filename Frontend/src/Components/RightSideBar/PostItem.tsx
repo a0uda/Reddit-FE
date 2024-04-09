@@ -34,7 +34,7 @@ const PostItem: React.FC<PostItemProps> = (props) => {
             <CommunityBadge
               name={props.communityName}
               joined={props.joined}
-              icon={props.communityIcon}
+              avatar={props.communityIcon}
               coverImage={props.communityCoverImage}
               description={props.communityDescription}
               members={props.communityMembers}
