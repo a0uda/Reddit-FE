@@ -11,7 +11,7 @@ const ButtonContainer = ({ children, className }: ButtonContainerProps) => {
     <>
       <div
         className={cn(
-          'flex checked:bg-orange flex-row items-center justify-center rounded-full bg-neutral-muted h-8 overflow-hidden',
+          'flex flex-row items-center justify-center rounded-full bg-neutral-muted h-8 overflow-hidden',
           className
         )}
       >

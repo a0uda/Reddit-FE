@@ -30,7 +30,7 @@ app.get("/users/account-settings", (req, res) => {
   res.status(200).json(accountSettings);
 });
 
-let c = 0
+let c = 0;
 app.patch("/users/change-account-settings", (req, res) => {
   accountSettings.account_settings[Object.keys(req.body)[0]] = Object.values(
     req.body
@@ -39,7 +39,7 @@ app.patch("/users/change-account-settings", (req, res) => {
     c++;
     res.sendStatus(200);
   } else {
-    res.status(404).send('Error')
+    res.status(404).send("Error");
   }
 });
 app.post("/users/disconnect-google", (req, res) => {
@@ -56,7 +56,6 @@ app.patch("/users/change-email", (req, res) => {
   res.sendStatus(200);
 });
 app.patch("/users/change-password", (req, res) => {
-
   const { current_password, new_password, verified_new_password } = req.body;
   // accountSettings.account_settings.email = new_email;
   res.sendStatus(200);
@@ -1053,6 +1052,7 @@ function shuffleList(list) {
   return list;
 }
 
+// * Listing
 app.get("/listings/posts/random", (req, res) => {
   res.status(200).json(postsListings);
 });
@@ -1090,4 +1090,14 @@ app.post("/posts-or-comments/vote", (req, res) => {
   } else {
   }
   res.sendStatus(200);
+});
+
+// * Post
+app.get("/posts/get-post/:id", (req, res) => {
+  const { id } = req.params;
+  const post = postsListings.find((post) => post.id === id);
+  if (!post) {
+    return res.status(404).json({ message: "Post not found" });
+  }
+  res.status(200).json(post);
 });
