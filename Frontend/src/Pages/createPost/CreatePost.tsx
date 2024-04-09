@@ -8,6 +8,7 @@ import ImageUpload from './ImageUpload';
 import MyEditor from './Editor';
 import DiscardPost from './DiscardPost';
 import { IconPlus, IconCheck } from '../../Components/RightSideBar/Icons';
+import SearchBar from './SearchCommunity';
 type FormSchema = 'createPost' | 'createPostImageAndVideo' | 'createPostLink';
 
 const NewPost: React.FC = () => {
@@ -32,8 +33,8 @@ const NewPost: React.FC = () => {
   const [initialValues, setInitialValues] = useState({
     title: '',
     description: '',
-    community_id: '1',
-    community_name: 'c',
+    community_id: '',
+    community_name: '',
     type: '',
     link_url: '',
     images: [],
@@ -108,15 +109,19 @@ const NewPost: React.FC = () => {
         return (
           <div className='mb-8 md:mb-12 lg:mb-16 ml-2 lg:ml-48 my-10 max-w-screen-xl'>
             <div className=''>
-              <h1 className='text-2xl lg:text-xl xl:text-xl border-b-2 w-1/2 mb-10 pb-4'>
+              <h1 className='text-2xl lg:text-xl xl:text-xl border-b-2 w-1/2 mb-4 pb-4'>
                 Create a post
               </h1>
+              <div className='mb-4'>
+                <SearchBar setFieldValue={formik.setFieldValue} />
+              </div>
             </div>
             <div className='editor w-10/12 flex flex-col text-gray-800 border border-gray-300 p-2 shadow-lg max-w-2xl  '>
               <NavBarCreatePost
                 activeIndex={activeIndex}
                 handleDivClick={handleDivClick}
               />
+
               {inputArr &&
                 inputArr.map((inp, i) => (
                   <div className='relative rounded-lg' key={i}>

@@ -1,12 +1,9 @@
-type HeaderCreatePostProps = {
+type Props = {
   activeIndex: number | null;
   handleDivClick: (index: number) => void;
 };
 
-const NavBarCreatePost: React.FC<HeaderCreatePostProps> = ({
-  activeIndex,
-  handleDivClick,
-}) => {
+const NavBarCreatePost: React.FC<Props> = ({ activeIndex, handleDivClick }) => {
   return (
     <div className='border-collapse'>
       <div className='flex'>
