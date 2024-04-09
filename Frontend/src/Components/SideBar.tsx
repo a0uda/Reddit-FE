@@ -65,11 +65,12 @@ const SideBar = ({ className }: { className?: string }) => {
   ];
   return (
     <>
-      <Card
+      <div
         className={
-          ' h-[calc(100vh-3.5rem)] overflow-x-auto w-full py-4 px-0 shadow-none ' +
+          ' h-[calc(100vh-3.5rem)] overflow-x-auto w-auto p-4 shadow-none border-r' +
           className
         }
+        style={{ scrollbarWidth: 'none' }} // Hide scrollbar
       >
         <List className='text-black *:text-black px-0 min-w-0'>
           <ListItemComponent
@@ -93,7 +94,7 @@ const SideBar = ({ className }: { className?: string }) => {
           <AccordionDropDown title='Create Post' list={createPost} />
           <hr className='my-2 border-blue-gray-50' />
         </List>
-      </Card>
+      </div>
     </>
   );
 };

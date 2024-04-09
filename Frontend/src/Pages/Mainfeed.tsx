@@ -7,21 +7,23 @@ import PostsListings from '../Components/PostsListings';
 const Mainfeed = () => {
   return (
     <>
-      <div className='mx-8 grid grid-col-1 lg:grid-cols-16 gap-6'>
-        <div className='lg-max:hidden col-span-3'>
+      <div className='flex '>
+        <div className='lg-max:hidden border-r'>
           <SideBar />
         </div>
-        <Card className='shadow-none col-span-9'>
-          <CardBody className='px-0 h-[calc(100vh-3.5rem)] overflow-auto'>
-            <PostsListings />
-          </CardBody>
-        </Card>
-        <Card className='lg-max:hidden shadow-none col-span-4'>
-          <CardBody className='space-y-4 px-0 overflow-auto h-[calc(100vh-3.5rem)]'>
-            <RecentPosts />
-            <PopularCommunities />
-          </CardBody>
-        </Card>
+        <div className='lg-max:block grid mx-5 grid-col-1 lg:grid-cols-16 gap-6 flex-grow'>
+          <Card className='shadow-none col-span-11'>
+            <CardBody className='px-0 h-[calc(100vh-3.5rem)] overflow-auto'>
+              <PostsListings />
+            </CardBody>
+          </Card>
+          <Card className='lg-max:hidden shadow-none col-span-5'>
+            <CardBody className='space-y-4 px-0 overflow-auto h-[calc(100vh-3.5rem)]'>
+              <RecentPosts />
+              <PopularCommunities />
+            </CardBody>
+          </Card>
+        </div>
       </div>
     </>
   );

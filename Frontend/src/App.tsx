@@ -3,6 +3,7 @@ import './assets/css/Layout.css';
 import UserSettings from './Pages/UserSettings/UserSettings';
 import NavigationBar from './Components/NavigationBar.tsx';
 import Mainfeed from './Pages/Mainfeed.tsx';
+import Notifications from './Pages/Notifications.tsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import OfflineAlert from './Components/OfflineAlert.tsx';
 
@@ -17,6 +18,7 @@ function App() {
             <Route path={'/'} element={<Mainfeed />} />
             <Route path={'/:sortOption'} element={<Mainfeed />} />
             <Route path='/settings/:page' element={<UserSettings />} />
+            <Route path='/notifications' element={<Notifications />} />
           </Routes>
         </Router>
       </div>
