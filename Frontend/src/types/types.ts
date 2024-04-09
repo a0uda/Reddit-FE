@@ -58,3 +58,27 @@ export type PostType = {
     total_shares: number;
   };
 };
+
+export type UserType = {
+  id: string;
+  created_at: string;
+  username: string;
+  email: string;
+  verified_email_flag: string;
+  gmail: string;
+  facebook_email: string;
+  display_name: string;
+  about: string;
+  social_links: {
+    _id: string;
+    username: string;
+    display_text: string;
+    type: string;
+    custom_url: string;
+  }[];
+  profile_picture: string;
+  banner_picture: string;
+  country: string;
+  gender: string;
+  connected_google: boolean;
+};

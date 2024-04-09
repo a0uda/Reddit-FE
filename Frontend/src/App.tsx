@@ -6,6 +6,7 @@ import Mainfeed from './Pages/Mainfeed.tsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import OfflineAlert from './Components/OfflineAlert.tsx';
 import { AuthProvider } from './Providers/AuthProvider.tsx';
+import Post from './Pages/Post.tsx';
 
 function App() {
   return (
@@ -18,6 +19,10 @@ function App() {
             <Routes>
               <Route path={'/'} element={<Mainfeed />} />
               <Route path={'/:sortOption'} element={<Mainfeed />} />
+              <Route
+                path={'/r/:communityName/comments/:id/:title/'}
+                element={<Post />}
+              />
               <Route path='/settings/:page' element={<UserSettings />} />
             </Routes>
           </Router>

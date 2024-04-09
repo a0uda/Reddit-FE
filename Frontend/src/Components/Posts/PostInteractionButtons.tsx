@@ -43,9 +43,6 @@ const PostInteractionButtons = ({
     }
   );
 
-  // console.log('upvote', upvote);
-  // console.log('downvote', downvote);
-
   return (
     <>
       <div className='flex flex-row items-center gap-4 text-black'>

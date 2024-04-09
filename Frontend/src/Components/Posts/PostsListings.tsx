@@ -16,9 +16,16 @@ const PostsListings = () => {
     capitalizeString(initialSortOption || '') || sortOptions[0]
   );
 
+  if (!sortOptions.includes(sortOption)) {
+    setSortOption(sortOptions[0]);
+  }
+
   const response = useQuery({
-    queryKey: ['listings', 'all'],
-    queryFn: () => fetchRequest(`listing/posts/${sortOption.toLowerCase()}`),
+    queryKey: ['listings', 'all', sortOption],
+    queryFn: () => {
+      console.log('sortOption', sortOption);
+      return fetchRequest(`listings/posts/${sortOption.toLowerCase()}`);
+    },
   });
 
   const navigate = useNavigate();

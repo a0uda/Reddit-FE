@@ -1103,3 +1103,13 @@ app.post("/posts-or-comments/vote", (req, res) => {
   }
   res.sendStatus(200);
 });
+
+// * Post
+app.get("/posts/get-post/:id", (req, res) => {
+  const { id } = req.params;
+  const post = postsListings.find((post) => post.id === id);
+  if (!post) {
+    return res.status(404).json({ message: "Post not found" });
+  }
+  res.status(200).json(post);
+});
