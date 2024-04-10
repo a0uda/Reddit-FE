@@ -209,105 +209,105 @@ const Notifications = () => {
   //   );
   return (
     <>
-      <div className=' flex'>
+      <div className='flex justify-between'>
         <div
-          className={'lg-max:hidden border-r'}
+          className={'xl:block hidden border-r'}
           style={{ scrollbarWidth: 'none' }} // Hide scrollbar
         >
           <SideBar />
         </div>
-        <div className=' grid mx-5 grid-col-1 lg:grid-cols-16 gap-6'>
-          <Card className='shadow-none col-span-11'>
-            <Typography variant='h4' className='text-black py-5 mb-3'>
-              Notifications
-            </Typography>
-            <CardBody className='p-0 h-[calc(100vh-3.5rem)] overflow-auto'>
-              <List className='p-0 text-foreground w-full'>
-                <ListItem className='p-0 flex gap-2 items-center justify-around hover:bg-transparent focus:bg-transparent  w-min'>
+        {/* <div className=' grid  gap-6'> */}
+        <Card className='shadow-none rounded-none flex-grow overflow-auto mx-5'>
+          <Typography variant='h4' className='text-black py-5 mb-3'>
+            Notifications
+          </Typography>
+          <CardBody className='p-0 h-[calc(100vh-3.5rem)] overflow-auto'>
+            <List className='p-0 text-foreground w-full'>
+              <ListItem className='p-0 flex gap-2 items-center justify-around hover:bg-transparent focus:bg-transparent  w-min'>
+                <Button
+                  variant='text'
+                  className='text-gray-700 hover:bg-transparent p-0 text-sm'
+                >
+                  Notifications
+                </Button>
+                <a href='/message/messages'>
                   <Button
                     variant='text'
-                    className='text-gray-700 hover:bg-transparent p-0 text-sm'
+                    className='text-gray-600 hover:bg-transparent py-0 text-sm'
                   >
-                    Notifications
+                    {/* // TODO: update the link after creating the messages page */}
+                    Messages
                   </Button>
-                  <a href='/message/messages'>
-                    <Button
-                      variant='text'
-                      className='text-gray-600 hover:bg-transparent py-0 text-sm'
+                </a>
+              </ListItem>
+              <div className='bg-blue w-20 h-1 rounded-full' />
+              {notifications.length > 0 ? (
+                <>
+                  <div className='flex items-center justify-between py-1 pr-4'>
+                    <Typography
+                      variant='small'
+                      className='text-neutral-900 uppercase font-medium'
                     >
-                      {/* // TODO: update the link after creating the messages page */}
-                      Messages
+                      Today
+                    </Typography>
+                    <div className='flex items-center gap-2'>
+                      <Typography
+                        variant='small'
+                        className='border-neutral-muted border-r-2 pr-2 cursor-pointer font-medium text-gray-800'
+                        onClick={markAllAsRead}
+                      >
+                        Mark all as Read
+                      </Typography>
+                      <a href='/settings/notifications'>
+                        <Cog8ToothIcon className='w-6 h-6 stroke-neutral-900' />
+                      </a>
+                    </div>
+                  </div>
+                  {renderNotificationItems(today)}
+                  <div className='flex items-center justify-between py-1'>
+                    <Typography
+                      variant='small'
+                      className='text-neutral-900 uppercase font-medium'
+                    >
+                      Earlier
+                    </Typography>
+                  </div>
+                  {renderNotificationItems(earlier)}
+                </>
+              ) : (
+                <>
+                  <ListItem className='px-5 py-2 flex flex-col items-center justify-center text-center hover:bg-transparent focus:bg-transparent'>
+                    <img
+                      className='max-h-[150px] mb-xl'
+                      role='presentation'
+                      src='https://www.redditstatic.com/shreddit/assets/snoovatar-full-hi.png'
+                      alt='Image for an empty inbox'
+                    />
+                    <Typography variant='lead'>No Notifications</Typography>
+                    <Typography variant='small'>
+                      All caught up! Check back later for new notifications.
+                    </Typography>
+                  </ListItem>
+                  <hr className='border-neutral-muted' />
+                  <div className='px-5 p-2'>
+                    <Button
+                      variant='filled'
+                      className='w-full h-10 bg-neutral-muted text-black'
+                    >
+                      View Settings
                     </Button>
-                  </a>
-                </ListItem>
-                <div className='bg-blue w-20 h-1 rounded-full' />
-                {notifications.length > 0 ? (
-                  <>
-                    <div className='flex items-center justify-between py-1 pr-4'>
-                      <Typography
-                        variant='small'
-                        className='text-neutral-900 uppercase font-medium'
-                      >
-                        Today
-                      </Typography>
-                      <div className='flex items-center gap-2'>
-                        <Typography
-                          variant='small'
-                          className='border-neutral-muted border-r-2 pr-2 cursor-pointer font-medium text-gray-800'
-                          onClick={markAllAsRead}
-                        >
-                          Mark all as Read
-                        </Typography>
-                        <a href='/settings/notifications'>
-                          <Cog8ToothIcon className='w-6 h-6 stroke-neutral-900' />
-                        </a>
-                      </div>
-                    </div>
-                    {renderNotificationItems(today)}
-                    <div className='flex items-center justify-between py-1'>
-                      <Typography
-                        variant='small'
-                        className='text-neutral-900 uppercase font-medium'
-                      >
-                        Earlier
-                      </Typography>
-                    </div>
-                    {renderNotificationItems(earlier)}
-                  </>
-                ) : (
-                  <>
-                    <ListItem className='px-5 py-2 flex flex-col items-center justify-center text-center hover:bg-transparent focus:bg-transparent'>
-                      <img
-                        className='max-h-[150px] mb-xl'
-                        role='presentation'
-                        src='https://www.redditstatic.com/shreddit/assets/snoovatar-full-hi.png'
-                        alt='Image for an empty inbox'
-                      />
-                      <Typography variant='lead'>No Notifications</Typography>
-                      <Typography variant='small'>
-                        All caught up! Check back later for new notifications.
-                      </Typography>
-                    </ListItem>
-                    <hr className='border-neutral-muted' />
-                    <div className='px-5 p-2'>
-                      <Button
-                        variant='filled'
-                        className='w-full h-10 bg-neutral-muted text-black'
-                      >
-                        View Settings
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </List>
-            </CardBody>
-          </Card>
-          <Card className='lg-max:hidden shadow-none col-span-5'>
-            <CardBody className='space-y-4 px-0 overflow-auto h-[calc(100vh-3.5rem)]'>
-              <div></div>
-            </CardBody>
-          </Card>
-        </div>
+                  </div>
+                </>
+              )}
+            </List>
+          </CardBody>
+        </Card>
+        <Card className='xl:block hidden shadow-none ml-auto px-3'>
+          <CardBody className='space-y-4 px-0 overflow-auto h-[calc(100vh-3.5rem)] min-w-72'>
+            <div></div>
+          </CardBody>
+        </Card>
+        {/* </div> */}
       </div>
     </>
   );
