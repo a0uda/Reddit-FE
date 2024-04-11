@@ -10,11 +10,21 @@ import DiscardPost from './DiscardPost';
 import { IconPlus, IconCheck } from '../../Components/RightSideBar/Icons';
 import SearchBar from './SearchCommunity';
 import OptionsPoll from './OptionsPoll';
+import { useMutation } from 'react-query';
+import { postRequest } from '../../API/User';
+import { useNavigate } from 'react-router-dom';
+
 type FormSchema =
   | 'createPost'
   | 'createPostImageAndVideo'
   | 'createPostLink'
   | 'createPostPoll';
+interface Image {
+  id: number;
+  path: string;
+  caption: string;
+  link: string;
+}
 
 const NewPost: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
@@ -25,6 +35,7 @@ const NewPost: React.FC = () => {
   const [Spoiler, setSpoiler] = useState(false);
   const [images, setImages] = useState<Image[]>([]);
   const [Imageindex, setImageIndex] = useState(0);
+  const navigate = useNavigate();
 
   const [inputArr, setInputArr] = useState([
     {
@@ -36,12 +47,11 @@ const NewPost: React.FC = () => {
     },
   ]);
   const [validateSchema, setValidateSchema] = useState<any>(null);
-  const [initialValues, setInitialValues] = useState({
+  const [initialValues] = useState({
     title: '',
     description: '',
     community_id: '',
     community_name: '',
-    type: '',
     link_url: '',
     images: [],
     oc_flag: false,
@@ -95,14 +105,28 @@ const NewPost: React.FC = () => {
       id: 'title',
     },
   ];
+
+  const mutation = useMutation(postRequest, {
+    onSuccess: () => {
+      navigate('/');
+    },
+    onError: () => {},
+  });
+
+  const handleOnSubmit = (values: object) => {
+    mutation.mutate({
+      endPoint: 'submit',
+      data: values,
+    });
+  };
   return (
     <Formik
       validationSchema={validateSchema}
       initialValues={{
         ...initialValues,
-        type: formType,
       }}
       onSubmit={(values, { setSubmitting, resetForm }) => {
+        handleOnSubmit(values);
         setTimeout(() => {
           alert(JSON.stringify(values));
           setSubmitting(true);
@@ -129,8 +153,8 @@ const NewPost: React.FC = () => {
               <NavBarCreatePost
                 activeIndex={activeIndex}
                 handleDivClick={handleDivClick}
+                setFieldValue={formik.setFieldValue}
               />
-
               {inputArr &&
                 inputArr.map((inp, i) => (
                   <div className='relative rounded-lg' key={i}>
@@ -152,7 +176,6 @@ const NewPost: React.FC = () => {
                     </div>
                   </div>
                 ))}
-
               {formType == 'createPost' || formType == 'createPostPoll' ? (
                 <div className='mt-4 mb-10'>
                   <MyEditor setFieldValue={formik.setFieldValue} />
@@ -169,13 +192,11 @@ const NewPost: React.FC = () => {
                   />
                 </>
               ) : null}
-
               {formType == 'createPostPoll' ? (
                 <div className='w-full border-bottom'>
                   <OptionsPoll setFieldValue={formik.setFieldValue} />
                 </div>
               ) : null}
-
               <div className='space-x-2 mt-4'>
                 <RoundedButton
                   buttonBorderColor='white'
@@ -258,6 +279,7 @@ const NewPost: React.FC = () => {
                   }}
                 />
               </div>
+
               <DiscardPost
                 handleOpen={() => setHandleOpen(!HandleOpen)}
                 open={HandleOpen}

@@ -345,11 +345,32 @@ const communitiesPost = [
     image_url:
       "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
   },
+  {
+    community_id: "3",
+    community_name: "r/football",
+    image_url:
+      "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+  },
+  {
+    community_id: "4",
+    community_name: "r/redditGroup",
+    image_url:
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+  },
+  {
+    community_id: "5",
+    community_name: "r/testcommunity",
+    image_url:
+      "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+  },
 ];
 
 app.get("/submit/communities", (req, res) => {
   res.status(200).json(communitiesPost);
-  console.log("ssssssssssssss");
+});
+app.post("/submit", (req, res) => {
+  // const {} = req.body;
+  res.status(200).json({ message: "	post created successfully" });
 });
 
 module.exports = app;

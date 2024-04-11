@@ -1,9 +1,22 @@
-type Props = {
+import { useEffect } from 'react';
+
+type PropsType = {
   activeIndex: number | null;
   handleDivClick: (index: number) => void;
+  setFieldValue: (
+    field: string,
+    value: unknown,
+    shouldValidate?: boolean
+  ) => void;
 };
-
-const NavBarCreatePost: React.FC<Props> = ({ activeIndex, handleDivClick }) => {
+export default function NavBarCreatePost({
+  activeIndex,
+  handleDivClick,
+  setFieldValue,
+}: PropsType) {
+  useEffect(() => {
+    setFieldValue('type', 'createPost');
+  }, [setFieldValue]);
   return (
     <div className='border-collapse'>
       <div className='flex'>
@@ -11,7 +24,10 @@ const NavBarCreatePost: React.FC<Props> = ({ activeIndex, handleDivClick }) => {
           className={`p-2 cursor-pointer w-1/3 border-b-2 flex items-center justify-center${
             activeIndex === 0 ? ' border-blue-light text-blue-light' : ''
           }`}
-          onClick={() => handleDivClick(0)}
+          onClick={() => {
+            handleDivClick(0);
+            setFieldValue('type', 'createPost');
+          }}
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -34,7 +50,10 @@ const NavBarCreatePost: React.FC<Props> = ({ activeIndex, handleDivClick }) => {
           className={`p-2 cursor-pointer w-1/3 border-b-2 flex items-center justify-center ${
             activeIndex === 1 ? 'border-blue-light text-blue-light' : ''
           }`}
-          onClick={() => handleDivClick(1)}
+          onClick={() => {
+            handleDivClick(1);
+            setFieldValue('type', 'createPostImageAndVideo');
+          }}
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -57,7 +76,10 @@ const NavBarCreatePost: React.FC<Props> = ({ activeIndex, handleDivClick }) => {
           className={`p-2 cursor-pointer w-1/3 border-b-2 flex items-center justify-center ${
             activeIndex === 2 ? ' border-blue-light text-blue-light' : ''
           }`}
-          onClick={() => handleDivClick(2)}
+          onClick={() => {
+            handleDivClick(2);
+            setFieldValue('type', 'createPostLink');
+          }}
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -80,7 +102,10 @@ const NavBarCreatePost: React.FC<Props> = ({ activeIndex, handleDivClick }) => {
           className={`p-2 cursor-pointer w-1/3 border-b-2 flex items-center justify-center ${
             activeIndex === 3 ? 'border-blue-light text-blue-light' : ''
           }`}
-          onClick={() => handleDivClick(3)}
+          onClick={() => {
+            handleDivClick(3);
+            setFieldValue('type', 'createPostPoll');
+          }}
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -101,6 +126,4 @@ const NavBarCreatePost: React.FC<Props> = ({ activeIndex, handleDivClick }) => {
       </div>
     </div>
   );
-};
-
-export default NavBarCreatePost;
+}

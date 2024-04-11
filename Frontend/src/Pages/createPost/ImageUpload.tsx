@@ -1,7 +1,6 @@
 import { ChangeEvent, useRef, useState } from 'react';
 import Input from '../../Components/Input';
 import RoundedButton from '../../Components/RoundedButton';
-import { IconPlus } from '../../Components/RightSideBar/Icons';
 
 interface Image {
   id: number;
@@ -9,14 +8,25 @@ interface Image {
   caption: string;
   link: string;
 }
-
-const ImageUpload: React.FC<{
-  setFieldValue: Function;
+type ImageUploadProps = {
+  setFieldValue: (
+    field: string,
+    value: unknown,
+    shouldValidate?: boolean
+  ) => void;
   images: Image[];
-  setImages: Function;
-  index: any;
-  setIndex: Function;
-}> = ({ setFieldValue, images, setImages, index, setIndex }) => {
+  setImages: React.Dispatch<React.SetStateAction<Image[]>>;
+  index: number;
+  setIndex: React.Dispatch<React.SetStateAction<number>>;
+};
+
+export default function ImageUpload({
+  setFieldValue,
+  images,
+  setImages,
+  index,
+  setIndex,
+}: ImageUploadProps) {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const uploadInput = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
@@ -199,7 +209,8 @@ const ImageUpload: React.FC<{
                 <div className='w-full sm:w-96 h-64 bg-gray-200 flex items-center justify-center'>
                   <img
                     src={
-                      images.find((image) => image.id === selectedImage).path
+                      images.find((image) => image.id === selectedImage)
+                        ?.path ?? ''
                     }
                     className='w-32 h-32 sm:w-full sm:h-full rounded-lg object-cover'
                     alt='Selected image'
@@ -233,5 +244,4 @@ const ImageUpload: React.FC<{
       </div>
     </section>
   );
-};
-export default ImageUpload;
+}

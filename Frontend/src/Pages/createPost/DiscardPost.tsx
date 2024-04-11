@@ -6,8 +6,9 @@ import {
   DialogFooter,
 } from '@material-tailwind/react';
 import RoundedButton from '../../Components/RoundedButton';
+import { Link } from 'react-router-dom';
 
-const DiscardPost = (props: { handleOpen; open }) => {
+const DiscardPost = (props: { handleOpen: () => void; open: boolean }) => {
   return (
     <Dialog size='sm' open={props.open} handler={props.handleOpen}>
       <DialogHeader className='!block relative border-b border-lines-color my-2 flex justify-between '>
@@ -39,13 +40,15 @@ const DiscardPost = (props: { handleOpen; open }) => {
         <div>Returning to the previous page will discard your post</div>
       </DialogBody>
       <DialogFooter className='bg-gray-200 rounded space-x-2'>
-        <RoundedButton
-          buttonBorderColor='border-white'
-          buttonText='Discard Post'
-          buttonTextColor='text-gray'
-          buttonColor='bg-gray-200 '
-          onClick={props.handleOpen}
-        />
+        <Link to='/'>
+          <RoundedButton
+            buttonBorderColor='border-white'
+            buttonText='Discard Post'
+            buttonTextColor='text-gray'
+            buttonColor='bg-gray-200 '
+            onClick={props.handleOpen}
+          />
+        </Link>
         <RoundedButton
           buttonBorderColor='border-text-blue'
           buttonText='Edit Post'
