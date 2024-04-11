@@ -1,5 +1,8 @@
 FROM node:alpine as builder
 
+ARG VITE_BASE_URL
+ENV VITE_BASE_URL=$VITE_BASE_URL
+
 WORKDIR /app
 COPY ./Frontend/package.json ./
 RUN npm install
