@@ -9,7 +9,12 @@ import MyEditor from './Editor';
 import DiscardPost from './DiscardPost';
 import { IconPlus, IconCheck } from '../../Components/RightSideBar/Icons';
 import SearchBar from './SearchCommunity';
-type FormSchema = 'createPost' | 'createPostImageAndVideo' | 'createPostLink';
+import OptionsPoll from './OptionsPoll';
+type FormSchema =
+  | 'createPost'
+  | 'createPostImageAndVideo'
+  | 'createPostLink'
+  | 'createPostPoll';
 
 const NewPost: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
@@ -20,6 +25,7 @@ const NewPost: React.FC = () => {
   const [Spoiler, setSpoiler] = useState(false);
   const [images, setImages] = useState<Image[]>([]);
   const [Imageindex, setImageIndex] = useState(0);
+
   const [inputArr, setInputArr] = useState([
     {
       className:
@@ -74,6 +80,10 @@ const NewPost: React.FC = () => {
 
       setInputArr([...initialInputs, ...LinkInput]);
     }
+    if (index == 3) {
+      setFormType('createPostPoll');
+      setInputArr(initialInputs);
+    }
   };
 
   const initialInputs = [
@@ -109,14 +119,13 @@ const NewPost: React.FC = () => {
         return (
           <div className='mb-8 md:mb-12 lg:mb-16 ml-2 lg:ml-48 my-10 max-w-screen-xl'>
             <div className=''>
-              <h1 className='text-2xl lg:text-xl xl:text-xl border-b-2 w-1/2 mb-4 pb-4'>
+              <h1 className='text-2xl lg:text-xl xl:text-xl border-b-2  max-w-3xl mb-4 pb-4'>
                 Create a post
               </h1>
-              <div className='mb-4'>
-                <SearchBar setFieldValue={formik.setFieldValue} />
-              </div>
+
+              <SearchBar setFieldValue={formik.setFieldValue} />
             </div>
-            <div className='editor w-10/12 flex flex-col text-gray-800 border border-gray-300 p-2 shadow-lg max-w-2xl  '>
+            <div className='editor w-full flex flex-col text-gray-800 border border-gray-300 p-2 shadow-lg max-w-3xl  '>
               <NavBarCreatePost
                 activeIndex={activeIndex}
                 handleDivClick={handleDivClick}
@@ -144,8 +153,8 @@ const NewPost: React.FC = () => {
                   </div>
                 ))}
 
-              {formType == 'createPost' ? (
-                <div className='mt-4 mb-16'>
+              {formType == 'createPost' || formType == 'createPostPoll' ? (
+                <div className='mt-4 mb-10'>
                   <MyEditor setFieldValue={formik.setFieldValue} />
                 </div>
               ) : null}
@@ -160,6 +169,13 @@ const NewPost: React.FC = () => {
                   />
                 </>
               ) : null}
+
+              {formType == 'createPostPoll' ? (
+                <div className='w-full border-bottom'>
+                  <OptionsPoll setFieldValue={formik.setFieldValue} />
+                </div>
+              ) : null}
+
               <div className='space-x-2 mt-4'>
                 <RoundedButton
                   buttonBorderColor='white'

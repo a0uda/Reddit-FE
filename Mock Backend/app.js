@@ -30,7 +30,7 @@ app.get("/users/account-settings", (req, res) => {
   res.status(200).json(accountSettings);
 });
 
-let c = 0
+let c = 0;
 app.patch("/users/change-account-settings", (req, res) => {
   accountSettings.account_settings[Object.keys(req.body)[0]] = Object.values(
     req.body
@@ -39,7 +39,7 @@ app.patch("/users/change-account-settings", (req, res) => {
     c++;
     res.sendStatus(200);
   } else {
-    res.status(404).send('Error')
+    res.status(404).send("Error");
   }
 });
 app.post("/users/disconnect-google", (req, res) => {
@@ -56,7 +56,6 @@ app.patch("/users/change-email", (req, res) => {
   res.sendStatus(200);
 });
 app.patch("/users/change-password", (req, res) => {
-
   const { current_password, new_password, verified_new_password } = req.body;
   // accountSettings.account_settings.email = new_email;
   res.sendStatus(200);
@@ -332,34 +331,25 @@ app.post("/users/signup-google", (req, res) => {
   res
     .status(200)
     .json({ message: "User logged in with Google successfully", token });
-  // const { code } = req.body;
-  // const client_id =
-  //   "178664293995-s6s92s28mme4eu54lg367sqhnj8bonff.apps.googleusercontent.com";
-  // const client_secret = "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";
-  // const redirect_uri = "http://localhost";
-  // const grant_type = "authorization_code";
+});
+const communitiesPost = [
+  {
+    community_id: "1",
+    community_name: "r/announcements",
+    image_url:
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+  },
+  {
+    community_id: "2",
+    community_name: "r/annou",
+    image_url:
+      "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+  },
+];
 
-  // fetch("<https://oauth2.googleapis.com/token>", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/x-www-form-urlencoded",
-  //   },
-  //   body: new URLSearchParams({
-  //     code,
-  //     client_id,
-  //     client_secret,
-  //     redirect_uri,
-  //     grant_type,
-  //   }),
-  // })
-  //   .then((response) => response.json())
-  //   .then((tokens) => {
-  //     res.json(tokens);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Token exchange error:", error);
-  //     res.status(500).json({ error: "Internal Server Error" });
-  //   });
+app.get("/submit/communities", (req, res) => {
+  res.status(200).json(communitiesPost);
+  console.log("ssssssssssssss");
 });
 
 module.exports = app;

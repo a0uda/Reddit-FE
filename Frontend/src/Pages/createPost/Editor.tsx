@@ -29,6 +29,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ setFieldValue }) => {
             value={editorHtml}
             onChange={handleEditorChange}
             className='w-full h-40 sm:h-64 md:h-40 lg:h-144 xl:h-160'
+            placeholder='Text (optional) '
           />
         </div>
       </div>
