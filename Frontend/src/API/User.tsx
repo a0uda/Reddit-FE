@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const baseUrl = import.meta.env.VITE_BASE_URL;
+//const baseUrl = import.meta.env.VITE_BASE_URL;
+const baseUrl = String(process.env.VITE_BASE_URL);
 console.log(baseUrl);
 
 const config = {
