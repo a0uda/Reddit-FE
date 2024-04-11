@@ -34,9 +34,12 @@ const patchRequest = async ({ newSettings, endPoint }) => {
 const postRequest = async ({ endPoint, data }) => {
   try {
     const response = await axios.post(baseUrl + endPoint, data, config);
-    console.log(response);
+    console.log(response, response.headers!.get('Authorization').slice(7));
 
-    return response.data;
+    return {
+      ...response.data,
+      token: response.headers['authorization'].slice(7),
+    };
   } catch (error) {
     throw new Error(error.response.data);
   }

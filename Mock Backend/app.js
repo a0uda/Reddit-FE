@@ -4,7 +4,6 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const fetch = require("node-fetch");
 
 app.use(
   cors({
@@ -14,6 +13,10 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  res.header('Access-Control-Expose-Headers', 'Authorization');
+  next();
+});
 const accountSettings = {
   account_settings: {
     email: "ahmedkhaled1029@gmail.com",
@@ -299,7 +302,10 @@ app.post("/users/signup", (req, res) => {
   };
   users.push(newUser);
   const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1h" });
-  res.status(201).json({ message: "User created successfully", token });
+  res.setHeader('authorization', `Bearer ${token}`);
+  
+  console.log(res.getHeaderNames());
+  res.sendStatus(201)
 });
 
 app.post("/users/login", (req, res) => {
@@ -310,7 +316,9 @@ app.post("/users/login", (req, res) => {
 
   if (user) {
     const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1h" });
-    res.status(200).json({ message: "Login successful", token });
+    res.setHeader('Authorization', `Bearer ${token}`);
+    console.log(res.getHeaderNames());
+    res.status(200).json({ message: "Login successful" });
   } else {
     res.status(401).json({ error: "Invalid username or password" });
   }
