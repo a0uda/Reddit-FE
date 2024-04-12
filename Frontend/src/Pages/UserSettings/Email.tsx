@@ -30,7 +30,7 @@ function Email() {
   });
 
   const handleToggleSwitch = (settingName, value) => {
-    const notificationsSettings = data?.data || {};
+    const notificationsSettings = data?.data.email_settings || {};
     const newSettings = {
       ...notificationsSettings,
       [settingName]: value,
@@ -45,7 +45,7 @@ function Email() {
     new_follower_email,
     chat_request_email,
     unsubscribe_from_all_emails,
-  } = data?.data || {};
+  } = data?.data.email_settings || {};
 
   return (
     <LoadingProvider error={error} isLoading={isLoading}>

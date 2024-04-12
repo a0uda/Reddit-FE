@@ -43,7 +43,7 @@ function FeedSettings() {
     global_content,
     Open_posts_in_new_tab,
     community_themes,
-  } = data?.data || {};
+  } = data?.data.feed_settings || {};
   console.log('Adult_content_flag', Adult_content_flag);
 
   return (

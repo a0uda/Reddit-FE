@@ -34,7 +34,7 @@ function ChatsandMessaging() {
     });
   };
   const { who_send_chat_request_flag, who_send_private_messages_flag } =
-    data?.data || {};
+    data?.data.chat_and_messaging_settings || {};
 
   return (
     <LoadingProvider error={error} isLoading={isLoading}>
