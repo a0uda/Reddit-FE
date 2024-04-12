@@ -30,7 +30,7 @@ const accountSettings = {
 };
 
 app.get("/users/account-settings", (req, res) => {
-  res.status(200).json(accountSettings);
+  res.status(200).json({ accountSettings });
 });
 
 let c = 0
@@ -95,7 +95,7 @@ let profileSettings = {
 };
 
 app.get("/users/profile-settings", (req, res) => {
-  res.status(200).json(profileSettings);
+  res.status(200).json({ profileSettings });
 });
 
 app.patch("/users/change-profile-settings", (req, res) => {
@@ -110,20 +110,22 @@ app.post("/users/clear-history", (req, res) => {
 });
 
 let notificationSettings = {
-  private_messages: false,
-  chat_messages: false,
-  chat_requests: false,
-  mentions: false,
-  comments: false,
-  upvotes_posts: false,
-  upvotes_comments: true,
-  replies: true,
-  new_followers: true,
-  invitations: true,
-  posts: true,
+  notifications_settings: {
+    private_messages: false,
+    chat_messages: false,
+    chat_requests: false,
+    mentions: false,
+    comments: false,
+    upvotes_posts: false,
+    upvotes_comments: true,
+    replies: true,
+    new_followers: true,
+    invitations: true,
+    posts: true,
+  }
 };
 app.get("/users/notification-settings", (req, res) => {
-  res.status(200).json(notificationSettings);
+  res.status(200).json({ notificationSettings });
 });
 app.patch("/users/change-notification-settings", (req, res) => {
   const updatedSettings = req.body;
@@ -303,7 +305,7 @@ app.post("/users/signup", (req, res) => {
   users.push(newUser);
   const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1h" });
   res.setHeader('authorization', `Bearer ${token}`);
-  
+
   console.log(res.getHeaderNames());
   res.sendStatus(201)
 });

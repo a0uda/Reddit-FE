@@ -32,8 +32,10 @@ function Email() {
   const handleToggleSwitch = (settingName, value) => {
     const notificationsSettings = data?.data.email_settings || {};
     const newSettings = {
-      ...notificationsSettings,
-      [settingName]: value,
+      email_settings: {
+        ...notificationsSettings,
+        [settingName]: value,
+      },
     };
 
     mutation.mutate({

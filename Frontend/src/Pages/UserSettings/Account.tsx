@@ -120,7 +120,9 @@ function Account() {
             buttonList={['Male', 'Female']}
             selected={gender}
             handleSelectionChange={(value) =>
-              handleChange('users/change-account-settings', { gender: value })
+              handleChange('users/change-account-settings', {
+                account_settings: { gender: value },
+              })
             }
           />
         </Card>
@@ -151,7 +153,9 @@ function Account() {
             ]}
             selected={country}
             handleSelectionChange={(value) =>
-              handleChange('users/change-account-settings', { country: value })
+              handleChange('users/change-account-settings', {
+                account_settings: { country: value },
+              })
             }
           />
         </Card>

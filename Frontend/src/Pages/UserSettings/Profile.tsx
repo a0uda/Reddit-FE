@@ -169,7 +169,9 @@ function Profile() {
               }
               patchReq.mutate({
                 endPoint: 'users/change-profile-settings',
-                newSettings: { display_name: displayName },
+                newSettings: {
+                  profile_settings: { display_name: displayName },
+                },
               });
             }}
             onChange={(e) => {
@@ -194,7 +196,7 @@ function Profile() {
               }
               patchReq.mutate({
                 endPoint: 'users/change-profile-settings',
-                newSettings: { about: aboutVal },
+                newSettings: { profile_settings: { about: aboutVal } },
               });
             }}
             onChange={(e) => {
@@ -372,7 +374,7 @@ function Profile() {
             onChange={(value) => {
               patchReq.mutate({
                 endPoint: 'users/change-profile-settings',
-                newSettings: { nsfw_flag: value },
+                newSettings: { profile_settings: { nsfw_flag: value } },
               });
             }}
           />
@@ -389,7 +391,7 @@ function Profile() {
             onChange={(value) => {
               patchReq.mutate({
                 endPoint: 'users/change-profile-settings',
-                newSettings: { allow_followers: value },
+                newSettings: { profile_settings: { allow_followers: value } },
               });
             }}
           />
@@ -404,7 +406,9 @@ function Profile() {
             onChange={(value) => {
               patchReq.mutate({
                 endPoint: 'users/change-profile-settings',
-                newSettings: { content_visibility: value },
+                newSettings: {
+                  profile_settings: { content_visibility: value },
+                },
               });
             }}
           />
@@ -418,7 +422,9 @@ function Profile() {
             onChange={(value) => {
               patchReq.mutate({
                 endPoint: 'users/change-profile-settings',
-                newSettings: { active_communities_visibility: value },
+                newSettings: {
+                  profile_settings: { active_communities_visibility: value },
+                },
               });
             }}
           />

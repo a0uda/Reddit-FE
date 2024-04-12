@@ -31,7 +31,9 @@ function Notifications() {
 
   const handleToggleSwitch = (settingName, value) => {
     const newSettings = {
-      [settingName]: value,
+      notifications_settings: {
+        [settingName]: value,
+      },
     };
 
     mutation.mutate({

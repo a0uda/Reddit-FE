@@ -30,7 +30,7 @@ function ChatsandMessaging() {
   const handleToggleSwitch = (newSettings: object) => {
     mutation.mutate({
       endPoint: 'users/change-chats-and-msgs-settings',
-      newSettings: newSettings,
+      newSettings: { chat_and_messaging_settings: newSettings },
     });
   };
   const { who_send_chat_request_flag, who_send_private_messages_flag } =

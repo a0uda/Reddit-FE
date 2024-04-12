@@ -33,7 +33,7 @@ function FeedSettings() {
   const handleToggleSwitch = (newSettings: object) => {
     mutation.mutate({
       endPoint: 'users/change-feed-settings',
-      newSettings: newSettings,
+      newSettings: { feed_settings: newSettings },
     });
   };
   const {
