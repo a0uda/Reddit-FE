@@ -8,7 +8,7 @@ console.log('baseUrl ', baseUrl);
 const config = {
   headers: {
     'Content-Type': 'application/json',
-    Authorization: localStorage.getItem('token'),
+    'Authorization': localStorage.getItem('token'),
   },
   withCredentials: false,
 };
@@ -16,7 +16,7 @@ const fetchRequest = async (endPoint: string) => {
   return await axios.get(baseUrl + endPoint, {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: localStorage.getItem('token'),
+      'Authorization': localStorage.getItem('token'),
     },
     withCredentials: false,
   });
@@ -27,7 +27,7 @@ const patchRequest = async ({ newSettings, endPoint }) => {
     const response = await axios.patch(baseUrl + endPoint, newSettings, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('token'),
+        'Authorization': localStorage.getItem('token'),
       },
       withCredentials: false,
     });
@@ -46,7 +46,7 @@ const postRequest = async ({ endPoint, data }) => {
     const response = await axios.post(baseUrl + endPoint, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: localStorage.getItem('token'),
+        'Authorization': localStorage.getItem('token'),
       },
       withCredentials: false,
     });
