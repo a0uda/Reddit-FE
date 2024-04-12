@@ -1061,23 +1061,23 @@ function shuffleList(list) {
   return list;
 }
 
-app.get("/listings/posts/random", (req, res) => {
+app.get("/listing/posts/random", (req, res) => {
   res.status(200).json(postsListings);
 });
 
-app.get("/listings/posts/best", (req, res) => {
+app.get("/listing/posts/best", (req, res) => {
   res.status(200).json([...postsListings].reverse());
 });
 
-app.get("/listings/posts/hot", (req, res) => {
+app.get("/listing/posts/hot", (req, res) => {
   res.status(200).json(shuffleList(postsListings));
 });
 
-app.get("/listings/posts/new", (req, res) => {
+app.get("/listing/posts/new", (req, res) => {
   res.status(200).json(shuffleList(postsListings));
 });
 
-app.get("/listings/posts/top", (req, res) => {
+app.get("/listing/posts/top", (req, res) => {
   res.status(200).json(shuffleList(postsListings));
 });
 
