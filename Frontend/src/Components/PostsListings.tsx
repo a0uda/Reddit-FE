@@ -48,10 +48,9 @@ const PostsListings = () => {
       <LoadingProvider error={response.isError} isLoading={response.isLoading}>
         {response.isSuccess && (
           <>
-            {response.data.data &&
-              response.data.data.map((post: PostType) => (
-                <Post key={post.id} post={post} />
-              ))}
+            {response.data.data.map((post: PostType) => (
+              <Post key={post.id} post={post} />
+            ))}
           </>
         )}
       </LoadingProvider>
