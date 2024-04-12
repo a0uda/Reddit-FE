@@ -39,7 +39,7 @@ function FeedSettings() {
   const {
     Adult_content_flag,
     autoplay_media,
-    community_content_sort,
+    communitiy_content_sort,
     global_content,
     Open_posts_in_new_tab,
     community_themes,
@@ -86,11 +86,11 @@ function FeedSettings() {
           description='Choose how you would like content organized in communities you visit. This will not affect global feeds such as Home, or Popular.'
         >
           <DropDownButton
-            selected={community_content_sort?.type}
+            selected={communitiy_content_sort?.type}
             buttonList={['hot', 'new', 'top', 'rising']}
             handleSelectionChange={(selectedItem) =>
               handleToggleSwitch({
-                community_content_sort: {
+                communitiy_content_sort: {
                   type: selectedItem,
                 },
               })
@@ -103,10 +103,10 @@ function FeedSettings() {
           description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
         >
           <SwitchButton
-            checked={community_content_sort?.sort_remember_per_community}
+            checked={communitiy_content_sort?.sort_remember_per_community}
             onChange={(value) =>
               handleToggleSwitch({
-                community_content_sort: {
+                communitiy_content_sort: {
                   sort_remember_per_community: value,
                 },
               })
