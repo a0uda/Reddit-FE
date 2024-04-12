@@ -44,6 +44,8 @@ function FeedSettings() {
     Open_posts_in_new_tab,
     community_themes,
   } = data?.data || {};
+  console.log('Adult_content_flag', Adult_content_flag);
+
   return (
     <LoadingProvider error={error} isLoading={isLoading}>
       <h2 className='text-xl my-8 font-semibold'>Feed Settings</h2>
