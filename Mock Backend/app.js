@@ -30,7 +30,7 @@ app.get("/users/account-settings", (req, res) => {
   res.status(200).json(accountSettings);
 });
 
-let c = 0
+let c = 0;
 app.patch("/users/change-account-settings", (req, res) => {
   accountSettings.account_settings[Object.keys(req.body)[0]] = Object.values(
     req.body
@@ -39,7 +39,7 @@ app.patch("/users/change-account-settings", (req, res) => {
     c++;
     res.sendStatus(200);
   } else {
-    res.status(404).send('Error')
+    res.status(404).send("Error");
   }
 });
 app.post("/users/disconnect-google", (req, res) => {
@@ -56,7 +56,6 @@ app.patch("/users/change-email", (req, res) => {
   res.sendStatus(200);
 });
 app.patch("/users/change-password", (req, res) => {
-
   const { current_password, new_password, verified_new_password } = req.body;
   // accountSettings.account_settings.email = new_email;
   res.sendStatus(200);
@@ -1090,4 +1089,89 @@ app.post("/posts-or-comments/vote", (req, res) => {
   } else {
   }
   res.sendStatus(200);
+});
+
+let userAbout = {
+  id: "string",
+  created_at: "Feb 24, 2024",
+  username: "u/Icy-Cry-5376",
+  email: "string",
+  gmail: "string",
+  facebook_email: "string",
+  profile_settings: {
+    display_name: "Icy-Cry-5376",
+    about: "string",
+    social_links: [
+      { icon: "Instagram", username: "ahmedtoaima_" },
+      {
+        icon: "Facebook",
+        username: "ahmedkhaled",
+        displayName: "Ahmed Khaled",
+      },
+    ],
+    profile_picture:
+      "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
+    banner_picture:
+      "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
+    nsfw_flag: true,
+    allow_followers: true,
+    content_visibility: true,
+    active_communities_visibility: true,
+  },
+  country: "string",
+  gender: "Male",
+  connected_google: true,
+  connected_twitter: true,
+  connected_apple: true,
+  communities: [
+    {
+      id: "string",
+      name: "string",
+      favorite_flag: true,
+      disable_updates: true,
+    },
+  ],
+  moderated_communities: [
+    {
+      id: "string",
+      name: "ree's community",
+      src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+      members_number: 1000,
+      joined:true,
+    },
+    {
+      id: "string",
+      name: "halla's community",
+      src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+      members_number: 500,
+      joined:false,
+    },
+  ],
+};
+app.get("/users/about", (req, res) => {
+  res.status(200).json(userAbout);
+});
+
+app.get("/users/downvoted-posts", (req, res) => {
+  res.status(200).json(postsListings);
+});
+app.get("/users/upvoted-posts", (req, res) => {
+  res.status(200).json(postsListings);
+});
+app.get("/users/hidden-and-reported-posts", (req, res) => {
+  res.status(200).json(postsListings);
+});
+app.get("/users/saved-posts-and-comments", (req, res) => {
+  res.status(200).json(postsListings);
+});
+
+app.get("/users/posts", (req, res) => {
+  res.status(200).json(postsListings);
+});
+
+app.get("/users/comments", (req, res) => {
+  res.status(200).json(postsListings);
+});
+app.get("/users/overview", (req, res) => {
+  res.status(200).json(postsListings);
 });
