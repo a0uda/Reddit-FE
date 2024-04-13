@@ -71,12 +71,12 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
   }, []);
 
   return (
-    <div className='flex relative w-1/4' ref={searchBarRef}>
+    <div className='flex relative w-full md:w-1/4 lg:w-1/4' ref={searchBarRef}>
       <div className='relative w-full'>
         <div>
           {!searchQuery || imageQuery === '' ? (
             <svg
-              className='text-gray-600 h-5 w-5 absolute top-3 left-3 fill-current'
+              className='text-gray-600 h-5 w-5 absolute top-3 left-3 fill-current z-10'
               xmlns='http://www.w3.org/2000/svg'
               xmlnsXlink='http://www.w3.org/1999/xlink'
               viewBox='0 0 56.966 56.966'
@@ -90,7 +90,7 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
               alt={searchQuery}
               src={imageQuery}
               style={{ width: '25px', height: '25px' }}
-              className='absolute top-2 ms-2'
+              className='absolute top-2 ms-2 z-10'
             />
           )}
         </div>
@@ -101,7 +101,7 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
           value={searchQuery}
           onChange={handleChange}
           onFocus={() => setShowSuggestions(true)}
-          className='w-full border ps-10 h-12 shadow rounded-lg'
+          className='w-full border ps-10 h-12 shadow rounded-lg bg-white'
           placeholder='Search'
           crossOrigin={undefined}
         />
@@ -113,6 +113,7 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
             viewBox='0 0 24 24'
             strokeWidth={1.5}
             stroke='currentColor'
+            onClick={() => setShowSuggestions(true)}
           >
             <path
               strokeLinecap='round'

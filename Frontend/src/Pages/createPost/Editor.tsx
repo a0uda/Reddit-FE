@@ -3,11 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 interface TextEditorProps {
-  setFieldValue: (
-    field: string,
-    value: unknown,
-    shouldValidate?: boolean
-  ) => void;
+  setFieldValue: (field: string, value: unknown) => void;
 }
 
 const TextEditor: React.FC<TextEditorProps> = ({ setFieldValue }) => {

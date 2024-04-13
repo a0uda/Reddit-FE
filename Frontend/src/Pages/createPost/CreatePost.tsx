@@ -44,9 +44,10 @@ const NewPost: React.FC = () => {
       type: 'text',
       placeholder: 'Title',
       id: 'title',
+      size: true,
     },
   ]);
-  const [validateSchema, setValidateSchema] = useState<any>(null);
+  const [validateSchema, setValidateSchema] = useState<unknown>(null);
   const [initialValues] = useState({
     title: '',
     description: '',
@@ -81,10 +82,11 @@ const NewPost: React.FC = () => {
       const LinkInput = [
         {
           className:
-            'placeholder:text-gray-500 placeholder:opacity-100 focus:!border-gray-900 !border !border-t-[rgb(176,190,197)] mt-4',
+            'placeholder:text-gray-500 pb-4 pt-10 placeholder:opacity-100 focus:!border-gray-900 !border !border-t-[rgb(176,190,197)] mt-4',
           type: 'text',
           placeholder: 'URL',
           id: 'link_url',
+          size: false,
         },
       ];
 
@@ -95,6 +97,7 @@ const NewPost: React.FC = () => {
       setInputArr(initialInputs);
     }
   };
+  const heightClass = activeIndex == 2 ? 'h-screen' : 'h-auto';
 
   const initialInputs = [
     {
@@ -103,6 +106,7 @@ const NewPost: React.FC = () => {
       type: 'text',
       placeholder: 'Title',
       id: 'title',
+      size: true,
     },
   ];
 
@@ -141,15 +145,15 @@ const NewPost: React.FC = () => {
     >
       {(formik) => {
         return (
-          <div className='mb-8 md:mb-12 lg:mb-16 ml-2 lg:ml-48 my-10 max-w-screen-xl'>
-            <div className=''>
-              <h1 className='text-2xl lg:text-xl xl:text-xl border-b-2  max-w-3xl mb-4 pb-4'>
-                Create a post
-              </h1>
+          <div
+            className={`pb-8 md:pb-12 lg:pb-16 pl-2 lg:pl-48 py-10 ${heightClass} h-full bg-grayLight w-full`}
+          >
+            <h1 className='text-2xl lg:text-xl xl:text-xl border-b-2 border-white max-w-3xl mb-4 pb-4'>
+              Create a post
+            </h1>
+            <SearchBar setFieldValue={formik.setFieldValue} />
 
-              <SearchBar setFieldValue={formik.setFieldValue} />
-            </div>
-            <div className='editor w-full flex flex-col text-gray-800 border border-gray-300 p-2 shadow-lg max-w-3xl  '>
+            <div className='bg-white editor w-full flex flex-col text-gray-800 border border-gray-300 p-2 shadow-lg max-w-3xl '>
               <NavBarCreatePost
                 activeIndex={activeIndex}
                 handleDivClick={handleDivClick}
@@ -169,11 +173,15 @@ const NewPost: React.FC = () => {
                         formik.setFieldValue(inp.id, e.target.value);
                       }}
                     />
-                    <div className='count ml-auto text-gray-400 text-xs font-semibold absolute right-3 top-3/4 -translate-y-1/2'>
-                      {formik.values[inp.id as keyof typeof formik.values]
-                        ?.length || 0}
-                      /300
-                    </div>
+                    {inp.size ? (
+                      <div className='count ml-auto text-gray-400 text-xs font-semibold absolute right-3 top-3/4 -translate-y-1/2'>
+                        {formik.values[inp.id as keyof typeof formik.values]
+                          ?.length || 0}
+                        /300
+                      </div>
+                    ) : (
+                      <div className='mb-10'></div>
+                    )}
                   </div>
                 ))}
               {formType == 'createPost' || formType == 'createPostPoll' ? (

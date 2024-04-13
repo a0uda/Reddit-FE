@@ -53,4 +53,5 @@ export const validationSchema = {
     )
     .min(2, 'At least 2 options are required')
     .required(),
+  gender: yup.string(),
 };

@@ -43,8 +43,8 @@ export default function ImageUpload({
         newImages.push({
           id: index,
           path: imageUrl,
-          caption: 'nn',
-          link: 'nn',
+          caption: '',
+          link: '',
         });
         setIndex((prevIndex) => prevIndex + 1);
       });

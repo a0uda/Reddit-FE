@@ -71,6 +71,7 @@ export default withMT({
         'danger-red': '#ff585b',
         'lines-color': '#EDEFF1',
         'gray-light': '#7C7C7C',
+        grayLight: '#dae0e6',
       },
       width: {
         'fit-content': 'fit-content',

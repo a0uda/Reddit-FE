@@ -3,11 +3,7 @@ import { useEffect } from 'react';
 type PropsType = {
   activeIndex: number | null;
   handleDivClick: (index: number) => void;
-  setFieldValue: (
-    field: string,
-    value: unknown,
-    shouldValidate?: boolean
-  ) => void;
+  setFieldValue: (field: string, value: unknown) => void;
 };
 export default function NavBarCreatePost({
   activeIndex,

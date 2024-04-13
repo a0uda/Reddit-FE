@@ -7,11 +7,7 @@ interface Option {
 }
 
 interface OptionsPollProps {
-  setFieldValue: (
-    field: string,
-    value: unknown,
-    shouldValidate?: boolean
-  ) => void;
+  setFieldValue: (field: string, value: unknown) => void;
 }
 
 function OptionsPoll({ setFieldValue }: OptionsPollProps) {
@@ -27,7 +23,23 @@ function OptionsPoll({ setFieldValue }: OptionsPollProps) {
   return (
     <div className='flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 p-2 border border-gray-200 border-t-0'>
       <div className='flex flex-col p-4 bg-blue-50 space-y-2 w-full lg:w-1/3 lg:order-last'>
-        <h3 className='font-semibold text-xs'>Tips for Better Polls</h3>
+        <h3 className='font-semibold text-xs flex space-x-2'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            strokeWidth={1.5}
+            stroke='currentColor'
+            className='w-6 h-6'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              d='M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z'
+            />
+          </svg>
+          <span className='mt-1'>Tips for Better Polls</span>
+        </h3>
         <ul className='list-disc ml-4 space-y-1 text-xs'>
           <li>Suggest short, clear options</li>
           <li>Balance the number of options</li>
