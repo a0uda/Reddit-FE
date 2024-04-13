@@ -67,7 +67,7 @@ const SideBar = ({ className }: { className?: string }) => {
     <>
       <Card
         className={
-          'h-[calc(100vh-var(--navbar-height))] overflow-x-auto w-full py-4 px-0 shadow-none ' +
+          'h-[calc(100vh-var(--navbar-height))] overflow-x-auto w-full p-5 shadow-none ' +
           className
         }
       >

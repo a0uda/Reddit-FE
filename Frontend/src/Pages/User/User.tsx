@@ -82,7 +82,7 @@ function User() {
     <>
       <ContentLayout>
         <ContentLayout.Main>
-          <Card className='shadow-none col-span-8'>
+          <Card className='shadow-none'>
             <CardBody className='px-0'>
               <div className='flex gap-2 mb-7'>
                 <div className='flex flex-col relative '>
@@ -107,18 +107,20 @@ function User() {
                   <div className='text-base text-neutral-900'>{username}</div>
                 </div>
               </div>
-              <SubNavBar
-                buttonArray={[
-                  'Overview',
-                  'Posts',
-                  'Comments',
-                  'Saved',
-                  'Hidden',
-                  'Upvoted',
-                  'Downvoted',
-                ]}
-                active={page}
-              />
+              <div className='overflow-auto'>
+                <SubNavBar
+                  buttonArray={[
+                    'Overview',
+                    'Posts',
+                    'Comments',
+                    'Saved',
+                    'Hidden',
+                    'Upvoted',
+                    'Downvoted',
+                  ]}
+                  active={page}
+                />
+              </div>
 
               {page == 'overview' ? (
                 <Overview />
