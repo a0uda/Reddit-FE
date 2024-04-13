@@ -6,6 +6,7 @@ import Mainfeed from './Pages/Mainfeed.tsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import OfflineAlert from './Components/OfflineAlert.tsx';
 import Post from './Pages/Post.tsx';
+import User from './Pages/User/User.tsx';
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
             />
             <Route path={'/:sortOption'} element={<Mainfeed />} />
             <Route path='/settings/:page' element={<UserSettings />} />
+            {/* to be deleted Ree */}
+            <Route path='/user/:page' element={<User />} />
           </Routes>
         </Router>
       </div>
