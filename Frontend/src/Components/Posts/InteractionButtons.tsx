@@ -111,21 +111,23 @@ const InteractionButtons = ({
             className='flex flex-row items-center justify-center gap-1 rounded-full'
           >
             <ChatBubbleLeftIcon className='h-5 w-5' />
-            {isPost ? (
-              <>
-                <Link to={`${refLink}`}>
+            <div className='hidden sm:block'>
+              {isPost ? (
+                <>
+                  <Link to={`${refLink}`}>
+                    <Typography variant='lead' className='text-sm'>
+                      {comments_replies}
+                    </Typography>
+                  </Link>
+                </>
+              ) : (
+                <>
                   <Typography variant='lead' className='text-sm'>
-                    {comments_replies}
+                    Reply
                   </Typography>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Typography variant='lead' className='text-sm'>
-                  Reply
-                </Typography>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </Button>
         </ButtonContainer>
         <ButtonContainer className={!isPost ? 'bg-inherit' : ''}>
@@ -139,9 +141,11 @@ const InteractionButtons = ({
             }}
           >
             <ArrowUpTrayIcon className='h-5 w-5' />
-            <Typography variant='lead' className='text-sm'>
-              Share
-            </Typography>
+            <div className='hidden sm:block'>
+              <Typography variant='lead' className='text-sm'>
+                Share
+              </Typography>
+            </div>
           </Button>
         </ButtonContainer>
       </div>

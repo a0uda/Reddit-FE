@@ -56,7 +56,10 @@ const PostsListings = () => {
         {response.isSuccess && (
           <>
             {response.data.data.map((post: PostType) => (
-              <PostPreview key={post.id} post={post} />
+              <>
+                <PostPreview key={post.id} post={post} />
+                <hr className='border-neutral-muted' />
+              </>
             ))}
           </>
         )}
