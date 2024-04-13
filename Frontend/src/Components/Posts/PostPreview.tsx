@@ -27,7 +27,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
         // className='absolute inset-0'
       >
         <Card
-          className='relative w-full py-2 border-b-[1px] border-neutral-muted hover:bg-neutral-200'
+          className='relative w-full px-4 py-2 hover:bg-neutral-200'
           shadow={false}
         >
           <CardHeader
