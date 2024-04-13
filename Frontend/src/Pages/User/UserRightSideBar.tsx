@@ -22,31 +22,81 @@ import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, postRequest } from '../../API/User';
 
 function UserRightSideBar() {
-  const { data, error, isLoading, refetch } = useQuery('about data', () =>
-    fetchRequest('users/about')
+  const [aboutData, setAboutData] = useState();
+  const aboutResponse = useQuery({
+    queryKey: 'about data',
+    queryFn: () => fetchRequest('users/about'),
+    onSuccess: (data) => {
+      setAboutData(data.data);
+    },
+  });
+
+  console.log(aboutData);
+
+  const [moderatedCommunities, setModeratedCommunities] = useState();
+  const communitiesResponse = useQuery({
+    queryKey: 'moderated communities',
+    queryFn: () => fetchRequest('users/moderated-communities'),
+    onSuccess: (data) => {
+      setModeratedCommunities(data.data);
+    },
+  });
+  const joinMutation = useMutation(
+    (communityName: string) =>
+      postRequest({
+        endPoint: 'users/join-community',
+        data: { communityName: communityName },
+      }),
+    {
+      onError: () => {
+        console.log('Error');
+      },
+    }
   );
 
-  const {
-    id,
-    created_at,
-    username,
-    email,
-    gmail,
-    facebook_email,
-    profile_settings,
-    country,
-    gender,
-    connected_google,
-    connected_twitter,
-    connected_apple,
-    communities,
-    moderated_communities,
-  } = data?.data || {};
+  const leaveMutation = useMutation(
+    (communityName: string) =>
+      postRequest({
+        endPoint: 'users/leave-community',
+        data: { communityName: communityName },
+      }),
+    {
+      onError: () => {
+        console.log('Error');
+      },
+    }
+  );
 
-  const social_links = profile_settings?.social_links || [];
-  const display_name = profile_settings?.display_name || '';
-  const profile_picture = profile_settings?.profile_picture || '';
-  const banner_picture = profile_settings?.banner_picture || '';
+  const moderated_communities =
+    moderatedCommunities?.moderated_communities || [];
+  // const {
+  //   id,
+  //   created_at,
+  //   username,
+  //   email,
+  //   gmail,
+  //   facebook_email,
+  //   profile_settings,
+  //   country,
+  //   gender,
+  //   connected_google,
+  //   connected_twitter,
+  //   connected_apple,
+  //   communities,
+  //   moderated_communities,
+  // } = data?.data || {};
+
+  const social_links = aboutData?.about?.social_links ?? [];
+  const display_name = aboutData?.about?.display_name ?? '';
+  const profile_picture = aboutData?.about?.profile_picture ?? '';
+  const banner_picture = aboutData?.about?.banner_picture ?? '';
+  const created_at = aboutData?.about?.created_at ?? '';
+  const date = new Date(created_at);
+  const formattedDate = date.toLocaleString('en-US', {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+  });
 
   const [joinStates, setJoinStates] = useState(() => {
     if (moderated_communities) {
@@ -61,7 +111,7 @@ function UserRightSideBar() {
     newJoinStates[index] = true;
     setJoinStates(newJoinStates);
 
-    //joinMutation.mutate(moderated_communities[index].name);
+    joinMutation.mutate(moderated_communities[index].name);
   };
 
   const handleLeave = (index) => {
@@ -69,7 +119,7 @@ function UserRightSideBar() {
     newJoinStates[index] = false;
     setJoinStates(newJoinStates);
 
-    //leaveMutation.mutate(moderated_communities[index].name);
+    leaveMutation.mutate(moderated_communities[index].name);
   };
   return (
     <>
@@ -101,7 +151,7 @@ function UserRightSideBar() {
             {display_name}
           </div>
           <CardBody className='flex flex-col gap-2'>
-            <div className='text-black text-sm'>{created_at}</div>
+            <div className='text-black text-sm'>{formattedDate}</div>
             <div className='text-xs'> Cake Day</div>
           </CardBody>
         </Card>
@@ -250,9 +300,9 @@ function UserRightSideBar() {
                       className='flex justify-between items-center'
                     >
                       <CommunityItem
-                        src={link.src}
+                        src={link.profile_picture}
                         name={link.name}
-                        membersNumber={link.members_number}
+                        membersNumber={link.members_count}
                       ></CommunityItem>
                       {joinStates[i] ? (
                         <RoundedButton

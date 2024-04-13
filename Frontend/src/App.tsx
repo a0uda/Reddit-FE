@@ -26,7 +26,7 @@ function App() {
               />
               <Route path='/settings/:page' element={<UserSettings />} />
               {/* to be deleted Ree */}
-              <Route path='/user/:page' element={<User />} />
+              <Route path='/user/:username/:page' element={<User />} />
             </Routes>
           </Router>
         </div>

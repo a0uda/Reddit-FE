@@ -8,7 +8,7 @@ export default function SidebarSection(props: {
   return (
     <div className={`mb-5 bg-[url('${props.background}')]`}>
       <div
-        className={`border-t-[1px] border-blue-gray-100 pt-4 text-[12px] font-semibold uppercase tracking-wider text-gray-light border-[#EDEFF1] `}
+        className={`border-t-[1px] border-blue-gray-100 pt-4 text-[10px] font-semibold uppercase tracking-wider text-gray-light border-[#EDEFF1] `}
       >
         {props.sectionTitle}
       </div>

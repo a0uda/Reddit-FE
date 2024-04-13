@@ -708,6 +708,7 @@ app.patch("/notifications/hide/:id", (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let postsListings = [
   {
+    is_post: true,
     id: "15",
     user_id: "user1",
     username: "john_doe",
@@ -764,6 +765,7 @@ let postsListings = [
     },
   },
   {
+    is_post: true,
     id: "18",
     user_id: "user2",
     username: "jane_smith",
@@ -820,6 +822,7 @@ let postsListings = [
     },
   },
   {
+    is_post: true,
     id: "3",
     user_id: "user3",
     username: "joe_bloggs",
@@ -876,6 +879,7 @@ let postsListings = [
     },
   },
   {
+    is_post: true,
     id: "4",
     user_id: "user4",
     username: "john_doe",
@@ -932,6 +936,7 @@ let postsListings = [
     },
   },
   {
+    is_post: true,
     id: "5",
     user_id: "user5",
     username: "joe_bloggs",
@@ -988,6 +993,7 @@ let postsListings = [
     },
   },
   {
+    is_post: true,
     id: "6",
     user_id: "user6",
     username: "jane_smith",
@@ -1464,15 +1470,16 @@ app.get("/posts/get-comments/:id", (req, res) => {
   res.status(200).json(postComments);
 });
 let userAbout = {
-  id: "string",
-  created_at: "Feb 24, 2024",
-  username: "u/Icy-Cry-5376",
-  email: "string",
-  gmail: "string",
-  facebook_email: "string",
-  profile_settings: {
+  message: "About retrieved successfully",
+  about: {
+    _id: "661a2c3fab10a4b012e8f59a",
+    username: "u/Icy-Cry-5376",
+    created_at: "2024-02-24T06:53:20.537Z",
+    email: "me22@gmail.com",
+    verified_email_flag: false,
+    connected_google: false,
     display_name: "Icy-Cry-5376",
-    about: "string",
+    about: "",
     social_links: [
       { icon: "Instagram", username: "ahmedtoaima_" },
       {
@@ -1485,45 +1492,268 @@ let userAbout = {
       "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
     banner_picture:
       "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
-    nsfw_flag: true,
-    allow_followers: true,
-    content_visibility: true,
-    active_communities_visibility: true,
+    gender: "Female",
   },
-  country: "string",
-  gender: "Male",
-  connected_google: true,
-  connected_twitter: true,
-  connected_apple: true,
-  communities: [
-    {
-      id: "string",
-      name: "string",
-      favorite_flag: true,
-      disable_updates: true,
-    },
-  ],
+};
+
+let moderatedCommunities = {
+  success: true,
+  status: 200,
+  msg: "Your moderated communities are retrieved successfully",
   moderated_communities: [
     {
-      id: "string",
-      name: "ree's community",
-      src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
-      members_number: 1000,
-      joined: true,
+      id: "661732b95ef02bd2dddfde17",
+      name: "Russel, Friesen and Volkman",
+      profile_picture: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+      favorite_flag: true,
+      members_count: 163,
+      joined:true,
     },
     {
-      id: "string",
-      name: "halla's community",
-      src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
-      members_number: 500,
-      joined: false,
+      id: "661732b95ef02bd2dddfde1e",
+      name: "Rowe, Heller and McKenzie",
+      profile_picture: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+      favorite_flag: false,
+      members_count: 924,
+      joined:false,
     },
   ],
 };
-app.get("/users/about", (req, res) => {
+
+// let userAbout = {
+//   id: "string",
+//   created_at: "Feb 24, 2024",
+//   username: "u/Icy-Cry-5376",
+//   email: "string",
+//   gmail: "string",
+//   facebook_email: "string",
+//   profile_settings: {
+//     display_name: "Icy-Cry-5376",
+//     about: "string",
+//     social_links: [
+//       { icon: "Instagram", username: "ahmedtoaima_" },
+//       {
+//         icon: "Facebook",
+//         username: "ahmedkhaled",
+//         displayName: "Ahmed Khaled",
+//       },
+//     ],
+//     profile_picture:
+//       "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
+//     banner_picture:
+//       "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
+//     nsfw_flag: true,
+//     allow_followers: true,
+//     content_visibility: true,
+//     active_communities_visibility: true,
+//   },
+//   country: "string",
+//   gender: "Male",
+//   connected_google: true,
+//   connected_twitter: true,
+//   connected_apple: true,
+//   communities: [
+//     {
+//       id: "string",
+//       name: "string",
+//       favorite_flag: true,
+//       disable_updates: true,
+//     },
+//   ],
+//   moderated_communities: [
+//     {
+//       id: "string",
+//       name: "ree's community",
+//       src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+//       members_number: 1000,
+//       joined: true,
+//     },
+//     {
+//       id: "string",
+//       name: "halla's community",
+//       src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+//       members_number: 500,
+//       joined: false,
+//     },
+//   ],
+// };
+
+let postsComments = [
+  {
+    is_post: true,
+    id: "15",
+    user_id: "user1",
+    username: "john_doe",
+    title: "First Post",
+    description: "This is the first post",
+    created_at: "2024-03-29",
+    edited_at: "2024-03-29",
+    deleted_at: "2024-03-29",
+    type: "image_and_videos",
+    link_url: "https://example.com",
+    images: [
+      {
+        path: "image1.jpg",
+        caption: "Image 1",
+        link: "https://source.unsplash.com/random",
+      },
+    ],
+    videos: [
+      {
+        path: "video1.mp4",
+        caption: "Video 1",
+        link: "https://example.com/video1.mp4",
+      },
+    ],
+    poll: {
+      options: ["Option 1", "Option 2", "Option 3"],
+      votes: [0, 0, 0],
+    },
+    community_id: "community1",
+    "community-name": "Community 1",
+    comments_count: 0,
+    views_count: 0,
+    shares_count: 0,
+    upvotes_count: 0,
+    downvotes_count: 0,
+    oc_flag: true,
+    spoiler_flag: true,
+    nsfw_flag: true,
+    locked_flag: true,
+    allowreplies_flag: true,
+    set_suggested_sort: "None (Recommended)",
+    moderator_details: {
+      approved_by: "moderator1",
+      approved_date: "2024-03-29",
+      removed_by: "moderator2",
+      removed_date: "2024-03-29",
+      spammed_by: "moderator3",
+      spammed_type: "spam",
+    },
+    user_details: {
+      total_views: 0,
+      upvote_rate: 0,
+      total_shares: 0,
+    },
+  },
+  {
+    is_post: true,
+    id: "18",
+    user_id: "user2",
+    username: "jane_smith",
+    title: "Second Post",
+    description: "This is the second post",
+    created_at: "2024-03-26",
+    edited_at: "2024-03-26",
+    deleted_at: "2024-03-26",
+    type: "image_and_videos",
+    link_url: "https://example.com",
+    images: [
+      {
+        path: "image2.jpg",
+        caption: "Image 2",
+        link: "https://source.unsplash.com/random",
+      },
+    ],
+    videos: [
+      {
+        path: "video2.mp4",
+        caption: "Video 2",
+        link: "https://example.com/video2.mp4",
+      },
+    ],
+    poll: {
+      options: ["Option 1", "Option 2", "Option 3"],
+      votes: [0, 0, 0],
+    },
+    community_id: "community2",
+    "community-name": "Community 2",
+    comments_count: 0,
+    views_count: 0,
+    shares_count: 0,
+    upvotes_count: 0,
+    downvotes_count: 0,
+    oc_flag: true,
+    spoiler_flag: true,
+    nsfw_flag: true,
+    locked_flag: true,
+    allowreplies_flag: true,
+    set_suggested_sort: "None (Recommended)",
+    moderator_details: {
+      approved_by: "moderator1",
+      approved_date: "2024-03-26",
+      removed_by: "moderator2",
+      removed_date: "2024-03-26",
+      spammed_by: "moderator3",
+      spammed_type: "spam",
+    },
+    user_details: {
+      total_views: 0,
+      upvote_rate: 0,
+      total_shares: 0,
+    },
+  },
+  {
+    is_post: false,
+    id: "20",
+    post_id: "1",
+    user_id: "901",
+    username: "user901",
+    parent_id: "1",
+    replies_comments_ids: [
+      {
+        id: "22",
+        post_id: "1",
+        user_id: "903",
+        username: "user903",
+        parent_id: "20",
+        replies_comments_ids: [],
+        created_at: "2024-03-22T09:50:00",
+        edited_at: "",
+        deleted_at: "",
+        description: "Replyyyyyy from user903.",
+        upvotes_count: 12,
+        downvotes_count: 0,
+        allowreplies_flag: true,
+        spam_flag: false,
+        locked_flag: false,
+        show_comment_flag: true,
+        moderator_details: {
+          approved_by: "",
+          approved_date: "",
+          removed_by: "",
+          removed_date: "",
+          spammed_by: "",
+          spammed_type: "",
+        },
+      },
+    ],
+    created_at: "2024-03-22T09:50:00",
+    edited_at: "",
+    deleted_at: "",
+    description: "I found your post very insightful. But I have a question.",
+    upvotes_count: 12,
+    downvotes_count: 0,
+    allowreplies_flag: true,
+    spam_flag: false,
+    locked_flag: false,
+    show_comment_flag: true,
+    moderator_details: {
+      approved_by: "",
+      approved_date: "",
+      removed_by: "",
+      removed_date: "",
+      spammed_by: "",
+      spammed_type: "",
+    },
+  },
+];
+app.get("/users/about/", (req, res) => {
   res.status(200).json(userAbout);
 });
-
+app.get("/users/moderated-communities", (req, res) => {
+  res.status(200).json(moderatedCommunities);
+});
 app.get("/users/downvoted-posts", (req, res) => {
   res.status(200).json(postsListings);
 });
@@ -1542,7 +1772,7 @@ app.get("/users/posts", (req, res) => {
 });
 
 app.get("/users/comments", (req, res) => {
-  res.status(200).json(postsListings);
+  res.status(200).json(comments);
 });
 app.get("/users/overview", (req, res) => {
   res.status(200).json(postsListings);
