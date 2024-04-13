@@ -34,6 +34,9 @@ export type PostType = {
   communityMembers: number;
   communityOnline: number;
   //
+  saved: boolean;
+  hidden: boolean;
+  //
   views_count: number;
   shares_count: number;
   upvotes_count: number;
@@ -81,4 +84,35 @@ export type UserType = {
   country: string;
   gender: string;
   connected_google: boolean;
+};
+
+export type CommentType = {
+  id: string;
+  post_id: string;
+  user_id: string;
+  username: string;
+  parent_id: string;
+  replies_comments_ids: CommentType[];
+  created_at: string;
+  edited_at: string;
+  deleted_at: string;
+  description: string;
+  upvotes_count: number;
+  //
+  saved: boolean;
+  hidden: boolean;
+  //
+  downvotes_count: number;
+  allowreplies_flag: boolean;
+  spam_flag: boolean;
+  locked_flag: boolean;
+  show_comment_flag: boolean;
+  moderator_details: {
+    approved_by: string;
+    approved_date: string;
+    removed_by: string;
+    removed_date: string;
+    spammed_by: string;
+    spammed_type: string;
+  };
 };

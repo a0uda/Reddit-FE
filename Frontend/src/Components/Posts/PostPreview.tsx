@@ -7,7 +7,7 @@ import {
 import { dateDuration } from '../../utils/helper_functions';
 import CommunityBadge from '../CommunityBadge';
 
-import PostInteractionButtons from './PostInteractionButtons';
+import InteractionButtons from './InteractionButtons';
 import { PostType } from '../../types/types';
 import PostOptions from './PostOptions';
 import { Link } from 'react-router-dom';
@@ -20,13 +20,14 @@ const PostPreview = ({ post }: { post: PostType }) => {
   // });
 
   return (
-    <>
+    <div className='relative'>
       <Link
         to={`/${post['community-name']}/comments/${post.id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
         reloadDocument
+        // className='absolute inset-0'
       >
         <Card
-          className='w-full px-4 py-2 border-b-[1px] border-neutral-muted hover:bg-neutral-200'
+          className='relative w-full py-2 border-b-[1px] border-neutral-muted hover:bg-neutral-200'
           shadow={false}
         >
           <CardHeader
@@ -58,11 +59,12 @@ const PostPreview = ({ post }: { post: PostType }) => {
               <Typography variant='h5' className='mb-2 font-normal text-black'>
                 {post.title}
               </Typography>
-              <PostInteractionButtons
-                postId={post.id}
+              <InteractionButtons
+                id={post.id}
                 upvotes={post.upvotes_count}
                 downvotes={post.downvotes_count}
-                comments={post.comments_count}
+                comments_replies={post.comments_count}
+                refLink={`/${post['community-name']}/comments/${post.id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
               />
             </div>
             {post.images?.[0] && (
@@ -75,7 +77,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
           </CardBody>
         </Card>
       </Link>
-    </>
+    </div>
   );
 };
 
