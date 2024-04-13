@@ -1045,6 +1045,331 @@ let postsListings = [
   },
 ].concat(recentPostsList); // m3 haget osama
 
+const comments = [
+  {
+    id: "11",
+    post_id: "7",
+    user_id: "567",
+    username: "commenter567",
+    parent_id: "",
+    replies_comments_ids: [],
+    created_at: "2024-03-30T11:30:00",
+    edited_at: "",
+    deleted_at: "",
+    description:
+      "I found this post thought-provoking. It made me reconsider my own perspective.",
+    upvotes_count: 14,
+    downvotes_count: 1,
+    allowreplies_flag: true,
+    spam_flag: false,
+    locked_flag: false,
+    show_comment_flag: true,
+    moderator_details: {
+      approved_by: "",
+      approved_date: "",
+      removed_by: "",
+      removed_date: "",
+      spammed_by: "",
+      spammed_type: "",
+    },
+  },
+  {
+    id: "12",
+    post_id: "7",
+    user_id: "678",
+    username: "user678",
+    parent_id: "",
+    replies_comments_ids: [],
+    created_at: "2024-03-29T14:45:00",
+    edited_at: "",
+    deleted_at: "",
+    description:
+      "I have a question regarding one of the points you raised. Can you elaborate?",
+    upvotes_count: 6,
+    downvotes_count: 3,
+    allowreplies_flag: true,
+    spam_flag: false,
+    locked_flag: false,
+    show_comment_flag: true,
+    moderator_details: {
+      approved_by: "",
+      approved_date: "",
+      removed_by: "",
+      removed_date: "",
+      spammed_by: "",
+      spammed_type: "",
+    },
+  },
+  {
+    id: "13",
+    post_id: "8",
+    user_id: "789",
+    username: "user789",
+    parent_id: "",
+    replies_comments_ids: [],
+    created_at: "2024-03-28T10:20:00",
+    edited_at: "2024-03-28T12:35:00",
+    deleted_at: "",
+    description:
+      "I enjoyed reading your post. It provided a fresh perspective on the topic.",
+    upvotes_count: 11,
+    downvotes_count: 0,
+    allowreplies_flag: true,
+    spam_flag: false,
+    locked_flag: false,
+    show_comment_flag: true,
+    moderator_details: {
+      approved_by: "moderator123",
+      approved_date: "2024-03-28T12:40:00",
+      removed_by: "",
+      removed_date: "",
+      spammed_by: "",
+      spammed_type: "",
+    },
+  },
+  {
+    id: "14",
+    post_id: "8",
+    user_id: "901",
+    username: "commenter901",
+    parent_id: "",
+    replies_comments_ids: [],
+    created_at: "2024-03-27T13:55:00",
+    edited_at: "",
+    deleted_at: "",
+    description:
+      "I found your post very informative. It helped me understand the topic better.",
+    upvotes_count: 9,
+    downvotes_count: 1,
+    allowreplies_flag: true,
+    spam_flag: false,
+    locked_flag: false,
+    show_comment_flag: true,
+    moderator_details: {
+      approved_by: "",
+      approved_date: "",
+      removed_by: "",
+      removed_date: "",
+      spammed_by: "",
+      spammed_type: "",
+    },
+  },
+  {
+    id: "15",
+    post_id: "9",
+    user_id: "234",
+    username: "user234",
+    parent_id: "",
+    replies_comments_ids: [],
+    created_at: "2024-03-26T16:40:00",
+    edited_at: "",
+    deleted_at: "",
+    description:
+      "Your post raises some important points. I appreciate the insights.",
+    upvotes_count: 7,
+    downvotes_count: 2,
+    allowreplies_flag: true,
+    spam_flag: false,
+    locked_flag: false,
+    show_comment_flag: true,
+    moderator_details: {
+      approved_by: "",
+      approved_date: "",
+      removed_by: "",
+      removed_date: "",
+      spammed_by: "",
+      spammed_type: "",
+    },
+  },
+  {
+    id: "16",
+    post_id: "9",
+    user_id: "345",
+    username: "commenter345",
+    parent_id: "",
+    replies_comments_ids: [],
+    created_at: "2024-03-25T09:10:00",
+    edited_at: "",
+    deleted_at: "",
+    description:
+      "I strongly agree with your viewpoint. Your post is well-argued and convincing.",
+    upvotes_count: 8,
+    downvotes_count: 0,
+    allowreplies_flag: true,
+    spam_flag: false,
+    locked_flag: false,
+    show_comment_flag: true,
+    moderator_details: {
+      approved_by: "",
+      approved_date: "",
+      removed_by: "",
+      removed_date: "",
+      spammed_by: "",
+      spammed_type: "",
+    },
+  },
+  {
+    id: "17",
+    post_id: "10",
+    user_id: "567",
+    username: "user567",
+    parent_id: "",
+    replies_comments_ids: [],
+    created_at: "2024-03-24T14:20:00",
+    edited_at: "",
+    deleted_at: "",
+    description: "I have a different perspective on this topic. Let's discuss!",
+    upvotes_count: 5,
+    downvotes_count: 3,
+    allowreplies_flag: true,
+    spam_flag: false,
+    locked_flag: false,
+    show_comment_flag: true,
+    moderator_details: {
+      approved_by: "",
+      approved_date: "",
+      removed_by: "",
+      removed_date: "",
+      spammed_by: "",
+      spammed_type: "",
+    },
+  },
+  {
+    id: "18",
+    post_id: "10",
+    user_id: "678",
+    username: "commenter678",
+    parent_id: "",
+    replies_comments_ids: [],
+    created_at: "2024-03-23T12:05:00",
+    edited_at: "",
+    deleted_at: "",
+    description:
+      "Your post provides a comprehensive overview of the topic. Well done!",
+    upvotes_count: 10,
+    downvotes_count: 1,
+    allowreplies_flag: true,
+    spam_flag: false,
+    locked_flag: false,
+    show_comment_flag: true,
+    moderator_details: {
+      approved_by: "",
+      approved_date: "",
+      removed_by: "",
+      removed_date: "",
+      spammed_by: "",
+      spammed_type: "",
+    },
+  },
+  {
+    id: "19",
+    post_id: "1",
+    user_id: "901",
+    username: "user901",
+    parent_id: "1",
+    replies_comments_ids: [
+      {
+        id: "21",
+        post_id: "1",
+        user_id: "902",
+        username: "user902",
+        parent_id: "19",
+        replies_comments_ids: [],
+        created_at: "2024-03-22T09:50:00",
+        edited_at: "",
+        deleted_at: "",
+        description: "Replyyyyyy.",
+        upvotes_count: 12,
+        downvotes_count: 0,
+        allowreplies_flag: true,
+        spam_flag: false,
+        locked_flag: false,
+        show_comment_flag: true,
+        moderator_details: {
+          approved_by: "",
+          approved_date: "",
+          removed_by: "",
+          removed_date: "",
+          spammed_by: "",
+          spammed_type: "",
+        },
+      },
+    ],
+    created_at: "2024-03-22T09:50:00",
+    edited_at: "",
+    deleted_at: "",
+    description:
+      "I found your post very insightful. It shed light on a complex issue.",
+    upvotes_count: 12,
+    downvotes_count: 0,
+    allowreplies_flag: true,
+    spam_flag: false,
+    locked_flag: false,
+    show_comment_flag: true,
+    moderator_details: {
+      approved_by: "",
+      approved_date: "",
+      removed_by: "",
+      removed_date: "",
+      spammed_by: "",
+      spammed_type: "",
+    },
+  },
+  {
+    id: "20",
+    post_id: "1",
+    user_id: "901",
+    username: "user901",
+    parent_id: "1",
+    replies_comments_ids: [
+      {
+        id: "22",
+        post_id: "1",
+        user_id: "903",
+        username: "user903",
+        parent_id: "20",
+        replies_comments_ids: [],
+        created_at: "2024-03-22T09:50:00",
+        edited_at: "",
+        deleted_at: "",
+        description: "Replyyyyyy from user903.",
+        upvotes_count: 12,
+        downvotes_count: 0,
+        allowreplies_flag: true,
+        spam_flag: false,
+        locked_flag: false,
+        show_comment_flag: true,
+        moderator_details: {
+          approved_by: "",
+          approved_date: "",
+          removed_by: "",
+          removed_date: "",
+          spammed_by: "",
+          spammed_type: "",
+        },
+      },
+    ],
+    created_at: "2024-03-22T09:50:00",
+    edited_at: "",
+    deleted_at: "",
+    description: "I found your post very insightful. But I have a question.",
+    upvotes_count: 12,
+    downvotes_count: 0,
+    allowreplies_flag: true,
+    spam_flag: false,
+    locked_flag: false,
+    show_comment_flag: true,
+    moderator_details: {
+      approved_by: "",
+      approved_date: "",
+      removed_by: "",
+      removed_date: "",
+      spammed_by: "",
+      spammed_type: "",
+    },
+  },
+];
+
 function shuffleList(list) {
   let currentIndex = list.length,
     randomIndex;
@@ -1086,8 +1411,8 @@ app.get("/listing/posts/top", (req, res) => {
 });
 
 app.post("/posts-or-comments/vote", (req, res) => {
-  const { id, isPost, rank } = req.body;
-  if (isPost) {
+  const { id, is_post, rank } = req.body;
+  if (is_post) {
     postsListings = postsListings.map((post) => {
       if (post.id === id) {
         if (rank === 1) {
@@ -1095,13 +1420,29 @@ app.post("/posts-or-comments/vote", (req, res) => {
         } else {
           post.downvotes_count++;
         }
-        console.log(post);
       }
       return post;
     });
   } else {
+    comments = comments.map((comment) => {
+      if (comment.id === id) {
+        if (rank === 1) {
+          comment.upvotes_count++;
+        } else {
+          comment.downvotes_count++;
+        }
+      }
+      return comment;
+    });
   }
   res.sendStatus(200);
+});
+
+app.get("/user/about/:id", (req, res) => {
+  const { id } = req.params;
+  const user = users.find((user) => user.id === id);
+  if (!user) return res.status(404).json({ message: "User not found" });
+  res.status(200).json(post);
 });
 
 // * Post
@@ -1112,4 +1453,13 @@ app.get("/posts/get-post/:id", (req, res) => {
     return res.status(404).json({ message: "Post not found" });
   }
   res.status(200).json(post);
+});
+
+app.get("/posts/get-comments/:id", (req, res) => {
+  const { id } = req.params;
+  const postComments = comments.filter((comment) => comment.post_id === id);
+  if (!postComments) {
+    return res.status(404).json({ message: "Comments not found" });
+  }
+  res.status(200).json(postComments);
 });
