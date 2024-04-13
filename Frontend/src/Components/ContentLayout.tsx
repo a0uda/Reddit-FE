@@ -5,12 +5,14 @@ import SideBar from './SideBar';
 const ContentLayout = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      <div className='mx-8 grid grid-col-1 lg:grid-cols-layout gap-6'>
-        <div className='lg-max:hidden'>
+      <div className='mx-8 grid grid-col-1 xl:grid-cols-layout gap-6'>
+        <div className='hidden xl:block'>
           <SideBar className='sticky top-[var(--navbar-height)] ' />
         </div>
 
-        <div className='flex justify-center md:px-10 gap-6'>{children}</div>
+        <div className='flex justify-center px-4 2xl:px-10 gap-6'>
+          {children}
+        </div>
       </div>
     </>
   );

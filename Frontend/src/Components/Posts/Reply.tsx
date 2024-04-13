@@ -3,7 +3,6 @@ import Comment from './Comment';
 
 const Reply = ({ reply }: { reply: CommentType }) => {
   return (
-    // <>Reply: {replyId}</>
     <>
       <>
         <Comment comment={reply} />
