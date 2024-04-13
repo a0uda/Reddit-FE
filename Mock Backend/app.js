@@ -1032,7 +1032,7 @@ let postsListings = [
   },
 ].concat(recentPostsList); // m3 haget osama
 
-const comments = [
+let comments = [
   {
     id: "11",
     post_id: "7",
@@ -1472,14 +1472,14 @@ let userAbout = {
       name: "ree's community",
       src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
       members_number: 1000,
-      joined:true,
+      joined: true,
     },
     {
       id: "string",
       name: "halla's community",
       src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
       members_number: 500,
-      joined:false,
+      joined: false,
     },
   ],
 };
@@ -1535,4 +1535,54 @@ app.get("/posts/get-comments/:id", (req, res) => {
     return res.status(404).json({ message: "Comments not found" });
   }
   res.status(200).json(postComments);
+});
+
+app.post("/comments/new-comment", (req, res) => {
+  const { id, description } = req.body;
+
+  // const token = req.headers.Authorization?.split(" ")[1];
+  const token = req.headers?.token;
+  console.log("req.headers", req.headers);
+  console.log("token", token);
+
+  if (!token) return res.status(401).json({ message: "Unauthorized user." });
+
+  const decodedToken = jwt.verify(token, "RedditToken@");
+  const username = decodedToken.username;
+
+  console.log("username", username);
+  const commentId = crypto.randomUUID();
+
+  comments = comments.concat([
+    {
+      id: commentId,
+      post_id: id,
+      user_id: "567",
+      username: username,
+      parent_id: commentId,
+      replies_comments_ids: [],
+      created_at: new Date(),
+      edited_at: "",
+      deleted_at: "",
+      description: description,
+      upvotes_count: 14,
+      downvotes_count: 1,
+      allowreplies_flag: true,
+      spam_flag: false,
+      locked_flag: false,
+      show_comment_flag: true,
+      moderator_details: {
+        approved_by: "",
+        approved_date: "",
+        removed_by: "",
+        removed_date: "",
+        spammed_by: "",
+        spammed_type: "",
+      },
+    },
+  ]);
+
+  console.log(comments);
+
+  res.status(200).json({ message: "Comment added successfully." });
 });

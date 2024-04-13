@@ -20,6 +20,7 @@ import LoadingProvider from '../LoadingProvider';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import { CommunityIcon } from '../../assets/icons/Icons';
 import Comment from './Comment';
+import AddComment from './AddComment';
 
 const PostDetails = () => {
   const { id: postId } = useParams();
@@ -152,6 +153,7 @@ const PostDetails = () => {
         )}
       </LoadingProvider>
       {/* Add Comment */}
+      <AddComment postId={postId!} />
       <LoadingProvider
         error={commentsResponse.isError}
         isLoading={commentsResponse.isLoading}
