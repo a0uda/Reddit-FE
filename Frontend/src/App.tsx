@@ -7,6 +7,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import OfflineAlert from './Components/OfflineAlert.tsx';
 import { AuthProvider } from './Providers/AuthProvider.tsx';
 import Post from './Pages/Post.tsx';
+import User from './Pages/User/User.tsx';
 
 function App() {
   return (
@@ -24,6 +25,8 @@ function App() {
                 element={<Post />}
               />
               <Route path='/settings/:page' element={<UserSettings />} />
+              {/* to be deleted Ree */}
+              <Route path='/user/:page' element={<User />} />
             </Routes>
           </Router>
         </div>
