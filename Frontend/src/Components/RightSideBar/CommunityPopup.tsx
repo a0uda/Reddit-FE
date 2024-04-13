@@ -34,7 +34,6 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
       }),
     {
       onError: () => {
-        // Perform any actions on error, like showing an error message
         console.log('Error');
       },
     }
@@ -48,7 +47,6 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
       }),
     {
       onError: () => {
-        // Perform any actions on error, like showing an error message
         console.log('Error');
       },
     }

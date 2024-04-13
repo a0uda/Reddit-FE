@@ -617,7 +617,6 @@ let notifications = [
     hidden_flag: false,
     type: "message",
     // added //
-    community_id: "community123",
     community_name: "r/sports",
     communityAvatarSrc:
       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
@@ -633,7 +632,6 @@ let notifications = [
     hidden_flag: false,
     type: "comment",
     // added //
-    community_id: "community123",
     community_name: "r/programming",
     communityAvatarSrc:
       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
@@ -649,7 +647,6 @@ let notifications = [
     hidden_flag: false,
     type: "reply",
     // added //
-    community_id: "community123",
     community_name: "r/sports",
     communityAvatarSrc:
       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
@@ -665,7 +662,6 @@ app.patch("/notifications/mark-all-as-read", (req, res) => {
     ...notification,
     unread_flag: false,
   }));
-  // console.log("Notifications marked as read:", notifications);
   res.sendStatus(200);
 });
 
@@ -677,7 +673,6 @@ app.patch("/notifications/mark-as-read/:id", (req, res) => {
     return res.status(404).json({ message: "Notification not found" });
   }
   notification.unread_flag = read_flag;
-  // console.log("Notifications marked as read:", notifications);
   res.sendStatus(200);
 });
 
@@ -689,7 +684,6 @@ app.patch("/notifications/hide/:id", (req, res) => {
   }
   notifications[notificationIndex].hidden_flag = true;
   notifications.splice(notificationIndex, 1);
-  // console.log("Notifications marked as read:", notifications);
   res.sendStatus(200);
 });
 

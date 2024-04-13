@@ -5,28 +5,22 @@ import {
   ListItem,
   ListItemPrefix,
   Avatar,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
   Button,
   Accordion,
   AccordionBody,
   AccordionHeader,
   List,
 } from '@material-tailwind/react';
-import PostItem from './PostItem';
-// import postList from './PostList.ts';
-import { useQuery } from 'react-query';
-import { fetchRequest } from '../../API/User';
+import { Link } from 'react-router-dom';
+import { useQuery, useMutation } from 'react-query';
+import { fetchRequest, postRequest } from '../../API/User';
 import LoadingProvider from '../LoadingProvider';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import CommunityItem from './CommunityItem';
-const baseURL = import.meta.env.VITE_BASE_URL;
-import axios from 'axios';
+import { CiMail } from 'react-icons/ci';
 
 interface CommunityProps {
   name: string;
+  joined?: boolean;
 }
 
 interface Community {
@@ -38,9 +32,10 @@ interface Community {
   rank: number;
 }
 
-export function CommunityRSB({ name: communityName }: CommunityProps) {
-  const [isContentVisible, setContentVisible] = useState(true);
-
+export function CommunityRSB({
+  name: communityName,
+  joined: joined,
+}: CommunityProps) {
   const { isLoading, error } = useQuery({
     queryKey: ['communities', communityName],
     queryFn: () => fetchRequest(`communities/${communityName}/`),
@@ -49,6 +44,41 @@ export function CommunityRSB({ name: communityName }: CommunityProps) {
     },
   });
   const [Community, setCommunity] = useState<Community | undefined>();
+
+  const [isJoined, setIsJoined] = useState(joined);
+
+  // useEffect(() => {
+  //   // Check if the user has just joined the community
+  //   if (!isJoined) {
+  //     setJustJoined(true);
+  //   }
+  // }, [isJoined]);
+
+  const joinMutation = useMutation(
+    (communityName: string) =>
+      postRequest({
+        endPoint: 'users/join-community',
+        data: { communityName: communityName },
+      }),
+    {
+      onError: () => {
+        console.log('Error');
+      },
+    }
+  );
+
+  const leaveMutation = useMutation(
+    (communityName: string) =>
+      postRequest({
+        endPoint: 'users/leave-community',
+        data: { communityName: communityName },
+      }),
+    {
+      onError: () => {
+        console.log('Error');
+      },
+    }
+  );
 
   return (
     <>
@@ -68,15 +98,28 @@ export function CommunityRSB({ name: communityName }: CommunityProps) {
               >
                 r/{Community?.name}
               </Typography>
-              <button
-                className='bg-light-blue-900 rounded-full font-body font-semibold text-white -tracking-tight text-xs m-0 px-6 py-2 selection:border-0'
-                // onClick={() => {
-                //   setIsJoined(!isJoined);
-                //   joinMutation.mutate(props.communityName);
-                // }}
-              >
-                Join
-              </button>
+              {!isJoined && (
+                <button
+                  className='bg-gray-900 rounded-full font-body font-semibold text-white -tracking-tight text-xs m-0 px-6 py-2 selection:border-0'
+                  onClick={() => {
+                    setIsJoined(!isJoined);
+                    joinMutation.mutate(communityName);
+                  }}
+                >
+                  Join
+                </button>
+              )}
+              {isJoined && (
+                <button
+                  className='bg-gray-200 rounded-full font-body font-semibold text-black -tracking-tight text-xs px-4 py-2 border-black border'
+                  onClick={() => {
+                    setIsJoined(!isJoined);
+                    leaveMutation.mutate(communityName);
+                  }}
+                >
+                  Joined
+                </button>
+              )}
             </div>
             <div className='px-4'>
               <Typography
@@ -185,6 +228,18 @@ export function CommunityRSB({ name: communityName }: CommunityProps) {
                 MODERATORS
               </Typography>
               <CommunityModerators name={communityName} />
+            </div>
+            <div className='px-4 p-2'>
+              <Link to='/message'>
+                {/* TODO: change the path */}
+                <Button
+                  variant='filled'
+                  className='w-full h-8 bg-neutral-muted text-black text-sm shadow-none hover:shadow-none flex items-center justify-center hover:underline'
+                >
+                  <CiMail className='h-5 w-5 mr-2' />
+                  Message the mods
+                </Button>
+              </Link>
             </div>
           </LoadingProvider>
         </Card>
