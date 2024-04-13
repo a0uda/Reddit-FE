@@ -1,10 +1,6 @@
 import { useEditor, EditorContent, Editor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import TextAlign from '@tiptap/extension-text-align';
 
-import Superscript from '@tiptap/extension-superscript';
-import { Button, IconButton } from '@material-tailwind/react';
-import Heading from '@tiptap/extension-heading';
+import { Button, IconButton, Typography } from '@material-tailwind/react';
 import { BiBold, BiHeading, BiItalic, BiStrikethrough } from 'react-icons/bi';
 import { BsQuote, BsSuperscript } from 'react-icons/bs';
 import { cn } from '../../utils/helper_functions';
@@ -12,27 +8,15 @@ import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import {
   CodeBracketIcon,
   CommandLineIcon,
+  ExclamationCircleIcon,
   LinkIcon,
   ListBulletIcon,
   PhotoIcon,
 } from '@heroicons/react/24/outline';
-import Link from '@tiptap/extension-link';
-import Image from '@tiptap/extension-image';
-import Code from '@tiptap/extension-code';
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import { common, createLowlight } from 'lowlight';
-import css from 'highlight.js/lib/languages/css';
-import js from 'highlight.js/lib/languages/javascript';
-import ts from 'highlight.js/lib/languages/typescript';
-import html from 'highlight.js/lib/languages/xml';
-
-import BulletList from '@tiptap/extension-bullet-list';
-import OrderedList from '@tiptap/extension-ordered-list';
 import { AiOutlineOrderedList } from 'react-icons/ai';
-import ListItem from '@tiptap/extension-list-item';
-import Blockquote from '@tiptap/extension-blockquote';
 import { useMutation, useQueryClient } from 'react-query';
 import { postRequest } from '../../API/User';
+import { tiptapConfig } from '../../utils/tiptap_config';
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   const setLink = useCallback(() => {
@@ -172,12 +156,14 @@ const MenuFooter = ({
   openMenuBar,
   setOpenMenuBar,
   setFocused,
+  setError,
 }: {
   postId: string;
   editor: Editor | null;
   openMenuBar: boolean;
   setOpenMenuBar: Dispatch<SetStateAction<boolean>>;
   setFocused: Dispatch<SetStateAction<boolean>>;
+  setError: Dispatch<SetStateAction<string>>;
 }) => {
   const queryClient = useQueryClient();
   const addCommentMuation = useMutation(
@@ -244,9 +230,14 @@ const MenuFooter = ({
           <Button
             className='bg-[#003e36]'
             onClick={() => {
+              if (editor.getText().length === 0) {
+                setError('The field is required and cannot be empty');
+                return;
+              }
               const html = editor.getHTML();
               console.log(html);
               addCommentMuation.mutate(html);
+              setFocused(false);
             }}
           >
             Continue
@@ -258,101 +249,53 @@ const MenuFooter = ({
 };
 
 export default function AddComment({ postId }: { postId: string }) {
-  const lowlight = createLowlight(common);
-  lowlight.register({ html, css, js, ts });
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Heading.configure({
-        HTMLAttributes: {
-          class: 'text-2xl',
-        },
-      }),
-      Superscript,
-      Link,
-      Image,
-      Blockquote.configure({
-        HTMLAttributes: {
-          class: 'border-l-4 ml-2 px-4 p-2',
-        },
-      }),
-      Code.configure({
-        HTMLAttributes: {
-          class: 'rounded-sm bg-neutral-200 px-1',
-        },
-      }),
-      CodeBlockLowlight.configure({
-        lowlight,
-        defaultLanguage: 'javascript',
-        HTMLAttributes: {
-          class: 'rounded-sm bg-neutral-200 p-2',
-        },
-      }),
-      BulletList.configure({
-        HTMLAttributes: {
-          class: 'list-disc pl-5',
-        },
-      }),
-      OrderedList.configure({
-        HTMLAttributes: {
-          class: 'list-decimal pl-5',
-        },
-      }),
-      ListItem,
-      TextAlign.configure({
-        types: ['heading', 'paragraph'],
-      }),
-    ],
-    editorProps: {
-      attributes: {
-        class:
-          'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl m-5 focus:outline-none',
-      },
+    ...tiptapConfig,
+    onUpdate() {
+      setError('');
     },
-    content: `
-        <h1>
-          Devs Just Want to Have Fun by Cyndi Lauper
-        </h1>
-        <p>
-          I come home in the morning light<br>
-          My mother says, “When you gonna live your life right?”<br>
-          Oh mother dear we're not the fortunate ones<br>
-          And devs, they wanna have fun<br>
-          Oh devs just want to have fun</p>
-        <p>
-
-        <ul>
-          <li>A list item</li>
-          <li>And another one</li>
-        </ul>
-        <br />
-        <ol>
-        <li>A list item</li>
-        <li>And another one</li>
-        </ol>
-        <br />
-        <blockquote><p>asdasdsa</p><p>asdsad</p></blockquote>
-      `,
   });
   const [openMenuBar, setOpenMenuBar] = useState<boolean>(false);
   const [focused, setFocused] = useState<boolean>(false);
+  const [error, setError] = useState('');
 
   return (
     <>
       {focused ? (
-        <div className='border-2 border-neutral-muted rounded-3xl'>
-          {openMenuBar && <MenuBar editor={editor} />}
-          <EditorContent editor={editor} />
-          <div>
-            <MenuFooter
-              postId={postId}
-              editor={editor}
-              openMenuBar
-              setOpenMenuBar={setOpenMenuBar}
-              setFocused={setFocused}
-            />
+        <>
+          <div
+            className={cn(
+              'border-2 border-neutral-muted rounded-3xl',
+              error.length > 0 && 'border-orange-red'
+            )}
+          >
+            {openMenuBar && <MenuBar editor={editor} />}
+            <div className='p-5'>
+              <EditorContent editor={editor} />
+            </div>
+            <div>
+              <MenuFooter
+                postId={postId}
+                editor={editor}
+                openMenuBar
+                setOpenMenuBar={setOpenMenuBar}
+                setFocused={setFocused}
+                setError={setError}
+              />
+            </div>
           </div>
-        </div>
+          {error.length > 0 && (
+            <>
+              <Typography
+                variant='paragraph'
+                className='flex items-center gap-2 text-orange-red'
+              >
+                <ExclamationCircleIcon className='h-5 w-5' />
+                The field is required and cannot be empty
+              </Typography>
+            </>
+          )}
+        </>
       ) : (
         <>
           <div

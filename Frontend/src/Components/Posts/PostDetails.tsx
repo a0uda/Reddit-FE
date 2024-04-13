@@ -153,7 +153,9 @@ const PostDetails = () => {
         )}
       </LoadingProvider>
       {/* Add Comment */}
-      <AddComment postId={postId!} />
+      <div className='my-2'>
+        <AddComment postId={postId!} />
+      </div>
       <LoadingProvider
         error={commentsResponse.isError}
         isLoading={commentsResponse.isLoading}

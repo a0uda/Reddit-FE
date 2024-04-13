@@ -14,6 +14,8 @@ import PostOptions from './PostOptions';
 import InteractionButtons from './InteractionButtons';
 import { Link } from 'react-router-dom';
 import Reply from './Reply';
+import { EditorContent, useEditor } from '@tiptap/react';
+import { tiptapConfig } from '../../utils/tiptap_config';
 
 const Comment = ({ comment }: { comment: CommentType }) => {
   const [author, setAuthor] = useState<UserType | undefined>();
@@ -24,6 +26,13 @@ const Comment = ({ comment }: { comment: CommentType }) => {
     onSuccess: (data) => {
       setAuthor(data.data);
     },
+  });
+
+  const editable = false;
+  const editor = useEditor({
+    ...tiptapConfig,
+    editable,
+    content: comment.description,
   });
 
   return (
@@ -67,9 +76,10 @@ const Comment = ({ comment }: { comment: CommentType }) => {
             )} */}
           </div>
           <div>
-            <Typography variant='paragraph' className='ml-2 text-black'>
+            {/* <Typography variant='paragraph' className='ml-2 text-black'>
               {comment.description}
-            </Typography>
+            </Typography> */}
+            <EditorContent editor={editor} />
             <div className='flex items-center px-0'>
               <InteractionButtons
                 isPost={false}
