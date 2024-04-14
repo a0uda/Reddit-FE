@@ -5,18 +5,20 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 //const baseUrl = String(process.env.VITE_BASE_URL);
 console.log('baseUrl ', baseUrl);
 
-const config = {
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': localStorage.getItem('token'),
-  },
-  withCredentials: false,
-};
+// const config = {
+//   headers: {
+//     'Content-Type': 'application/json',
+//     authorization: localStorage.getItem('token'),
+//   },
+//   withCredentials: true,
+// };
+// console.log(config);
+
 const fetchRequest = async (endPoint: string) => {
   return await axios.get(baseUrl + endPoint, {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': localStorage.getItem('token'),
+      Authorization: localStorage.getItem('token'),
     },
     withCredentials: false,
   });
@@ -33,7 +35,7 @@ const patchRequest = async ({
     const response = await axios.patch(baseUrl + endPoint, newSettings, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token'),
+        Authorization: localStorage.getItem('token'),
       },
       withCredentials: false,
     });
@@ -58,7 +60,7 @@ const postRequest = async ({
     const response = await axios.post(baseUrl + endPoint, data, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token'),
+        Authorization: localStorage.getItem('token'),
       },
       withCredentials: false,
     });

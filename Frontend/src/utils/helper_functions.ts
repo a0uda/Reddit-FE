@@ -54,3 +54,18 @@ export function getTimeDifference(date: string) {
     return 'Less than a minute';
   }
 }
+
+export function getTimeDifferenceAsString(date: Date) {
+  const momDate = moment(date);
+  return momDate.fromNow();
+}
+
+export function addPrefixToUsername(username: string, userType: string) {
+  console.log(username, userType);
+
+  if (userType == 'moderator') {
+    return 'r/' + username;
+  } else {
+    return 'u/' + username;
+  }
+}

@@ -76,6 +76,8 @@ export default function Signup(props: {
   const mutation = useMutation(postRequest, {
     onSuccess: (response) => {
       const { token } = response;
+      console.log(response);
+
       localStorage.setItem('token', token);
       seterrorMessage('');
       props.handleOpen();

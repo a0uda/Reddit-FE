@@ -1,7 +1,7 @@
 import React from 'react';
 import Section from './Containers/Section';
 import Card from './Containers/Card';
-import SwitchButton from './Containers/SwitchButton';
+import SwitchButton from '../../Components/SwitchButton';
 import DropDownButton from './Containers/DropDownButton';
 import { Spinner } from '@material-tailwind/react';
 import { useMutation, useQuery } from 'react-query';
