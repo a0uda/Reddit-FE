@@ -18,7 +18,7 @@ const PostsListings = () => {
 
   const response = useQuery({
     queryKey: ['listings', 'all'],
-    queryFn: () => fetchRequest(`listings/posts/${sortOption.toLowerCase()}`),
+    queryFn: () => fetchRequest(`listing/posts/${sortOption.toLowerCase()}`),
   });
 
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ const PostsListings = () => {
       <LoadingProvider error={response.isError} isLoading={response.isLoading}>
         {response.isSuccess && (
           <>
-            {response.data.data.map((post: PostType) => (
+            {response.data.data.posts.map((post: PostType) => (
               <Post key={post.id} post={post} />
             ))}
           </>

@@ -6,12 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "buildDev": "vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "dev:local": "vite --mode development",
     "build:local": "tsc && vite build --mode development ",
     "dev:server": "vite --mode production",
-    "build:server": "tsc && vite build --mode production"
+    "build:server": "tsc && vite build --mode production",
+    "test": "jest --watchALL=false"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",
