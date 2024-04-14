@@ -3,7 +3,8 @@ import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import { PostType } from '../../types/types';
-import Post from '../../Components/Post';
+
+import PostPreview from '../../Components/Posts/PostPreview';
 
 function UserContent(props: { endpoint: string; queryName: string }) {
   const { data, error, isLoading, refetch } = useQuery(
@@ -17,7 +18,7 @@ function UserContent(props: { endpoint: string; queryName: string }) {
         {data && (
           <>
             {data.data.map((post: PostType) => (
-              <Post key={post.id} post={post} />
+              <PostPreview key={post.id} post={post} />
             ))}
           </>
         )}

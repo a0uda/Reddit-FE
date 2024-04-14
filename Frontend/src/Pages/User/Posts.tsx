@@ -2,7 +2,7 @@ import React from 'react';
 import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
 import { PostType } from '../../types/types';
-import Post from '../../Components/Post';
+
 import { useQuery } from 'react-query';
 import { Card, CardBody } from '@material-tailwind/react';
 import {
@@ -11,6 +11,7 @@ import {
   ArrowUturnRightIcon,
   ChatBubbleBottomCenterIcon,
 } from '@heroicons/react/24/outline';
+import PostPreview from '../../Components/Posts/PostPreview';
 
 function Posts() {
   const { data, error, isLoading, refetch } = useQuery(
@@ -25,7 +26,7 @@ function Posts() {
           <>
             {data.data.map((post: PostType) => (
               <div key={post.id}>
-                <Post post={post} />
+                <PostPreview post={post} />
                 <div className='text-black m-2 text-sm'>
                   Lifetime Performance
                 </div>
