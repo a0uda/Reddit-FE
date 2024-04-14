@@ -6,6 +6,7 @@ import Mainfeed from './Pages/Mainfeed.tsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import OfflineAlert from './Components/OfflineAlert.tsx';
 import { AuthProvider } from './Providers/AuthProvider.tsx';
+import MessageRouter from './Pages/Messaging/MessageRouter.tsx';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
               <Route path={'/'} element={<Mainfeed />} />
               <Route path={'/:sortOption'} element={<Mainfeed />} />
               <Route path='/settings/:page' element={<UserSettings />} />
+              <Route path='/message/*' element={<MessageRouter />} />
             </Routes>
           </Router>
         </div>
