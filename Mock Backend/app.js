@@ -33,7 +33,7 @@ app.get("/users/account-settings", (req, res) => {
   res.status(200).json({ accountSettings });
 });
 
-let c = 0
+let c = 0;
 app.patch("/users/change-account-settings", (req, res) => {
   accountSettings.account_settings[Object.keys(req.body)[0]] = Object.values(
     req.body
@@ -42,7 +42,7 @@ app.patch("/users/change-account-settings", (req, res) => {
     c++;
     res.sendStatus(200);
   } else {
-    res.status(404).send('Error')
+    res.status(404).send("Error");
   }
 });
 app.post("/users/disconnect-google", (req, res) => {
@@ -59,7 +59,6 @@ app.patch("/users/change-email", (req, res) => {
   res.sendStatus(200);
 });
 app.patch("/users/change-password", (req, res) => {
-
   const { current_password, new_password, verified_new_password } = req.body;
   // accountSettings.account_settings.email = new_email;
   res.sendStatus(200);
@@ -337,8 +336,11 @@ app.post("/users/forget-password", (req, res) => {
 
 app.post("/users/signup-google", (req, res) => {
   const { code } = req.body;
+  name = "ahmed";
   username = "llllllllll";
-  const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1h" });
+  const token = jwt.sign({ username, name }, "RedditToken@", {
+    expiresIn: "1h",
+  });
   res
     .status(200)
     .json({ message: "User logged in with Google successfully", token });

@@ -33,10 +33,10 @@ export default function Alert(props: {
 
   useEffect(() => {
     let timeoutId;
-    console.log(props.trigger);
+    // console.log(props.trigger);
     if (props.message) {
       setOpen(true);
-      console.log(props.message);
+      // console.log(props.message);
 
       timeoutId = setTimeout(() => {
         setOpen(false);

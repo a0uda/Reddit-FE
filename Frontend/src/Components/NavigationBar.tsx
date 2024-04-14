@@ -21,10 +21,8 @@ import {
 } from '@material-tailwind/react';
 import {
   HiArrowRightOnRectangle,
-  HiCursorArrowRipple,
   HiEllipsisHorizontal,
   HiMagnifyingGlass,
-  HiShoppingBag,
 } from 'react-icons/hi2';
 import { LogoMark, LogoText } from '../assets/icons/Logo';
 import { PlusIcon } from '@heroicons/react/24/solid';
@@ -49,10 +47,14 @@ import Login from '../Pages/credential/Login';
 import RecoverUsername from '../Pages/credential/RecoverUsername';
 import ResetPassword from '../Pages/credential/ResetPassword';
 import Signup from '../Pages/credential/Signup';
+import useSession from '../hooks/auth/useSession';
 
 export function NavigationBar() {
   const [openNav, setOpenNav] = useState(false);
-  const [isLogged, setIsLogged] = useState(!!localStorage.getItem('token'));
+
+  const { status } = useSession();
+  console.log('status', status);
+
   useEffect(() => {
     window.addEventListener(
       'resize',
@@ -60,9 +62,6 @@ export function NavigationBar() {
     );
   }, []);
 
-  useEffect(() => {
-    setIsLogged(!!localStorage.getItem('token'));
-  }, [localStorage.getItem('token')]);
   return (
     <div className='px-4'>
       <nav className='m-0 p-0 flex flex-row justify-between border-b-[1px] border-b-neutral-muted h-14 w-full'>
@@ -117,7 +116,11 @@ export function NavigationBar() {
           <SearchBar />
         </div>
         <div className='col-span-4 flex justify-end shrink-0'>
-          {isLogged ? <CampainLoggedIn /> : <CampainLoggedOut />}
+          {status === 'authenticated' ? (
+            <CampainLoggedIn />
+          ) : (
+            <CampainLoggedOut />
+          )}
         </div>
         <Drawer
           open={openNav}
@@ -398,11 +401,13 @@ const CampainLoggedOut = () => {
 };
 
 const CampainLoggedIn = () => {
-  const user = {
-    name: 'Ahmed Tarek',
-    username: 'ahmedtarek',
-    icon: 'https://www.redditstatic.com/avatars/avatar_default_07_24A0ED.png',
-  };
+  // const user = {
+  //   name: 'Ahmed Tarek',
+  //   username: 'ahmedtarek',
+  //   icon: 'https://www.redditstatic.com/avatars/avatar_default_07_24A0ED.png',
+  // };
+
+  const { user } = useSession();
 
   const [avatarDrawer, setAvatarDrawer] = useState(false);
   const navigate = useNavigate();
@@ -412,8 +417,11 @@ const CampainLoggedIn = () => {
       <List className='p-0 text-foreground w-full'>
         <ListItem className='py-2 flex gap-2 items-center'>
           <Avatar
-            src={user.icon}
-            alt={user.name + ' Profile'}
+            src={
+              user?.imageUrl ||
+              'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+            }
+            alt={user?.name + "'s Profile"}
             variant='circular'
             size='sm'
           />
@@ -423,7 +431,7 @@ const CampainLoggedIn = () => {
               variant='small'
               className='text-neutral-900 font-normal text-xs'
             >
-              u/{user.username}
+              u/{user?.username}
             </Typography>
           </div>
         </ListItem>
@@ -492,8 +500,11 @@ const CampainLoggedIn = () => {
             <MenuHandler>
               <Button variant='text' className=''>
                 <Avatar
-                  src={user.icon}
-                  alt={user.name + ' Profile'}
+                  src={
+                    user?.imageUrl ||
+                    'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+                  }
+                  alt={user?.name + "'s Profile"}
                   variant='circular'
                   size='sm'
                 />
@@ -508,8 +519,11 @@ const CampainLoggedIn = () => {
         <div className='lg:hidden'>
           <Button variant='text' onClick={() => setAvatarDrawer(true)}>
             <Avatar
-              src={user.icon}
-              alt={user.name + ' Profile'}
+              src={
+                user?.imageUrl ||
+                'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+              }
+              alt={user?.name + "'s Profile"}
               variant='circular'
               size='sm'
             />
@@ -706,9 +720,8 @@ const NotificationMenu = () => {
         })
       );
     }
-    console.log(notifications);
-
-    console.log(today);
+    // console.log(notifications);
+    // console.log(today);
   }, [notifications]);
 
   const unreadNotifications = notifications.filter(
