@@ -10,14 +10,17 @@ import UserContent from './UserContent';
 import { fetchRequest } from '../../API/User';
 import { useQuery } from 'react-query';
 import ContentLayout from '../../Components/ContentLayout';
+import useSession from '../../hooks/auth/useSession';
+
 const NavButton = (props: {
   active?: boolean | undefined;
   buttonName: string;
   buttonLink: string;
+  username?: string;
 }) => {
   return (
     <Link
-      to={`/user/icycry/${props.buttonLink}`}
+      to={`/user/${props.username}/${props.buttonLink}`}
       className={`${props.active ? 'bg-neutral-500' : ''}  text-black rounded-full p-[10px] mx-[5px]  hover:underline`}
     >
       <div className='text-black text-sm'>{props.buttonName}</div>
@@ -28,6 +31,7 @@ const NavButton = (props: {
 const SubNavBar = (props: {
   buttonArray: string[];
   active: string | undefined;
+  username?: string;
 }) => {
   const pagesArray = [
     'overview',
@@ -46,19 +50,22 @@ const SubNavBar = (props: {
           active={props.active == pagesArray[i]}
           buttonName={butt}
           buttonLink={pagesArray[i]}
+          username={props.username}
         />
       ))}
     </div>
   );
 };
 function User() {
+  const { user } = useSession();
+
   const { page } = useParams();
-  console.log(page, 'hi');
-  const { data, error, isLoading, refetch } = useQuery('about data', () =>
-    fetchRequest('users/about')
+
+  const { data } = useQuery('about data', () =>
+    fetchRequest(`users/${user?.username}/about`)
   );
 
-  const { message, about } = data?.data || {};
+  const { about } = data?.data || {};
 
   const username = about?.username ?? '';
   const display_name = about?.display_name ?? '';
@@ -105,6 +112,7 @@ function User() {
                     'Downvoted',
                   ]}
                   active={page}
+                  username={user?.username}
                 />
               </div>
 

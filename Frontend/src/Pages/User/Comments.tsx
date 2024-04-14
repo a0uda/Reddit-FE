@@ -1,16 +1,17 @@
-import React from 'react';
 import { fetchRequest } from '../../API/User';
 import { useQuery } from 'react-query';
 import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
 import { CommentType } from '../../types/types';
 import Comment from '../../Components/Posts/Comment';
+import useSession from '../../hooks/auth/useSession';
 
 function Comments() {
-  const { data, error, isLoading, refetch } = useQuery(
+  const { user } = useSession();
+  const { data, error, isLoading } = useQuery(
     ['userComments', 'comments'],
-    () => fetchRequest('users/comments')
+    () => fetchRequest(`users/${user?.username}/comments`)
   );
-  console.log(data);
+
   return (
     <>
       <LoadingProvider error={error} isLoading={isLoading}>

@@ -415,7 +415,13 @@ const CampainLoggedIn = () => {
   const avatarMenu = (
     <>
       <List className='p-0 text-foreground w-full'>
-        <ListItem className='py-2 flex gap-2 items-center'>
+        <ListItem
+          className='py-2 flex gap-2 items-center'
+          onClick={() => {
+            navigate(`user/${user?.username}/saved`);
+            location.reload();
+          }}
+        >
           <Avatar
             src={
               user?.imageUrl ||

@@ -1,10 +1,7 @@
-import React from 'react';
 import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
 import { PostType } from '../../types/types';
-
 import { useQuery } from 'react-query';
-import { Card, CardBody } from '@material-tailwind/react';
 import {
   EyeIcon,
   ArrowUpIcon,
@@ -12,11 +9,12 @@ import {
   ChatBubbleBottomCenterIcon,
 } from '@heroicons/react/24/outline';
 import PostPreview from '../../Components/Posts/PostPreview';
+import useSession from '../../hooks/auth/useSession';
 
 function Posts() {
-  const { data, error, isLoading, refetch } = useQuery(
-    ['posts', 'listings'],
-    () => fetchRequest('users/posts')
+  const { user } = useSession();
+  const { data, error, isLoading } = useQuery(['posts', 'listings'], () =>
+    fetchRequest(`users/${user?.username}/posts`)
   );
   console.log(data);
   return (

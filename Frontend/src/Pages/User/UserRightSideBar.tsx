@@ -20,12 +20,14 @@ import instagramIcon from '../../assets/instagramIcon.svg';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, postRequest } from '../../API/User';
 import { AboutType, ModeratedCommunity, SocialLink } from '../../types/types';
+import useSession from '../../hooks/auth/useSession';
 
 function UserRightSideBar() {
+  const { user } = useSession();
   const [aboutData, setAboutData] = useState<AboutType | undefined>();
   useQuery({
     queryKey: 'about data',
-    queryFn: () => fetchRequest('users/about'),
+    queryFn: () => fetchRequest(`users/${user?.username}/about`),
     onSuccess: (data) => {
       setAboutData(data.data.about);
     },

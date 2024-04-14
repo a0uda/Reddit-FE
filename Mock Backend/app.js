@@ -1748,7 +1748,7 @@ let postsComments = [
     },
   },
 ];
-app.get("/users/about/", (req, res) => {
+app.get("/users/:username/about", (req, res) => {
   res.status(200).json(userAbout);
 });
 app.get("/users/moderated-communities", (req, res) => {
@@ -1767,13 +1767,13 @@ app.get("/users/saved-posts-and-comments", (req, res) => {
   res.status(200).json(postsListings);
 });
 
-app.get("/users/posts", (req, res) => {
+app.get("/users/:username/posts", (req, res) => {
   res.status(200).json(postsListings);
 });
 
-app.get("/users/comments", (req, res) => {
+app.get("/users/:username/comments", (req, res) => {
   res.status(200).json(comments);
 });
-app.get("/users/overview", (req, res) => {
-  res.status(200).json(postsListings);
+app.get("/users/:username/overview", (req, res) => {
+  res.status(200).json(postsComments);
 });

@@ -8,6 +8,7 @@ import OfflineAlert from './Components/OfflineAlert.tsx';
 import { AuthProvider } from './Providers/AuthProvider.tsx';
 import Post from './Pages/Post.tsx';
 import User from './Pages/User/User.tsx';
+import useSession from './hooks/auth/useSession.tsx';
 
 function App() {
   return (
@@ -25,8 +26,7 @@ function App() {
                 element={<Post />}
               />
               <Route path='/settings/:page' element={<UserSettings />} />
-              {/* to be deleted Ree */}
-              <Route path='/user/:username/:page' element={<User />} />
+              <Route path={`/user/:username/:page`} element={<User />} />
             </Routes>
           </Router>
         </div>
