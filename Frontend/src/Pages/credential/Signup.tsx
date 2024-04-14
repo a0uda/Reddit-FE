@@ -2,6 +2,7 @@ import { useState } from 'react';
 import MyForm from '../../Components/Form';
 import { ButtonType } from '../../validate/buttonType';
 import { postRequest } from '../../API/User';
+import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogBody, IconButton } from '@material-tailwind/react';
 import { IoMdClose } from 'react-icons/io';
 import { IoMdArrowBack } from 'react-icons/io';
@@ -14,7 +15,7 @@ export default function Signup(props: {
 }) {
   const [step, setStep] = useState(1);
   const [errorMessage, seterrorMessage] = useState('');
-
+  const navigate = useNavigate();
   const inputArr2 = [
     {
       placeholder: 'Username*',
@@ -50,7 +51,7 @@ export default function Signup(props: {
     {
       type: 'submit',
       className:
-        'form-control rounded-full w-full text-center p-3 m-2 my-10 mt-20',
+        'form-control rounded-full w-full text-center p-3 m-2 my-10 mt-40',
       content: 'submit',
       style: { backgroundColor: '#FF4500' },
     },
@@ -124,7 +125,6 @@ export default function Signup(props: {
           handleModal={() => {
             props.handleOpen();
           }}
-          gender={step == 2 ? true : false}
         >
           {step === 1 ? (
             <>

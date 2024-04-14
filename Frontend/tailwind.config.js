@@ -18,8 +18,6 @@ export default withMT({
     extend: {
       height: {
         navbar: 'var(--navbar-height)',
-      blur: {
-        'custom-blur': '10px',
       },
       gridTemplateColumns: {
         // Simple 16 col grid
@@ -73,7 +71,6 @@ export default withMT({
         'danger-red': '#ff585b',
         'lines-color': '#EDEFF1',
         'gray-light': '#7C7C7C',
-        grayLight: '#dae0e6',
       },
       width: {
         'fit-content': 'fit-content',

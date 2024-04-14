@@ -344,46 +344,34 @@ app.post("/users/signup-google", (req, res) => {
   res
     .status(200)
     .json({ message: "User logged in with Google successfully", token });
-});
-const communitiesPost = [
-  {
-    community_id: "1",
-    community_name: "r/announcements",
-    image_url:
-      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
-  },
-  {
-    community_id: "2",
-    community_name: "r/annou",
-    image_url:
-      "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
-  },
-  {
-    community_id: "3",
-    community_name: "r/football",
-    image_url:
-      "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
-  },
-  {
-    community_id: "4",
-    community_name: "r/redditGroup",
-    image_url:
-      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
-  },
-  {
-    community_id: "5",
-    community_name: "r/testcommunity",
-    image_url:
-      "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
-  },
-];
+  // const { code } = req.body;
+  // const client_id =
+  //   "178664293995-s6s92s28mme4eu54lg367sqhnj8bonff.apps.googleusercontent.com";
+  // const client_secret = "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";
+  // const redirect_uri = "http://localhost";
+  // const grant_type = "authorization_code";
 
-app.get("/submit/communities", (req, res) => {
-  res.status(200).json(communitiesPost);
-});
-app.post("/submit", (req, res) => {
-  // const {} = req.body;
-  res.status(200).json({ message: "	post created successfully" });
+  // fetch("<https://oauth2.googleapis.com/token>", {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/x-www-form-urlencoded",
+  //   },
+  //   body: new URLSearchParams({
+  //     code,
+  //     client_id,
+  //     client_secret,
+  //     redirect_uri,
+  //     grant_type,
+  //   }),
+  // })
+  //   .then((response) => response.json())
+  //   .then((tokens) => {
+  //     res.json(tokens);
+  //   })
+  //   .catch((error) => {
+  //     console.error("Token exchange error:", error);
+  //     res.status(500).json({ error: "Internal Server Error" });
+  //   });
 });
 
 module.exports = app;
