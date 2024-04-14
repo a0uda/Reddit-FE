@@ -118,3 +118,56 @@ export type CommentType = {
     spammed_type: string;
   };
 };
+
+export type AboutType = {
+  _id: string;
+  username: string;
+  created_at: string;
+  email: string;
+  verified_email_flag: boolean;
+  connected_google: boolean;
+  display_name: string;
+  about: string;
+  social_links: {
+    icon: string;
+    username: string;
+    displayName?: string;
+  }[];
+  profile_picture: string;
+  banner_picture: string;
+  gender: string;
+};
+
+export type AboutType = {
+  _id: string;
+  username: string;
+  created_at: string;
+  email: string;
+  verified_email_flag: boolean;
+  connected_google: boolean;
+  display_name: string;
+  about: string;
+  social_links: {
+    icon: string;
+    username: string;
+    displayName?: string;
+  }[];
+  profile_picture: string;
+  banner_picture: string;
+  gender: string;
+};
+
+export type SocialLink = {
+  icon: string;
+  username: string;
+  displayName?: string; // Optional property
+};
+
+export type ModeratedCommunity = {
+  id: string;
+  name: string;
+  profile_picture: string;
+  favorite_flag: boolean;
+  members_count: number;
+  joined: boolean;
+};

@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import Section from '../UserSettings/Containers/Section';
+import { useState } from 'react';
 import RoundedButton from '../../Components/RoundedButton';
 import {
   Avatar,
@@ -20,25 +19,26 @@ import facebookIcon from '../../assets/facebookIcon.svg';
 import instagramIcon from '../../assets/instagramIcon.svg';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, postRequest } from '../../API/User';
+import { AboutType, ModeratedCommunity, SocialLink } from '../../types/types';
 
 function UserRightSideBar() {
-  const [aboutData, setAboutData] = useState();
-  const aboutResponse = useQuery({
+  const [aboutData, setAboutData] = useState<AboutType | undefined>();
+  useQuery({
     queryKey: 'about data',
     queryFn: () => fetchRequest('users/about'),
     onSuccess: (data) => {
-      setAboutData(data.data);
+      setAboutData(data.data.about);
     },
   });
 
-  console.log(aboutData);
-
-  const [moderatedCommunities, setModeratedCommunities] = useState();
-  const communitiesResponse = useQuery({
+  const [moderatedCommunities, setModeratedCommunities] = useState<
+    ModeratedCommunity[]
+  >([]);
+  useQuery({
     queryKey: 'moderated communities',
     queryFn: () => fetchRequest('users/moderated-communities'),
     onSuccess: (data) => {
-      setModeratedCommunities(data.data);
+      setModeratedCommunities(data.data.moderated_communities);
     },
   });
   const joinMutation = useMutation(
@@ -67,8 +67,6 @@ function UserRightSideBar() {
     }
   );
 
-  const moderated_communities =
-    moderatedCommunities?.moderated_communities || [];
   // const {
   //   id,
   //   created_at,
@@ -86,11 +84,11 @@ function UserRightSideBar() {
   //   moderated_communities,
   // } = data?.data || {};
 
-  const social_links = aboutData?.about?.social_links ?? [];
-  const display_name = aboutData?.about?.display_name ?? '';
-  const profile_picture = aboutData?.about?.profile_picture ?? '';
-  const banner_picture = aboutData?.about?.banner_picture ?? '';
-  const created_at = aboutData?.about?.created_at ?? '';
+  const social_links = aboutData?.social_links ?? [];
+  const display_name = aboutData?.display_name ?? '';
+  const profile_picture = aboutData?.profile_picture ?? '';
+  const banner_picture = aboutData?.banner_picture ?? '';
+  const created_at = aboutData?.created_at ?? '';
   const date = new Date(created_at);
   const formattedDate = date.toLocaleString('en-US', {
     month: 'short',
@@ -99,27 +97,27 @@ function UserRightSideBar() {
   });
 
   const [joinStates, setJoinStates] = useState(() => {
-    if (moderated_communities) {
-      return moderated_communities.map(() => false);
+    if (moderatedCommunities) {
+      return moderatedCommunities.map(() => false);
     } else {
       return [];
     }
   });
 
-  const handleJoin = (index) => {
+  const handleJoin = (index: number) => {
     const newJoinStates = [...joinStates];
     newJoinStates[index] = true;
     setJoinStates(newJoinStates);
 
-    joinMutation.mutate(moderated_communities[index].name);
+    joinMutation.mutate(moderatedCommunities[index].name);
   };
 
-  const handleLeave = (index) => {
+  const handleLeave = (index: number) => {
     const newJoinStates = [...joinStates];
     newJoinStates[index] = false;
     setJoinStates(newJoinStates);
 
-    leaveMutation.mutate(moderated_communities[index].name);
+    leaveMutation.mutate(moderatedCommunities[index].name);
   };
   return (
     <>
@@ -245,10 +243,10 @@ function UserRightSideBar() {
           <SidebarSection sectionTitle='Links'>
             <div className='flex flex-start gap-2 flex-wrap'>
               {social_links &&
-                social_links.map((link, i: number) => {
+                social_links.map((link: SocialLink, i: number) => {
                   return (
                     <Link
-                      key={link + i}
+                      key={i}
                       to={
                         link.icon != 'Facebook'
                           ? 'https://www.' +
@@ -292,38 +290,40 @@ function UserRightSideBar() {
           </SidebarSection>
           <SidebarSection sectionTitle="YOU'RE A MODERATOR OF THESE COMMUNITIES">
             <div className='flex flex-col w-full '>
-              {moderated_communities &&
-                moderated_communities.map((link, i: number) => {
-                  return (
-                    <div
-                      key={link + i}
-                      className='flex justify-between items-center'
-                    >
-                      <CommunityItem
-                        src={link.profile_picture}
-                        name={link.name}
-                        membersNumber={link.members_count}
-                      ></CommunityItem>
-                      {joinStates[i] ? (
-                        <RoundedButton
-                          buttonBorderColor='none'
-                          buttonColor='bg-neutral-500'
-                          buttonText='leave'
-                          buttonTextColor='text-black'
-                          onClick={() => handleLeave(i)}
-                        ></RoundedButton>
-                      ) : (
-                        <RoundedButton
-                          buttonBorderColor='none'
-                          buttonColor='bg-neutral-500'
-                          buttonText='join'
-                          buttonTextColor='text-black'
-                          onClick={() => handleJoin(i)}
-                        ></RoundedButton>
-                      )}
-                    </div>
-                  );
-                })}
+              {moderatedCommunities &&
+                moderatedCommunities.map(
+                  (link: ModeratedCommunity, i: number) => {
+                    return (
+                      <div
+                        key={i}
+                        className='flex justify-between items-center'
+                      >
+                        <CommunityItem
+                          src={link.profile_picture}
+                          name={link.name}
+                          membersNumber={link.members_count}
+                        ></CommunityItem>
+                        {joinStates[i] ? (
+                          <RoundedButton
+                            buttonBorderColor='none'
+                            buttonColor='bg-neutral-500'
+                            buttonText='leave'
+                            buttonTextColor='text-black'
+                            onClick={() => handleLeave(i)}
+                          ></RoundedButton>
+                        ) : (
+                          <RoundedButton
+                            buttonBorderColor='none'
+                            buttonColor='bg-neutral-500'
+                            buttonText='join'
+                            buttonTextColor='text-black'
+                            onClick={() => handleJoin(i)}
+                          ></RoundedButton>
+                        )}
+                      </div>
+                    );
+                  }
+                )}
             </div>
           </SidebarSection>
         </CardBody>
