@@ -20,4 +20,38 @@ export const validationSchema = {
     .string()
     .required('Please confirm your new password')
     .oneOf([yup.ref('newPassword')], 'Passwords must match'),
+  title: yup.string().required('Title is required'),
+  description: yup.string(),
+  link_url: yup.string().required('Link URl is required'),
+  images: yup.array().of(
+    yup.object().shape({
+      path: yup.string().required('Path is required'),
+      caption: yup.string().required('Caption is required'),
+      link: yup.string().required('Link is required'),
+    })
+  ),
+  videos: yup.array().of(
+    yup.object().shape({
+      path: yup.string().required('Path is required'),
+      caption: yup.string().required('Caption is required'),
+      link: yup.string().required('Link is required'),
+    })
+  ),
+  type: yup.string().required(),
+  community_id: yup.string().required(),
+  community_name: yup.string().required(),
+  nsfw_flag: yup.boolean().required(),
+  spoiler_flag: yup.boolean().required(),
+  oc_flag: yup.boolean().required(),
+  polls_voting_length: yup.number().required(),
+  polls: yup
+    .array()
+    .of(
+      yup.object().shape({
+        option: yup.string().required('Option is required'),
+      })
+    )
+    .min(2, 'At least 2 options are required')
+    .required(),
+  gender: yup.string(),
 };

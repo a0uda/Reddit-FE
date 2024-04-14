@@ -9,6 +9,7 @@ import { AuthProvider } from './Providers/AuthProvider.tsx';
 import Post from './Pages/Post.tsx';
 import User from './Pages/User/User.tsx';
 import useSession from './hooks/auth/useSession.tsx';
+import CreatePost from './Pages/createPost/CreatePost.tsx';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
               />
               <Route path='/settings/:page' element={<UserSettings />} />
               <Route path={`/user/:username/:page`} element={<User />} />
+              <Route path={'/submit'} element={<CreatePost />} />
             </Routes>
           </Router>
         </div>

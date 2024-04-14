@@ -14,7 +14,8 @@ interface InputProps {
   error?: boolean;
   errorMsg?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  isEmpty: boolean;
+  isEmpty?: boolean;
+  NoCheck?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -28,6 +29,7 @@ const Input: React.FC<InputProps> = ({
   errorMsg,
   onChange,
   isEmpty,
+  NoCheck,
 }) => {
   const [showTick, setShowTick] = React.useState(false);
   return (
@@ -59,7 +61,7 @@ const Input: React.FC<InputProps> = ({
           }}
         />
 
-        {!error && showTick && !isEmpty && (
+        {!error && showTick && !isEmpty && !NoCheck && (
           <FaCheckCircle className='absolute right-3  top-1/2 -translate-y-1/2 text-green-muted ' />
         )}
       </div>
