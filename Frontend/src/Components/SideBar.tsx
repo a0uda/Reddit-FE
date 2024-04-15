@@ -19,6 +19,9 @@ import {
 import { ReactNode, useState } from 'react';
 import { CommunityIcon } from '../assets/icons/Icons';
 import { cn } from '../utils/helper_functions';
+import { useQuery } from 'react-query';
+import { CommunityType } from '../types/types';
+import { fetchRequest } from '../API/User';
 
 const SideBar = ({ className }: { className?: string }) => {
   const moderation = [
@@ -63,6 +66,31 @@ const SideBar = ({ className }: { className?: string }) => {
       link: '/submit?type=link',
     },
   ];
+
+  const [communities, setCommunities] = useState<ListItemProps[] | undefined>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const communitiesResponse = useQuery({
+    queryKey: ['communities'],
+    queryFn: () => fetchRequest(`users/communities/`),
+    onSuccess: (data) => {
+      const formattedCommunities = data.data?.map(
+        (community: CommunityType) => ({
+          icon: community.profile_picture || (
+            <CommunityIcon className='h-5 w-5' />
+          ),
+          title: 'r/' + community.name,
+          link: `/r/${community.name}`,
+        })
+      );
+
+      const communityList: ListItemProps[] = formattedCommunities || [];
+
+      console.log('communityList', communityList);
+
+      setCommunities(communityList);
+    },
+  });
+
   return (
     <>
       <div
@@ -84,12 +112,16 @@ const SideBar = ({ className }: { className?: string }) => {
           <AccordionDropDown title='Recent' list={recent} />
           <hr className='my-2 border-blue-gray-50' />
           {/* BE */}
-          <AccordionDropDown title='Communities' list={recent}>
-            <ListItemComponent
-              icon={<PlusIcon className='h-5 w-5' />}
-              title='Create Community'
-            />
-          </AccordionDropDown>
+          {communities && communities?.length > 0 && (
+            <>
+              <AccordionDropDown title='Communities' list={communities!}>
+                <ListItemComponent
+                  icon={<PlusIcon className='h-5 w-5' />}
+                  title='Create Community'
+                />
+              </AccordionDropDown>
+            </>
+          )}
           <hr className='my-2 border-blue-gray-50' />
           <AccordionDropDown title='Create Post' list={createPost} />
           <hr className='my-2 border-blue-gray-50' />
