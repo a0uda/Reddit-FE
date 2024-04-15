@@ -29,7 +29,12 @@ export const tiptapConfig = {
       },
     }),
     Superscript,
-    Link,
+    Link.configure({
+      HTMLAttributes: {
+        class: 'text-blue hover:underline',
+      },
+      linkOnPaste: true,
+    }),
     Image,
     Blockquote.configure({
       HTMLAttributes: {

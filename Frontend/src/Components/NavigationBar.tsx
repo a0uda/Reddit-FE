@@ -69,7 +69,7 @@ export function NavigationBar() {
         <div className=' flex items-center col-span-4 gap-2 p-0'>
           <IconButton
             variant='text'
-            className='ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden'
+            className='ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent xl:hidden'
             ripple={false}
             onClick={() => setOpenNav(!openNav)}
           >
@@ -620,19 +620,21 @@ const NotificationMenu = () => {
       (notification: Notification, index: number) => (
         <ListItem
           key={index}
-          className={`py-2 flex gap-2 h-10 items-center ${
+          className={`py-8 flex gap-2 h-10 items-center rounded-none ${
             notification.unread_flag ? 'bg-light-blue-50' : 'bg-transparent'
           }`}
           onClick={() => markAsRead(notification.id)}
         >
           <ListItemPrefix className='mr-0'>
             {notification.communityAvatarSrc ? (
-              <Avatar
-                size='sm'
-                variant='circular'
-                alt={notification.communityAvatarSrc}
-                src={notification.communityAvatarSrc}
-              />
+              <div className='min-w-10'>
+                <Avatar
+                  size='sm'
+                  variant='circular'
+                  alt={notification.communityAvatarSrc}
+                  src={notification.communityAvatarSrc}
+                />
+              </div>
             ) : (
               <CommunityIcon />
             )}
@@ -646,12 +648,9 @@ const NotificationMenu = () => {
                 {getTimeDifference(notification.created_at)}
               </Typography>
             </div>
-            <Typography
-              variant='small'
-              className='font-normal text-xs text-gray-600'
-            >
+            <p className='font-normal text-xs text-gray-600 line-clamp-2 overflow-hidden text-ellipsis'>
               {notification.description}
-            </Typography>
+            </p>
           </div>
           <div className='ml-auto'>
             <Menu placement='bottom-end'>
@@ -759,10 +758,10 @@ const NotificationMenu = () => {
               </Button>
             </a>
           </ListItem>
-          <div className='bg-blue w-1/2 h-1 rounded-full' />
+          <div className='bg-blue w-1/2 h-1 rounded-full mb-3' />
           {notifications.length > 0 ? (
             <>
-              <div className='flex items-center justify-between p-3'>
+              <div className='flex items-center justify-between px-3'>
                 <Typography
                   variant='small'
                   className='text-neutral-900 uppercase font-medium'
@@ -783,7 +782,7 @@ const NotificationMenu = () => {
                 </div>
               </div>
               {renderNotificationItems(today)}
-              <div className='flex items-center justify-between p-3'>
+              <div className='flex items-center justify-between px-3'>
                 <Typography
                   variant='small'
                   className='text-neutral-900 uppercase font-medium'
@@ -794,7 +793,7 @@ const NotificationMenu = () => {
               {renderNotificationItems(earlier)}
               <hr className='border-neutral-muted' />
               <div className='px-5 p-2'>
-                <Link to='/settings/account'>
+                <Link to='/notifications'>
                   <Button
                     variant='filled'
                     className='w-full h-10 bg-neutral-muted text-black text-sm'

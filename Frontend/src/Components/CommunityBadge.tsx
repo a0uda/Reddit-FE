@@ -63,8 +63,8 @@ const CommunityBadge = ({
               variant='small'
               className='font-body -tracking-tight text-gray-600'
             >
-              <Link to={`/${name}`} className='hover:underline'>
-                {name}
+              <Link to={`/r/${name}`} className='hover:underline'>
+                r/{name}
               </Link>
             </Typography>
           </div>

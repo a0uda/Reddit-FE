@@ -464,7 +464,7 @@ let recentPostsList = [
       votes: [10, 5, 7],
     },
     community_id: "community123",
-    "community-name": "r/sports",
+    "community-name": "sports",
     comments_count: 9,
     // added //
     communityAvatarSrc:
@@ -537,7 +537,7 @@ let recentPostsList = [
       votes: [10, 5, 7],
     },
     community_id: "community123",
-    "community-name": "r/programming",
+    "community-name": "programming",
     comments_count: 20,
     // added //
     communityAvatarSrc:
@@ -607,16 +607,48 @@ app.post("/users/leave-community", (req, res) => {
 let notifications = [
   {
     id: "1",
-    created_at: "2024-03-27",
+    created_at: new Date().toISOString().split("T")[0],
     post_id: "post123",
     comment_id: "comment456",
     sending_user_username: "osama_youssef",
-    description: "first notification description",
+    description:
+      "first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description",
     unread_flag: true,
     hidden_flag: false,
     type: "message",
     // added //
-    community_id: "community123",
+    community_name: "r/sports",
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+  },
+  {
+    id: "5",
+    created_at: new Date().toISOString().split("T")[0],
+    post_id: "post123",
+    comment_id: "comment456",
+    sending_user_username: "osama_youssef",
+    description:
+      "first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description",
+    unread_flag: true,
+    hidden_flag: false,
+    type: "message",
+    // added //
+    community_name: "r/sports",
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+  },
+  {
+    id: "6",
+    created_at: new Date().toISOString().split("T")[0],
+    post_id: "post123",
+    comment_id: "comment456",
+    sending_user_username: "osama_youssef",
+    description:
+      "first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description",
+    unread_flag: true,
+    hidden_flag: false,
+    type: "message",
+    // added //
     community_name: "r/sports",
     communityAvatarSrc:
       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
@@ -632,7 +664,6 @@ let notifications = [
     hidden_flag: false,
     type: "comment",
     // added //
-    community_id: "community123",
     community_name: "r/programming",
     communityAvatarSrc:
       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
@@ -648,7 +679,21 @@ let notifications = [
     hidden_flag: false,
     type: "reply",
     // added //
-    community_id: "community123",
+    community_name: "r/sports",
+    communityAvatarSrc:
+      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+  },
+  {
+    id: "4",
+    created_at: "2024-03-24",
+    post_id: "post345",
+    comment_id: "comment678",
+    sending_user_username: "osama_youssef",
+    description: "You have a new reply",
+    unread_flag: true,
+    hidden_flag: false,
+    type: "reply",
+    // added //
     community_name: "r/sports",
     communityAvatarSrc:
       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
@@ -664,7 +709,6 @@ app.patch("/notifications/mark-all-as-read", (req, res) => {
     ...notification,
     unread_flag: false,
   }));
-  // console.log("Notifications marked as read:", notifications);
   res.sendStatus(200);
 });
 
@@ -676,7 +720,6 @@ app.patch("/notifications/mark-as-read/:id", (req, res) => {
     return res.status(404).json({ message: "Notification not found" });
   }
   notification.unread_flag = read_flag;
-  // console.log("Notifications marked as read:", notifications);
   res.sendStatus(200);
 });
 
@@ -688,7 +731,6 @@ app.patch("/notifications/hide/:id", (req, res) => {
   }
   notifications[notificationIndex].hidden_flag = true;
   notifications.splice(notificationIndex, 1);
-  // console.log("Notifications marked as read:", notifications);
   res.sendStatus(200);
 });
 
@@ -1511,7 +1553,7 @@ app.get("/users/overview", (req, res) => {
   res.status(200).json(postsListings);
 });
 
-app.get("/user/about/:id", (req, res) => {
+app.get("/users/about/:id", (req, res) => {
   const { id } = req.params;
   const user = users.find((user) => user.id === id);
   if (!user) return res.status(404).json({ message: "User not found" });
@@ -1585,4 +1627,247 @@ app.post("/comments/new-comment", (req, res) => {
   console.log(comments);
 
   res.status(200).json({ message: "Comment added successfully." });
+});
+
+let Commiunities = [
+  {
+    name: "sports",
+    title: "Reddit Sports",
+    description:
+      "Sports News and Highlights from the NFL, NBA, NHL, MLB, MLS, and leagues around the world.",
+    membersNumber: 5000,
+    onlineMembers: 205,
+    rank: 5,
+  },
+  {
+    name: "programming",
+    title: "programming",
+    description: "Computer Programming",
+    membersNumber: 1000,
+    onlineMembers: 500,
+    rank: 1,
+  },
+  {
+    name: "music",
+    title: "Reddit Music",
+    description: "The musical community of reddit",
+    membersNumber: 7000,
+    onlineMembers: 300,
+    rank: 3,
+  },
+];
+
+//Added Request (doesn't exist in the API)
+//(return the community details by passing the community name as a prameter in the path)
+app.get("/communities/:communityName", (req, res) => {
+  const { communityName } = req.params;
+  const community = Commiunities.find(
+    (community) => community.name === communityName
+  );
+  if (community) {
+    res.status(200).json(community);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+
+let CommunityModerators = [
+  {
+    community_name: "sports",
+    moderators: [
+      {
+        id: 1,
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_1.png",
+        username: "u/FirstModerator",
+        approved_at: "2024-03-29",
+      },
+      {
+        id: 2,
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_2.png",
+        username: "u/SecondModerator",
+        approved_at: "2024-03-29",
+      },
+      {
+        id: 3,
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png",
+        username: "u/ThirdModerator",
+        approved_at: "2024-03-29",
+      },
+      {
+        id: 4,
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png",
+        username: "u/FourthModerator",
+        approved_at: "2024-03-29",
+      },
+      {
+        id: 5,
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_5.png",
+        username: "u/FifthModerator",
+        approved_at: "2024-03-29",
+      },
+      {
+        id: 6,
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_6.png",
+        username: "u/SixthModerator",
+        approved_at: "2024-03-29",
+      },
+      {
+        id: 7,
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_7.png",
+        username: "u/SeventhModerator",
+        approved_at: "2024-03-29",
+      },
+    ],
+  },
+  {
+    community_name: "programming",
+    moderators: [
+      {
+        id: 6,
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_6.png",
+        username: "u/SixthModerator",
+        approved_at: "2024-03-29",
+      },
+      {
+        id: 7,
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_7.png",
+        username: "u/SeventhModerator",
+        approved_at: "2024-03-29",
+      },
+    ],
+  },
+];
+
+app.get("/communities/about/moderators/:communityName", (req, res) => {
+  const { communityName } = req.params;
+  const community = CommunityModerators.find(
+    (community) => community.community_name === communityName
+  );
+  if (community) {
+    res.status(200).json(community.moderators);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+
+const communityRules = [
+  {
+    community_name: "sports",
+    rules: [
+      {
+        rule_order: 1,
+        rule_title: "Civil Behavior",
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Keep posts and comments civil at all times. Follow proper reddiquette. Please try to be respectful to everyone. Hateful or otherwise inappropriate behaviour will not be tolerated. No witch-hunting.",
+      },
+      {
+        rule_order: 2,
+        rule_title: "Self-Promotion",
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Self-promotion/original content is allowed in certain circumstances. Profile sharing is only permitted through setting your user flair to your Letterboxd Username, using our profile sharing mega-thread, or in other mod-approved threads. Original content (LB lists/reviews, third-party OC etc.) is generally only permitted within our weekly threads. If you feel your original content promotes discussion, is of relevance/importance to the sub, or is high-effort/high-quality, exceptions will be made pending mod discretion.",
+      },
+      {
+        rule_order: 3,
+        rule_title: "Low-Effort Content",
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Low-effort/low-quality posts will be removed. Low-effort questions, low-quality shared content, or any content deemed by mods to lack honest intent, will be removed. Shared content must be relevant to Letterboxd or Film, and must be of an acceptable standard. Content that pushes agendas, has excessive ads, or is otherwise deemed to be a negative contribution, will be removed at mod discretion. Image macros, screen-grabs or commonly used memes/image formats must make an honest attempt at humor.",
+      },
+      {
+        rule_order: 4,
+        rule_title: "No Wank/Circlejerking",
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "No wank/circlejerking posts allowed. Standalone posts and/or comments that are considered to be bait and/or wank about specific or non-specific users or reviews on Letterboxd will be removed. These types of posts have been deemed to be low-effort and, most importantly, unwelcoming to all individuals who use both the subreddit and Letterboxd.",
+      },
+      {
+        rule_order: 5,
+        rule_title: "Duplicate Posts/Reposts",
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Duplicate posts/reposts will be removed. Individual posts that belong in an existing masterthread will be removed.",
+      },
+      {
+        rule_order: 6,
+        rule_title: "No Vandalism",
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "TMDb/Letterboxd vandalism posts are not allowed. Screenshots/links to content vandalism on either TMDb and/or Letterboxd will be removed. These posts fall under low effort and do not encourage adequate discussion on the subreddit.",
+      },
+      {
+        rule_order: 7,
+        rule_title: "Suggestions for Letterboxd",
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Suggestions for additions to the Letterboxd site will be redirected. Standalone posts offering original and/or common suggestions for Letterboxd will be directed to the official Letterboxd feedback site (letterboxd.nolt.io). Posts discussing new updates to the website and/or app are allowed.",
+      },
+      {
+        rule_order: 8,
+        rule_title: "Miscellaneous Content",
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Miscellaneous content that is addressed in the FAQ will be removed. Any posts or comments discussing or asking about issues that are addressed in the sub FAQ will be removed. The poster will be directed to the FAQ page.",
+      },
+      {
+        rule_order: 9,
+        rule_title: "Spoiler Policy",
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Spoiler posts/comments must be marked as such. Absolutely no spoilers, intentional or otherwise, in post titles. This will be considered a serious offense and could result in a permanent ban. All posts with spoilers INSIDE the body of said post must be marked with the spoiler flair. When commenting on a post that is NOT labelled with the spoiler flair, please use proper spoiler formatting. Comments containing spoilers are acceptable within posts marked with the spoiler flair.",
+      },
+      {
+        rule_order: 10,
+        rule_title: "Consequences for Violations",
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Consequences. Violations of any of the rules above will be met with a removal, a warning, a temporary ban, or a perma ban, at the discretion of the Moderators, in relation to the severity and/or repetitive nature of said violation(s).",
+      },
+    ],
+  },
+  {
+    community_name: "programming",
+    rules: [
+      {
+        rule_order: 1,
+        rule_title: "Civil Behavior",
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Keep posts and comments civil at all times. Follow proper reddiquette. Please try to be respectful to everyone. Hateful or otherwise inappropriate behaviour will not be tolerated. No witch-hunting.",
+      },
+    ],
+  },
+];
+
+app.get("/communities/rules/:communityName", (req, res) => {
+  const { communityName } = req.params;
+  const community = communityRules.find(
+    (community) => community.community_name === communityName
+  );
+  if (community) {
+    res.status(200).json(community.rules);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
 });

@@ -4,6 +4,7 @@ import { Avatar, Typography, Card, CardBody } from '@material-tailwind/react';
 import { postRequest } from '../../API/User';
 import { useMutation } from 'react-query';
 import { CommunityIcon } from '../../assets/icons/Icons';
+import { Link } from 'react-router-dom';
 
 interface CommunityPopupItemProps {
   //community data
@@ -35,7 +36,6 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
       }),
     {
       onError: () => {
-        // Perform any actions on error, like showing an error message
         console.log('Error');
       },
     }
@@ -49,7 +49,6 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
       }),
     {
       onError: () => {
-        // Perform any actions on error, like showing an error message
         console.log('Error');
       },
     }
@@ -84,9 +83,12 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
               variant='small'
               className='font-body font-bold -tracking-tight text-lg text-black'
             >
-              <a href='' className='hover:underline'>
-                {props.communityName}
-              </a>
+              <Link
+                to={`/r/${props.communityName}`}
+                className='hover:underline'
+              >
+                r/{props.communityName}
+              </Link>
             </Typography>
           </div>
           {!isJoined && JustJoined && (

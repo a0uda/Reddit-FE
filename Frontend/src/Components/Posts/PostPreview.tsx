@@ -22,7 +22,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
   return (
     <div className='relative'>
       <Link
-        to={`/${post['community-name']}/comments/${post.id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
+        to={`/r/${post['community-name']}/comments/${post.id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
         reloadDocument
         // className='absolute inset-0'
       >
@@ -64,7 +64,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
                 upvotes={post.upvotes_count}
                 downvotes={post.downvotes_count}
                 comments_replies={post.comments_count}
-                refLink={`/${post['community-name']}/comments/${post.id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
+                refLink={`/r/${post['community-name']}/comments/${post.id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
               />
             </div>
             {post.images?.[0] && (

@@ -2,7 +2,6 @@ import {
   Accordion,
   AccordionBody,
   AccordionHeader,
-  Card,
   List,
   ListItem,
   ListItemPrefix,
@@ -19,6 +18,7 @@ import {
 } from '@heroicons/react/24/solid';
 import { ReactNode, useState } from 'react';
 import { CommunityIcon } from '../assets/icons/Icons';
+import { cn } from '../utils/helper_functions';
 
 const SideBar = ({ className }: { className?: string }) => {
   const moderation = [
@@ -65,11 +65,12 @@ const SideBar = ({ className }: { className?: string }) => {
   ];
   return (
     <>
-      <Card
-        className={
-          'h-[calc(100vh-var(--navbar-height))] overflow-x-auto w-full p-5 shadow-none ' +
+      <div
+        className={cn(
+          'h-[calc(100vh-var(--navbar-height))] overflow-x-auto w-full p-5 shadow-none border-r',
           className
-        }
+        )}
+        // style={{ scrollbarWidth: 'none' }} // Hide scrollbar
       >
         <List className='text-black *:text-black px-0 min-w-0'>
           <ListItemComponent
@@ -93,7 +94,7 @@ const SideBar = ({ className }: { className?: string }) => {
           <AccordionDropDown title='Create Post' list={createPost} />
           <hr className='my-2 border-blue-gray-50' />
         </List>
-      </Card>
+      </div>
     </>
   );
 };
@@ -173,23 +174,4 @@ const AccordionDropDown = ({
     </>
   );
 };
-
-{
-  /* <ListItem>
-<ListItemPrefix>
-  <InboxIcon className='h-5 w-5' />
-</ListItemPrefix>
-Inbox
-<ListItemSuffix>
-  <Chip
-    value='14'
-    size='sm'
-    variant='ghost'
-    color='blue-gray'
-    className='rounded-full'
-  />
-</ListItemSuffix>
-</ListItem> */
-}
-
 export default SideBar;

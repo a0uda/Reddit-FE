@@ -54,11 +54,13 @@ const InteractionButtons = ({
     <>
       <div
         className={cn(
-          'flex flex-row items-center gap-4 text-black',
+          'flex flex-row items-center gap-4 text-black z-10',
           !isPost ? 'gap-0' : '',
           className
         )}
         onClick={(e) => {
+          // Wahed fehom yeshel el event (mesh 3ayez yed5ol lel post details)
+          e.preventDefault();
           e.stopPropagation();
         }}
       >
