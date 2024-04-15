@@ -29,12 +29,13 @@ const PostDetails = ({ post }: { post?: PostType }) => {
     queryKey: ['comments', comments],
     queryFn: () => fetchRequest(`posts/get-comments/${postId}/`),
     onSuccess: (data) => {
-      setComments(data.data);
+      const comments: CommentType[] = data.data;
+      setComments(
+        comments.sort((a, b) => b.created_at.localeCompare(a.created_at))
+      );
     },
     enabled: !!post,
   });
-
-  console.log('comments', comments);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {

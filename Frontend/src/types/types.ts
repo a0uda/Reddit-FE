@@ -116,3 +116,11 @@ export type CommentType = {
     spammed_type: string;
   };
 };
+
+export type CommunityType = {
+  id: string;
+  name: string;
+  profile_picture: string;
+  favorite_flag: boolean;
+  members_count: number;
+};

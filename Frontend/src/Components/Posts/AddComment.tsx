@@ -235,7 +235,6 @@ const MenuFooter = ({
                 return;
               }
               const html = editor.getHTML();
-              console.log(html);
               addCommentMuation.mutate(html);
               setFocused(false);
             }}

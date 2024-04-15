@@ -286,7 +286,67 @@ app.patch("/users/change-chats-and-msgs-settings", (req, res) => {
   res.sendStatus(200);
 });
 
-let users = [];
+let users = [
+  {
+    _id: "661a2c3fab10a4b012e8f59a",
+    username: "m",
+    created_at: "2024-04-13T06:53:20.537Z",
+    email: "me22@gmail.com",
+    verified_email_flag: false,
+    connected_google: false,
+    display_name: "m",
+    about: "",
+    social_links: [],
+    profile_picture: "",
+    banner_picture: "",
+    gender: "Female",
+  },
+  {
+    _id: "661a2c3fab10a4b012e8f59b",
+    username: "n",
+    created_at: "2024-04-14T06:53:20.537Z",
+    email: "ne22@gmail.com",
+    verified_email_flag: false,
+    connected_google: false,
+    display_name: "n",
+    about: "",
+    social_links: [],
+    profile_picture: "",
+    banner_picture: "",
+    gender: "Male",
+  },
+  {
+    _id: "661a2c3fab10a4b012e8f59c",
+    username: "o",
+    created_at: "2024-04-15T06:53:20.537Z",
+    email: "oe22@gmail.com",
+    verified_email_flag: false,
+    connected_google: false,
+    display_name: "o",
+    about: "",
+    social_links: [],
+    profile_picture: "",
+    banner_picture: "",
+    gender: "Female",
+  },
+  {
+    id: "user-1",
+    created_at: "2024-01-01",
+    username: "JohnDoe",
+    email: "john.doe@example.com",
+    verified_email_flag: "true",
+    gmail: "john.doe@gmail.com",
+    facebook_email: null,
+    display_name: "John Doe",
+    about: "I love creating content!",
+    social_links: [],
+    profile_picture: "profile.jpg",
+    banner_picture: null,
+    country: "US",
+    gender: "male",
+    connected_google: true,
+  },
+];
 
 app.post("/users/signup", (req, res) => {
   const { username, email, password } = req.body;
@@ -297,7 +357,7 @@ app.post("/users/signup", (req, res) => {
     password,
   };
   users.push(newUser);
-  const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1h" });
+  const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1d" });
   res.status(201).json({ message: "User created successfully", token });
 });
 
@@ -1525,7 +1585,7 @@ let userAbout = {
     },
   ],
 };
-app.get("/users/about", (req, res) => {
+app.get("/users/about/", (req, res) => {
   res.status(200).json(userAbout);
 });
 
@@ -1553,11 +1613,34 @@ app.get("/users/overview", (req, res) => {
   res.status(200).json(postsListings);
 });
 
-app.get("/users/about/:id", (req, res) => {
-  const { id } = req.params;
-  const user = users.find((user) => user.id === id);
+app.get("/users/about/:username", (req, res) => {
+  const { username } = req.params;
+  console.log("username", username);
+  const user = users.find((user) => user.username === username);
   if (!user) return res.status(404).json({ message: "User not found" });
-  res.status(200).json(post);
+  res.status(200).json(user);
+});
+
+const getAuthUsername = (req) => {
+  const token = req.headers?.token;
+  console.log("req.headers", req.headers);
+  console.log("token", token);
+
+  if (!token) return null;
+
+  const decodedToken = jwt.verify(token, "RedditToken@");
+  const username = decodedToken.username;
+
+  return username;
+};
+
+app.get("/users/communities", (req, res) => {
+  // const username = getAuthUsername(req);
+  // if (!username) {
+  //   return res.status(401).json({ message: "Unauthorized" });
+  // }
+
+  res.status(200).json(communities);
 });
 
 // * Post
@@ -1582,15 +1665,11 @@ app.get("/posts/get-comments/:id", (req, res) => {
 app.post("/comments/new-comment", (req, res) => {
   const { id, description } = req.body;
 
-  // const token = req.headers.Authorization?.split(" ")[1];
-  const token = req.headers?.token;
-  console.log("req.headers", req.headers);
-  console.log("token", token);
-
-  if (!token) return res.status(401).json({ message: "Unauthorized user." });
-
-  const decodedToken = jwt.verify(token, "RedditToken@");
-  const username = decodedToken.username;
+  const username = getAuthUsername(req);
+  console.log("username", username);
+  if (!username) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
   console.log("username", username);
   const commentId = crypto.randomUUID();
@@ -1629,7 +1708,7 @@ app.post("/comments/new-comment", (req, res) => {
   res.status(200).json({ message: "Comment added successfully." });
 });
 
-let Commiunities = [
+let communities = [
   {
     name: "sports",
     title: "Reddit Sports",
@@ -1661,7 +1740,7 @@ let Commiunities = [
 //(return the community details by passing the community name as a prameter in the path)
 app.get("/communities/:communityName", (req, res) => {
   const { communityName } = req.params;
-  const community = Commiunities.find(
+  const community = communities.find(
     (community) => community.name === communityName
   );
   if (community) {
