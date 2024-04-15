@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 
 const Sent = () => {
-  const { data, error, isLoading } = useQuery('unreadMessages', () =>
+  const { data, error, isLoading, refetch } = useQuery('unreadMessages', () =>
     fetchRequest('messages/unread')
   );
   console.log(data);
@@ -31,6 +31,10 @@ const Sent = () => {
               messageId={mess['_id']}
               key={mess['_id']}
               senderVia={mess['senderVia']}
+              refetch={refetch}
+              parentMessageId={mess['parentMessageId']}
+              query='unreadMessages'
+
             />
           ))}
         {/* <Message type='message' />

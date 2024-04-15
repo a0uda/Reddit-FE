@@ -3,29 +3,33 @@ import './assets/css/Layout.css';
 import UserSettings from './Pages/UserSettings/UserSettings';
 import NavigationBar from './Components/NavigationBar.tsx';
 import Mainfeed from './Pages/Mainfeed.tsx';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import OfflineAlert from './Components/OfflineAlert.tsx';
-import { AuthProvider } from './Providers/AuthProvider.tsx';
 import MessageRouter from './Pages/Messaging/MessageRouter.tsx';
+import useSession from './hooks/auth/useSession.tsx';
 
 function App() {
+  const { status } = useSession();
+  const HandleRoutes = (props: { element: JSX.Element }) =>
+    status !== 'authenticated' ? <Mainfeed /> : props.element;
   return (
-    <AuthProvider>
-      <GoogleOAuthProvider clientId='178664293995-s6s92s28mme4eu54lg367sqhnj8bonff.apps.googleusercontent.com'>
-        <div className='App'>
-          <Router>
-            <OfflineAlert />
-            <NavigationBar />
-            <Routes>
-              <Route path={'/'} element={<Mainfeed />} />
-              <Route path={'/:sortOption'} element={<Mainfeed />} />
-              <Route path='/settings/:page' element={<UserSettings />} />
-              <Route path='/message/*' element={<MessageRouter />} />
-            </Routes>
-          </Router>
-        </div>
-      </GoogleOAuthProvider>
-    </AuthProvider>
+    <div className='App'>
+      <Router>
+        <OfflineAlert />
+        <NavigationBar />
+        <Routes>
+          <Route path={'/'} element={<Mainfeed />} />
+          <Route path={'/:sortOption'} element={<Mainfeed />} />
+          <Route
+            path='/settings/:page'
+            element={<HandleRoutes element={<UserSettings />} />}
+          />
+          <Route
+            path='/message/*'
+            element={<HandleRoutes element={<MessageRouter />} />}
+          />
+        </Routes>
+      </Router>
+    </div>
   );
 }
 
