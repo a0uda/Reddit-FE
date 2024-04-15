@@ -71,7 +71,13 @@ const postRequest = async ({
       token: response.headers['authorization'],
     };
   } catch (error) {
-    throw new Error(error.response.data);
+    // console.log(error.response);
+    const errorMessage =
+      typeof error.response === 'object'
+        ? JSON.stringify(error.response)
+        : error.response;
+
+    throw new Error(errorMessage);
   }
 };
 

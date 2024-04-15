@@ -15,6 +15,9 @@ import {
   getTimeDifferenceAsString,
   addPrefixToUsername,
 } from '../../../utils/helper_functions';
+import { useMutation, useQueryClient } from 'react-query';
+import { postRequest } from '../../../API/User';
+import { useAlert } from '../../../Providers/AlertProvider';
 
 function Butt(props: {
   buttonText: string;
@@ -45,6 +48,9 @@ export const ReportModal = (props: {
   handleOpen: () => void;
   open: boolean;
   handleThankyouModal: () => void;
+  senderUsername: string;
+  senderType: string;
+  messageId: string;
 }) => {
   const reportMsgArr = [
     'Harassment',
@@ -85,6 +91,7 @@ export const ReportModal = (props: {
     Spam: 'Repeated, unwanted, or unsolicited manual or automated actions that negatively affect redditors, communities, and the Reddit platform.',
   };
   const [chosenMsg, setChosenMsg] = React.useState('');
+  const postReq = useMutation(postRequest);
 
   return (
     <>
@@ -154,9 +161,24 @@ export const ReportModal = (props: {
                 buttonTextColor='text-white font-bold px-8'
                 disabled={!chosenMsg}
                 onClick={() => {
-                  setChosenMsg('');
-                  props.handleThankyouModal();
-                  props.handleOpen();
+                  postReq.mutate(
+                    {
+                      endPoint: 'messages/report-msg',
+                      data: {
+                        report: chosenMsg,
+                        sender_username: props.senderUsername,
+                        sender_type: props.senderType,
+                        _id: props.messageId,
+                      },
+                    },
+                    {
+                      onSuccess: () => {
+                        setChosenMsg('');
+                        props.handleThankyouModal();
+                        props.handleOpen();
+                      },
+                    }
+                  );
                 }}
               />
             </div>
@@ -171,7 +193,11 @@ export const ThankYouModal = (props: {
   handleOpen: () => void;
   open: boolean;
   senderUsername: string;
+  query: string;
 }) => {
+  const postReq = useMutation(postRequest);
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+  const queryClient = useQueryClient();
   return (
     <>
       <Dialog size='md' open={props.open} handler={props.handleOpen}>
@@ -230,7 +256,35 @@ export const ThankYouModal = (props: {
               </div>
             </div>
             <div className='flex items-center justify-center'>
-              <SwitchButton checked={false} />
+              <SwitchButton
+                checked={false}
+                onChange={(value) => {
+                  console.log(value);
+                  postReq.mutate(
+                    {
+                      endPoint: 'users/block-unblock-user',
+                      data: {
+                        block: value,
+                        blocked_username: props.senderUsername,
+                      },
+                    },
+                    {
+                      onSuccess: () => {
+                        setTrigger(!trigger);
+                        setIsError(false);
+                        setAlertMessage('User blocked successfully!');
+                      },
+                      onError: () => {
+                        setTrigger(!trigger);
+                        setIsError(true);
+                        setAlertMessage(
+                          'An error ocurred while blocking user!'
+                        );
+                      },
+                    }
+                  );
+                }}
+              />
             </div>
           </div>
         </DialogBody>
@@ -240,7 +294,10 @@ export const ThankYouModal = (props: {
             buttonColor='bg-blue-light'
             buttonText='DONE'
             buttonTextColor='text-white font-bold px-8'
-            onClick={props.handleOpen}
+            onClick={() => {
+              props.handleOpen();
+              queryClient.invalidateQueries(props.query);
+            }}
           />
         </DialogFooter>
       </Dialog>
@@ -263,9 +320,13 @@ const Message = (props: {
   senderVia?: string;
   messageContent: string;
   messageId: string;
+  parentMessageId: string;
+  refetch: () => void;
+  query?: string;
 }) => {
   const [msgUnread, setMsgUnead] = React.useState(props.unread);
   const [reply, setReply] = React.useState('');
+  const [replyValid, setReplyValid] = React.useState(true);
   const [replyBool, setReplyBool] = React.useState(false);
   const [deleteBool, setDeleteBool] = React.useState(false);
   const [blockBool, setBlockeBool] = React.useState(false);
@@ -273,6 +334,9 @@ const Message = (props: {
   const [thankyouModal, setThankyouModal] = React.useState(false);
   const [isExpandedAll, setIsExpandedAll] = React.useState(true);
   const [isExpandedMain, setIsExpandedMain] = React.useState(true);
+
+  const postReq = useMutation(postRequest);
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
 
   const handleThankyouModal = () => {
     setThankyouModal(!thankyouModal);
@@ -346,7 +410,10 @@ const Message = (props: {
             <span>
               {' '}
               from{' '}
-              <Link to='/' className='text-[#80bce9] hover:underline'>
+              <Link
+                to={`/${props.sendType === 'user' ? 'user/' + props.sendUsername : addPrefixToUsername(props.sendUsername, props.sendType)}`}
+                className='text-[#80bce9] hover:underline'
+              >
                 {addPrefixToUsername(props.sendUsername, props.sendType)}
               </Link>{' '}
             </span>
@@ -355,7 +422,10 @@ const Message = (props: {
             <span>
               {' '}
               to{' '}
-              <Link to='/' className='text-[#80bce9] hover:underline'>
+              <Link
+                to={`/${props.recType === 'user' ? 'user/' + props.recUsername : addPrefixToUsername(props.recUsername, props.recType)}`}
+                className='text-[#80bce9] hover:underline'
+              >
                 {addPrefixToUsername(props.recUsername, props.recType)}
               </Link>{' '}
             </span>
@@ -364,11 +434,17 @@ const Message = (props: {
             <span>
               {' '}
               via{' '}
-              <Link className='text-[#228822] hover:underline' to='/'>
+              <Link
+                className='text-[#228822] hover:underline'
+                to={`/${addPrefixToUsername(props.sendVia || '', 'moderator')}`}
+              >
                 {addPrefixToUsername(props.sendVia || '', 'moderator')}
               </Link>
               {' ['}
-              <Link to='/' className='text-[#80bce9] hover:underline'>
+              <Link
+                to={`/${addPrefixToUsername(props.sendVia || '', 'moderator')}/about/moderators`}
+                className='text-[#80bce9] hover:underline'
+              >
                 M
               </Link>
               {'] '}
@@ -392,7 +468,11 @@ const Message = (props: {
         <>
           <div className='flex gap-3'>
             <div className='border-2 border-blue-light rounded-[10px] px-3 font-bold text-blue-light'>
-              {addPrefixToUsername(props.senderUsername, props.senderType)}
+              <Link
+                to={`/${props.senderType === 'user' ? 'user/' + props.senderUsername : addPrefixToUsername(props.senderUsername, props.senderType)}`}
+              >
+                {addPrefixToUsername(props.senderUsername, props.senderType)}
+              </Link>
             </div>
             <h3 className='font-bold'>{props.subject}:</h3>
           </div>
@@ -441,7 +521,10 @@ const Message = (props: {
             <span>
               {' '}
               from{' '}
-              <Link to='/' className='text-[#80bce9] hover:underline'>
+              <Link
+                to={`/${props.senderType === 'user' ? 'user/' + props.senderUsername : addPrefixToUsername(props.senderUsername, props.senderType)}`}
+                className='text-[#80bce9] hover:underline'
+              >
                 {addPrefixToUsername(props.senderUsername, props.senderType)}
               </Link>{' '}
             </span>
@@ -450,7 +533,10 @@ const Message = (props: {
             <span>
               {' '}
               to{' '}
-              <Link to='/' className='text-[#80bce9] hover:underline'>
+              <Link
+                to={`/${props.receiverType === 'user' ? 'user/' + props.receiverUsername : addPrefixToUsername(props.receiverUsername, props.receiverType)}`}
+                className='text-[#80bce9] hover:underline'
+              >
                 {addPrefixToUsername(
                   props.receiverUsername,
                   props.receiverType
@@ -462,11 +548,17 @@ const Message = (props: {
             <span>
               {' '}
               via{' '}
-              <Link className='text-[#228822] hover:underline' to='/'>
+              <Link
+                className='text-[#228822] hover:underline'
+                to={`/${addPrefixToUsername(props.senderVia || '', 'moderator')}`}
+              >
                 {addPrefixToUsername(props.senderVia || '', 'moderator')}
               </Link>
               {' ['}
-              <Link to='/' className='text-[#80bce9] hover:underline'>
+              <Link
+                to={`/${addPrefixToUsername(props.senderVia || '', 'moderator')}/about/moderators`}
+                className='text-[#80bce9] hover:underline'
+              >
                 M
               </Link>
               {'] '}
@@ -491,7 +583,25 @@ const Message = (props: {
                 ) : (
                   <li className='text-danger-red font-normal'>
                     are you sure?{' '}
-                    <span className=' cursor-pointer hover:underline text-[#888] font-bold'>
+                    <span
+                      onClick={() => {
+                        postReq.mutate(
+                          {
+                            endPoint: 'messages/del-msg',
+                            data: {
+                              _id: props.messageId,
+                              deleted_at: new Date(),
+                            },
+                          },
+                          {
+                            onSuccess: () => {
+                              props.refetch();
+                            },
+                          }
+                        );
+                      }}
+                      className=' cursor-pointer hover:underline text-[#888] font-bold'
+                    >
                       Yes
                     </span>{' '}
                     /{' '}
@@ -509,11 +619,15 @@ const Message = (props: {
                 handleOpen={handleReportModal}
                 open={reportModal}
                 handleThankyouModal={handleThankyouModal}
+                messageId={props.messageId}
+                senderType={props.senderType}
+                senderUsername={props.senderUsername}
               />
               <ThankYouModal
                 handleOpen={handleThankyouModal}
                 open={thankyouModal}
                 senderUsername={props.senderUsername}
+                query={props.query || ''}
               />
               {!props.isSent && (
                 <li
@@ -538,7 +652,35 @@ const Message = (props: {
                 ) : (
                   <li className='text-danger-red font-normal'>
                     are you sure?{' '}
-                    <span className=' cursor-pointer hover:underline text-[#888] font-bold'>
+                    <span
+                      onClick={() => {
+                        postReq.mutate(
+                          {
+                            endPoint: 'users/block-unblock-user',
+                            data: {
+                              block: true,
+                              blocked_username: props.senderUsername,
+                            },
+                          },
+                          {
+                            onSuccess: () => {
+                              props.refetch();
+                              setTrigger(!trigger);
+                              setIsError(false);
+                              setAlertMessage('User blocked successfully!');
+                            },
+                            onError: () => {
+                              setTrigger(!trigger);
+                              setIsError(true);
+                              setAlertMessage(
+                                'An error ocurred while blocking user!'
+                              );
+                            },
+                          }
+                        );
+                      }}
+                      className=' cursor-pointer hover:underline text-[#888] font-bold'
+                    >
                       Yes
                     </span>{' '}
                     /{' '}
@@ -584,9 +726,66 @@ const Message = (props: {
               }}
               className='w-[25rem] h-[6rem] mt-7 p-2 border-[1px] border-gray-500'
             ></textarea>
+            {!replyValid && (
+              <p className='text-danger-red text-sm'>We Need Something Here</p>
+            )}
             <div className='flex gap-2 mt-2'>
               <Button
-                // onClick={handleOnClick}
+                onClick={() => {
+                  setReplyValid(true);
+                  if (!reply) {
+                    setReplyValid(false);
+                    return;
+                  }
+                  let senderUsername;
+                  let senderType;
+                  let senderVia;
+                  let recUsername;
+                  let recType;
+                  if (props.isSent) {
+                    senderUsername = props.senderUsername;
+                    senderType = props.senderType;
+                    senderVia = props.senderVia;
+                    recUsername = props.receiverUsername;
+                    recType = props.receiverType;
+                  } else {
+                    senderUsername = props.receiverUsername;
+                    senderType = props.receiverType;
+                    senderVia = props.receiverUsername;
+                    recUsername = props.senderUsername;
+                    recType = props.senderType;
+                  }
+                  console.log(props.parentMessageId || props.messageId);
+
+                  postReq.mutate(
+                    {
+                      endPoint: 'messages/reply',
+                      data: {
+                        sender_username: senderUsername,
+                        sender_type: senderType,
+                        senderVia: senderVia,
+                        receiver_username: recUsername,
+                        receiver_type: recType,
+                        message: reply,
+                        created_at: new Date(),
+                        deleted_at: null,
+                        unread_flag: false,
+                        isSent: true,
+                        isReply: true,
+                        parentMessageId:
+                          props.parentMessageId || props.messageId,
+                        subject: props.subject,
+                      },
+                    },
+                    {
+                      onSuccess: () => {
+                        setReplyBool(false);
+                        setReply('');
+                        props.refetch();
+                      },
+                    }
+                  );
+                }}
                 className='rounded-sm bg-blue-light text-[1rem] px-4 py-1 uppercase'
               >
                 save

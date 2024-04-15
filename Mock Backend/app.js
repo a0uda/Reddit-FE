@@ -291,7 +291,7 @@ app.patch("/users/change-chats-and-msgs-settings", (req, res) => {
   res.sendStatus(200);
 });
 
-let users = [];
+let users = [{ username: 'username', password: 'password' }];
 
 app.post("/users/signup", (req, res) => {
   const { username, email, password } = req.body;
@@ -1104,7 +1104,7 @@ app.post("/posts-or-comments/vote", (req, res) => {
   res.sendStatus(200);
 });
 
-const sentMessages = [
+let sentMessages = [
   {
     "_id": "5da454f4307b0a8b30838839",
     "sender_username": "ahmed",
@@ -1199,7 +1199,7 @@ const sentMessages = [
 
 
 ]
-const recievedMessages = [
+let recievedMessages = [
   {
     "_id": "5daqq4f4307b0a8b30838839",
     "sender_username": "aww",
@@ -1434,3 +1434,63 @@ app.get('/users/moderated-communities', (req, res) => {
   });
 
 })
+
+app.post('/messages/compose/', (req, res) => {
+  let c = 0;
+  console.log(req.body, 'compose');
+  sentMessages.push({
+    ...req.body, "isSent": true,
+    "isReply": false,
+    "parentMessageId": null,
+    "_id": c
+    // "subject": "header 5",
+  })
+  c++;
+
+  res.sendStatus(200);
+
+
+})
+
+app.post('/messages/reply', (req, res) => {
+  let c = 100;
+  console.log(req.body, 'compose');
+  sentMessages.push({
+    ...req.body,
+    "_id": c
+    // "subject": "header 5",
+  })
+  c++;
+
+  res.sendStatus(200);
+
+
+})
+
+app.post('/messages/del-msg', (req, res) => {
+
+  console.log(req.body, 'delmsg');
+  recievedMessages = recievedMessages.filter(message => message._id !== req.body['_id'] && message.parentMessageId !== req.body['_id']);
+  sentMessages = sentMessages.filter(message => message.parentMessageId !== req.body['_id']);
+
+
+
+  res.sendStatus(200);
+
+
+})
+app.post('/messages/report-msg', (req, res) => {
+
+  console.log(req.body, 'repmsg');
+  recievedMessages = recievedMessages.filter(message => message._id !== req.body['_id'] && message.parentMessageId !== req.body['_id']);
+  sentMessages = sentMessages.filter(message => message.parentMessageId !== req.body['_id']);
+
+
+
+  res.sendStatus(200);
+
+
+})
+
+
+

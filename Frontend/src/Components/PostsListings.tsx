@@ -34,7 +34,7 @@ const PostsListings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption]);
 
-  console.log('response', response.isError);
+  console.log('response', response);
 
   return (
     <>
@@ -48,7 +48,7 @@ const PostsListings = () => {
       <LoadingProvider error={response.isError} isLoading={response.isLoading}>
         {response.isSuccess && (
           <>
-            {response.data.data.posts.map((post: PostType) => (
+            {response.data.data.map((post: PostType) => (
               <Post key={post.id} post={post} />
             ))}
           </>

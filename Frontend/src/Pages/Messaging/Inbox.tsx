@@ -5,7 +5,7 @@ import { fetchRequest } from '../../API/User';
 import PostReply from './Containers/PostReply';
 
 const Sent = () => {
-  const { data, error, isLoading } = useQuery('unreadMessages', () =>
+  const { data, error, isLoading, refetch } = useQuery('inbox', () =>
     fetchRequest('messages/inbox')
   );
   console.log(data);
@@ -35,6 +35,9 @@ const Sent = () => {
                   messageId={mess['_id']}
                   key={mess['_id']}
                   senderVia={mess['senderVia']}
+                  refetch={refetch}
+                  parentMessageId={mess['parentMessageId']}
+                  query='inbox'
                 />
               );
             } else {

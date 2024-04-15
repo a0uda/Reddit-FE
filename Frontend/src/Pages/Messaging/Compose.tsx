@@ -1,29 +1,52 @@
 import React from 'react';
 import ContentContainer from './Containers/ContentContainer';
 import { Button } from '@material-tailwind/react';
-import { useQuery } from 'react-query';
-import { fetchRequest } from '../../API/User';
+import { useMutation, useQuery } from 'react-query';
+import { fetchRequest, postRequest } from '../../API/User';
 import { addPrefixToUsername } from '../../utils/helper_functions';
+import useSession from '../../hooks/auth/useSession';
 
 const Compose = () => {
-  const [from, setFrom] = React.useState('');
+  const { user } = useSession();
+  const [from, setFrom] = React.useState(user?.username);
   const [to, setTo] = React.useState('');
   const [subject, setSubject] = React.useState('');
   const [message, setMessage] = React.useState('');
-  const [fromBool, setfromBool] = React.useState(true);
+  const [fromBool, setfromBool] = React.useState(false);
   const [toBool, setToBool] = React.useState(false);
   const [subjectBool, setSubjectBool] = React.useState(false);
   const [messageBool, setMessageBool] = React.useState(false);
+  const [toFeedback, setToFeedback] = React.useState('');
+  React.useEffect(() => {
+    setFrom(user?.username);
+  }, [user]);
+
   const getCommResponse = useQuery('getCommunities', () =>
     fetchRequest('users/moderated-communities')
   );
+
+  const postReq = useMutation(postRequest, {
+    onSuccess: () => {},
+    onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+      if (errorObj.status == 400) {
+        setToFeedback(
+          "Hmm, that community doesn't exist. Try checking the spelling."
+        );
+        setToBool(true);
+      }
+      // Handle the error here
+    },
+  });
 
   const handleOnClick = () => {
     setToBool(false);
     setSubjectBool(false);
     setMessageBool(false);
+    setfromBool(false);
 
     if (!to) {
+      setToFeedback('Please Enter a Username');
       setToBool(true);
       return;
     }
@@ -35,6 +58,35 @@ const Compose = () => {
       setMessageBool(true);
       return;
     }
+    const moderatedCommunityNames =
+      getCommResponse.data?.data.moderated_communities.map((com) => com.name);
+    console.log(moderatedCommunityNames, 'mmmmm');
+    const senderType = moderatedCommunityNames.includes(from)
+      ? 'moderator'
+      : 'user';
+    const recType = to.includes('r/') ? 'moderator' : 'user';
+    if (senderType == 'moderator' && recType == 'moderator') {
+      setFrom("You can't send a message from a Subreddit to another Subreddit");
+      setfromBool(true);
+      return;
+    }
+    const splitted = to.split('/');
+    const recUsername = splitted[splitted.length - 1];
+    postReq.mutate({
+      endPoint: 'messages/compose/',
+      data: {
+        sender_username: from,
+        sender_type: senderType,
+        receiver_username: recUsername,
+        receiver_type: recType,
+        subject: subject,
+        message: message,
+        created_at: new Date(),
+        deleted_at: null,
+        unread_flag: false,
+        senderVia: from,
+      },
+    });
   };
 
   return (
@@ -48,11 +100,15 @@ const Compose = () => {
             onChange={(e) => {
               setFrom(e.target.value);
             }}
+            // defaultValue={user?.username}
             className='w-[27rem] p-1 text-lg border-[1px] border-gray-500'
           >
+            <option value={user?.username}>
+              {addPrefixToUsername(user?.username || '', 'user')}
+            </option>
             {getCommResponse.data?.data.moderated_communities &&
               getCommResponse.data?.data.moderated_communities.map((com, i) => (
-                <option key={com.name}>
+                <option key={com.name} value={com.name}>
                   {addPrefixToUsername(com.name, 'moderator')}
                 </option>
               ))}
@@ -82,9 +138,7 @@ const Compose = () => {
             type='text'
             className='w-[27rem] p-1 text-lg border-[1px] border-gray-500'
           />
-          {toBool && (
-            <p className='text-danger-red text-sm'>Please Enter a Username</p>
-          )}
+          {toBool && <p className='text-danger-red text-sm'>{toFeedback}</p>}
         </div>
         <div className='mb-3'>
           <p className='text-lg'>subject</p>
@@ -120,15 +174,15 @@ const Compose = () => {
           >
             Send
           </Button>
-          {/* <span className='font-normal text-sm'>
-            {isLoading
+          <span className='font-normal text-sm'>
+            {postReq.isLoading
               ? 'Submitting'
-              : error
+              : postReq.error
                 ? 'An error occured while submitting message'
-                : data
+                : postReq.data
                   ? 'Message delivered successfully'
                   : ''}
-          </span> */}
+          </span>
         </div>
       </div>
     </ContentContainer>
