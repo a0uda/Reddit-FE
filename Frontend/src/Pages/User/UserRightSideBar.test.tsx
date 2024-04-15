@@ -1,4 +1,3 @@
-/// <reference types="@testing-library/jest-dom" />
 jest.mock('../../assets/facebookIcon.svg', () => 'facebookIcon');
 jest.mock('../../assets/instagramIcon.svg', () => 'instagramIcon');
 jest.mock('../../API/User', () => ({
@@ -6,42 +5,66 @@ jest.mock('../../API/User', () => ({
   fetchRequest: jest.fn(), // Mocking the fetchRequest function
   postRequest: jest.fn(), // Mocking the postRequest function
 }));
-import { render, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import UserRightSideBar from './UserRightSideBar';
+import { BrowserRouter } from 'react-router-dom';
+import '@testing-library/jest-dom';
+
+import { QueryClient, QueryClientProvider } from 'react-query';
+const queryClient = new QueryClient();
 
 describe('UserRightSideBar', () => {
-  let handleJoin: jest.Mock;
-  let handleLeave: jest.Mock;
+  it('renders correctly', () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <UserRightSideBar />
+        </BrowserRouter>
+      </QueryClientProvider>
+    );
 
-  beforeEach(() => {
-    handleJoin = jest.fn();
-    handleLeave = jest.fn();
+    const profileElements = screen.queryAllByText(/profile/i);
+    expect(profileElements).toHaveLength(3);
+    expect(profileElements[0]).toBeInTheDocument();
+
+    const moderationElements = screen.getAllByText(/Moderation/i);
+    expect(moderationElements).toHaveLength(2);
+    expect(moderationElements[0]).toBeInTheDocument();
+
+    const communitiesElements = screen.getAllByText(
+      /YOU'RE A MODERATOR OF THESE COMMUNITIES/i
+    );
+    expect(communitiesElements).toHaveLength(1);
+    expect(communitiesElements[0]).toBeInTheDocument();
+
+    const linksElements = screen.getAllByText(/Links/i);
+    expect(linksElements).toHaveLength(1);
+    expect(linksElements[0]).toBeInTheDocument();
   });
 
-  //   it('renders correctly', () => {
-  //     render(<UserRightSideBar />);
-
-  //     expect(screen.getByText(/profile/i)).toBeInTheDocument();
-  //     expect(screen.getByText(/Moderation/i)).toBeInTheDocument();
-  //     expect(screen.getByText(/Links/i)).toBeInTheDocument();
-  //     expect(
-  //       screen.getByText(/YOU'RE A MODERATOR OF THESE COMMUNITIES/i)
-  //     ).toBeInTheDocument();
-  //   });
-
-  it('calls handleJoin when "join" button is clicked', () => {
-    const { getByText } = render(<UserRightSideBar />);
-
-    fireEvent.click(getByText('join'));
-
-    expect(handleJoin).toHaveBeenCalled();
+  it('navigates to the specified destination when "Add Social Link" is clicked', () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <UserRightSideBar />
+        </BrowserRouter>
+      </QueryClientProvider>
+    );
+    const addSocialLink = screen.getByText('Add Social Link');
+    fireEvent.click(addSocialLink);
+    expect(window.location.pathname).toBe('/settings/profile');
   });
 
-  it('calls handleLeave when "leave" button is clicked', () => {
-    const { getByText } = render(<UserRightSideBar />);
-
-    fireEvent.click(getByText('leave'));
-
-    expect(handleLeave).toHaveBeenCalled();
+  it('navigates to the specified destination when "Edit Profile" is clicked', () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <UserRightSideBar />
+        </BrowserRouter>
+      </QueryClientProvider>
+    );
+    const EditProfile = screen.getByText('Edit profile');
+    fireEvent.click(EditProfile);
+    expect(window.location.pathname).toBe('/settings/profile');
   });
 });

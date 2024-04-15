@@ -18,6 +18,7 @@ export default withMT({
     extend: {
       height: {
         navbar: 'var(--navbar-height)',
+      },
       blur: {
         'custom-blur': '10px',
       },

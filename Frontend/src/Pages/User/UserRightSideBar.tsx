@@ -132,7 +132,6 @@ function UserRightSideBar() {
           />
           <div className='absolute bottom-2 right-2 '>
             <Link
-              //   to be changed to mod setting later ree
               to={`/settings/profile`}
               className='flex rounded-full border text-xs bg-white'
             >
