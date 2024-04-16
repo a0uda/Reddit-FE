@@ -5,8 +5,8 @@ import { fetchRequest } from '../../API/User';
 import useSession from '../../hooks/auth/useSession';
 
 interface Suggestion {
-  community_name: string;
-  image_url: string;
+  name: string;
+  profile_picture: string;
 }
 
 interface Props {
@@ -24,7 +24,7 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
   const searchBarRef = useRef<HTMLDivElement>(null);
 
   const { data } = useQuery('suggestions', () =>
-    fetchRequest('submit/communities')
+    fetchRequest('users/communities')
   );
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
     setSearchQuery(value);
     if (data && Array.isArray(data.data)) {
       const filteredSuggestions = data.data.filter((suggestion) =>
-        suggestion.community_name.toLowerCase().includes(value.toLowerCase())
+        suggestion.name.toLowerCase().includes(value.toLowerCase())
       );
       setSuggestions(filteredSuggestions);
     }
@@ -49,10 +49,10 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
   };
 
   const handleOptionClick = (suggestion: Suggestion) => {
-    setSearchQuery(suggestion.community_name);
-    setImageQuery(suggestion.image_url);
+    setSearchQuery(suggestion.name);
+    setImageQuery(suggestion.profile_picture);
     setShowSuggestions(false);
-    setFieldValue('community_name', suggestion.community_name);
+    setFieldValue('community_name', suggestion.name);
     setFieldValue('post_in_community_flag', true.toString());
   };
   const handleOptionClickUser = (user: {
@@ -137,25 +137,26 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
 
       {showSuggestions && (
         <ul className='absolute z-10 mt-12 w-full bg-white divide-y divide-gray-200 rounded-lg shadow-lg dark:bg-gray-700 dark:divide-gray-600'>
-          <div className='m-2 ps-4 text-xs text-gray-600'>YOUR PROFILE</div>
-
           {user ? (
-            <li
-              onClick={() => handleOptionClickUser(user)}
-              className='flex items-start gap-4 p-2 m-0 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer'
-            >
-              <div className='flex flex-row gap-2'>
-                <Avatar
-                  variant='circular'
-                  alt={user.imageUrl}
-                  src={user.imageUrl}
-                  className='w-8 h-8'
-                />
-                <p className='font-body font-bold tracking-tight text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 dark:text-gray-200 line-clamp-2 overflow-hidden text-ellipsis'>
-                  {user.username}
-                </p>
-              </div>
-            </li>
+            <>
+              <div className='m-2 ps-4 text-xs text-gray-600'>YOUR PROFILE</div>
+              <li
+                onClick={() => handleOptionClickUser(user)}
+                className='flex items-start gap-4 p-2 m-0 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer'
+              >
+                <div className='flex flex-row gap-2'>
+                  <Avatar
+                    variant='circular'
+                    alt={user.imageUrl}
+                    src={user.imageUrl}
+                    className='w-8 h-8'
+                  />
+                  <p className='font-body font-bold tracking-tight text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 dark:text-gray-200 line-clamp-2 overflow-hidden text-ellipsis'>
+                    {user.username}
+                  </p>
+                </div>
+              </li>
+            </>
           ) : null}
 
           <div className='m-2 ps-4 text-xs text-gray-600'>YOUR COMMUNITIES</div>
@@ -169,12 +170,12 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
                 <div className='flex flex-row gap-2'>
                   <Avatar
                     variant='circular'
-                    alt={suggestion.community_name}
-                    src={suggestion.image_url}
+                    alt={suggestion.name}
+                    src={suggestion.profile_picture}
                     className='w-8 h-8'
                   />
                   <p className='font-body font-bold tracking-tight text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 dark:text-gray-200 line-clamp-2 overflow-hidden text-ellipsis'>
-                    {suggestion.community_name}
+                    {suggestion.name}
                   </p>
                 </div>
               </li>

@@ -347,38 +347,38 @@ app.post("/users/signup-google", (req, res) => {
 });
 const communitiesPost = [
   {
-    community_id: "1",
-    community_name: "r/announcements",
-    image_url:
+    id: "1",
+    name: "r/announcements",
+    profile_picture:
       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
   },
   {
-    community_id: "2",
-    community_name: "r/annou",
-    image_url:
+    id: "2",
+    name: "r/annou",
+    profile_picture:
       "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
   },
   {
-    community_id: "3",
-    community_name: "r/football",
-    image_url:
+    id: "3",
+    name: "r/football",
+    profile_picture:
       "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
   },
   {
-    community_id: "4",
-    community_name: "r/redditGroup",
-    image_url:
+    id: "4",
+    name: "r/redditGroup",
+    profile_picture:
       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
   },
   {
-    community_id: "5",
-    community_name: "r/testcommunity",
-    image_url:
+    id: "5",
+    name: "r/testcommunity",
+    profile_picture:
       "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
   },
 ];
 
-app.get("/submit/communities", (req, res) => {
+app.get("/users/communities", (req, res) => {
   res.status(200).json(communitiesPost);
 });
 app.post("/posts/new-post", (req, res) => {
