@@ -29,10 +29,10 @@ const Compose = () => {
     onSuccess: () => {},
     onError: (error) => {
       const errorObj = JSON.parse(error.message);
+      console.log(errorObj);
+
       if (errorObj.status == 400) {
-        setToFeedback(
-          "Hmm, that community doesn't exist. Try checking the spelling."
-        );
+        setToFeedback(errorObj.data);
         setToBool(true);
       }
       // Handle the error here

@@ -7,6 +7,9 @@ import { Link } from 'react-router-dom';
 import { ReportModal, ThankYouModal } from './Message';
 import { Button } from '@material-tailwind/react';
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline';
+import { useMutation } from 'react-query';
+import { postRequest } from '../../../API/User';
+import { useAlert } from '../../../Providers/AlertProvider';
 
 const PostReply = (props: {
   createDate: Date;
@@ -19,6 +22,8 @@ const PostReply = (props: {
   unread: boolean;
   commentsCount: number;
   vote: number;
+  query: string;
+  refetch: () => void;
 }) => {
   const [msgUnread, setMsgUnead] = React.useState(props.unread);
   const [reply, setReply] = React.useState('');
@@ -29,8 +34,7 @@ const PostReply = (props: {
   const [reportModal, setReportModal] = React.useState(false);
   const [thankyouModal, setThankyouModal] = React.useState(false);
   const [vote, setVote] = React.useState(props.vote);
-  // const [isExpandedAll, setIsExpandedAll] = React.useState(true);
-  //   const [isExpandedMain, setIsExpandedMain] = React.useState(true);
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
 
   const handleThankyouModal = () => {
     setThankyouModal(!thankyouModal);
@@ -38,6 +42,7 @@ const PostReply = (props: {
   const handleReportModal = () => {
     setReportModal(!reportModal);
   };
+  const postReq = useMutation(postRequest);
   //   React.useEffect(() => {
   //     setIsExpandedMain(isExpandedAll);
   //   }, [isExpandedAll]);
@@ -54,10 +59,17 @@ const PostReply = (props: {
       }}
       className='w-full odd:bg-[#f6f7f8] px-4 py-3'
     >
-      <h3 className='font-bold'>
-        post reply:
-        {' ' + props.postSubject}
-      </h3>
+      <div className='flex gap-4'>
+        <h3 className='font-bold'>
+          {props.query === 'postReplies' ? 'post reply ' : 'username mentions '}
+          :
+        </h3>
+        <h3
+          className={`font-bold ${props.query === 'usernameMentions' && 'text-blue-light'}`}
+        >
+          {props.postSubject}
+        </h3>
+      </div>
       <div className='flex'>
         <div className='pt-3'>
           <ArrowUpIcon
@@ -65,11 +77,28 @@ const PostReply = (props: {
             strokeWidth={4.5}
             className='w-[15px] cursor-pointer'
             onClick={() => {
+              const lastVote = vote;
+              let newVote = vote;
+
               if (vote === 1) {
                 setVote(0);
+                newVote = 0;
               } else {
                 setVote(1);
+                newVote = 1;
               }
+
+              postReq.mutate(
+                {
+                  endPoint: 'posts-or-comments/vote',
+                  data: { id: props.replyId, is_post: false, vote: newVote },
+                },
+                {
+                  onError: () => {
+                    setVote(lastVote);
+                  },
+                }
+              );
             }}
           />
           <ArrowDownIcon
@@ -77,11 +106,30 @@ const PostReply = (props: {
             strokeWidth={4.5}
             className='w-[15px] cursor-pointer'
             onClick={() => {
+              const lastVote = vote;
+              let newVote = vote;
+
               if (vote === -1) {
                 setVote(0);
+                newVote = 0;
               } else {
                 setVote(-1);
+                newVote = -1;
               }
+              // const { id, isPost, rank } = req.body;
+              console.log(newVote);
+
+              postReq.mutate(
+                {
+                  endPoint: 'posts-or-comments/vote',
+                  data: { id: props.replyId, is_post: false, vote: newVote },
+                },
+                {
+                  onError: () => {
+                    setVote(lastVote);
+                  },
+                }
+              );
             }}
           />
         </div>
@@ -95,7 +143,10 @@ const PostReply = (props: {
             <span>
               {' '}
               from{' '}
-              <Link to='/' className='text-[#80bce9] hover:underline'>
+              <Link
+                to={`/user/${props.senderUsername}`}
+                className='text-[#80bce9] hover:underline'
+              >
                 {addPrefixToUsername(props.senderUsername, 'user')}
               </Link>{' '}
             </span>
@@ -103,7 +154,10 @@ const PostReply = (props: {
             <span>
               {' '}
               via{' '}
-              <Link className='text-[#228822] hover:underline' to='/'>
+              <Link
+                className='text-[#228822] hover:underline'
+                to={`/${props.postCreatorType === 'user' ? 'user/' + props.postCreator : addPrefixToUsername(props.postCreator, props.postCreatorType)}`}
+              >
                 {addPrefixToUsername(
                   props.postCreator || '',
                   props.postCreatorType
@@ -123,59 +177,95 @@ const PostReply = (props: {
             <li className='cursor-pointer hover:underline'>
               Full Comments ({props.commentsCount})
             </li>
-            {!spamBool ? (
-              <li
-                onClick={() => {
-                  setSpamBool(true);
-                }}
-                className='cursor-pointer hover:underline'
-              >
-                Spam
-              </li>
-            ) : (
-              <li className='text-danger-red font-normal'>
-                are you sure?{' '}
-                <span className='cursor-pointer hover:underline text-[#888] font-bold'>
-                  Yes
-                </span>{' '}
-                /{' '}
-                <span
-                  className='text-[#888] font-bold cursor-pointer hover:underline'
+            {props.query === 'postReplies' &&
+              (!spamBool ? (
+                <li
                   onClick={() => {
-                    setSpamBool(false);
+                    setSpamBool(true);
                   }}
+                  className='cursor-pointer hover:underline'
                 >
-                  No
-                </span>
-              </li>
-            )}
+                  Spam
+                </li>
+              ) : (
+                <li className='text-danger-red font-normal'>
+                  are you sure?{' '}
+                  <span
+                    onClick={() => {
+                      postReq.mutate(
+                        {
+                          endPoint: 'posts-or-comments/report',
+                          data: {
+                            id: props.replyId,
+                            is_post: false,
+                            reason: 'spam',
+                          },
+                        },
+                        {
+                          onSuccess: () => {
+                            props.refetch();
+                          },
+                        }
+                      );
+                    }}
+                    className='cursor-pointer hover:underline text-[#888] font-bold'
+                  >
+                    Yes
+                  </span>{' '}
+                  /{' '}
+                  <span
+                    className='text-[#888] font-bold cursor-pointer hover:underline'
+                    onClick={() => {
+                      setSpamBool(false);
+                    }}
+                  >
+                    No
+                  </span>
+                </li>
+              ))}
 
-            {!removeBool ? (
-              <li
-                onClick={() => {
-                  setRemoveBool(true);
-                }}
-                className='cursor-pointer hover:underline'
-              >
-                Remove
-              </li>
-            ) : (
-              <li className='text-danger-red font-normal'>
-                are you sure?{' '}
-                <span className=' cursor-pointer hover:underline text-[#888] font-bold'>
-                  Yes
-                </span>{' '}
-                /{' '}
-                <span
-                  className='text-[#888] font-bold cursor-pointer hover:underline'
+            {props.query === 'postReplies' &&
+              (!removeBool ? (
+                <li
                   onClick={() => {
-                    setRemoveBool(false);
+                    setRemoveBool(true);
                   }}
+                  className='cursor-pointer hover:underline'
                 >
-                  No
-                </span>
-              </li>
-            )}
+                  Remove
+                </li>
+              ) : (
+                <li className='text-danger-red font-normal'>
+                  are you sure?{' '}
+                  <span
+                    onClick={() => {
+                      postReq.mutate(
+                        {
+                          endPoint: 'posts-or-comments/delete',
+                          data: { id: props.replyId, is_post: false },
+                        },
+                        {
+                          onSuccess: () => {
+                            props.refetch();
+                          },
+                        }
+                      );
+                    }}
+                    className=' cursor-pointer hover:underline text-[#888] font-bold'
+                  >
+                    Yes
+                  </span>{' '}
+                  /{' '}
+                  <span
+                    className='text-[#888] font-bold cursor-pointer hover:underline'
+                    onClick={() => {
+                      setRemoveBool(false);
+                    }}
+                  >
+                    No
+                  </span>
+                </li>
+              ))}
 
             {
               <li
@@ -189,11 +279,16 @@ const PostReply = (props: {
               handleOpen={handleReportModal}
               open={reportModal}
               handleThankyouModal={handleThankyouModal}
+              id={props.replyId}
+              username={props.senderUsername}
+              type='postReply'
+              senderType='user'
             />
             <ThankYouModal
               handleOpen={handleThankyouModal}
               open={thankyouModal}
               senderUsername={props.senderUsername}
+              query={props.query}
             />
 
             {!blockBool ? (
@@ -208,7 +303,18 @@ const PostReply = (props: {
             ) : (
               <li className='text-danger-red font-normal'>
                 are you sure?{' '}
-                <span className=' cursor-pointer hover:underline text-[#888] font-bold'>
+                <span
+                  onClick={() => {
+                    postReq.mutate(
+                      {
+                        endPoint: `users/block-unblock-user?blocked_username=${props.senderUsername}&block=${true}`,
+                        data: {},
+                      },
+                      { onSuccess: props.refetch }
+                    );
+                  }}
+                  className=' cursor-pointer hover:underline text-[#888] font-bold'
+                >
                   Yes
                 </span>{' '}
                 /{' '}
@@ -254,7 +360,23 @@ const PostReply = (props: {
               ></textarea>
               <div className='flex gap-2 mt-2'>
                 <Button
-                  // onClick={handleOnClick}
+                  onClick={() => {
+                    postReq.mutate(
+                      {
+                        endPoint: 'comments/reply',
+                        data: { id: props.replyId, description: reply },
+                      },
+                      {
+                        onSuccess: () => {
+                          setTrigger(!trigger);
+                          setIsError(false);
+                          setAlertMessage('Reply is added Successfully!');
+                          setReply('');
+                          setReplyBool(false);
+                        },
+                      }
+                    );
+                  }}
                   className='rounded-sm bg-blue-light text-[1rem] px-4 py-1 uppercase'
                 >
                   save
