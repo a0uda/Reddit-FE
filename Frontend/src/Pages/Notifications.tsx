@@ -136,7 +136,7 @@ const Notifications = () => {
           <div>
             <div className='flex items-center gap-2 '>
               <Typography variant='small' color='blue-gray'>
-                {notification.community_name}
+                r/{notification.community_name}
               </Typography>
               <Typography variant='paragraph' className='text-xs text-gray-600'>
                 {getTimeDifference(notification.created_at)}

@@ -245,7 +245,7 @@ const CommunityRules = ({ name: communityName }: CommunityProps) => {
       {rulesList.map((rule: Rule) => (
         <AccordionDropDown
           key={rule.rule_order}
-          id={rule.rule_order}
+          order={rule.rule_order}
           title={rule.rule_title}
           description={rule.full_description}
         />
@@ -304,7 +304,7 @@ const ModeratorItem = ({
               variant='small'
               className='font-body font-thin -tracking-tight text-sm text-gray-900'
             >
-              {name}
+              u/{name}
             </Typography>
           </a>
         </div>
@@ -314,13 +314,13 @@ const ModeratorItem = ({
 };
 
 type AccordionDropDownProps = {
-  id: number;
+  order: number;
   title: string;
   description: string;
 };
 
 const AccordionDropDown = ({
-  id,
+  order,
   title,
   description,
 }: AccordionDropDownProps) => {
@@ -344,7 +344,7 @@ const AccordionDropDown = ({
           >
             <div className='flex gap-4 items-center'>
               <Typography className='mr-auto text-neutral-900 font-light text-sm'>
-                {id}
+                {order}
               </Typography>
               <Typography className='mr-auto text-neutral-900 font-light text-sm'>
                 {title}

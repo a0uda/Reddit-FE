@@ -431,55 +431,55 @@ let popularComunities = [
   {
     id: 1,
     src: "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
-    name: "r/sports",
+    name: "sports",
     membersNumber: 1234,
   },
   {
     id: 2,
     src: "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
-    name: "r/programming",
+    name: "programming",
     membersNumber: 2000,
   },
   {
     id: 3,
     src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
-    name: "r/Music",
+    name: "Music",
     membersNumber: 1500,
   },
   {
     id: 4,
     src: "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
-    name: "r/sports",
+    name: "sports",
     membersNumber: 1000,
   },
   {
     id: 5,
     src: "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
-    name: "r/programming",
+    name: "programming",
     membersNumber: 2000,
   },
   {
     id: 6,
     src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
-    name: "r/Music",
+    name: "Music",
     membersNumber: 1500,
   },
   {
     id: 7,
     src: "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
-    name: "r/sports",
+    name: "sports",
     membersNumber: 1000,
   },
   {
     id: 8,
     src: "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
-    name: "r/programming",
+    name: "programming",
     membersNumber: 2000,
   },
   {
     id: 9,
     src: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
-    name: "r/Music",
+    name: "Music",
     membersNumber: 1500,
   },
 ];
@@ -677,7 +677,7 @@ let notifications = [
     hidden_flag: false,
     type: "message",
     // added //
-    community_name: "r/sports",
+    community_name: "sports",
     communityAvatarSrc:
       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
   },
@@ -693,7 +693,7 @@ let notifications = [
     hidden_flag: false,
     type: "message",
     // added //
-    community_name: "r/sports",
+    community_name: "sports",
     communityAvatarSrc:
       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
   },
@@ -709,7 +709,7 @@ let notifications = [
     hidden_flag: false,
     type: "message",
     // added //
-    community_name: "r/sports",
+    community_name: "sports",
     communityAvatarSrc:
       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
   },
@@ -724,7 +724,7 @@ let notifications = [
     hidden_flag: false,
     type: "comment",
     // added //
-    community_name: "r/programming",
+    community_name: "programming",
     communityAvatarSrc:
       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
   },
@@ -739,7 +739,7 @@ let notifications = [
     hidden_flag: false,
     type: "reply",
     // added //
-    community_name: "r/sports",
+    community_name: "sports",
     communityAvatarSrc:
       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
   },
@@ -754,7 +754,7 @@ let notifications = [
     hidden_flag: false,
     type: "reply",
     // added //
-    community_name: "r/sports",
+    community_name: "sports",
     communityAvatarSrc:
       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
   },
@@ -1750,58 +1750,51 @@ app.get("/communities/:communityName", (req, res) => {
   }
 });
 
-let CommunityModerators = [
+const CommunityModerators = [
   {
     community_name: "sports",
     moderators: [
       {
-        id: 1,
+        username: "FirstModerator",
         profile_picture:
           "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_1.png",
-        username: "u/FirstModerator",
-        approved_at: "2024-03-29",
+        moderator_since: "2024-03-29T00:00:00.000Z",
       },
       {
-        id: 2,
+        username: "SecondModerator",
         profile_picture:
           "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_2.png",
-        username: "u/SecondModerator",
-        approved_at: "2024-03-29",
+        moderator_since: "2024-03-29T00:00:00.000Z",
       },
       {
-        id: 3,
+        username: "ThirdModerator",
         profile_picture:
           "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png",
-        username: "u/ThirdModerator",
-        approved_at: "2024-03-29",
+        moderator_since: "2024-03-29T00:00:00.000Z",
       },
       {
-        id: 4,
+        username: "FourthModerator",
         profile_picture:
           "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png",
-        username: "u/FourthModerator",
-        approved_at: "2024-03-29",
+        moderator_since: "2024-03-29T00:00:00.000Z",
       },
       {
-        id: 5,
+        username: "FifthModerator",
         profile_picture:
           "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_5.png",
-        username: "u/FifthModerator",
-        approved_at: "2024-03-29",
+        moderator_since: "2024-03-29T00:00:00.000Z",
       },
       {
-        id: 6,
+        username: "SixthModerator",
         profile_picture:
           "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_6.png",
-        username: "u/SixthModerator",
-        approved_at: "2024-03-29",
+        moderator_since: "2024-03-29T00:00:00.000Z",
       },
       {
-        id: 7,
+        username: "SeventhModerator",
         profile_picture:
           "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_7.png",
-        username: "u/SeventhModerator",
-        approved_at: "2024-03-29",
+        moderator_since: "2024-03-29T00:00:00.000Z",
       },
     ],
   },
@@ -1809,18 +1802,16 @@ let CommunityModerators = [
     community_name: "programming",
     moderators: [
       {
-        id: 6,
+        username: "SixthModerator",
         profile_picture:
           "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_6.png",
-        username: "u/SixthModerator",
-        approved_at: "2024-03-29",
+        moderator_since: "2024-03-29T00:00:00.000Z",
       },
       {
-        id: 7,
+        username: "SeventhModerator",
         profile_picture:
           "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_7.png",
-        username: "u/SeventhModerator",
-        approved_at: "2024-03-29",
+        moderator_since: "2024-03-29T00:00:00.000Z",
       },
     ],
   },
@@ -1843,84 +1834,54 @@ const communityRules = [
     community_name: "sports",
     rules: [
       {
-        rule_order: 1,
+        _id: "111",
         rule_title: "Civil Behavior",
+        rule_order: 1,
         applies_to: "posts_and_comments",
         report_reason: "string",
         full_description:
           "Keep posts and comments civil at all times. Follow proper reddiquette. Please try to be respectful to everyone. Hateful or otherwise inappropriate behaviour will not be tolerated. No witch-hunting.",
+        __v: 0,
       },
       {
-        rule_order: 2,
+        _id: "222",
         rule_title: "Self-Promotion",
-        applies_to: "posts_and_comments",
+        rule_order: 2,
+        applies_to: "comments_only",
         report_reason: "string",
         full_description:
           "Self-promotion/original content is allowed in certain circumstances. Profile sharing is only permitted through setting your user flair to your Letterboxd Username, using our profile sharing mega-thread, or in other mod-approved threads. Original content (LB lists/reviews, third-party OC etc.) is generally only permitted within our weekly threads. If you feel your original content promotes discussion, is of relevance/importance to the sub, or is high-effort/high-quality, exceptions will be made pending mod discretion.",
+        __v: 0,
       },
       {
-        rule_order: 3,
+        _id: "3333",
         rule_title: "Low-Effort Content",
+        rule_order: 3,
         applies_to: "posts_and_comments",
         report_reason: "string",
         full_description:
           "Low-effort/low-quality posts will be removed. Low-effort questions, low-quality shared content, or any content deemed by mods to lack honest intent, will be removed. Shared content must be relevant to Letterboxd or Film, and must be of an acceptable standard. Content that pushes agendas, has excessive ads, or is otherwise deemed to be a negative contribution, will be removed at mod discretion. Image macros, screen-grabs or commonly used memes/image formats must make an honest attempt at humor.",
+        __v: 0,
       },
       {
-        rule_order: 4,
+        _id: "444",
         rule_title: "No Wank/Circlejerking",
-        applies_to: "posts_and_comments",
+        rule_order: 4,
+        applies_to: "comments_only",
         report_reason: "string",
         full_description:
           "No wank/circlejerking posts allowed. Standalone posts and/or comments that are considered to be bait and/or wank about specific or non-specific users or reviews on Letterboxd will be removed. These types of posts have been deemed to be low-effort and, most importantly, unwelcoming to all individuals who use both the subreddit and Letterboxd.",
+        __v: 0,
       },
       {
-        rule_order: 5,
+        _id: "555",
         rule_title: "Duplicate Posts/Reposts",
+        rule_order: 5,
         applies_to: "posts_and_comments",
         report_reason: "string",
         full_description:
           "Duplicate posts/reposts will be removed. Individual posts that belong in an existing masterthread will be removed.",
-      },
-      {
-        rule_order: 6,
-        rule_title: "No Vandalism",
-        applies_to: "posts_and_comments",
-        report_reason: "string",
-        full_description:
-          "TMDb/Letterboxd vandalism posts are not allowed. Screenshots/links to content vandalism on either TMDb and/or Letterboxd will be removed. These posts fall under low effort and do not encourage adequate discussion on the subreddit.",
-      },
-      {
-        rule_order: 7,
-        rule_title: "Suggestions for Letterboxd",
-        applies_to: "posts_and_comments",
-        report_reason: "string",
-        full_description:
-          "Suggestions for additions to the Letterboxd site will be redirected. Standalone posts offering original and/or common suggestions for Letterboxd will be directed to the official Letterboxd feedback site (letterboxd.nolt.io). Posts discussing new updates to the website and/or app are allowed.",
-      },
-      {
-        rule_order: 8,
-        rule_title: "Miscellaneous Content",
-        applies_to: "posts_and_comments",
-        report_reason: "string",
-        full_description:
-          "Miscellaneous content that is addressed in the FAQ will be removed. Any posts or comments discussing or asking about issues that are addressed in the sub FAQ will be removed. The poster will be directed to the FAQ page.",
-      },
-      {
-        rule_order: 9,
-        rule_title: "Spoiler Policy",
-        applies_to: "posts_and_comments",
-        report_reason: "string",
-        full_description:
-          "Spoiler posts/comments must be marked as such. Absolutely no spoilers, intentional or otherwise, in post titles. This will be considered a serious offense and could result in a permanent ban. All posts with spoilers INSIDE the body of said post must be marked with the spoiler flair. When commenting on a post that is NOT labelled with the spoiler flair, please use proper spoiler formatting. Comments containing spoilers are acceptable within posts marked with the spoiler flair.",
-      },
-      {
-        rule_order: 10,
-        rule_title: "Consequences for Violations",
-        applies_to: "posts_and_comments",
-        report_reason: "string",
-        full_description:
-          "Consequences. Violations of any of the rules above will be met with a removal, a warning, a temporary ban, or a perma ban, at the discretion of the Moderators, in relation to the severity and/or repetitive nature of said violation(s).",
+        __v: 0,
       },
     ],
   },
@@ -1928,12 +1889,44 @@ const communityRules = [
     community_name: "programming",
     rules: [
       {
+        _id: "666",
+        rule_title: "No Vandalism",
         rule_order: 1,
-        rule_title: "Civil Behavior",
         applies_to: "posts_and_comments",
         report_reason: "string",
         full_description:
-          "Keep posts and comments civil at all times. Follow proper reddiquette. Please try to be respectful to everyone. Hateful or otherwise inappropriate behaviour will not be tolerated. No witch-hunting.",
+          "TMDb/Letterboxd vandalism posts are not allowed. Screenshots/links to content vandalism on either TMDb and/or Letterboxd will be removed. These posts fall under low effort and do not encourage adequate discussion on the subreddit.",
+        __v: 0,
+      },
+      {
+        _id: "777",
+        rule_title: "Suggestions for Letterboxd",
+        rule_order: 2,
+        applies_to: "comments_only",
+        report_reason: "string",
+        full_description:
+          "Suggestions for additions to the Letterboxd site will be redirected. Standalone posts offering original and/or common suggestions for Letterboxd will be directed to the official Letterboxd feedback site (letterboxd.nolt.io). Posts discussing new updates to the website and/or app are allowed.",
+        __v: 0,
+      },
+      {
+        _id: "888",
+        rule_title: "Miscellaneous Content",
+        rule_order: 3,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Miscellaneous content that is addressed in the FAQ will be removed. Any posts or comments discussing or asking about issues that are addressed in the sub FAQ will be removed. The poster will be directed to the FAQ page.",
+        __v: 0,
+      },
+      {
+        _id: "999",
+        rule_title: "Spoiler Policy",
+        rule_order: 4,
+        applies_to: "comments_only",
+        report_reason: "string",
+        full_description:
+          "Spoiler posts/comments must be marked as such. Absolutely no spoilers, intentional or otherwise, in post titles. This will be considered a serious offense and could result in a permanent ban. All posts with spoilers INSIDE the body of said post must be marked with the spoiler flair. When commenting on a post that is NOT labelled with the spoiler flair, please use proper spoiler formatting. Comments containing spoilers are acceptable within posts marked with the spoiler flair.",
+        __v: 0,
       },
     ],
   },

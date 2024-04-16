@@ -15,8 +15,9 @@ interface CommunityItemProps {
 export function PopularCommunities() {
   const [showAll, setShowAll] = useState(false);
 
-  const { data, error, isLoading } = useQuery('popular communities data', () =>
-    fetchRequest('communities/get-popular-communities')
+  const { data, isError, isLoading } = useQuery(
+    'popular communities data',
+    () => fetchRequest('communities/get-popular-communities')
   );
   console.log(data);
 
@@ -39,7 +40,7 @@ export function PopularCommunities() {
         >
           POPULAR COMMUNITIES
         </Typography>
-        <LoadingProvider error={error} isLoading={isLoading}>
+        <LoadingProvider error={isError} isLoading={isLoading}>
           <div>
             <List>
               {displayedCommunities.map(

@@ -54,6 +54,8 @@ export function RecentPosts() {
                     communityDescription={post.communityDescription}
                     communityMembers={post.communityMembers}
                     communityOnline={post.communityOnline}
+                    postId={post.id}
+                    postTitle={post.title}
                     postDescription={post.description}
                     postMediaSrc={post.images[0].link} // show the first image only
                     upvotes={post.upvotes_count}

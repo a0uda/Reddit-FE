@@ -29,7 +29,7 @@ const CommunityItem: React.FC<CommunityItemProps> = (props) => {
             variant='small'
             className='font-body font-thin -tracking-tight text-sm text-gray-900'
           >
-            {props.name}
+            r/{props.name}
           </Typography>
           <Typography
             variant='small'
