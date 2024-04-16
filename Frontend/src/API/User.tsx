@@ -41,6 +41,10 @@ axios.interceptors.response.use(
       delete data['message'];
       noStatus = true;
     }
+    if ('msg' in data) {
+      delete data['message'];
+      noStatus = true;
+    }
 
     if (noStatus) data = Object.values(data)[0]; // Last object in the response
     response.data = data;
