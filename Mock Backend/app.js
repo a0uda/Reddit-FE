@@ -247,7 +247,7 @@ app.get("/users/safety-settings", (req, res) => {
 });
 
 app.post("/users/block-unblock-user", (req, res) => {
-  const { blocked_username, block } = req.body;
+  const { blocked_username, block } = req.query;
   if (!block) {
     safetySettings.safety_and_privacy_settings.blocked_users =
       safetySettings.safety_and_privacy_settings.blocked_users.filter(
@@ -258,6 +258,9 @@ app.post("/users/block-unblock-user", (req, res) => {
       username: blocked_username,
       blocked_date: new Date(),
     });
+    postReplies = postReplies.filter(rep => rep.senderUsername !== blocked_username);
+    usernameMentions = usernameMentions.filter(rep => rep.senderUsername !== blocked_username);
+
   }
 
   res.sendStatus(200);
@@ -1123,11 +1126,11 @@ app.get("/listing/posts/top", (req, res) => {
 });
 
 app.post("/posts-or-comments/vote", (req, res) => {
-  const { id, isPost, rank } = req.body;
-  if (isPost) {
+  const { id, is_post, vote } = req.body;
+  if (is_post) {
     postsListings = postsListings.map((post) => {
       if (post.id === id) {
-        if (rank === 1) {
+        if (vote === 1) {
           post.upvotes_count++;
         } else {
           post.downvotes_count++;
@@ -1137,7 +1140,74 @@ app.post("/posts-or-comments/vote", (req, res) => {
       return post;
     });
   } else {
+
+    postReplies = postReplies.map((post) => {
+      console.log(post.id, id, 'cmp');
+      if (post.id === id) {
+        post.vote = vote;
+        if (vote === 1) {
+          post.upvotes_count++;
+
+        } else {
+          post.downvotes_count++;
+        }
+        console.log('reply');
+      }
+      return post;
+    });
+
+    usernameMentions = usernameMentions.map((post) => {
+      console.log(post.id, id, 'cmp');
+      if (post.id === id) {
+        post.vote = vote;
+        if (vote === 1) {
+          post.upvotes_count++;
+
+        } else {
+          post.downvotes_count++;
+        }
+        console.log('reply');
+      }
+      return post;
+    });
+    // console.log(postReplies, req.body);
   }
+  res.sendStatus(200);
+});
+
+app.post("/posts-or-comments/report", (req, res) => {
+  const { id, is_post, reason } = req.body;
+  if (is_post) {
+
+  } else {
+
+    postReplies = postReplies.filter(post => post.id !== id);
+    usernameMentions = usernameMentions.filter(post => post.id !== id);
+
+    // console.log(postReplies, 'postReplies');
+    console.log(reason, 'reason');
+
+  }
+  res.sendStatus(200);
+});
+
+app.post("/posts-or-comments/delete", (req, res) => {
+  const { id, is_post } = req.body;
+  if (is_post) {
+
+  } else {
+
+    postReplies = postReplies.filter(post => post.id !== id);
+    usernameMentions = usernameMentions.filter(post => post.id !== id);
+    // console.log(postReplies, 'postReplies');
+
+  }
+  res.sendStatus(200);
+});
+
+app.post("/comments/reply", (req, res) => {
+  const { id, description } = req.body;
+  console.log(req.body);
   res.sendStatus(200);
 });
 
@@ -1378,7 +1448,7 @@ app.get('/messages/unread', (req, res) => {
 // commentsCount={3}
 // key={i}
 // vote={0}
-const postReplies = [
+let postReplies = [
   {
     "created_at": "09/15/2023",
     "senderUsername": "reem",
@@ -1386,10 +1456,12 @@ const postReplies = [
     "postCreatorType": "user",
     "postSubject": "post reply 1",
     "replyContent": "<strong>reply content 1</strong>",
-    "replyId": "1",
+    "id": "1",
     "unread": false,
     "commentsCount": 3,
-    "vote": -1
+    "vote": -1,
+    'upvotes_count': 3,
+    'downvotes_count': 2
   },
   {
     "created_at": "10/15/2023",
@@ -1398,10 +1470,12 @@ const postReplies = [
     "postCreatorType": "moderator",
     "postSubject": "post reply 2",
     "replyContent": "<ul><li><i>list content 1</i></li><li>list content 2</li><li>list content 3</li></ul>",
-    "replyId": "2",
+    "id": "2",
     "unread": true,
     "commentsCount": 15,
-    "vote": 0
+    "vote": 0,
+    'upvotes_count': 100,
+    'downvotes_count': 3
   },
   {
     "created_at": "11/15/2023",
@@ -1410,10 +1484,12 @@ const postReplies = [
     "postCreatorType": "user",
     "postSubject": "post reply 3",
     "replyContent": "reply content 3",
-    "replyId": "3",
+    "id": "3",
     "unread": false,
     "commentsCount": 1,
-    "vote": 1
+    "vote": 1,
+    'upvotes_count': 6,
+    'downvotes_count': 10
   }
 ]
 
@@ -1432,7 +1508,7 @@ app.get('/messages/get-post-replies', (req, res) => {
 })
 
 app.get('/messages/inbox', (req, res) => {
-  const allInbox = [...postReplies, ...recievedMessages]
+  const allInbox = [...postReplies, ...recievedMessages, ...usernameMentions];
   allInbox.sort((a, b) => {
     if (new Date(a.created_at) < new Date(b.created_at)) {
       return 1
@@ -1475,16 +1551,20 @@ app.get('/users/moderated-communities', (req, res) => {
 app.post('/messages/compose/', (req, res) => {
   let c = 0;
   console.log(req.body, 'compose');
-  sentMessages.push({
-    ...req.body, "isSent": true,
-    "isReply": false,
-    "parentMessageId": null,
-    "_id": c
-    // "subject": "header 5",
-  })
-  c++;
+  if (req.body.receiver_username != 'mido') {
+    sentMessages.push({
+      ...req.body, "isSent": true,
+      "isReply": false,
+      "parentMessageId": null,
+      "_id": c
+      // "subject": "header 5",
+    })
+    c++;
 
-  res.sendStatus(200);
+    res.sendStatus(200);
+  } else {
+    res.status(400).send("Hmm, that user doesn't exist. Try checking the spelling.")
+  }
 
 
 })
@@ -1526,6 +1606,65 @@ app.post('/messages/report-msg', (req, res) => {
 
   res.sendStatus(200);
 
+
+})
+
+let usernameMentions = [
+  {
+    "created_at": "09/15/2023",
+    "senderUsername": "reem",
+    "postCreator": "ahmed",
+    "postCreatorType": "user",
+    "postSubject": "post 1",
+    "replyContent": "<a href='/user/ahmed'>u/ahmed</a><h1>content 1</h1>",
+    "id": "11",
+    "unread": false,
+    "commentsCount": 3,
+    "vote": -1,
+    'upvotes_count': 3,
+    'downvotes_count': 2
+  },
+  {
+    "created_at": "10/15/2023",
+    "senderUsername": "walid",
+    "postCreator": "subreddit",
+    "postCreatorType": "moderator",
+    "postSubject": "post 2",
+    "replyContent": "<a href='/user/ahmed'>u/ahmed</a><h1>content 2</h1>",
+    "id": "21",
+    "unread": true,
+    "commentsCount": 15,
+    "vote": 0,
+    'upvotes_count': 100,
+    'downvotes_count': 3
+  },
+  {
+    "created_at": "11/15/2023",
+    "senderUsername": "tarek",
+    "postCreator": "ahmed",
+    "postCreatorType": "user",
+    "postSubject": "post 3",
+    "replyContent": "<a href='/user/ahmed'>u/ahmed</a><h1>content 3</h1>",
+    "id": "31",
+    "unread": false,
+    "commentsCount": 1,
+    "vote": 1,
+    'upvotes_count': 6,
+    'downvotes_count': 10
+  }
+];
+
+app.get('/messages/get-user-mentions', (req, res) => {
+
+  usernameMentions.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  res.status(200).json(usernameMentions);
 
 })
 

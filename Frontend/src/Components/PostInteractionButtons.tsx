@@ -29,7 +29,7 @@ const PostInteractionButtons = ({
     ({ postId, rank }: { postId: string; rank: number }) =>
       postRequest({
         endPoint: 'posts-or-comments/vote',
-        data: { id: postId, isPost: true, rank: rank },
+        data: { id: postId, is_post: true, vote: rank },
       }),
     {
       onSuccess: () => {

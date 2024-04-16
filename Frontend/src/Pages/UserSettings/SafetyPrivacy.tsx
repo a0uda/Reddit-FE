@@ -108,10 +108,10 @@ function SafetyPrivacy() {
             inputValue={blockVal}
             setInputValue={setBlockVal}
             onClick={() => {
-              handleAddButton('users/block-unblock-user', {
-                block: true,
-                blocked_username: blockVal,
-              });
+              handleAddButton(
+                `users/block-unblock-user?blocked_username=${blockVal}&block=${true}`,
+                {}
+              );
               setBlockVal('');
             }}
           />
@@ -122,7 +122,7 @@ function SafetyPrivacy() {
                 date={user.blocked_date}
                 id={user.id}
                 name={user.username}
-                endPoint='users/block-unblock-user'
+                endPoint={`users/block-unblock-user?blocked_username=${user.username}&block=${false}`}
                 data={{ blocked_username: user.username, block: false }}
                 key={user.id + user.username + i}
                 refetch={refetch}

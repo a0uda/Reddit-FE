@@ -48,9 +48,10 @@ export const ReportModal = (props: {
   handleOpen: () => void;
   open: boolean;
   handleThankyouModal: () => void;
-  senderUsername: string;
+  username: string;
   senderType: string;
-  messageId: string;
+  id: string;
+  type: string;
 }) => {
   const reportMsgArr = [
     'Harassment',
@@ -161,24 +162,44 @@ export const ReportModal = (props: {
                 buttonTextColor='text-white font-bold px-8'
                 disabled={!chosenMsg}
                 onClick={() => {
-                  postReq.mutate(
-                    {
-                      endPoint: 'messages/report-msg',
-                      data: {
-                        report: chosenMsg,
-                        sender_username: props.senderUsername,
-                        sender_type: props.senderType,
-                        _id: props.messageId,
+                  if (props.type != 'postReply') {
+                    postReq.mutate(
+                      {
+                        endPoint: 'messages/report-msg',
+                        data: {
+                          report: chosenMsg,
+                          sender_username: props.username,
+                          sender_type: props.senderType,
+                          _id: props.id,
+                        },
                       },
-                    },
-                    {
-                      onSuccess: () => {
-                        setChosenMsg('');
-                        props.handleThankyouModal();
-                        props.handleOpen();
+                      {
+                        onSuccess: () => {
+                          setChosenMsg('');
+                          props.handleThankyouModal();
+                          props.handleOpen();
+                        },
+                      }
+                    );
+                  } else {
+                    postReq.mutate(
+                      {
+                        endPoint: 'posts-or-comments/report',
+                        data: {
+                          id: props.id,
+                          is_post: false,
+                          reason: chosenMsg,
+                        },
                       },
-                    }
-                  );
+                      {
+                        onSuccess: () => {
+                          setChosenMsg('');
+                          props.handleThankyouModal();
+                          props.handleOpen();
+                        },
+                      }
+                    );
+                  }
                 }}
               />
             </div>
@@ -262,11 +283,8 @@ export const ThankYouModal = (props: {
                   console.log(value);
                   postReq.mutate(
                     {
-                      endPoint: 'users/block-unblock-user',
-                      data: {
-                        block: value,
-                        blocked_username: props.senderUsername,
-                      },
+                      endPoint: `users/block-unblock-user?blocked_username=${props.senderUsername}&block=${value}`,
+                      data: {},
                     },
                     {
                       onSuccess: () => {
@@ -619,9 +637,10 @@ const Message = (props: {
                 handleOpen={handleReportModal}
                 open={reportModal}
                 handleThankyouModal={handleThankyouModal}
-                messageId={props.messageId}
+                id={props.messageId}
                 senderType={props.senderType}
-                senderUsername={props.senderUsername}
+                username={props.senderUsername}
+                type='message'
               />
               <ThankYouModal
                 handleOpen={handleThankyouModal}
@@ -656,11 +675,8 @@ const Message = (props: {
                       onClick={() => {
                         postReq.mutate(
                           {
-                            endPoint: 'users/block-unblock-user',
-                            data: {
-                              block: true,
-                              blocked_username: props.senderUsername,
-                            },
+                            endPoint: `users/block-unblock-user?blocked_username=${props.senderUsername}&block=${true}`,
+                            data: {},
                           },
                           {
                             onSuccess: () => {
