@@ -708,9 +708,11 @@ app.patch("/notifications/hide/:id", (req, res) => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let postsListings = [
   {
-    id: "15",
+    deleted: false,//mtzwda
+    is_post: true,
+    _id: "15",
     user_id: "user1",
-    username: "john_doe",
+    // username: "john_doe",
     title: "First Post",
     description: "This is the first post",
     created_at: "2024-03-29",
@@ -723,6 +725,8 @@ let postsListings = [
         path: "image1.jpg",
         caption: "Image 1",
         link: "https://source.unsplash.com/random",
+        ////
+        _id: 'asdasdasd'
       },
     ],
     videos: [
@@ -730,14 +734,31 @@ let postsListings = [
         path: "video1.mp4",
         caption: "Video 1",
         link: "https://example.com/video1.mp4",
+        _id: 'qqqqqq'
       },
     ],
-    poll: {
-      options: ["Option 1", "Option 2", "Option 3"],
-      votes: [0, 0, 0],
-    },
-    community_id: "community1",
-    "community-name": "Community 1",
+    polls: //metghyr
+      [
+        {
+          "options": "option 1",
+          "votes": 0,
+          "_id": "6617aec5023c99b0dcaf4399"
+        },
+        {
+          "options": "option 2",
+          "votes": 0,
+          "_id": "6617aec5023c99b0dcaf439a"
+        }, {
+          "options": "option 3",
+          "votes": 4,
+          "_id": "6817aec5023c99b0dcaf439a"
+        }
+      ],
+    "polls_voting_length": 3, //mtzwd
+    "polls_voting_is_expired_flag": false, ////mtzwd
+    "post_in_community_flag": false,
+    // community_id: "community1", etshal
+    "community_name": "Community 1",
     comments_count: 0,
     views_count: 0,
     shares_count: 0,
@@ -748,20 +769,28 @@ let postsListings = [
     nsfw_flag: true,
     locked_flag: true,
     allowreplies_flag: true,
+    scheduled_flag: false, //mtzwd
     set_suggested_sort: "None (Recommended)",
     moderator_details: {
-      approved_by: "moderator1",
-      approved_date: "2024-03-29",
-      removed_by: "moderator2",
-      removed_date: "2024-03-29",
-      spammed_by: "moderator3",
-      spammed_type: "spam",
+      // approved_by: "moderator1",
+      // approved_date: "2024-03-29",//sheel
+      // removed_by: "moderator2",
+      // removed_date: "2024-03-29",//sheel
+      // spammed_by: "moderator3",//sheel
+      // spammed_type: "spam",//sheel
+      spammed_flag: false,
+      approved_flag: false,
+      removed_flag: false
     },
     user_details: {
       total_views: 0,
       upvote_rate: 0,
       total_shares: 0,
     },
+    "is_reposted_flag": false, //mtzwd
+    "reposted": [], // mtzwd
+    "user_id": "661574f4faed34e05f91ded3", //mtzwd
+    "__v": 0 //mtzwd
   },
   {
     id: "18",
@@ -1066,21 +1095,26 @@ function shuffleList(list) {
 }
 
 app.get("/listing/posts/random", (req, res) => {
-  res.status(200).json(postsListings);
+  res.status(200).json({ success: true, status: 200, posts: postsListings });
 });
 
 app.get("/listing/posts/best", (req, res) => {
   res
     .status(200)
     .json({ success: true, status: 200, posts: [...postsListings].reverse() });
+
 });
 
 app.get("/listing/posts/hot", (req, res) => {
-  res.status(200).json(shuffleList(postsListings));
+  res.status(200).json({ success: true, status: 200, posts: shuffleList(postsListings) });
+
+  // res.status(200).json(shuffleList(postsListings));
 });
 
 app.get("/listing/posts/new", (req, res) => {
-  res.status(200).json(shuffleList(postsListings));
+  res.status(200).json({ success: true, status: 200, posts: shuffleList(postsListings) });
+
+  // res.status(200).json(shuffleList(postsListings));
 });
 
 app.get("/listing/posts/top", (req, res) => {
