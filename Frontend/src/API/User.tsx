@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
-console.log(baseUrl);
+
+//const baseUrl = String(process.env.VITE_BASE_URL);
+console.log('baseUrl ', baseUrl);
 
 const config = {
   headers: {
@@ -50,10 +52,7 @@ axios.interceptors.response.use(
 );
 
 const fetchRequest = async (endPoint: string) => {
-  return await axios.get(baseUrl + endPoint, {
-    withCredentials: false,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  return await axios.get(baseUrl + endPoint, config);
 };
 
 const patchRequest = async ({

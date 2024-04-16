@@ -1,0 +1,21 @@
+# CI FRONTEND
+
+name: CI FE
+
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  build_dev_test:
+    name: Build Frontend For Dev files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Frontend For Dev files
+        run: |
+          docker build -t dev-frontend -f Dockerfile.dev .
+      - name: Run Frontend For Testing Dev files
+        run: |
+          docker run --rm dev-frontend

@@ -30,11 +30,11 @@ function ChatsandMessaging() {
   const handleToggleSwitch = (newSettings: object) => {
     mutation.mutate({
       endPoint: 'users/change-chats-and-msgs-settings',
-      newSettings: newSettings,
+      newSettings: { chat_and_messaging_settings: newSettings },
     });
   };
-  const { who_send_chat_request_flag, who_send_private_messages_flag } =
-    data?.data || {};
+  const { who_send_chat_requests_flag, who_send_private_messages_flag } =
+    data?.data.chat_and_messaging_settings || {};
 
   return (
     <LoadingProvider error={error} isLoading={isLoading}>
@@ -42,11 +42,11 @@ function ChatsandMessaging() {
       <Section sectionTitle=''>
         <Card title='Who can send you chat requests' description=''>
           <DropDownButton
-            selected={who_send_chat_request_flag}
+            selected={who_send_chat_requests_flag}
             buttonList={['Everyone', 'Accounts older than 30 days', 'Nobody']}
             handleSelectionChange={(selectedItem) =>
               handleToggleSwitch({
-                who_send_chat_request_flag: selectedItem,
+                who_send_chat_requests_flag: selectedItem,
               })
             }
           />

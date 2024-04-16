@@ -18,7 +18,7 @@ const PostsListings = () => {
 
   const response = useQuery({
     queryKey: ['listings', 'all'],
-    queryFn: () => fetchRequest(`listings/posts/${sortOption.toLowerCase()}`),
+    queryFn: () => fetchRequest(`listing/posts/${sortOption.toLowerCase()}`),
   });
 
   const navigate = useNavigate();

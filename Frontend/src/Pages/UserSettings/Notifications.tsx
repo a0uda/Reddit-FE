@@ -31,7 +31,9 @@ function Notifications() {
 
   const handleToggleSwitch = (settingName, value) => {
     const newSettings = {
-      [settingName]: value,
+      notifications_settings: {
+        [settingName]: value,
+      },
     };
 
     mutation.mutate({
@@ -51,7 +53,7 @@ function Notifications() {
     new_followers,
     invitations,
     posts,
-  } = data?.data || {};
+  } = data?.data.notifications_settings || {};
 
   return (
     <LoadingProvider error={error} isLoading={isLoading}>
