@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
-  res.header('Access-Control-Expose-Headers', 'Authorization');
+  res.header("Access-Control-Expose-Headers", "Authorization");
   next();
 });
 const accountSettings = {
@@ -121,7 +121,7 @@ let notificationSettings = {
     new_followers: true,
     invitations: true,
     posts: true,
-  }
+  },
 };
 app.get("/users/notification-settings", (req, res) => {
   res.status(200).json({ notificationSettings });
@@ -303,10 +303,10 @@ app.post("/users/signup", (req, res) => {
   };
   users.push(newUser);
   const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1h" });
-  res.setHeader('authorization', `Bearer ${token}`);
+  res.setHeader("authorization", `Bearer ${token}`);
 
   console.log(res.getHeaderNames());
-  res.sendStatus(201)
+  res.sendStatus(201);
 });
 
 app.post("/users/login", (req, res) => {
@@ -317,7 +317,7 @@ app.post("/users/login", (req, res) => {
 
   if (user) {
     const token = jwt.sign({ username }, "RedditToken@", { expiresIn: "1h" });
-    res.setHeader('Authorization', `Bearer ${token}`);
+    res.setHeader("Authorization", `Bearer ${token}`);
     console.log(res.getHeaderNames());
     res.status(200).json({ message: "Login successful" });
   } else {
@@ -1099,9 +1099,10 @@ app.get("/listing/posts/random", (req, res) => {
 });
 
 app.get("/listing/posts/best", (req, res) => {
-  res.status(200).json({ success: true, status: 200, posts: postsListings.reverse() });
+  res
+    .status(200)
+    .json({ success: true, status: 200, posts: [...postsListings].reverse() });
 
-  // res.status(200).json([...postsListings].reverse());
 });
 
 app.get("/listing/posts/hot", (req, res) => {
@@ -1117,9 +1118,9 @@ app.get("/listing/posts/new", (req, res) => {
 });
 
 app.get("/listing/posts/top", (req, res) => {
-  res.status(200).json({ success: true, status: 200, posts: shuffleList(postsListings) });
-
-  // res.status(200).json(shuffleList(postsListings));
+  res
+    .status(200)
+    .json({ success: true, status: 200, posts: shuffleList(postsListings) });
 });
 
 app.post("/posts-or-comments/vote", (req, res) => {
@@ -1132,7 +1133,6 @@ app.post("/posts-or-comments/vote", (req, res) => {
         } else {
           post.downvotes_count++;
         }
-        console.log(post);
       }
       return post;
     });
