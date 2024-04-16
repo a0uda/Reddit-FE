@@ -381,7 +381,7 @@ const communitiesPost = [
 app.get("/submit/communities", (req, res) => {
   res.status(200).json(communitiesPost);
 });
-app.post("/submit", (req, res) => {
+app.post("/posts/new-post", (req, res) => {
   // const {} = req.body;
   res.status(200).json({ message: "	post created successfully" });
 });
@@ -1516,18 +1516,20 @@ let moderatedCommunities = {
     {
       id: "661732b95ef02bd2dddfde17",
       name: "Russel, Friesen and Volkman",
-      profile_picture: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+      profile_picture:
+        "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
       favorite_flag: true,
       members_count: 163,
-      joined:true,
+      joined: true,
     },
     {
       id: "661732b95ef02bd2dddfde1e",
       name: "Rowe, Heller and McKenzie",
-      profile_picture: "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+      profile_picture:
+        "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
       favorite_flag: false,
       members_count: 924,
-      joined:false,
+      joined: false,
     },
   ],
 };

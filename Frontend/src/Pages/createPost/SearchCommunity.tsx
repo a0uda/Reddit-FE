@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Avatar, Input } from '@material-tailwind/react';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
+import useSession from '../../hooks/auth/useSession';
 
 interface Suggestion {
-  community_id: string;
   community_name: string;
   image_url: string;
 }
@@ -18,6 +18,8 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
   const [imageQuery, setImageQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+
+  const { user } = useSession();
 
   const searchBarRef = useRef<HTMLDivElement>(null);
 
@@ -51,9 +53,18 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
     setImageQuery(suggestion.image_url);
     setShowSuggestions(false);
     setFieldValue('community_name', suggestion.community_name);
-    setFieldValue('community_id', suggestion.community_id);
+    setFieldValue('post_in_community_flag', true.toString());
   };
-
+  const handleOptionClickUser = (user: {
+    username: string;
+    imageUrl: string;
+  }) => {
+    setSearchQuery(user.username);
+    setImageQuery(user.imageUrl);
+    setShowSuggestions(false);
+    setFieldValue('community_name', user.username);
+    setFieldValue('post_in_community_flag', false.toString());
+  };
   const handleClickOutside = (event: MouseEvent) => {
     if (
       searchBarRef.current &&
@@ -126,6 +137,27 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
 
       {showSuggestions && (
         <ul className='absolute z-10 mt-12 w-full bg-white divide-y divide-gray-200 rounded-lg shadow-lg dark:bg-gray-700 dark:divide-gray-600'>
+          <div className='m-2 ps-4 text-xs text-gray-600'>YOUR PROFILE</div>
+
+          {user ? (
+            <li
+              onClick={() => handleOptionClickUser(user)}
+              className='flex items-start gap-4 p-2 m-0 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer'
+            >
+              <div className='flex flex-row gap-2'>
+                <Avatar
+                  variant='circular'
+                  alt={user.imageUrl}
+                  src={user.imageUrl}
+                  className='w-8 h-8'
+                />
+                <p className='font-body font-bold tracking-tight text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 dark:text-gray-200 line-clamp-2 overflow-hidden text-ellipsis'>
+                  {user.username}
+                </p>
+              </div>
+            </li>
+          ) : null}
+
           <div className='m-2 ps-4 text-xs text-gray-600'>YOUR COMMUNITIES</div>
           {Array.isArray(suggestions) &&
             suggestions.map((suggestion, index) => (

@@ -29,29 +29,29 @@ type FormSchema = {
     type: yup.Schema<string>;
     description: yup.Schema<string | undefined>;
     community_name: yup.Schema<string>;
-    community_id: yup.Schema<string>;
     oc_flag: yup.Schema<boolean>;
     spoiler_flag: yup.Schema<boolean>;
     nsfw_flag: yup.Schema<boolean>;
+    post_in_community_flag: yup.Schema<boolean>;
   };
   createPostImageAndVideo: {
     title: yup.Schema<string>;
     community_name: yup.Schema<string>;
-    community_id: yup.Schema<string>;
     images: yup.Schema<any>;
     oc_flag: yup.Schema<boolean>;
     spoiler_flag: yup.Schema<boolean>;
     nsfw_flag: yup.Schema<boolean>;
+    post_in_community_flag: yup.Schema<boolean>;
   };
   createPostLink: {
     title: yup.Schema<string>;
     type: yup.Schema<string>;
     community_name: yup.Schema<string>;
-    community_id: yup.Schema<string>;
     link_url: yup.Schema<string>;
     oc_flag: yup.Schema<boolean>;
     spoiler_flag: yup.Schema<boolean>;
     nsfw_flag: yup.Schema<boolean>;
+    post_in_community_flag: yup.Schema<boolean>;
   };
   createPostPoll: {
     title: yup.Schema<string>;
@@ -60,9 +60,9 @@ type FormSchema = {
     spoiler_flag: yup.Schema<boolean>;
     nsfw_flag: yup.Schema<boolean>;
     polls_voting_length: yup.Schema<number>;
-    polls: yup.Schema<any>;
+    polls: yup.Schema<unknown>;
     community_name: yup.Schema<string>;
-    community_id: yup.Schema<string>;
+    post_in_community_flag: yup.Schema<boolean>;
   };
 };
 
@@ -94,30 +94,30 @@ const Validation = (type: keyof FormSchema) => {
       title: validationSchema['title'],
       description: validationSchema['description'],
       community_name: validationSchema['community_name'],
-      community_id: validationSchema['community_id'],
       type: validationSchema['type'],
       oc_flag: validationSchema['oc_flag'],
       spoiler_flag: validationSchema['spoiler_flag'],
       nsfw_flag: validationSchema['nsfw_flag'],
+      post_in_community_flag: validationSchema['post_in_community_flag'],
     },
     createPostLink: {
       title: validationSchema['title'],
       community_name: validationSchema['community_name'],
-      community_id: validationSchema['community_id'],
       link_url: validationSchema['link_url'],
       type: validationSchema['type'],
       oc_flag: validationSchema['oc_flag'],
       spoiler_flag: validationSchema['spoiler_flag'],
       nsfw_flag: validationSchema['nsfw_flag'],
+      post_in_community_flag: validationSchema['post_in_community_flag'],
     },
     createPostImageAndVideo: {
       title: validationSchema['title'],
       community_name: validationSchema['community_name'],
-      community_id: validationSchema['community_id'],
       images: validationSchema['images'],
       oc_flag: validationSchema['oc_flag'],
       spoiler_flag: validationSchema['spoiler_flag'],
       nsfw_flag: validationSchema['nsfw_flag'],
+      post_in_community_flag: validationSchema['post_in_community_flag'],
     },
     createPostPoll: {
       title: validationSchema['title'],
@@ -128,7 +128,7 @@ const Validation = (type: keyof FormSchema) => {
       polls: validationSchema['polls'],
       oc_flag: validationSchema['oc_flag'],
       community_name: validationSchema['community_name'],
-      community_id: validationSchema['community_id'],
+      post_in_community_flag: validationSchema['post_in_community_flag'],
     },
   };
 

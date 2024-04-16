@@ -3,7 +3,7 @@ import RoundedButton from '../../Components/RoundedButton';
 import Input from '../../Components/Input';
 
 interface Option {
-  option: string;
+  options: string;
 }
 
 interface OptionsPollProps {
@@ -12,12 +12,12 @@ interface OptionsPollProps {
 
 function OptionsPoll({ setFieldValue }: OptionsPollProps) {
   const [options, setOptions] = useState<Option[]>([
-    { option: '' },
-    { option: '' },
+    { options: '' },
+    { options: '' },
   ]);
 
   const addOptionField = (): void => {
-    setOptions([...options, { option: '' }]);
+    setOptions([...options, { options: '' }]);
   };
 
   const removeOptionField = (index: number): void => {
@@ -64,7 +64,7 @@ function OptionsPoll({ setFieldValue }: OptionsPollProps) {
               key={index}
               NoCheck={true}
               onChange={(e) =>
-                setFieldValue(`polls[${index}].option`, e.target.value)
+                setFieldValue(`polls[${index}].options`, e.target.value)
               }
             />
             {index >= 2 && (
