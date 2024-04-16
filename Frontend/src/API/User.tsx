@@ -6,20 +6,43 @@ console.log(baseUrl);
 const config = {
   headers: {
     'Content-Type': 'application/json',
-    // token: localStorage.getItem('token'),
   },
   withCredentials: false,
 };
-
-// const api = axios.create({
-//   baseURL: baseUrl,
-// });
 
 axios.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
+  },
+  (error) => {
+    console.log('Error', error);
+    return Promise.reject(error);
+  }
+);
+
+axios.interceptors.response.use(
+  (response) => {
+    let data = response.data;
+    let noStatus = false;
+
+    if ('success' in data) {
+      delete data['success'];
+      noStatus = true;
+    }
+    if ('status' in data) {
+      delete data['status'];
+      noStatus = true;
+    }
+    if ('message' in data) {
+      delete data['message'];
+      noStatus = true;
+    }
+
+    if (noStatus) data = Object.values(data)[0]; // Last object in the response
+    response.data = data;
+    return response;
   },
   (error) => {
     return Promise.reject(error);
@@ -40,16 +63,10 @@ const patchRequest = async ({
   newSettings: unknown;
   endPoint: string;
 }) => {
-  try {
-    const response = await axios.patch(baseUrl + endPoint, newSettings, config);
-    console.log(response);
+  const response = await axios.patch(baseUrl + endPoint, newSettings, config);
+  console.log(response);
 
-    return response.data;
-  } catch (error) {
-    console.log('Error', error.response.data);
-
-    throw new Error(error.response.data);
-  }
+  return response.data;
 };
 
 const postRequest = async ({
@@ -59,14 +76,10 @@ const postRequest = async ({
   endPoint: string;
   data: unknown;
 }) => {
-  try {
-    const response = await axios.post(baseUrl + endPoint, data, config);
-    console.log(response);
+  const response = await axios.post(baseUrl + endPoint, data, config);
+  console.log(response);
 
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response.data);
-  }
+  return response.data;
 };
 
 export { fetchRequest, patchRequest, postRequest };

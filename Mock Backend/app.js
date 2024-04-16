@@ -1060,7 +1060,9 @@ app.get("/listings/posts/random", (req, res) => {
 });
 
 app.get("/listings/posts/best", (req, res) => {
-  res.status(200).json([...postsListings].reverse());
+  res
+    .status(200)
+    .json({ success: true, status: 200, posts: [...postsListings].reverse() });
 });
 
 app.get("/listings/posts/hot", (req, res) => {
@@ -1072,7 +1074,9 @@ app.get("/listings/posts/new", (req, res) => {
 });
 
 app.get("/listings/posts/top", (req, res) => {
-  res.status(200).json(shuffleList(postsListings));
+  res
+    .status(200)
+    .json({ success: true, status: 200, posts: shuffleList(postsListings) });
 });
 
 app.post("/posts-or-comments/vote", (req, res) => {

@@ -34,7 +34,7 @@ const PostsListings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption]);
 
-  console.log('response', response.isError);
+  console.log('response', response);
 
   return (
     <>
