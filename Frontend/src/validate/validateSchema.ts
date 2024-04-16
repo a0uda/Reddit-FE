@@ -22,7 +22,10 @@ export const validationSchema = {
     .oneOf([yup.ref('newPassword')], 'Passwords must match'),
   title: yup.string().required('Title is required'),
   description: yup.string(),
-  link_url: yup.string().required('Link URl is required'),
+  link_url: yup
+    .string()
+    .required('Link URl is required')
+    .url('Invalid URL format'),
   images: yup.array().of(
     yup.object().shape({
       path: yup.string().required('Path is required'),
@@ -38,7 +41,6 @@ export const validationSchema = {
     })
   ),
   type: yup.string().required(),
-  community_id: yup.string().required(),
   community_name: yup.string().required(),
   nsfw_flag: yup.boolean().required(),
   spoiler_flag: yup.boolean().required(),
@@ -48,10 +50,11 @@ export const validationSchema = {
     .array()
     .of(
       yup.object().shape({
-        option: yup.string().required('Option is required'),
+        options: yup.string().required('Option is required'),
       })
     )
     .min(2, 'At least 2 options are required')
     .required(),
   gender: yup.string(),
+  post_in_community_flag: yup.boolean().required(),
 };

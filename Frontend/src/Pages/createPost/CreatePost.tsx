@@ -51,13 +51,13 @@ const NewPost: React.FC = () => {
   const [initialValues] = useState({
     title: '',
     description: '',
-    community_id: '',
     community_name: '',
     link_url: '',
     images: [],
     oc_flag: false,
     spoiler_flag: false,
     nsfw_flag: false,
+    post_in_community_flag: false,
   });
 
   useEffect(() => {
@@ -119,7 +119,7 @@ const NewPost: React.FC = () => {
 
   const handleOnSubmit = (values: object) => {
     mutation.mutate({
-      endPoint: 'submit',
+      endPoint: 'posts/new-post',
       data: values,
     });
   };
@@ -132,7 +132,7 @@ const NewPost: React.FC = () => {
       onSubmit={(values, { setSubmitting, resetForm }) => {
         handleOnSubmit(values);
         setTimeout(() => {
-          alert(JSON.stringify(values));
+          // alert(JSON.stringify(values));
           setSubmitting(true);
           resetForm();
           setOC(false);
@@ -259,7 +259,7 @@ const NewPost: React.FC = () => {
                   }}
                 />
               </div>
-              <div className='flex justify-end mt-10 border-t-2 py-4 space-x-2'>
+              <div className='flex justify-end mt-4 pe-4 border-t-2 py-4 space-x-2'>
                 <RoundedButton
                   buttonBorderColor='red'
                   buttonText='Cancel'
