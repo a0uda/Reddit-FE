@@ -1,5 +1,5 @@
 import React from 'react';
-import SwitchButton from './Containers/SwitchButton';
+import SwitchButton from '../../Components/SwitchButton';
 import Card from './Containers/Card';
 import Section from './Containers/Section';
 import { fetchRequest, patchRequest } from '../../API/User';
