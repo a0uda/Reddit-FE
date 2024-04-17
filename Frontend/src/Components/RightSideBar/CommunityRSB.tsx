@@ -47,13 +47,6 @@ export function CommunityRSB({
 
   const [isJoined, setIsJoined] = useState(joined);
 
-  // useEffect(() => {
-  //   // Check if the user has just joined the community
-  //   if (!isJoined) {
-  //     setJustJoined(true);
-  //   }
-  // }, [isJoined]);
-
   const joinMutation = useMutation(
     (communityName: string) =>
       postRequest({
@@ -89,7 +82,10 @@ export function CommunityRSB({
           scrollbarWidth: 'thin',
         }}
       >
-        <Card className='w-80 bg-gray-100 rounded-xl shadow-none p-0 pb-3 min-w-0'>
+        <Card
+          className='w-80 bg-gray-100 rounded-xl shadow-none p-0 pb-3 min-w-0'
+          data-testid='community-card'
+        >
           <LoadingProvider error={isError} isLoading={isLoading}>
             <div className='p-4  flex justify-between items-end'>
               <Typography
@@ -105,6 +101,7 @@ export function CommunityRSB({
                     setIsJoined(!isJoined);
                     joinMutation.mutate(communityName);
                   }}
+                  data-testid='join-button'
                 >
                   Join
                 </button>
@@ -116,6 +113,7 @@ export function CommunityRSB({
                     setIsJoined(!isJoined);
                     leaveMutation.mutate(communityName);
                   }}
+                  data-testid='leave-button'
                 >
                   Joined
                 </button>
@@ -209,6 +207,7 @@ export function CommunityRSB({
                 <Button
                   variant='filled'
                   className='w-full h-8 bg-neutral-muted text-black text-sm shadow-none hover:shadow-none flex items-center justify-center hover:underline'
+                  data-testid='message-button'
                 >
                   <CiMail className='h-5 w-5 mr-2' />
                   Message the mods

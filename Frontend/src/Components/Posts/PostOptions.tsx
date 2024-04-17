@@ -23,7 +23,15 @@ const PostOptions = ({ saved, hidden }: PostOptionsProps) => {
   return (
     <Menu placement='bottom-end'>
       <MenuHandler>
-        <Button variant='text' className='p-2'>
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            e.nativeEvent.stopImmediatePropagation();
+            e.stopPropagation();
+          }}
+          variant='text'
+          className='p-2 z-10'
+        >
           <HiEllipsisHorizontal size={20} />
         </Button>
       </MenuHandler>

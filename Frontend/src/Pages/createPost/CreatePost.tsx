@@ -209,12 +209,8 @@ const NewPost: React.FC = () => {
                 <RoundedButton
                   buttonBorderColor='white'
                   id='oc_flag'
-                  buttonText={
-                    <>
-                      {oc ? <IconCheck /> : <IconPlus />}
-                      OC
-                    </>
-                  }
+                  buttonIcon={<>{oc ? <IconCheck /> : <IconPlus />}</>}
+                  buttonText='OC'
                   buttonTextColor={oc ? 'text-white' : 'text-gray-600'}
                   buttonColor={oc ? 'bg-orange' : 'bg-white'}
                   onClick={() => {
@@ -226,12 +222,8 @@ const NewPost: React.FC = () => {
                 <RoundedButton
                   buttonBorderColor='white'
                   id='spoiler_flag'
-                  buttonText={
-                    <>
-                      {Spoiler ? <IconCheck /> : <IconPlus />}
-                      Spoiler
-                    </>
-                  }
+                  buttonIcon={<>{Spoiler ? <IconCheck /> : <IconPlus />}</>}
+                  buttonText='Spoiler'
                   buttonTextColor={Spoiler ? 'text-white' : 'text-gray-600'}
                   buttonColor={Spoiler ? 'bg-black' : 'bg-white'}
                   onClick={() => {
@@ -245,12 +237,8 @@ const NewPost: React.FC = () => {
                 <RoundedButton
                   buttonBorderColor='red'
                   id='nsfw_flag'
-                  buttonText={
-                    <>
-                      {NSFW ? <IconCheck /> : <IconPlus />}
-                      NSFW
-                    </>
-                  }
+                  buttonIcon={<>{NSFW ? <IconCheck /> : <IconPlus />}</>}
+                  buttonText='NSFW'
                   buttonTextColor={NSFW ? 'text-white' : 'text-gray-600'}
                   buttonColor={NSFW ? 'bg-orange-red' : 'bg-white'}
                   onClick={() => {
