@@ -191,6 +191,7 @@ app.get("/users/feed-settings", (req, res) => {
   res.status(200).json(feedSettings);
 });
 app.patch("/users/change-feed-settings", (req, res) => {
+  console.log(req.body);
   const updatedSettings = req.body;
   feedSettings.settings = {
     ...feedSettings.settings,
@@ -269,7 +270,7 @@ app.get("/users/safety-settings", (req, res) => {
 });
 
 app.post("/users/block-unblock-user", (req, res) => {
-  const { blocked_username, block } = req.body;
+  const { blocked_username, block } = req.query;
   if (!block) {
     safetySettings.safety_and_privacy_settings.blocked_users =
       safetySettings.safety_and_privacy_settings.blocked_users.filter(
@@ -280,6 +281,9 @@ app.post("/users/block-unblock-user", (req, res) => {
       username: blocked_username,
       blocked_date: new Date(),
     });
+    postReplies = postReplies.filter(rep => rep.senderUsername !== blocked_username);
+    usernameMentions = usernameMentions.filter(rep => rep.senderUsername !== blocked_username);
+
   }
 
   res.sendStatus(200);
@@ -318,6 +322,7 @@ app.patch("/users/change-chats-and-msgs-settings", (req, res) => {
   res.sendStatus(200);
 });
 
+let credentials = [{ username: 'username', password: 'password' }];
 let users = [
   {
     _id: "661a2c3fab10a4b012e8f59a",
@@ -398,7 +403,7 @@ app.post("/users/signup", (req, res) => {
 
 app.post("/users/login", (req, res) => {
   const { username, password } = req.body;
-  const user = users.find(
+  const user = credentials.find(
     (user) => user.username === username && user.password === password
   );
 
@@ -1747,6 +1752,37 @@ app.post("/posts-or-comments/vote", (req, res) => {
       return post;
     });
   } else {
+
+    postReplies = postReplies.map((post) => {
+      console.log(post.id, id, 'cmp');
+      if (post.id === id) {
+        post.rank = rank;
+        if (rank === 1) {
+          post.upvotes_count++;
+
+        } else {
+          post.downvotes_count++;
+        }
+        console.log(post);
+      }
+      return post;
+    });
+
+    usernameMentions = usernameMentions.map((post) => {
+      console.log(post.id, id, 'cmp');
+      if (post.id === id) {
+        post.rank = rank;
+        if (rank === 1) {
+          post.upvotes_count++;
+
+        } else {
+          post.downvotes_count++;
+        }
+        console.log('reply');
+      }
+      return post;
+    });
+    // console.log(postReplies, req.body);
     comments.comments = comments.comments.map((comment) => {
       if (comment._id === id) {
         if (rank === 1) {
@@ -1760,6 +1796,476 @@ app.post("/posts-or-comments/vote", (req, res) => {
   }
   res.sendStatus(200);
 });
+
+app.post("/posts-or-comments/report", (req, res) => {
+  const { id, is_post, reason } = req.body;
+  if (is_post) {
+
+  } else {
+
+    postReplies = postReplies.filter(post => post.id !== id);
+    usernameMentions = usernameMentions.filter(post => post.id !== id);
+
+    // console.log(postReplies, 'postReplies');
+    console.log(reason, 'reason');
+
+  }
+  res.sendStatus(200);
+});
+
+app.post("/posts-or-comments/delete", (req, res) => {
+  const { id, is_post } = req.body;
+  if (is_post) {
+
+  } else {
+
+    postReplies = postReplies.filter(post => post.id !== id);
+    usernameMentions = usernameMentions.filter(post => post.id !== id);
+    // console.log(postReplies, 'postReplies');
+
+  }
+  res.sendStatus(200);
+});
+
+app.post("/comments/reply", (req, res) => {
+  const { id, description } = req.body;
+  console.log(req.body);
+  res.sendStatus(200);
+});
+
+let sentMessages = [
+  {
+    "_id": "5da454f4307b0a8b30838839",
+    "sender_username": "ahmed",
+    "sender_type": "user",
+    "receiver_username": "aww",
+    "receiver_type": 'moderator',
+    "senderVia": "aww",
+    "message": "content 1",
+    "created_at": "10/15/2023",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": true,
+    "isReply": true,
+    "parentMessageId": '5da454f4307b0a8b30838830',
+    "subject": "header 2",
+
+  },
+  {
+    "_id": "5da454f4307b0a8b30838830",
+    "sender_username": "ahmed",
+    "sender_type": 'user',
+    "receiver_username": "aww",
+    "receiver_type": "moderator",
+    "senderVia": "aww",
+    "subject": "header 2",
+    "message": "content 11",
+    "created_at": "09/15/2023",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": true,
+    "isReply": false,
+    "parentMessageId": null
+
+  }, {
+    "_id": "5da454f4307b0a8b30838831",
+    "sender_username": "ahmed",
+    "sender_type": "moderator",
+    "senderVia": "subreddit",
+    "receiver_username": "reem",
+    "receiver_type": 'user',
+    "subject": "header 3",
+    "message": "content 12",
+    "created_at": "01/01/2024",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": true,
+    "isReply": false,
+    "parentMessageId": null
+  },
+  {
+    "_id": "5da456f4307b0a8b30838831",
+    "sender_username": "ahmed",
+    "sender_type": "moderator",
+    "senderVia": "subreddit",
+    "receiver_username": "reem",
+    "receiver_type": "user",
+    "message": "content 10",
+    "created_at": "01/01/2024",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": true,
+    "isReply": true,
+    "parentMessageId": '5da454f4307b0a8b30838831',
+    "subject": "header 3", //subject of parent message
+
+
+
+
+  },
+  {
+    "_id": "5da456f4307b0a8b30898831",
+    "sender_username": "ahmed",
+    "sender_type": "user",
+    "senderVia": "subreddit",
+    "receiver_username": "walid",
+    "receiver_type": "user",
+    "message": "content 60",
+    "created_at": "01/02/2024",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": true,
+    "isReply": true,
+    "parentMessageId": '5da454f430712430a8b308938830',
+    "subject": "header 5",
+
+
+
+
+  }
+
+
+
+
+]
+let recievedMessages = [
+  {
+    "_id": "5daqq4f4307b0a8b30838839",
+    "sender_username": "aww",
+    "sender_type": "moderator",
+    "senderVia": "aww",
+    "receiver_username": "ahmed",
+    "receiver_type": 'user',
+    "subject": "header 2",
+    "message": "content 99",
+    "created_at": "10/15/2023",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": false,
+    "isReply": true,
+    "parentMessageId": '5da454f4307b0a8b30838830',
+  },
+  {
+    "_id": "5da454f430712430a8b308938830",
+    "sender_username": "walid",
+    "sender_type": 'user',
+    "senderVia": "aww",
+    "receiver_username": "ahmed",
+    "receiver_type": "user",
+    "subject": "header 5",
+    "message": "content 2",
+    "created_at": "09/15/2023",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": false,
+    "isReply": false,
+    "parentMessageId": null
+
+  }, {
+    "_id": "5da454f4323407b0a8b3760838831",
+    "sender_username": "subreddit",
+    "sender_type": "moderator",
+    "senderVia": "subreddit",
+    "receiver_username": "ahmed",
+    "receiver_type": 'user',
+    "subject": "header 6",
+    "message": "content 3",
+    "created_at": "01/01/2024",
+    "deleted_at": "15/10/2024",
+    "unread_flag": true,
+    "isSent": false,
+    "isReply": false,
+    "parentMessageId": null
+  },
+  {
+    "_id": "5da456f4307b0a8b308384k53831",
+    "sender_username": "reem",
+    "sender_type": "user",
+    "senderVia": "subreddit",
+    "receiver_username": "subreddit",
+    "receiver_type": "moderator",
+    "message": "content 4",
+    "created_at": "01/01/2024",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": false,
+    "isReply": true,
+    "parentMessageId": '5da454f4307b0a8b30838831',
+    "subject": "header 3",
+
+
+
+
+  },
+  {
+    "_id": "5da456f4307b0a8b35670898831",
+    "sender_username": "reem",
+    "sender_type": "user",
+    "senderVia": "subreddit",
+    "receiver_username": "subreddit",
+    "receiver_type": "moderator",
+    "message": "content 5",
+    "created_at": "01/01/2024",
+    "deleted_at": "15/10/2024",
+    "unread_flag": true,
+    "isSent": false,
+    "isReply": true,
+    "parentMessageId": '5da454f4307b0a8b30838831',
+    "subject": "header 3",
+
+  }
+
+]
+
+app.get('/messages/sent/', (req, res) => {
+  sentMessages.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  res.status(200).json(sentMessages);
+
+})
+
+app.get('/messages/read-all-messages', (req, res) => {
+  const allMessages = [...sentMessages, ...recievedMessages]
+  allMessages.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  console.log(allMessages)
+  res.status(200).json(allMessages);
+
+})
+
+app.get('/messages/unread', (req, res) => {
+  const unreadMessages = recievedMessages.filter((val) => val.unread_flag == true)
+
+  unreadMessages.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  res.status(200).json(unreadMessages);
+
+})
+// createDate={new Date()}
+// senderUsername='mido'
+// postCreator='reem'
+// postCreatorType='user'
+// postSubject='da post reply'
+// replyContent='post reply content'
+// replyId='1212'
+// unread={true}
+// commentsCount={3}
+// key={i}
+// vote={0}
+let postReplies = [
+  {
+    "created_at": "09/15/2023",
+    "senderUsername": "reem",
+    "postCreator": "ahmed",
+    "postCreatorType": "user",
+    "postSubject": "post reply 1",
+    "replyContent": "<strong>reply content 1</strong>",
+    "id": "1",
+    "unread": false,
+    "commentsCount": 3,
+    "rank": -1,
+    'upvotes_count': 3,
+    'downvotes_count': 2
+  },
+  {
+    "created_at": "10/15/2023",
+    "senderUsername": "walid",
+    "postCreator": "subreddit",
+    "postCreatorType": "moderator",
+    "postSubject": "post reply 2",
+    "replyContent": "<ul><li><i>list content 1</i></li><li>list content 2</li><li>list content 3</li></ul>",
+    "id": "2",
+    "unread": true,
+    "commentsCount": 15,
+    "rank": 0,
+    'upvotes_count': 100,
+    'downvotes_count': 3
+  },
+  {
+    "created_at": "11/15/2023",
+    "senderUsername": "tarek",
+    "postCreator": "ahmed",
+    "postCreatorType": "user",
+    "postSubject": "post reply 3",
+    "replyContent": "reply content 3",
+    "id": "3",
+    "unread": false,
+    "commentsCount": 1,
+    "rank": 1,
+    'upvotes_count': 6,
+    'downvotes_count': 10
+  }
+]
+
+app.get('/messages/get-post-replies', (req, res) => {
+
+  postReplies.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  res.status(200).json(postReplies);
+
+})
+
+app.get('/messages/inbox', (req, res) => {
+  const allInbox = [...postReplies, ...recievedMessages, ...usernameMentions];
+  allInbox.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  console.log(allInbox)
+  res.status(200).json(allInbox);
+
+})
+
+
+app.post('/messages/compose/', (req, res) => {
+  let c = 0;
+  console.log(req.body, 'compose');
+  if (req.body.receiver_username != 'mido') {
+    sentMessages.push({
+      ...req.body, "isSent": true,
+      "isReply": false,
+      "parentMessageId": null,
+      "_id": c
+      // "subject": "header 5",
+    })
+    c++;
+
+    res.sendStatus(200);
+  } else {
+    res.status(400).send("Hmm, that user doesn't exist. Try checking the spelling.")
+  }
+
+
+})
+
+app.post('/messages/reply', (req, res) => {
+  let c = 100;
+  console.log(req.body, 'compose');
+  sentMessages.push({
+    ...req.body,
+    "_id": c
+    // "subject": "header 5",
+  })
+  c++;
+
+  res.sendStatus(200);
+
+
+})
+
+app.post('/messages/del-msg', (req, res) => {
+
+  console.log(req.body, 'delmsg');
+  recievedMessages = recievedMessages.filter(message => message._id !== req.body['_id'] && message.parentMessageId !== req.body['_id']);
+  sentMessages = sentMessages.filter(message => message.parentMessageId !== req.body['_id']);
+
+
+
+  res.sendStatus(200);
+
+
+})
+app.post('/messages/report-msg', (req, res) => {
+
+  console.log(req.body, 'repmsg');
+  recievedMessages = recievedMessages.filter(message => message._id !== req.body['_id'] && message.parentMessageId !== req.body['_id']);
+  sentMessages = sentMessages.filter(message => message.parentMessageId !== req.body['_id']);
+
+
+
+  res.sendStatus(200);
+
+
+})
+
+let usernameMentions = [
+  {
+    "created_at": "09/15/2023",
+    "senderUsername": "reem",
+    "postCreator": "ahmed",
+    "postCreatorType": "user",
+    "postSubject": "post 1",
+    "replyContent": "<a href='/user/ahmed'>u/ahmed</a><h1>content 1</h1>",
+    "id": "11",
+    "unread": false,
+    "commentsCount": 3,
+    "rank": -1,
+    'upvotes_count': 3,
+    'downvotes_count': 2
+  },
+  {
+    "created_at": "10/15/2023",
+    "senderUsername": "walid",
+    "postCreator": "subreddit",
+    "postCreatorType": "moderator",
+    "postSubject": "post 2",
+    "replyContent": "<a href='/user/ahmed'>u/ahmed</a><h1>content 2</h1>",
+    "id": "21",
+    "unread": true,
+    "commentsCount": 15,
+    "rank": 0,
+    'upvotes_count': 100,
+    'downvotes_count': 3
+  },
+  {
+    "created_at": "11/15/2023",
+    "senderUsername": "tarek",
+    "postCreator": "ahmed",
+    "postCreatorType": "user",
+    "postSubject": "post 3",
+    "replyContent": "<a href='/user/ahmed'>u/ahmed</a><h1>content 3</h1>",
+    "id": "31",
+    "unread": false,
+    "commentsCount": 1,
+    "vote": 1,
+    'upvotes_count': 6,
+    'downvotes_count': 10
+  }
+];
+
+app.get('/messages/get-user-mentions', (req, res) => {
+
+  usernameMentions.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  res.status(200).json(usernameMentions);
+
+})
+
+
 
 app.get("/user/about/:id", (req, res) => {
   const { id } = req.params;
@@ -2072,6 +2578,29 @@ let postsComments = [
 ];
 app.get("/users/:username/about", (req, res) => {
   res.status(200).json(userAbout);
+});
+app.get("/users/moderated-communities2", (req, res) => {
+  res.status(200).json({
+    "success": true,
+    "status": 200,
+    "msg": "Your moderated communities are retrieved successfully",
+    "moderated_communities": [
+      {
+        "id": "661732b95ef02bd2dddfde17",
+        "name": "Russel, Friesen and Volkman",
+        "profile_picture": "",
+        "favorite_flag": true,
+        "members_count": 163
+      },
+      {
+        "id": "661732b95ef02bd2dddfde1e",
+        "name": "Rowe, Heller and McKenzie",
+        "profile_picture": "",
+        "favorite_flag": false,
+        "members_count": 924
+      }
+    ]
+  });
 });
 app.get("/users/moderated-communities", (req, res) => {
   res.status(200).json(moderatedCommunities);
