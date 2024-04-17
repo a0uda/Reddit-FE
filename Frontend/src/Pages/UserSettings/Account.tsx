@@ -43,6 +43,8 @@ function Account() {
   const { data, error, isLoading, refetch } = useQuery('accountSettings', () =>
     fetchRequest('users/account-settings')
   );
+  console.log(data, 'accountsettings');
+
   const patchReq = useMutation(patchRequest, {
     onSuccess: (data) => {
       refetch();

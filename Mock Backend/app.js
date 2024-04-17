@@ -31,6 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 const accountSettings = {
+  msg: 'asdasd',
   account_settings: {
     email: "ahmedkhaled1029@gmail.com",
     verified_email_flag: "string",
@@ -43,14 +44,14 @@ const accountSettings = {
 };
 
 app.get("/users/account-settings", (req, res) => {
-  res.status(200).json({ accountSettings });
+  res.status(200).json(accountSettings);
 });
 
 let c = 0;
 app.patch("/users/change-account-settings", (req, res) => {
-  accountSettings.account_settings[Object.keys(req.body)[0]] = Object.values(
-    req.body
-  )[0];
+  accountSettings.account_settings = { ...accountSettings.account_settings, ...req.body.account_settings }
+
+  console.log(req.body);
   if (c < 5) {
     c++;
     res.sendStatus(200);
@@ -84,6 +85,7 @@ app.post("/users/delete-account", (req, res) => {
 });
 
 let profileSettings = {
+  msg: 'adasd',
   profile_settings: {
     display_name: "string",
     about: "string",
@@ -107,13 +109,12 @@ let profileSettings = {
 };
 
 app.get("/users/profile-settings", (req, res) => {
-  res.status(200).json({ profileSettings });
+  res.status(200).json(profileSettings);
 });
 
 app.patch("/users/change-profile-settings", (req, res) => {
-  profileSettings.profile_settings[Object.keys(req.body)[0]] = Object.values(
-    req.body
-  )[0];
+  profileSettings.profile_settings = { ...profileSettings.profile_settings, ...req.body.profile_settings }
+
   res.status(200).json(profileSettings);
 });
 
@@ -122,6 +123,7 @@ app.post("/users/clear-history", (req, res) => {
 });
 
 let notificationSettings = {
+  msg: 'asda',
   notifications_settings: {
     private_messages: false,
     chat_messages: false,
@@ -137,56 +139,62 @@ let notificationSettings = {
   },
 };
 app.get("/users/notification-settings", (req, res) => {
-  res.status(200).json({ notificationSettings });
+  res.status(200).json(notificationSettings);
 });
 app.patch("/users/change-notification-settings", (req, res) => {
   const updatedSettings = req.body;
-  notificationSettings = {
-    ...notificationSettings,
-    ...updatedSettings,
+  notificationSettings.notifications_settings = {
+    ...notificationSettings.notifications_settings,
+    ...updatedSettings.notifications_settings,
   };
   res.status(200).json(notificationSettings);
 });
 
 let emailSettings = {
-  new_follower_email: true,
-  chat_request_email: true,
-  unsubscribe_from_all_emails: true,
+  msg: 'asdasd',
+  settings: {
+    new_follower_email: true,
+    chat_request_email: true,
+    unsubscribe_from_all_emails: true,
+  }
 };
 app.get("/users/email-settings", (req, res) => {
   res.status(200).json(emailSettings);
 });
 app.patch("/users/change-email-settings", (req, res) => {
   const updatedSettings = req.body;
-  emailSettings = {
-    ...emailSettings,
-    ...updatedSettings,
+  emailSettings.settings = {
+    ...emailSettings.settings,
+    ...updatedSettings.email_settings,
   };
   res.status(200).json(emailSettings);
 });
 
 let feedSettings = {
-  Adult_content_flag: true,
-  autoplay_media: true,
-  community_content_sort: {
-    type: "top",
-    sort_remember_per_community: true,
-  },
-  global_content: {
-    global_content_view: "classic",
-    global_remember_per_community: true,
-  },
-  Open_posts_in_new_tab: true,
-  community_themes: true,
+  msg: 'asds',
+  settings: {
+    Adult_content_flag: true,
+    autoplay_media: true,
+    community_content_sort: {
+      type: "top",
+      sort_remember_per_community: true,
+    },
+    global_content: {
+      global_content_view: "classic",
+      global_remember_per_community: true,
+    },
+    Open_posts_in_new_tab: true,
+    community_themes: true,
+  }
 };
 app.get("/users/feed-settings", (req, res) => {
   res.status(200).json(feedSettings);
 });
 app.patch("/users/change-feed-settings", (req, res) => {
   const updatedSettings = req.body;
-  feedSettings = {
-    ...feedSettings,
-    ...updatedSettings,
+  feedSettings.settings = {
+    ...feedSettings.settings,
+    ...updatedSettings.feed_settings,
   };
   res.sendStatus(200);
 });
@@ -212,6 +220,7 @@ app.post("/users/delete-social-link", (req, res) => {
 });
 
 const safetySettings = {
+  msg: 'asda',
   safety_and_privacy_settings: {
     blocked_users: [
       {
@@ -292,14 +301,19 @@ app.post("/users/mute-unmute-community", (req, res) => {
 });
 
 let chatSettings = {
-  who_send_chat_request_flag: "Everyone",
-  who_send_private_messages_flag: "Everyone",
+  msg: 'asdad',
+  settings: {
+    who_send_chat_request_flag: "Everyone",
+    who_send_private_messages_flag: "Everyone",
+  }
 };
 app.get("/users/chats-and-msgs-settings", (req, res) => {
   res.status(200).json(chatSettings);
 });
 app.patch("/users/change-chats-and-msgs-settings", (req, res) => {
-  chatSettings[Object.keys(req.body)[0]] = Object.values(req.body)[0];
+  console.log(req.body);
+  chatSettings.settings = { ...chatSettings.settings, ...req.body.chat_and_messaging_settings }
+
   console.log(chatSettings);
   res.sendStatus(200);
 });
@@ -1749,7 +1763,7 @@ app.post("/posts-or-comments/vote", (req, res) => {
 
 app.get("/user/about/:id", (req, res) => {
   const { id } = req.params;
-  console.log(id,'hiiii');
+  console.log(id, 'hiiii');
   const user = users.find((user) => user.id === id);
   if (!user) return res.status(404).json({ message: "User not found" });
   res.status(200).json(post);
