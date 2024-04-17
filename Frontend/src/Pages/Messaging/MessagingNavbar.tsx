@@ -19,7 +19,7 @@ export const MessagingNavbar = () => {
   const url = useParams();
   const loc = Object.values(url)[0];
   return (
-    <div className='bg-blue-light w-full px-[100px] text-white capitalize'>
+    <div className='bg-blue-light w-full px-5  md:!px-[100px] text-white capitalize'>
       <ul className='flex gap-6 text-lg py-4 text-[#edeff1] opacity-80'>
         <Link to='/message/compose'>
           <li className={loc === 'compose' ? 'text-[#80bce9]' : ''}>
