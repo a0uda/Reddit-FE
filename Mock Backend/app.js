@@ -166,27 +166,31 @@ app.patch("/users/change-email-settings", (req, res) => {
 });
 
 let feedSettings = {
-  Adult_content_flag: true,
-  autoplay_media: true,
-  community_content_sort: {
-    type: "top",
-    sort_remember_per_community: true,
-  },
-  global_content: {
-    global_content_view: "classic",
-    global_remember_per_community: true,
-  },
-  Open_posts_in_new_tab: true,
-  community_themes: true,
+  msg: 'asds',
+  settings: {
+    Adult_content_flag: true,
+    autoplay_media: true,
+    community_content_sort: {
+      type: "top",
+      sort_remember_per_community: true,
+    },
+    global_content: {
+      global_content_view: "classic",
+      global_remember_per_community: true,
+    },
+    Open_posts_in_new_tab: true,
+    community_themes: true,
+  }
 };
 app.get("/users/feed-settings", (req, res) => {
   res.status(200).json(feedSettings);
 });
 app.patch("/users/change-feed-settings", (req, res) => {
+  console.log(req.body);
   const updatedSettings = req.body;
-  feedSettings = {
-    ...feedSettings,
-    ...updatedSettings,
+  feedSettings.settings = {
+    ...feedSettings.settings,
+    ...updatedSettings.feed_settings,
   };
   res.sendStatus(200);
 });
@@ -1748,7 +1752,7 @@ app.post("/posts-or-comments/vote", (req, res) => {
         } else {
           post.downvotes_count++;
         }
-        console.log('reply');
+        console.log(post);
       }
       return post;
     });
@@ -2066,7 +2070,7 @@ let postReplies = [
     "id": "1",
     "unread": false,
     "commentsCount": 3,
-    "vote": -1,
+    "rank": -1,
     'upvotes_count': 3,
     'downvotes_count': 2
   },
@@ -2080,7 +2084,7 @@ let postReplies = [
     "id": "2",
     "unread": true,
     "commentsCount": 15,
-    "vote": 0,
+    "rank": 0,
     'upvotes_count': 100,
     'downvotes_count': 3
   },
@@ -2094,7 +2098,7 @@ let postReplies = [
     "id": "3",
     "unread": false,
     "commentsCount": 1,
-    "vote": 1,
+    "rank": 1,
     'upvotes_count': 6,
     'downvotes_count': 10
   }
@@ -2202,7 +2206,7 @@ let usernameMentions = [
     "id": "11",
     "unread": false,
     "commentsCount": 3,
-    "vote": -1,
+    "rank": -1,
     'upvotes_count': 3,
     'downvotes_count': 2
   },
@@ -2216,7 +2220,7 @@ let usernameMentions = [
     "id": "21",
     "unread": true,
     "commentsCount": 15,
-    "vote": 0,
+    "rank": 0,
     'upvotes_count': 100,
     'downvotes_count': 3
   },
@@ -2254,7 +2258,7 @@ app.get('/messages/get-user-mentions', (req, res) => {
 
 app.get("/user/about/:id", (req, res) => {
   const { id } = req.params;
-  console.log(id,'hiiii');
+  console.log(id, 'hiiii');
   const user = users.find((user) => user.id === id);
   if (!user) return res.status(404).json({ message: "User not found" });
   res.status(200).json(post);
@@ -2563,6 +2567,29 @@ let postsComments = [
 ];
 app.get("/users/:username/about", (req, res) => {
   res.status(200).json(userAbout);
+});
+app.get("/users/moderated-communities2", (req, res) => {
+  res.status(200).json({
+    "success": true,
+    "status": 200,
+    "msg": "Your moderated communities are retrieved successfully",
+    "moderated_communities": [
+      {
+        "id": "661732b95ef02bd2dddfde17",
+        "name": "Russel, Friesen and Volkman",
+        "profile_picture": "",
+        "favorite_flag": true,
+        "members_count": 163
+      },
+      {
+        "id": "661732b95ef02bd2dddfde1e",
+        "name": "Rowe, Heller and McKenzie",
+        "profile_picture": "",
+        "favorite_flag": false,
+        "members_count": 924
+      }
+    ]
+  });
 });
 app.get("/users/moderated-communities", (req, res) => {
   res.status(200).json(moderatedCommunities);

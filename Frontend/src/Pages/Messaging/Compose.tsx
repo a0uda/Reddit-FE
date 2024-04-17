@@ -22,8 +22,9 @@ const Compose = () => {
   }, [user]);
 
   const getCommResponse = useQuery('getCommunities', () =>
-    fetchRequest('users/moderated-communities')
+    fetchRequest('users/moderated-communities2')
   );
+  console.log(getCommResponse.data, 'getCommResponse.data');
 
   const postReq = useMutation(postRequest, {
     onSuccess: () => {},
@@ -58,8 +59,9 @@ const Compose = () => {
       setMessageBool(true);
       return;
     }
-    const moderatedCommunityNames =
-      getCommResponse.data?.data.moderated_communities.map((com) => com.name);
+    const moderatedCommunityNames = getCommResponse.data?.data.map(
+      (com) => com.name
+    );
     console.log(moderatedCommunityNames, 'mmmmm');
     const senderType = moderatedCommunityNames.includes(from)
       ? 'moderator'
@@ -90,7 +92,7 @@ const Compose = () => {
   };
 
   return (
-    <ContentContainer>
+    <ContentContainer length={1}>
       <div className='px-5 py-3'>
         <h1 className='text-lg mb-3'>Send A Private Message</h1>
         <div className='mb-3'>
@@ -106,8 +108,8 @@ const Compose = () => {
             <option value={user?.username}>
               {addPrefixToUsername(user?.username || '', 'user')}
             </option>
-            {getCommResponse.data?.data.moderated_communities &&
-              getCommResponse.data?.data.moderated_communities.map((com, i) => (
+            {getCommResponse.data?.data &&
+              getCommResponse.data?.data.map((com, i) => (
                 <option key={com.name} value={com.name}>
                   {addPrefixToUsername(com.name, 'moderator')}
                 </option>

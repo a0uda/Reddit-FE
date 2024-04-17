@@ -15,6 +15,7 @@ function FeedSettings() {
     () => fetchRequest('users/feed-settings')
   );
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+  console.log(data, 'feeeed');
 
   const mutation = useMutation(patchRequest, {
     onSuccess: () => {
@@ -39,12 +40,12 @@ function FeedSettings() {
   const {
     Adult_content_flag,
     autoplay_media,
-    communitiy_content_sort,
+    community_content_sort,
     global_content,
     Open_posts_in_new_tab,
     community_themes,
   } = data?.data || {};
-  console.log('Adult_content_flag', Adult_content_flag);
+  console.log('Adult_content_flag', community_content_sort);
 
   return (
     <LoadingProvider error={error} isLoading={isLoading}>
@@ -86,11 +87,11 @@ function FeedSettings() {
           description='Choose how you would like content organized in communities you visit. This will not affect global feeds such as Home, or Popular.'
         >
           <DropDownButton
-            selected={communitiy_content_sort?.type}
+            selected={community_content_sort?.type}
             buttonList={['hot', 'new', 'top', 'rising']}
             handleSelectionChange={(selectedItem) =>
               handleToggleSwitch({
-                communitiy_content_sort: {
+                community_content_sort: {
                   type: selectedItem,
                 },
               })
@@ -103,10 +104,10 @@ function FeedSettings() {
           description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
         >
           <SwitchButton
-            checked={communitiy_content_sort?.sort_remember_per_community}
+            checked={community_content_sort?.sort_remember_per_community}
             onChange={(value) =>
               handleToggleSwitch({
-                communitiy_content_sort: {
+                community_content_sort: {
                   sort_remember_per_community: value,
                 },
               })

@@ -8,7 +8,7 @@ const Sent = () => {
   const { data, isError, isLoading, refetch } = useQuery('postReplies', () =>
     fetchRequest('messages/get-post-replies')
   );
-  console.log(data);
+  console.log(data, 'messages/get-post-replies');
   // createDate: Date;
   // senderUsername: string;
   // postCreator: string;
@@ -34,7 +34,7 @@ const Sent = () => {
                 unread={reply['unread']}
                 commentsCount={reply['commentsCount']}
                 key={reply['id']}
-                vote={reply['vote']}
+                vote={reply['rank']}
                 query='postReplies'
                 refetch={refetch}
 

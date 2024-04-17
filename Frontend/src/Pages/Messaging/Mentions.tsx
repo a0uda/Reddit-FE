@@ -36,7 +36,7 @@ const Sent = () => {
                 unread={reply['unread']}
                 commentsCount={reply['commentsCount']}
                 key={reply['id']}
-                vote={reply['vote']}
+                vote={reply['rank']}
                 query='usernameMentions'
                 refetch={refetch}
               />
