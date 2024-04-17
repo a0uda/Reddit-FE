@@ -47,6 +47,7 @@ axios.interceptors.response.use(
         noStatus = true;
       }
     }
+    
 
     if (noStatus) data = Object.values(data)[0]; // Last object in the response
     response.data = data;
