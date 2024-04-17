@@ -442,6 +442,10 @@ const communitiesPost = [
 app.get("/users/communities", (req, res) => {
   res.status(200).json(communitiesPost);
 });
+
+app.get("/users/communities2", (req, res) => {
+  res.status(200).json(communities);
+});
 app.post("/posts/new-post", (req, res) => {
   // const {} = req.body;
   res.status(200).json({ message: "	post created successfully" });
@@ -513,6 +517,52 @@ app.get("/communities/get-popular-communities", (req, res) => {
   res.status(200).json(popularComunities);
 });
 
+let communities = [
+  {
+    name: "sports",
+    title: "Reddit Sports",
+    description:
+      "Sports News and Highlights from the NFL, NBA, NHL, MLB, MLS, and leagues around the world.",
+    membersNumber: 5000,
+    onlineMembers: 205,
+    rank: 5,
+  },
+  {
+    name: "programming",
+    title: "programming",
+    description: "Computer Programming",
+    membersNumber: 1000,
+    onlineMembers: 500,
+    rank: 1,
+  },
+  {
+    name: "music",
+    title: "Reddit Music",
+    description: "The musical community of reddit",
+    membersNumber: 7000,
+    onlineMembers: 300,
+    rank: 3,
+  },
+];
+
+app.get("/communities/get-history-posts/", (req, res) => {
+  res.status(200).json(recentPostsList);
+});
+
+//Added Request (doesn't exist in the API)
+//(return the community details by passing the community name as a prameter in the path)
+app.get("/communities/:communityName", (req, res) => {
+  const { communityName } = req.params;
+  const community = communities.find(
+    (community) => community.name === communityName
+  );
+  if (community) {
+    res.status(200).json(community);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+
 let recentPostsList = [
   {
     id: "1",
@@ -550,7 +600,7 @@ let recentPostsList = [
       votes: [10, 5, 7],
     },
     community_id: "community123",
-    "community-name": "sports",
+    community_name: "sports",
     comments_count: 9,
     // added //
     communityAvatarSrc:
@@ -623,7 +673,7 @@ let recentPostsList = [
       votes: [10, 5, 7],
     },
     community_id: "community123",
-    "community-name": "programming",
+    community_name: "programming",
     comments_count: 20,
     // added //
     communityAvatarSrc:
@@ -662,14 +712,10 @@ let recentPostsList = [
   },
 ];
 
-app.get("/communities/get-history-posts", (req, res) => {
-  res.status(200).json(recentPostsList);
-});
-
 app.post("/users/join-community", (req, res) => {
   const { communityName } = req.body;
   recentPostsList = recentPostsList.map((post) => {
-    if (post["community-name"] === communityName) {
+    if (post.community_name === communityName) {
       post.joined = true;
       console.log(post);
     }
@@ -681,7 +727,7 @@ app.post("/users/join-community", (req, res) => {
 app.post("/users/leave-community", (req, res) => {
   const { communityName } = req.body;
   recentPostsList = recentPostsList.map((post) => {
-    if (post["community-name"] === communityName) {
+    if (post.community_name === communityName) {
       post.joined = false;
       console.log(post);
     }
@@ -822,92 +868,92 @@ app.patch("/notifications/hide/:id", (req, res) => {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let postsListings = [
-  {
-    deleted: false, //mtzwda
-    is_post: true,
-    _id: "15",
-    user_id: "user1",
-    // username: "john_doe",
-    title: "First Post",
-    description: "This is the first post",
-    created_at: "2024-03-29",
-    edited_at: "2024-03-29",
-    deleted_at: "2024-03-29",
-    type: "image_and_videos",
-    link_url: "https://example.com",
-    images: [
-      {
-        path: "image1.jpg",
-        caption: "Image 1",
-        link: "https://source.unsplash.com/random",
-        ////
-        _id: "asdasdasd",
-      },
-    ],
-    videos: [
-      {
-        path: "video1.mp4",
-        caption: "Video 1",
-        link: "https://example.com/video1.mp4",
-        _id: "qqqqqq",
-      },
-    ],
-    //metghyr
-    polls: [
-      {
-        options: "option 1",
-        votes: 0,
-        _id: "6617aec5023c99b0dcaf4399",
-      },
-      {
-        options: "option 2",
-        votes: 0,
-        _id: "6617aec5023c99b0dcaf439a",
-      },
-      {
-        options: "option 3",
-        votes: 4,
-        _id: "6817aec5023c99b0dcaf439a",
-      },
-    ],
-    polls_voting_length: 3, //mtzwd
-    polls_voting_is_expired_flag: false, ////mtzwd
-    post_in_community_flag: false,
-    // community_id: "community1", etshal
-    community_name: "Community 1",
-    comments_count: 0,
-    views_count: 0,
-    shares_count: 0,
-    upvotes_count: 0,
-    downvotes_count: 0,
-    oc_flag: true,
-    spoiler_flag: true,
-    nsfw_flag: true,
-    locked_flag: true,
-    allowreplies_flag: true,
-    scheduled_flag: false, //mtzwd
-    set_suggested_sort: "None (Recommended)",
-    moderator_details: {
-      // approved_by: "moderator1",
-      // approved_date: "2024-03-29",//sheel
-      // removed_by: "moderator2",
-      // removed_date: "2024-03-29",//sheel
-      // spammed_by: "moderator3",//sheel
-      // spammed_type: "spam",//sheel
-      spammed_flag: false,
-      approved_flag: false,
-      removed_flag: false,
-    },
-    user_details: {
-      total_views: 0,
-      upvote_rate: 0,
-      total_shares: 0,
-    },
-    is_reposted_flag: false, //mtzwd
-    reposted: [], // mtzwd
-    user_id: "661574f4faed34e05f91ded3", //mtzwd
-    __v: 0, //mtzwd
-  },
+  // {
+  //   deleted: false, //mtzwda
+  //   is_post: true,
+  //   _id: "15",
+  //   user_id: "user1",
+  //   // username: "john_doe",
+  //   title: "First Post",
+  //   description: "This is the first post",
+  //   created_at: "2024-03-29",
+  //   edited_at: "2024-03-29",
+  //   deleted_at: "2024-03-29",
+  //   type: "image_and_videos",
+  //   link_url: "https://example.com",
+  //   images: [
+  //     {
+  //       path: "image1.jpg",
+  //       caption: "Image 1",
+  //       link: "https://source.unsplash.com/random",
+  //       ////
+  //       _id: "asdasdasd",
+  //     },
+  //   ],
+  //   videos: [
+  //     {
+  //       path: "video1.mp4",
+  //       caption: "Video 1",
+  //       link: "https://example.com/video1.mp4",
+  //       _id: "qqqqqq",
+  //     },
+  //   ],
+  //   //metghyr
+  //   polls: [
+  //     {
+  //       options: "option 1",
+  //       votes: 0,
+  //       _id: "6617aec5023c99b0dcaf4399",
+  //     },
+  //     {
+  //       options: "option 2",
+  //       votes: 0,
+  //       _id: "6617aec5023c99b0dcaf439a",
+  //     },
+  //     {
+  //       options: "option 3",
+  //       votes: 4,
+  //       _id: "6817aec5023c99b0dcaf439a",
+  //     },
+  //   ],
+  //   polls_voting_length: 3, //mtzwd
+  //   polls_voting_is_expired_flag: false, ////mtzwd
+  //   post_in_community_flag: false,
+  //   // community_id: "community1", etshal
+  //   community_name: "Community 1",
+  //   comments_count: 0,
+  //   views_count: 0,
+  //   shares_count: 0,
+  //   upvotes_count: 0,
+  //   downvotes_count: 0,
+  //   oc_flag: true,
+  //   spoiler_flag: true,
+  //   nsfw_flag: true,
+  //   locked_flag: true,
+  //   allowreplies_flag: true,
+  //   scheduled_flag: false, //mtzwd
+  //   set_suggested_sort: "None (Recommended)",
+  //   moderator_details: {
+  //     // approved_by: "moderator1",
+  //     // approved_date: "2024-03-29",//sheel
+  //     // removed_by: "moderator2",
+  //     // removed_date: "2024-03-29",//sheel
+  //     // spammed_by: "moderator3",//sheel
+  //     // spammed_type: "spam",//sheel
+  //     spammed_flag: false,
+  //     approved_flag: false,
+  //     removed_flag: false,
+  //   },
+  //   user_details: {
+  //     total_views: 0,
+  //     upvote_rate: 0,
+  //     total_shares: 0,
+  //   },
+  //   is_reposted_flag: false, //mtzwd
+  //   reposted: [], // mtzwd
+  //   user_id: "661574f4faed34e05f91ded3", //mtzwd
+  //   __v: 0, //mtzwd
+  // },
   {
     is_post: true,
     id: "18",
@@ -939,7 +985,7 @@ let postsListings = [
       votes: [0, 0, 0],
     },
     community_id: "community2",
-    "community-name": "Community 2",
+    community_name: "Community 2",
     comments_count: 0,
     views_count: 0,
     shares_count: 0,
@@ -996,7 +1042,7 @@ let postsListings = [
       votes: [0, 0, 0],
     },
     community_id: "community3",
-    "community-name": "Community 3",
+    community_name: "Community 3",
     comments_count: 0,
     views_count: 0,
     shares_count: 0,
@@ -1053,7 +1099,7 @@ let postsListings = [
       votes: [0, 0, 0],
     },
     community_id: "community4",
-    "community-name": "Community 4",
+    community_name: "Community 4",
     comments_count: 0,
     views_count: 0,
     shares_count: 0,
@@ -1110,7 +1156,7 @@ let postsListings = [
       votes: [0, 0, 0],
     },
     community_id: "community3",
-    "community-name": "Community 3",
+    community_name: "Community 3",
     comments_count: 0,
     views_count: 0,
     shares_count: 0,
@@ -1167,7 +1213,7 @@ let postsListings = [
       votes: [0, 0, 0],
     },
     community_id: "community2",
-    "community-name": "Community 2",
+    community_name: "Community 2",
     comments_count: 0,
     views_count: 0,
     shares_count: 0,
@@ -1195,7 +1241,7 @@ let postsListings = [
   },
 ].concat(recentPostsList); // m3 haget osama
 
-const comments = {
+let comments = {
   message: "Comments Retrieved sucessfully",
   comments: [
     {
@@ -1661,6 +1707,7 @@ app.get("/listing/posts/top", (req, res) => {
 
 app.post("/posts-or-comments/vote", (req, res) => {
   const { id, is_post, rank } = req.body;
+  console.log("id", id, "is_post", is_post, "rank", rank);
   if (is_post) {
     postsListings = postsListings.map((post) => {
       if (post.id === id) {
@@ -1673,8 +1720,8 @@ app.post("/posts-or-comments/vote", (req, res) => {
       return post;
     });
   } else {
-    comments = comments.map((comment) => {
-      if (comment.id === id) {
+    comments.comments = comments.comments.map((comment) => {
+      if (comment._id === id) {
         if (rank === 1) {
           comment.upvotes_count++;
         } else {
@@ -1706,7 +1753,9 @@ app.get("/posts/get-post/:id", (req, res) => {
 
 app.get("/posts/get-comments/:id", (req, res) => {
   const { id } = req.params;
-  const postComments = comments.filter((comment) => comment.post_id === id);
+  const postComments = comments.comments.filter(
+    (comment) => comment.post_id === id
+  );
   if (!postComments) {
     return res.status(404).json({ message: "Comments not found" });
   }
@@ -1855,7 +1904,7 @@ let postsComments = [
       votes: [0, 0, 0],
     },
     community_id: "community1",
-    "community-name": "Community 1",
+    community_name: "Community 1",
     comments_count: 0,
     views_count: 0,
     shares_count: 0,
@@ -1912,7 +1961,7 @@ let postsComments = [
       votes: [0, 0, 0],
     },
     community_id: "community2",
-    "community-name": "Community 2",
+    community_name: "Community 2",
     comments_count: 0,
     views_count: 0,
     shares_count: 0,

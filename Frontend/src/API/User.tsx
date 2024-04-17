@@ -29,21 +29,23 @@ axios.interceptors.response.use(
     let data = response.data;
     let noStatus = false;
 
-    if ('success' in data) {
-      delete data['success'];
-      noStatus = true;
-    }
-    if ('status' in data) {
-      delete data['status'];
-      noStatus = true;
-    }
-    if ('message' in data) {
-      delete data['message'];
-      noStatus = true;
-    }
-    if ('msg' in data) {
-      delete data['message'];
-      noStatus = true;
+    if (data && typeof data === 'object') {
+      if ('success' in data) {
+        delete data['success'];
+        noStatus = true;
+      }
+      if ('status' in data) {
+        delete data['status'];
+        noStatus = true;
+      }
+      if ('message' in data) {
+        delete data['message'];
+        noStatus = true;
+      }
+      if ('msg' in data) {
+        delete data['msg'];
+        noStatus = true;
+      }
     }
 
     if (noStatus) data = Object.values(data)[0]; // Last object in the response

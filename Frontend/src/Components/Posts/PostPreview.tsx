@@ -22,7 +22,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
   return (
     <div className='relative'>
       <Link
-        to={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
+        to={`/r/${post.community_name}/comments/${post.id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
         reloadDocument
         // className='absolute inset-0'
       >
@@ -60,11 +60,11 @@ const PostPreview = ({ post }: { post: PostType }) => {
                 {post.title}
               </Typography>
               <InteractionButtons
-                id={post._id}
+                id={post.id}
                 upvotes={post.upvotes_count}
                 downvotes={post.downvotes_count}
                 comments_replies={post.comments_count}
-                refLink={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
+                refLink={`/r/${post.community_name}/comments/${post.id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
               />
             </div>
             {post.images?.[0] && (

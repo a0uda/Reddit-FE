@@ -41,7 +41,9 @@ const InteractionButtons = ({
     {
       onSuccess: () => {
         // Invalidate or refetch a query on success
-        queryClient.invalidateQueries(['listings', 'all']);
+        queryClient.invalidateQueries(['listings']);
+        queryClient.invalidateQueries(['post']);
+        queryClient.invalidateQueries(['comments']);
       },
       onError: () => {
         // Perform any actions on error, like showing an error message
@@ -66,8 +68,8 @@ const InteractionButtons = ({
       >
         <ButtonContainer
           className={cn(
-            upvote ? 'bg-orange' : downvote ? 'bg-violet-muted' : '',
-            !isPost && 'bg-inherit'
+            !isPost && 'bg-inherit',
+            upvote ? 'bg-orange' : downvote ? 'bg-violet-muted' : ''
           )}
         >
           <IconButton

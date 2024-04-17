@@ -65,7 +65,7 @@ function User() {
     fetchRequest(`users/${user?.username}/about`)
   );
 
-  const { about } = data?.data || {};
+  const about = data?.data || {};
 
   const username = about?.username ?? '';
   const display_name = about?.display_name ?? '';

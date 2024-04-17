@@ -21,7 +21,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
   const [author, setAuthor] = useState<UserType | undefined>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const userResponse = useQuery({
-    queryKey: ['user'],
+    queryKey: ['users/about/comment', comment.username],
     queryFn: () => fetchRequest(`users/about/${comment.username}`),
     onSuccess: (data) => {
       setAuthor(data.data);

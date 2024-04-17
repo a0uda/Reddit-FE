@@ -49,7 +49,7 @@ export function RecentPosts() {
                   <PostItem
                     communityCoverImage={post.communityCoverSrc}
                     communityIcon={post.communityAvatarSrc}
-                    communityName={post['community-name']}
+                    communityName={post.community_name}
                     joined={post.joined}
                     communityDescription={post.communityDescription}
                     communityMembers={post.communityMembers}

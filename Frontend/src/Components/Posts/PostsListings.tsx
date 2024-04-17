@@ -21,10 +21,10 @@ const PostsListings = () => {
   }
 
   const response = useQuery({
-    queryKey: ['listings', 'all', sortOption],
+    queryKey: ['listings', sortOption],
     queryFn: () => {
       console.log('sortOption', sortOption);
-      return fetchRequest(`listings/posts/${sortOption.toLowerCase()}`);
+      return fetchRequest(`listing/posts/${sortOption.toLowerCase()}`);
     },
   });
 
@@ -41,8 +41,6 @@ const PostsListings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption]);
 
-  console.log('response', response.isError);
-
   return (
     <>
       {/* Sort by dropdown */}
@@ -56,10 +54,10 @@ const PostsListings = () => {
         {response.isSuccess && (
           <>
             {response.data.data.map((post: PostType) => (
-              <>
-                <PostPreview key={post._id} post={post} />
+              <div key={post.id}>
+                <PostPreview post={post} />
                 <hr className='border-neutral-muted' />
-              </>
+              </div>
             ))}
           </>
         )}

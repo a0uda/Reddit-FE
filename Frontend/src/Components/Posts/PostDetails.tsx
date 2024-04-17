@@ -73,7 +73,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 {post.communityAvatarSrc ? (
                   <Avatar
                     variant='circular'
-                    alt={post['community-name']}
+                    alt={post.community_name}
                     src={post.communityAvatarSrc}
                     className='w-10 h-10'
                   />
@@ -83,7 +83,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 <div className='flex flex-col justify-between m-0'>
                   <div className='flex flex-row items-center justify-between gap-1 m-0'>
                     <CommunityBadge
-                      name={post['community-name']}
+                      name={post.community_name}
                       joined={post.joined}
                       avatar={post.communityAvatarSrc}
                       displayAvatar={false}
@@ -131,7 +131,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 upvotes={post.upvotes_count}
                 downvotes={post.downvotes_count}
                 comments_replies={post.comments_count}
-                refLink={`/r/${post['community-name']}/comments/${post.id}/${post.title
+                refLink={`/r/${post.community_name}/comments/${post.id}/${post.title
                   .split(' ')
                   .splice(0, 10)
                   .join('_')}/`}
@@ -151,7 +151,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
         <>
           {comments &&
             comments.map((comment) => (
-              <Comment key={comment.id} comment={comment} />
+              <Comment key={comment._id} comment={comment} />
             ))}
         </>
       </LoadingProvider>

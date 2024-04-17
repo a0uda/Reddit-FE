@@ -71,7 +71,7 @@ const SideBar = ({ className }: { className?: string }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const communitiesResponse = useQuery({
     queryKey: ['communities'],
-    queryFn: () => fetchRequest(`users/communities/`),
+    queryFn: () => fetchRequest(`users/communities2/`),
     onSuccess: (data) => {
       const formattedCommunities = data.data?.map(
         (community: CommunityType) => ({

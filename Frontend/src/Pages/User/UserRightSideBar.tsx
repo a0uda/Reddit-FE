@@ -29,7 +29,7 @@ function UserRightSideBar() {
     queryKey: 'about data',
     queryFn: () => fetchRequest(`users/${user?.username}/about`),
     onSuccess: (data) => {
-      setAboutData(data.data.about);
+      setAboutData(data.data);
     },
   });
 
@@ -40,7 +40,8 @@ function UserRightSideBar() {
     queryKey: 'moderated communities',
     queryFn: () => fetchRequest('users/moderated-communities'),
     onSuccess: (data) => {
-      setModeratedCommunities(data.data.moderated_communities);
+      console.log('moderated communities', data.data);
+      setModeratedCommunities(data.data);
     },
   });
   const joinMutation = useMutation(
