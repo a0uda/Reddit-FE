@@ -47,10 +47,12 @@ import Login from '../Pages/credential/Login';
 import RecoverUsername from '../Pages/credential/RecoverUsername';
 import ResetPassword from '../Pages/credential/ResetPassword';
 import Signup from '../Pages/credential/Signup';
+import useSession from '../hooks/auth/useSession';
 
 export function NavigationBar() {
   const [openNav, setOpenNav] = useState(false);
-  const [isLogged, setIsLogged] = useState(!!localStorage.getItem('token'));
+
+  const { status } = useSession();
   const [avatarDrawer, setAvatarDrawer] = useState(false);
 
   useEffect(() => {
@@ -60,9 +62,6 @@ export function NavigationBar() {
     );
   }, []);
 
-  useEffect(() => {
-    setIsLogged(!!localStorage.getItem('token'));
-  }, [localStorage.getItem('token')]);
   return (
     <>
       <div className='px-4 sticky top-0 z-20 w-full bg-white overflow-visible'>
@@ -118,7 +117,7 @@ export function NavigationBar() {
             <SearchBar />
           </div>
           <div className='col-span-4 flex justify-end shrink-0'>
-            {isLogged ? (
+            {status === 'authenticated' ? (
               <CampainLoggedIn setAvatarDrawer={setAvatarDrawer} />
             ) : (
               <CampainLoggedOut />
@@ -412,20 +411,26 @@ const CampainLoggedOut = () => {
 };
 
 const AvatarMenu = () => {
-  const user = {
-    name: 'Ahmed Tarek',
-    username: 'ahmedtarek',
-    icon: 'https://www.redditstatic.com/avatars/avatar_default_07_24A0ED.png',
-  };
+  const { user } = useSession();
+
   const navigate = useNavigate();
 
   return (
     <>
       <List className='p-0 text-foreground w-full'>
-        <ListItem className='py-2 flex gap-2 items-center'>
+        <ListItem
+          className='py-2 flex gap-2 items-center'
+          onClick={() => {
+            navigate(`user/${user?.username}/saved`);
+            location.reload();
+          }}
+        >
           <Avatar
-            src={user.icon}
-            alt={user.name + ' Profile'}
+            src={
+              user?.imageUrl ||
+              'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+            }
+            alt={user?.name + "'s Profile"}
             variant='circular'
             size='sm'
           />
@@ -435,7 +440,7 @@ const AvatarMenu = () => {
               variant='small'
               className='text-neutral-900 font-normal text-xs'
             >
-              u/{user.username}
+              u/{user?.username}
             </Typography>
           </div>
         </ListItem>
@@ -483,11 +488,7 @@ const CampainLoggedIn = ({
 }: {
   setAvatarDrawer: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const user = {
-    name: 'Ahmed Tarek',
-    username: 'ahmedtarek',
-    icon: 'https://www.redditstatic.com/avatars/avatar_default_07_24A0ED.png',
-  };
+  const { user } = useSession();
 
   return (
     <>
@@ -516,8 +517,11 @@ const CampainLoggedIn = ({
             <MenuHandler>
               <Button variant='text' className=''>
                 <Avatar
-                  src={user.icon}
-                  alt={user.name + ' Profile'}
+                  src={
+                    user?.imageUrl ||
+                    'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+                  }
+                  alt={user?.name + "'s Profile"}
                   variant='circular'
                   size='sm'
                 />
@@ -532,8 +536,11 @@ const CampainLoggedIn = ({
         <div className='lg:hidden'>
           <Button variant='text' onClick={() => setAvatarDrawer(true)}>
             <Avatar
-              src={user.icon}
-              alt={user.name + ' Profile'}
+              src={
+                user?.imageUrl ||
+                'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+              }
+              alt={user?.name + "'s Profile"}
               variant='circular'
               size='sm'
             />
@@ -721,9 +728,8 @@ const NotificationMenu = () => {
         })
       );
     }
-    console.log(notifications);
-
-    console.log(today);
+    // console.log(notifications);
+    // console.log(today);
   }, [notifications]);
 
   const unreadNotifications = notifications.filter(

@@ -19,7 +19,7 @@ export function PopularCommunities() {
     'popular communities data',
     () => fetchRequest('communities/get-popular-communities')
   );
-  console.log(data);
+  // console.log(data);
 
   const communityList = data?.data ?? [];
 
@@ -27,7 +27,7 @@ export function PopularCommunities() {
     ? communityList
     : communityList.slice(0, 5);
 
-  console.log(displayedCommunities);
+  // console.log(displayedCommunities);
 
   return (
     <div

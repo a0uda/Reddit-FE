@@ -76,14 +76,11 @@ const Comment = ({ comment }: { comment: CommentType }) => {
             )} */}
           </div>
           <div>
-            {/* <Typography variant='paragraph' className='ml-2 text-black'>
-              {comment.description}
-            </Typography> */}
             <EditorContent editor={editor} />
             <div className='flex items-center px-0'>
               <InteractionButtons
                 isPost={false}
-                id={comment.id}
+                id={comment._id}
                 upvotes={comment.upvotes_count}
                 downvotes={comment.downvotes_count}
                 comments_replies={comment.replies_comments_ids.length}
@@ -103,7 +100,7 @@ const Comment = ({ comment }: { comment: CommentType }) => {
                   <div className='box-border h-4 border-0 border-neutral-muted border-solid border-b-[1px] cursor-pointer w-xs absolute right-[-8px]'></div>
                 </div> */}
                 {comment.replies_comments_ids.map((reply) => (
-                  <Reply key={reply.id} reply={reply} />
+                  <Reply key={reply._id} reply={reply} />
                 ))}
               </div>
             )}

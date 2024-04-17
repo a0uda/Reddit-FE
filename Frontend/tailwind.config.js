@@ -19,6 +19,9 @@ export default withMT({
       height: {
         navbar: 'var(--navbar-height)',
       },
+      blur: {
+        'custom-blur': '10px',
+      },
       gridTemplateColumns: {
         // Simple 16 col grid
         16: 'repeat(16, minmax(0, 1fr))',
@@ -71,6 +74,7 @@ export default withMT({
         'danger-red': '#ff585b',
         'lines-color': '#EDEFF1',
         'gray-light': '#7C7C7C',
+        grayLight: '#dae0e6',
       },
       width: {
         'fit-content': 'fit-content',

@@ -1,6 +1,7 @@
 import { FcGoogle } from 'react-icons/fc';
 import { useGoogleLogin } from '@react-oauth/google';
 import { postRequest } from '../API/User';
+import { saveToken } from '../utils/tokens_helper';
 
 function LoginWithGoogle(props: { handleOpen: () => void }) {
   const googleLogin = useGoogleLogin({
@@ -12,7 +13,8 @@ function LoginWithGoogle(props: { handleOpen: () => void }) {
           data: tokenResponse,
         });
         const { token } = response;
-        localStorage.setItem('token', token);
+        console.log('token', token);
+        saveToken(token);
         props.handleOpen();
         location.reload();
       } catch (error) {

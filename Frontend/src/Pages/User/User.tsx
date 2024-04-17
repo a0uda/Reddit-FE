@@ -10,14 +10,17 @@ import UserContent from './UserContent';
 import { fetchRequest } from '../../API/User';
 import { useQuery } from 'react-query';
 import ContentLayout from '../../Components/ContentLayout';
+import useSession from '../../hooks/auth/useSession';
+
 const NavButton = (props: {
   active?: boolean | undefined;
   buttonName: string;
   buttonLink: string;
+  username?: string;
 }) => {
   return (
     <Link
-      to={`/user/${props.buttonLink}`}
+      to={`/user/${props.username}/${props.buttonLink}`}
       className={`${props.active ? 'bg-neutral-500' : ''}  text-black rounded-full p-[10px] mx-[5px]  hover:underline`}
     >
       <div className='text-black text-sm'>{props.buttonName}</div>
@@ -28,6 +31,7 @@ const NavButton = (props: {
 const SubNavBar = (props: {
   buttonArray: string[];
   active: string | undefined;
+  username?: string;
 }) => {
   const pagesArray = [
     'overview',
@@ -46,37 +50,26 @@ const SubNavBar = (props: {
           active={props.active == pagesArray[i]}
           buttonName={butt}
           buttonLink={pagesArray[i]}
+          username={props.username}
         />
       ))}
     </div>
   );
 };
 function User() {
+  const { user } = useSession();
+
   const { page } = useParams();
-  console.log(page, 'hi');
-  const { data, error, isLoading, refetch } = useQuery('about data', () =>
-    fetchRequest('users/about')
+
+  const { data } = useQuery('about data', () =>
+    fetchRequest(`users/${user?.username}/about`)
   );
 
-  const {
-    id,
-    created_at,
-    username,
-    email,
-    gmail,
-    facebook_email,
-    profile_settings,
-    country,
-    gender,
-    connected_google,
-    connected_twitter,
-    connected_apple,
-    communities,
-    moderated_communities,
-  } = data?.data || {};
+  const { about } = data?.data || {};
 
-  const display_name = profile_settings?.display_name || '';
-  const profile_picture = profile_settings?.profile_picture || '';
+  const username = about?.username ?? '';
+  const display_name = about?.display_name ?? '';
+  const profile_picture = about?.profile_picture ?? '';
 
   return (
     <>
@@ -119,6 +112,7 @@ function User() {
                     'Downvoted',
                   ]}
                   active={page}
+                  username={user?.username}
                 />
               </div>
 

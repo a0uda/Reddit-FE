@@ -22,7 +22,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
   return (
     <div className='relative'>
       <Link
-        to={`/r/${post['community-name']}/comments/${post.id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
+        to={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
         reloadDocument
         // className='absolute inset-0'
       >
@@ -36,15 +36,15 @@ const PostPreview = ({ post }: { post: PostType }) => {
             className='flex flex-row items-center justify-between gap-2 m-0 bg-inherit'
           >
             <div className='flex flex-row items-center justify-between gap-1 m-0'>
-              <CommunityBadge
-                name={post['community-name']}
+              {/* <CommunityBadge
+                name={post.community_name}
                 joined={post.joined}
                 avatar={post.communityAvatarSrc}
                 coverImage={post.communityCoverSrc}
                 members={post.communityMembers}
                 online={post.communityOnline}
                 description={post.description}
-              />
+              /> */}
               <span className='relative -top-0.5'>•</span>
               <Typography variant='small' className=''>
                 {dateDuration(new Date(post.created_at))}
@@ -60,11 +60,11 @@ const PostPreview = ({ post }: { post: PostType }) => {
                 {post.title}
               </Typography>
               <InteractionButtons
-                id={post.id}
+                id={post._id}
                 upvotes={post.upvotes_count}
                 downvotes={post.downvotes_count}
                 comments_replies={post.comments_count}
-                refLink={`/r/${post['community-name']}/comments/${post.id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
+                refLink={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
               />
             </div>
             {post.images?.[0] && (
