@@ -81,7 +81,7 @@ export default function Signup(props: {
       saveToken(token);
       seterrorMessage('');
       props.handleOpen();
-      // location.reload();
+      location.reload();
     },
     onError: () => {
       seterrorMessage('Failed to signup');
