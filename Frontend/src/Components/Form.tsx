@@ -159,7 +159,7 @@ const MyForm: React.FC<InputProps> = ({
                       buttonColor={clicked == 1 ? 'bg-gray-200' : 'bg-white'}
                       buttonText='Male'
                       onClick={() => {
-                        formik.setFieldValue('gender', 'male');
+                        formik.setFieldValue('gender', 'Male');
                         setClicked(1);
                       }}
                     />
@@ -169,7 +169,7 @@ const MyForm: React.FC<InputProps> = ({
                       buttonColor={clicked == 2 ? 'bg-gray-200' : 'bg-white'}
                       buttonText='Female'
                       onClick={() => {
-                        formik.setFieldValue('gender', 'female');
+                        formik.setFieldValue('gender', 'Female');
                         setClicked(2);
                       }}
                     />
