@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, ReactNode } from 'react';
+import { MouseEventHandler, ReactNode } from 'react';
 import { Button } from '@material-tailwind/react';
 
 export default function RoundedButton(props: {
@@ -6,6 +6,7 @@ export default function RoundedButton(props: {
   buttonBorderColor: string;
   buttonText: string;
   buttonTextColor: string;
+  buttonShape?: string;
   imgRight?: any;
   children?: ReactNode;
   onClick?: MouseEventHandler<HTMLButtonElement>;
@@ -22,7 +23,7 @@ export default function RoundedButton(props: {
       }}
       type={props.type || 'button'}
       // color='black'
-      className={`!border ${props.buttonColor} ${props.buttonBorderColor} !normal-case ${props.buttonTextColor} hover:opacity-50 active:brightness-150 rounded-full hover:shadow-none focus:shadow-none shadow-none `}
+      className={`rounded-full !border ${props.buttonColor} ${props.buttonBorderColor} !normal-case ${props.buttonTextColor} hover:opacity-50 active:brightness-150  hover:shadow-none focus:shadow-none shadow-none `}
       size='sm'
       ripple={false}
       disabled={props.disabled || false}

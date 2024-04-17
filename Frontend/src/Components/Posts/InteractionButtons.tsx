@@ -1,35 +1,42 @@
-import ButtonContainer from './ButtonContainer';
+import ButtonContainer from '../ButtonContainer';
 import { Button, IconButton, Typography } from '@material-tailwind/react';
-import { VoteArrow } from '../assets/icons/Icons';
+import { VoteArrow } from '../../assets/icons/Icons';
 import {
   ArrowUpTrayIcon,
   ChatBubbleLeftIcon,
 } from '@heroicons/react/24/outline';
-import { postRequest } from '../API/User';
+import { postRequest } from '../../API/User';
 import { useMutation, useQueryClient } from 'react-query';
 import { useState } from 'react';
-import { cn } from '../utils/helper_functions';
+import { cn } from '../../utils/helper_functions';
+import { Link } from 'react-router-dom';
 
-const PostInteractionButtons = ({
-  postId,
+const InteractionButtons = ({
+  id,
   upvotes,
   downvotes,
-  comments,
+  comments_replies,
+  isPost = true,
+  refLink,
+  className,
 }: {
-  postId: string;
+  id: string;
   upvotes: number;
   downvotes: number;
-  comments: number;
+  comments_replies: number;
+  isPost?: boolean;
+  refLink?: string;
+  className?: string;
 }) => {
   const [upvote, setUpvote] = useState(false);
   const [downvote, setDownvote] = useState(false);
   const queryClient = useQueryClient();
 
   const mutate = useMutation(
-    ({ postId, rank }: { postId: string; rank: number }) =>
+    ({ id, rank }: { id: string; rank: number }) =>
       postRequest({
         endPoint: 'posts-or-comments/vote',
-        data: { id: postId, isPost: true, rank: rank },
+        data: { id: id, is_post: isPost, rank: rank },
       }),
     {
       onSuccess: () => {
@@ -43,14 +50,25 @@ const PostInteractionButtons = ({
     }
   );
 
-  // console.log('upvote', upvote);
-  // console.log('downvote', downvote);
-
   return (
     <>
-      <div className='flex flex-row items-center gap-4 text-black'>
+      <div
+        className={cn(
+          'flex flex-row items-center gap-4 text-black z-10',
+          !isPost ? 'gap-0' : '',
+          className
+        )}
+        onClick={(e) => {
+          // Wahed fehom yeshel el event (mesh 3ayez yed5ol lel post details)
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
         <ButtonContainer
-          className={upvote ? 'bg-orange' : downvote ? 'bg-violet-muted' : ''}
+          className={cn(
+            upvote ? 'bg-orange' : downvote ? 'bg-violet-muted' : '',
+            !isPost && 'bg-inherit'
+          )}
         >
           <IconButton
             variant='text'
@@ -60,8 +78,8 @@ const PostInteractionButtons = ({
             )}
             onClick={() => {
               setUpvote(!upvote);
-              downvote && mutate.mutate({ postId, rank: 1 });
-              mutate.mutate({ postId, rank: upvote ? -1 : 1 });
+              downvote && mutate.mutate({ id, rank: 1 });
+              mutate.mutate({ id, rank: upvote ? -1 : 1 });
               setDownvote(false);
             }}
           >
@@ -81,34 +99,55 @@ const PostInteractionButtons = ({
             )}
             onClick={() => {
               setDownvote(!downvote);
-              upvote && mutate.mutate({ postId, rank: -1 });
-              mutate.mutate({ postId, rank: downvote ? 1 : -1 });
+              upvote && mutate.mutate({ id, rank: -1 });
+              mutate.mutate({ id, rank: downvote ? 1 : -1 });
               setUpvote(false);
             }}
           >
             <VoteArrow className='h-5 w-5 hover:fill-violet rotate-180' />
           </IconButton>
         </ButtonContainer>
-        <ButtonContainer>
+        <ButtonContainer className={!isPost ? 'bg-inherit' : ''}>
           <Button
             variant='text'
             className='flex flex-row items-center justify-center gap-1 rounded-full'
           >
             <ChatBubbleLeftIcon className='h-5 w-5' />
-            <Typography variant='lead' className='text-sm'>
-              {comments}
-            </Typography>
+            <div className='hidden sm:block'>
+              {isPost ? (
+                <>
+                  <Link to={`${refLink}`}>
+                    <Typography variant='lead' className='text-sm'>
+                      {comments_replies}
+                    </Typography>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Typography variant='lead' className='text-sm'>
+                    Reply
+                  </Typography>
+                </>
+              )}
+            </div>
           </Button>
         </ButtonContainer>
-        <ButtonContainer>
+        <ButtonContainer className={!isPost ? 'bg-inherit' : ''}>
           <Button
             variant='text'
             className='flex flex-row items-center justify-center gap-1 rounded-full'
+            onClick={() => {
+              navigator.clipboard.writeText(
+                `${window.location.origin}${refLink}`
+              );
+            }}
           >
             <ArrowUpTrayIcon className='h-5 w-5' />
-            <Typography variant='lead' className='text-sm'>
-              Share
-            </Typography>
+            <div className='hidden sm:block'>
+              <Typography variant='lead' className='text-sm'>
+                Share
+              </Typography>
+            </div>
           </Button>
         </ButtonContainer>
       </div>
@@ -116,4 +155,4 @@ const PostInteractionButtons = ({
   );
 };
 
-export default PostInteractionButtons;
+export default InteractionButtons;

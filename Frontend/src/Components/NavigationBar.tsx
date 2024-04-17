@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import {
   Button,
   IconButton,
@@ -53,7 +53,7 @@ export function NavigationBar() {
   const [openNav, setOpenNav] = useState(false);
 
   const { status } = useSession();
-  console.log('status', status);
+  const [avatarDrawer, setAvatarDrawer] = useState(false);
 
   useEffect(() => {
     window.addEventListener(
@@ -63,81 +63,91 @@ export function NavigationBar() {
   }, []);
 
   return (
-    <div className='px-4'>
-      <nav className='m-0 p-0 flex flex-row justify-between border-b-[1px] border-b-neutral-muted h-14 w-full'>
-        <div className=' flex items-center col-span-4 gap-2 p-0'>
-          <IconButton
-            variant='text'
-            className='ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden'
-            ripple={false}
-            onClick={() => setOpenNav(!openNav)}
-          >
-            {openNav ? (
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                className='h-6 w-6'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M6 18L18 6M6 6l12 12'
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                className='h-6 w-6'
-                fill='none'
-                stroke='currentColor'
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M4 6h16M4 12h16M4 18h16'
-                />
-              </svg>
-            )}
-          </IconButton>
-          <Link to='/'>
-            <div className='flex gap-2 items-center justify-center h-12'>
-              <LogoMark />
-              <div className='hidden lg:flex'>
-                <LogoText />
-              </div>
-            </div>
-          </Link>
-        </div>
-        <div className='col-span-4 hidden w-full relative lg:flex lg:items-center lg:justify-center'>
-          <SearchBar />
-        </div>
-        <div className='col-span-4 flex justify-end shrink-0'>
-          {status === 'authenticated' ? (
-            <CampainLoggedIn />
-          ) : (
-            <CampainLoggedOut />
-          )}
-        </div>
-        <Drawer
-          open={openNav}
-          onClose={() => setOpenNav(false)}
-          className='absolute left-0 p-4'
-        >
-          <div className='flex items-center justify-between'>
-            <LogoMark />
-            <IconButton onClick={() => setOpenNav(false)}>
-              <XMarkIcon className='w-6 h-6' />
+    <>
+      <div className='px-4 sticky top-0 z-20 w-full bg-white overflow-visible'>
+        <nav className='m-0 p-0 flex flex-row justify-between border-b-[1px] border-b-neutral-muted h-navbar w-full'>
+          <div className=' flex items-center col-span-4 gap-2 p-0'>
+            <IconButton
+              variant='text'
+              className='ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent xl:hidden'
+              ripple={false}
+              onClick={() => setOpenNav(!openNav)}
+            >
+              {openNav ? (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  className='h-6 w-6'
+                  viewBox='0 0 24 24'
+                  stroke='currentColor'
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M6 18L18 6M6 6l12 12'
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  className='h-6 w-6'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M4 6h16M4 12h16M4 18h16'
+                  />
+                </svg>
+              )}
             </IconButton>
+            <Link to='/'>
+              <div className='flex gap-2 items-center justify-center h-12'>
+                <LogoMark />
+                <div className='hidden lg:flex'>
+                  <LogoText />
+                </div>
+              </div>
+            </Link>
           </div>
-          <hr className='border-neutral-muted my-4' />
-          <SideBar />
-        </Drawer>
-      </nav>
-    </div>
+          <div className='col-span-4 hidden w-full relative lg:flex lg:items-center lg:justify-center'>
+            <SearchBar />
+          </div>
+          <div className='col-span-4 flex justify-end shrink-0'>
+            {status === 'authenticated' ? (
+              <CampainLoggedIn setAvatarDrawer={setAvatarDrawer} />
+            ) : (
+              <CampainLoggedOut />
+            )}
+          </div>
+        </nav>
+      </div>
+      <Drawer
+        open={openNav}
+        onClose={() => setOpenNav(false)}
+        className='absolute left-0 p-4 w-full bg-white z-[9999] h-full'
+      >
+        <div className='flex items-center justify-between'>
+          <LogoMark />
+          <IconButton onClick={() => setOpenNav(false)}>
+            <XMarkIcon className='w-6 h-6' />
+          </IconButton>
+        </div>
+        <hr className='border-neutral-muted my-4' />
+        <SideBar className='p-0' />
+      </Drawer>
+      <Drawer
+        placement='bottom'
+        open={avatarDrawer}
+        onClose={() => setAvatarDrawer(false)}
+        className='fixed mt-14 h-max'
+      >
+        <AvatarMenu />
+      </Drawer>
+    </>
   );
 }
 
@@ -175,7 +185,7 @@ const SearchBar = () => {
             <span className='text-black/80 font-light'>Search Reddit</span>
           </div>
         </MenuHandler>
-        <MenuList className='*:focus:bg-transparent *:hover:bg-transparent p-0 pt-1 hidden z-25 shadow-md shadow-black/25 max-w-[550px] w-full rounded-3xl lg:block min-h-24 max-h-[calc(100vh-3.5rem)]'>
+        <MenuList className='*:focus:bg-transparent *:hover:bg-transparent p-0 pt-1 hidden z-30 shadow-md shadow-black/25 max-w-[550px] w-full rounded-3xl lg:block min-h-24 max-h-[calc(100vh-3.5rem)]'>
           <div
             className={cn(
               'flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-30 max-w-[550px] w-full h-10',
@@ -400,22 +410,21 @@ const CampainLoggedOut = () => {
   );
 };
 
-const CampainLoggedIn = () => {
-  // const user = {
-  //   name: 'Ahmed Tarek',
-  //   username: 'ahmedtarek',
-  //   icon: 'https://www.redditstatic.com/avatars/avatar_default_07_24A0ED.png',
-  // };
-
+const AvatarMenu = () => {
   const { user } = useSession();
 
-  const [avatarDrawer, setAvatarDrawer] = useState(false);
   const navigate = useNavigate();
 
-  const avatarMenu = (
+  return (
     <>
       <List className='p-0 text-foreground w-full'>
-        <ListItem className='py-2 flex gap-2 items-center'>
+        <ListItem
+          className='py-2 flex gap-2 items-center'
+          onClick={() => {
+            navigate(`user/${user?.username}/saved`);
+            location.reload();
+          }}
+        >
           <Avatar
             src={
               user?.imageUrl ||
@@ -472,6 +481,14 @@ const CampainLoggedIn = () => {
       </List>
     </>
   );
+};
+
+const CampainLoggedIn = ({
+  setAvatarDrawer,
+}: {
+  setAvatarDrawer: Dispatch<SetStateAction<boolean>>;
+}) => {
+  const { user } = useSession();
 
   return (
     <>
@@ -511,7 +528,7 @@ const CampainLoggedIn = () => {
               </Button>
             </MenuHandler>
             <MenuList className='p-0 py-2 text-foreground w-64 shadow-lg shadow-black/25 overflow-hidden'>
-              {avatarMenu}
+              <AvatarMenu />
             </MenuList>
           </Menu>
         </div>
@@ -528,14 +545,6 @@ const CampainLoggedIn = () => {
               size='sm'
             />
           </Button>
-          <Drawer
-            placement='bottom'
-            open={avatarDrawer}
-            onClose={() => setAvatarDrawer(false)}
-            className='fixed mt-14 h-max'
-          >
-            {avatarMenu}
-          </Drawer>
         </div>
       </div>
     </>
@@ -634,19 +643,21 @@ const NotificationMenu = () => {
       (notification: Notification, index: number) => (
         <ListItem
           key={index}
-          className={`py-2 flex gap-2 h-10 items-center ${
+          className={`py-8 flex gap-2 h-10 items-center rounded-none ${
             notification.unread_flag ? 'bg-light-blue-50' : 'bg-transparent'
           }`}
           onClick={() => markAsRead(notification.id)}
         >
           <ListItemPrefix className='mr-0'>
             {notification.communityAvatarSrc ? (
-              <Avatar
-                size='sm'
-                variant='circular'
-                alt={notification.communityAvatarSrc}
-                src={notification.communityAvatarSrc}
-              />
+              <div className='min-w-10'>
+                <Avatar
+                  size='sm'
+                  variant='circular'
+                  alt={notification.communityAvatarSrc}
+                  src={notification.communityAvatarSrc}
+                />
+              </div>
             ) : (
               <CommunityIcon />
             )}
@@ -654,18 +665,15 @@ const NotificationMenu = () => {
           <div>
             <div className='flex items-center gap-2'>
               <Typography variant='small' color='blue-gray'>
-                {notification.community_name}
+                r/{notification.community_name}
               </Typography>
               <Typography variant='paragraph' className='text-xs text-gray-600'>
                 {getTimeDifference(notification.created_at)}
               </Typography>
             </div>
-            <Typography
-              variant='small'
-              className='font-normal text-xs text-gray-600'
-            >
+            <p className='font-normal text-xs text-gray-600 line-clamp-2 overflow-hidden text-ellipsis'>
               {notification.description}
-            </Typography>
+            </p>
           </div>
           <div className='ml-auto'>
             <Menu placement='bottom-end'>
@@ -772,10 +780,10 @@ const NotificationMenu = () => {
               </Button>
             </a>
           </ListItem>
-          <div className='bg-blue w-1/2 h-1 rounded-full' />
+          <div className='bg-blue w-1/2 h-1 rounded-full mb-3' />
           {notifications.length > 0 ? (
             <>
-              <div className='flex items-center justify-between p-3'>
+              <div className='flex items-center justify-between px-3'>
                 <Typography
                   variant='small'
                   className='text-neutral-900 uppercase font-medium'
@@ -796,7 +804,7 @@ const NotificationMenu = () => {
                 </div>
               </div>
               {renderNotificationItems(today)}
-              <div className='flex items-center justify-between p-3'>
+              <div className='flex items-center justify-between px-3'>
                 <Typography
                   variant='small'
                   className='text-neutral-900 uppercase font-medium'
@@ -807,7 +815,7 @@ const NotificationMenu = () => {
               {renderNotificationItems(earlier)}
               <hr className='border-neutral-muted' />
               <div className='px-5 p-2'>
-                <Link to='/settings/account'>
+                <Link to='/notifications'>
                   <Button
                     variant='filled'
                     className='w-full h-10 bg-neutral-muted text-black text-sm'

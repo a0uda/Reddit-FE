@@ -7,7 +7,7 @@ const button: ButtonStyleTypes = {
     // color: string,
     // fullWidth: boolean,
     // ripple: boolean,
-    className: 'rounded-full font-medium normal-case',
+    className: 'rounded-full font-medium normal-case hover:shadow-none',
   },
   valid: {
     variants: ['filled'],

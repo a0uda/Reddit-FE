@@ -8,20 +8,13 @@ import {
 import CommunityPopup from './RightSideBar/CommunityPopup';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CommunityIcon } from '../assets/icons/Icons';
+import { UserType } from '../types/types';
 
-type Community = {
-  name: string;
-  joined?: boolean;
-  avatar?: string;
-  coverImage?: string;
-  description?: string;
-  members?: number;
-  online?: number;
-  displayAvatar?: boolean;
+type CommunityBadgeProps = {
+  props: {
+    user: UserType;
+  };
 };
-
-type CommunityBadgeProps = Community;
 
 const CommunityBadge = ({
   name,
@@ -63,8 +56,8 @@ const CommunityBadge = ({
               variant='small'
               className='font-body -tracking-tight text-gray-600'
             >
-              <Link to={`/r/${name}`} className='hover:underline'>
-                r/{name}
+              <Link to={`/${name}`} className='hover:underline'>
+                {name}
               </Link>
             </Typography>
           </div>
