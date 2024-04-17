@@ -5,14 +5,57 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 //const baseUrl = String(process.env.VITE_BASE_URL);
 console.log('baseUrl ', baseUrl);
 
-// const config = {
-//   headers: {
-//     'Content-Type': 'application/json',
-//     authorization: localStorage.getItem('token'),
-//   },
-//   withCredentials: true,
-// };
-// console.log(config);
+const config = {
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  withCredentials: false,
+};
+
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) config.headers.Authorization = `${token}`;
+    return config;
+  },
+  (error) => {
+    console.log('Error', error);
+    return Promise.reject(error);
+  }
+);
+
+axios.interceptors.response.use(
+  (response) => {
+    let data = response.data;
+    let noStatus = false;
+
+    if (data && typeof data === 'object') {
+      if ('success' in data) {
+        delete data['success'];
+        noStatus = true;
+      }
+      if ('status' in data) {
+        delete data['status'];
+        noStatus = true;
+      }
+      if ('message' in data) {
+        delete data['message'];
+        noStatus = true;
+      }
+      if ('msg' in data) {
+        delete data['msg'];
+        noStatus = true;
+      }
+    }
+
+    if (noStatus) data = Object.values(data)[0]; // Last object in the response
+    response.data = data;
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 const fetchRequest = async (endPoint: string) => {
   return await axios.get(baseUrl + endPoint, {
@@ -43,9 +86,13 @@ const patchRequest = async ({
 
     return response.data;
   } catch (error) {
-    console.log('Error', error.response.data);
+    // console.log(error.response);
+    const errorMessage =
+      typeof error.response === 'object'
+        ? JSON.stringify(error.response)
+        : error.response;
 
-    throw new Error(error.response.data);
+    throw new Error(errorMessage);
   }
 };
 
@@ -64,7 +111,7 @@ const postRequest = async ({
       },
       withCredentials: false,
     });
-    console.log(response, response.headers!.get('Authorization'));
+    // console.log(response, response.headers!.get('Authorization'));
 
     return {
       ...response.data,

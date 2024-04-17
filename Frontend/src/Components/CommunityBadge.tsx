@@ -7,15 +7,18 @@ import {
 } from '@material-tailwind/react';
 import CommunityPopup from './RightSideBar/CommunityPopup';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { CommunityIcon } from '../assets/icons/Icons';
 
 type Community = {
   name: string;
   joined?: boolean;
-  icon?: string;
+  avatar?: string;
   coverImage?: string;
   description?: string;
   members?: number;
   online?: number;
+  displayAvatar?: boolean;
 };
 
 type CommunityBadgeProps = Community;
@@ -23,11 +26,12 @@ type CommunityBadgeProps = Community;
 const CommunityBadge = ({
   name,
   joined = false,
-  icon,
+  avatar,
   coverImage,
   description,
   members,
   online,
+  displayAvatar = true,
 }: CommunityBadgeProps) => {
   const [openPopover, setOpenPopover] = useState(false);
 
@@ -41,19 +45,27 @@ const CommunityBadge = ({
       <Popover open={openPopover} handler={setOpenPopover}>
         <PopoverHandler {...triggers}>
           <div className='flex justify-start items-center gap-2 pt-0'>
-            <Avatar
-              variant='circular'
-              alt='candice'
-              src={icon}
-              style={{ width: '25px', height: '25px' }}
-            />
+            {displayAvatar && (
+              <>
+                {avatar ? (
+                  <Avatar
+                    variant='circular'
+                    alt={name}
+                    src={avatar}
+                    style={{ width: '25px', height: '25px' }}
+                  />
+                ) : (
+                  <CommunityIcon className='h-5 w-5' />
+                )}
+              </>
+            )}
             <Typography
               variant='small'
               className='font-body -tracking-tight text-gray-600'
             >
-              <a href='' className='hover:underline'>
-                {name}
-              </a>
+              <Link to={`/r/${name}`} className='hover:underline'>
+                r/{name}
+              </Link>
             </Typography>
           </div>
         </PopoverHandler>
@@ -63,7 +75,7 @@ const CommunityBadge = ({
         >
           <CommunityPopup
             communityCoverImage={coverImage}
-            communityIcon={icon}
+            communityAvatar={avatar}
             communityName={name}
             joined={joined}
             communityDescription={description}

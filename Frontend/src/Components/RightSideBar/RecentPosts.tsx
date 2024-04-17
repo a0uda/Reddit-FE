@@ -5,16 +5,17 @@ import PostItem from './PostItem';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../LoadingProvider';
+import { PostType } from '../../types/types';
 
 export function RecentPosts() {
   const [isContentVisible, setContentVisible] = useState(true);
 
-  const { data, error, isLoading } = useQuery('recent posts data', () =>
+  const { data, isError, isLoading } = useQuery('recent posts data', () =>
     fetchRequest('communities/get-history-posts')
   );
   console.log(data);
 
-  const postList = data?.data ?? [];
+  const postList: PostType[] = data?.data ?? [];
 
   return (
     <>
@@ -26,7 +27,7 @@ export function RecentPosts() {
             scrollbarWidth: 'thin',
           }}
         >
-          <Card className='w-full bg-gray-100 rounded-lg shadow-none p-0 pt-3 pb-3 min-w-0'>
+          <Card className='w-72 bg-gray-100 rounded-2xl shadow-none p-0 pt-3 pb-3 min-w-0 mb-3'>
             <div className='flex flex-row justify-between p-4 py-3'>
               <Typography
                 variant='small'
@@ -42,17 +43,19 @@ export function RecentPosts() {
                 Clear
               </button>
             </div>
-            <LoadingProvider error={error} isLoading={isLoading}>
+            <LoadingProvider error={isError} isLoading={isLoading}>
               {postList.map((post, index) => (
                 <div key={index}>
                   <PostItem
                     communityCoverImage={post.communityCoverSrc}
                     communityIcon={post.communityAvatarSrc}
-                    communityName={post['community-name']}
+                    communityName={post.community_name}
                     joined={post.joined}
                     communityDescription={post.communityDescription}
                     communityMembers={post.communityMembers}
                     communityOnline={post.communityOnline}
+                    postId={post.id}
+                    postTitle={post.title}
                     postDescription={post.description}
                     postMediaSrc={post.images[0].link} // show the first image only
                     upvotes={post.upvotes_count}

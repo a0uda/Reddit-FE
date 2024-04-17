@@ -1,6 +1,6 @@
 export const saveToken = (token: string) => {
   // Store token in local storage
-  localStorage.setItem('token', JSON.stringify(token));
+  localStorage.setItem('token', token);
 };
 
 export const removeToken = () => {

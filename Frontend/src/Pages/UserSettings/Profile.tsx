@@ -126,7 +126,7 @@ function Profile() {
     allow_followers,
     content_visibility,
     active_communities_visibility,
-  } = data?.data.profile_settings || {};
+  } = data?.data || {};
 
   const [openSLModal, setOpenSLModal] = React.useState(false);
   const [enterLinkDetails, setEnterLinkDetails] = React.useState(false);

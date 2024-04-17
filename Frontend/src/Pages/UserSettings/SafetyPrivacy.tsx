@@ -70,10 +70,8 @@ function SafetyPrivacy() {
     fetchRequest('users/safety-settings')
   );
 
-  const blocked_users =
-    data?.data.safety_and_privacy_settings?.blocked_users ?? [];
-  const muted_communities =
-    data?.data.safety_and_privacy_settings?.muted_communities ?? [];
+  const blocked_users = data?.data?.blocked_users ?? [];
+  const muted_communities = data?.data?.muted_communities ?? [];
 
   const postReq = useMutation(postRequest, {
     onSuccess: () => {

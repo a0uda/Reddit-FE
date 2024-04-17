@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik } from 'formik';
 import PropTypes from 'prop-types';
 import Validation from '../validate/validate';
@@ -6,6 +6,7 @@ import FormHeader from './FormHeader';
 import Input from './Input';
 import Button from './Button';
 import LoginWithGoogle from './LoginWithGoogle';
+import RoundedButton from './RoundedButton';
 
 type FormSchema = {
   login: {
@@ -56,6 +57,7 @@ interface InputProps {
   errorMessage?: string;
   HandleOnSubmitFunction?: (values: object) => void;
   handleModal?: () => void;
+  gender?: boolean;
 }
 
 const MyForm: React.FC<InputProps> = ({
@@ -71,8 +73,10 @@ const MyForm: React.FC<InputProps> = ({
   HandleOnSubmitFunction,
   errorMessage,
   handleModal,
+  gender,
 }) => {
   const validateSchema = Validation(type || 'login');
+  const [clicked, setClicked] = useState(0);
 
   return (
     <Formik
@@ -144,6 +148,34 @@ const MyForm: React.FC<InputProps> = ({
                 <div className='text-danger-red ps-3'>{errorMessage}</div>
               ) : null}
               {children}
+
+              {gender ? (
+                <>
+                  <div className='mt-10 ms-2 space-x-2'>
+                    <div className='flex ms-4 mb-2'>How do you identify?</div>
+                    <RoundedButton
+                      buttonBorderColor='border-none'
+                      buttonTextColor='text-orange font-bold text-base'
+                      buttonColor={clicked == 1 ? 'bg-gray-200' : 'bg-white'}
+                      buttonText='Male'
+                      onClick={() => {
+                        formik.setFieldValue('gender', 'male');
+                        setClicked(1);
+                      }}
+                    />
+                    <RoundedButton
+                      buttonBorderColor='border-none'
+                      buttonTextColor='text-orange font-bold text-base'
+                      buttonColor={clicked == 2 ? 'bg-gray-200' : 'bg-white'}
+                      buttonText='Female'
+                      onClick={() => {
+                        formik.setFieldValue('gender', 'female');
+                        setClicked(2);
+                      }}
+                    />
+                  </div>
+                </>
+              ) : null}
 
               {ButtArr &&
                 ButtArr.map((button, i) => (

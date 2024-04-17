@@ -67,7 +67,7 @@ function Account() {
     gender,
     country,
     hasPassword,
-  } = data?.data.account_settings || {};
+  } = data?.data || {};
 
   return (
     <LoadingProvider error={error} isLoading={isLoading}>

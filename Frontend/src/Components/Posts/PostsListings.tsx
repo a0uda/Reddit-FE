@@ -1,12 +1,12 @@
 import { useQuery } from 'react-query';
-import SortOptions from './SortOptions';
-import Post from './Post';
-import { fetchRequest } from '../API/User';
+import SortOptions from '../SortOptions';
+import { fetchRequest } from '../../API/User';
 import { useEffect, useRef, useState } from 'react';
-import { PostType } from '../types/types';
+import { PostType } from '../../types/types';
 import { useNavigate, useParams } from 'react-router-dom';
-import { capitalizeString } from '../utils/helper_functions';
-import LoadingProvider from './LoadingProvider';
+import { capitalizeString } from '../../utils/helper_functions';
+import LoadingProvider from '../LoadingProvider';
+import PostPreview from './PostPreview';
 
 const PostsListings = () => {
   const { sortOption: initialSortOption } = useParams();
@@ -16,9 +16,16 @@ const PostsListings = () => {
     capitalizeString(initialSortOption || '') || sortOptions[0]
   );
 
+  if (!sortOptions.includes(sortOption)) {
+    setSortOption(sortOptions[0]);
+  }
+
   const response = useQuery({
-    queryKey: ['listings', 'all'],
-    queryFn: () => fetchRequest(`listing/posts/${sortOption.toLowerCase()}`),
+    queryKey: ['listings', sortOption],
+    queryFn: () => {
+      console.log('sortOption', sortOption);
+      return fetchRequest(`listing/posts/${sortOption.toLowerCase()}`);
+    },
   });
 
   const navigate = useNavigate();
@@ -34,8 +41,6 @@ const PostsListings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption]);
 
-  console.log('response', response);
-
   return (
     <>
       {/* Sort by dropdown */}
@@ -49,7 +54,10 @@ const PostsListings = () => {
         {response.isSuccess && (
           <>
             {response.data.data.map((post: PostType) => (
-              <Post key={post.id} post={post} />
+              <div key={post.id}>
+                <PostPreview post={post} />
+                <hr className='border-neutral-muted' />
+              </div>
             ))}
           </>
         )}

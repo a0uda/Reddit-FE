@@ -16,12 +16,18 @@ export default withMT({
       },
     },
     extend: {
+      height: {
+        navbar: 'var(--navbar-height)',
+      },
+      blur: {
+        'custom-blur': '10px',
+      },
       gridTemplateColumns: {
-        // Simple 16 row grid
+        // Simple 16 col grid
         16: 'repeat(16, minmax(0, 1fr))',
 
-        // Complex site-specific row configuration
-        layout: '300px minmax(400px, 1fr) 400px',
+        // Complex site-specific col configuration
+        layout: '272px minmax(400px, 1fr)',
       },
       gridTemplateRows: {
         // Simple 16 row grid
@@ -68,6 +74,7 @@ export default withMT({
         'danger-red': '#ff585b',
         'lines-color': '#EDEFF1',
         'gray-light': '#7C7C7C',
+        grayLight: '#dae0e6',
       },
       width: {
         'fit-content': 'fit-content',
