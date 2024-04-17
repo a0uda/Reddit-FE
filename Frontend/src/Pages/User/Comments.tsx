@@ -18,7 +18,7 @@ function Comments() {
         {data && (
           <>
             {data.data.map((comment: CommentType) => (
-              <Comment key={comment.id} comment={comment} />
+              <Comment key={comment._id} comment={comment} />
             ))}
           </>
         )}

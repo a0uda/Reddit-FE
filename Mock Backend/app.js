@@ -403,7 +403,8 @@ app.post("/users/signup-google", (req, res) => {
   });
   res
     .status(200)
-    .json({ message: "User logged in with Google successfully", token });
+    .header("Authorization", `Bearer ${token}`)
+    .json({ message: "User logged in with Google successfully" });
 });
 const communitiesPost = [
   {
