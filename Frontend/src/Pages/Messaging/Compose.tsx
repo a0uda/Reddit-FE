@@ -9,6 +9,7 @@ import useSession from '../../hooks/auth/useSession';
 const Compose = () => {
   const { user } = useSession();
   const [from, setFrom] = React.useState(user?.username);
+  const [fromFeedback, setFromFeedback] = React.useState('');
   const [to, setTo] = React.useState('');
   const [subject, setSubject] = React.useState('');
   const [message, setMessage] = React.useState('');
@@ -68,7 +69,9 @@ const Compose = () => {
       : 'user';
     const recType = to.includes('r/') ? 'moderator' : 'user';
     if (senderType == 'moderator' && recType == 'moderator') {
-      setFrom("You can't send a message from a Subreddit to another Subreddit");
+      setFromFeedback(
+        "You can't send a message from a Subreddit to another Subreddit"
+      );
       setfromBool(true);
       return;
     }
