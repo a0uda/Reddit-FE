@@ -36,7 +36,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
             className='flex flex-row items-center justify-between gap-2 m-0 bg-inherit'
           >
             <div className='flex flex-row items-center justify-between gap-1 m-0'>
-              {/* <CommunityBadge
+              <CommunityBadge
                 name={post.community_name}
                 joined={post.joined}
                 avatar={post.communityAvatarSrc}
@@ -44,7 +44,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
                 members={post.communityMembers}
                 online={post.communityOnline}
                 description={post.description}
-              /> */}
+              />
               <span className='relative -top-0.5'>•</span>
               <Typography variant='small' className=''>
                 {dateDuration(new Date(post.created_at))}

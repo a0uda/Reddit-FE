@@ -6,6 +6,7 @@ import { Dialog, DialogBody, IconButton } from '@material-tailwind/react';
 import { IoMdClose } from 'react-icons/io';
 import { IoMdArrowBack } from 'react-icons/io';
 import { useMutation } from 'react-query';
+import { saveToken } from '../../utils/tokens_helper';
 
 export default function Signup(props: {
   open: boolean;
@@ -75,7 +76,9 @@ export default function Signup(props: {
   const mutation = useMutation(postRequest, {
     onSuccess: (response) => {
       const { token } = response;
-      localStorage.setItem('token', token);
+      console.log(response);
+
+      saveToken(token);
       seterrorMessage('');
       props.handleOpen();
       location.reload();

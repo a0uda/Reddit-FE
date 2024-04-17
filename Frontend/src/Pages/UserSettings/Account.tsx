@@ -43,6 +43,8 @@ function Account() {
   const { data, error, isLoading, refetch } = useQuery('accountSettings', () =>
     fetchRequest('users/account-settings')
   );
+  console.log(data, 'accountsettings');
+
   const patchReq = useMutation(patchRequest, {
     onSuccess: (data) => {
       refetch();
@@ -67,7 +69,7 @@ function Account() {
     gender,
     country,
     hasPassword,
-  } = data?.data.account_settings || {};
+  } = data?.data || {};
 
   return (
     <LoadingProvider error={error} isLoading={isLoading}>

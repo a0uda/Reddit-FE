@@ -1,7 +1,7 @@
 import React from 'react';
 import Section from './Containers/Section';
 import Card from './Containers/Card';
-import SwitchButton from './Containers/SwitchButton';
+import SwitchButton from '../../Components/SwitchButton';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest } from '../../API/User';
 import { Spinner } from '@material-tailwind/react';
@@ -53,7 +53,7 @@ function Notifications() {
     new_followers,
     invitations,
     posts,
-  } = data?.data.notifications_settings || {};
+  } = data?.data || {};
 
   return (
     <LoadingProvider error={error} isLoading={isLoading}>

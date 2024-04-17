@@ -5,6 +5,19 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 
+const getAuthUsername = (req) => {
+  const token = req.headers?.authorization;
+  console.log("req.headers", req.headers);
+  console.log("token", token.split(' ')[1]);
+
+  if (!token) return null;
+  const decodedToken = jwt.verify(token.split(' ')[1], "RedditToken@");
+  const username = decodedToken.username;
+  // console.log(token,'userrrrname');
+
+  return username;
+};
+
 app.use(
   cors({
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Add PATCH method here
@@ -18,6 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 const accountSettings = {
+  msg: 'asdasd',
   account_settings: {
     email: "ahmedkhaled1029@gmail.com",
     verified_email_flag: "string",
@@ -30,14 +44,14 @@ const accountSettings = {
 };
 
 app.get("/users/account-settings", (req, res) => {
-  res.status(200).json({ accountSettings });
+  res.status(200).json(accountSettings);
 });
 
 let c = 0;
 app.patch("/users/change-account-settings", (req, res) => {
-  accountSettings.account_settings[Object.keys(req.body)[0]] = Object.values(
-    req.body
-  )[0];
+  accountSettings.account_settings = { ...accountSettings.account_settings, ...req.body.account_settings }
+
+  console.log(req.body);
   if (c < 5) {
     c++;
     res.sendStatus(200);
@@ -71,6 +85,7 @@ app.post("/users/delete-account", (req, res) => {
 });
 
 let profileSettings = {
+  msg: 'adasd',
   profile_settings: {
     display_name: "string",
     about: "string",
@@ -94,13 +109,12 @@ let profileSettings = {
 };
 
 app.get("/users/profile-settings", (req, res) => {
-  res.status(200).json({ profileSettings });
+  res.status(200).json(profileSettings);
 });
 
 app.patch("/users/change-profile-settings", (req, res) => {
-  profileSettings.profile_settings[Object.keys(req.body)[0]] = Object.values(
-    req.body
-  )[0];
+  profileSettings.profile_settings = { ...profileSettings.profile_settings, ...req.body.profile_settings }
+
   res.status(200).json(profileSettings);
 });
 
@@ -109,6 +123,7 @@ app.post("/users/clear-history", (req, res) => {
 });
 
 let notificationSettings = {
+  msg: 'asda',
   notifications_settings: {
     private_messages: false,
     chat_messages: false,
@@ -124,56 +139,63 @@ let notificationSettings = {
   },
 };
 app.get("/users/notification-settings", (req, res) => {
-  res.status(200).json({ notificationSettings });
+  res.status(200).json(notificationSettings);
 });
 app.patch("/users/change-notification-settings", (req, res) => {
   const updatedSettings = req.body;
-  notificationSettings = {
-    ...notificationSettings,
-    ...updatedSettings,
+  notificationSettings.notifications_settings = {
+    ...notificationSettings.notifications_settings,
+    ...updatedSettings.notifications_settings,
   };
   res.status(200).json(notificationSettings);
 });
 
 let emailSettings = {
-  new_follower_email: true,
-  chat_request_email: true,
-  unsubscribe_from_all_emails: true,
+  msg: 'asdasd',
+  settings: {
+    new_follower_email: true,
+    chat_request_email: true,
+    unsubscribe_from_all_emails: true,
+  }
 };
 app.get("/users/email-settings", (req, res) => {
   res.status(200).json(emailSettings);
 });
 app.patch("/users/change-email-settings", (req, res) => {
   const updatedSettings = req.body;
-  emailSettings = {
-    ...emailSettings,
-    ...updatedSettings,
+  emailSettings.settings = {
+    ...emailSettings.settings,
+    ...updatedSettings.email_settings,
   };
   res.status(200).json(emailSettings);
 });
 
 let feedSettings = {
-  Adult_content_flag: true,
-  autoplay_media: true,
-  community_content_sort: {
-    type: "top",
-    sort_remember_per_community: true,
-  },
-  global_content: {
-    global_content_view: "classic",
-    global_remember_per_community: true,
-  },
-  Open_posts_in_new_tab: true,
-  community_themes: true,
+  msg: 'asds',
+  settings: {
+    Adult_content_flag: true,
+    autoplay_media: true,
+    community_content_sort: {
+      type: "top",
+      sort_remember_per_community: true,
+    },
+    global_content: {
+      global_content_view: "classic",
+      global_remember_per_community: true,
+    },
+    Open_posts_in_new_tab: true,
+    community_themes: true,
+  }
 };
 app.get("/users/feed-settings", (req, res) => {
   res.status(200).json(feedSettings);
 });
 app.patch("/users/change-feed-settings", (req, res) => {
+  console.log(req.body);
   const updatedSettings = req.body;
-  feedSettings = {
-    ...feedSettings,
-    ...updatedSettings,
+  feedSettings.settings = {
+    ...feedSettings.settings,
+    ...updatedSettings.feed_settings,
   };
   res.sendStatus(200);
 });
@@ -199,6 +221,7 @@ app.post("/users/delete-social-link", (req, res) => {
 });
 
 const safetySettings = {
+  msg: 'asda',
   safety_and_privacy_settings: {
     blocked_users: [
       {
@@ -247,7 +270,7 @@ app.get("/users/safety-settings", (req, res) => {
 });
 
 app.post("/users/block-unblock-user", (req, res) => {
-  const { blocked_username, block } = req.body;
+  const { blocked_username, block } = req.query;
   if (!block) {
     safetySettings.safety_and_privacy_settings.blocked_users =
       safetySettings.safety_and_privacy_settings.blocked_users.filter(
@@ -258,6 +281,9 @@ app.post("/users/block-unblock-user", (req, res) => {
       username: blocked_username,
       blocked_date: new Date(),
     });
+    postReplies = postReplies.filter(rep => rep.senderUsername !== blocked_username);
+    usernameMentions = usernameMentions.filter(rep => rep.senderUsername !== blocked_username);
+
   }
 
   res.sendStatus(200);
@@ -279,18 +305,24 @@ app.post("/users/mute-unmute-community", (req, res) => {
 });
 
 let chatSettings = {
-  who_send_chat_request_flag: "Everyone",
-  who_send_private_messages_flag: "Everyone",
+  msg: 'asdad',
+  settings: {
+    who_send_chat_request_flag: "Everyone",
+    who_send_private_messages_flag: "Everyone",
+  }
 };
 app.get("/users/chats-and-msgs-settings", (req, res) => {
   res.status(200).json(chatSettings);
 });
 app.patch("/users/change-chats-and-msgs-settings", (req, res) => {
-  chatSettings[Object.keys(req.body)[0]] = Object.values(req.body)[0];
+  console.log(req.body);
+  chatSettings.settings = { ...chatSettings.settings, ...req.body.chat_and_messaging_settings }
+
   console.log(chatSettings);
   res.sendStatus(200);
 });
 
+let credentials = [{ username: 'username', password: 'password' }];
 let users = [
   {
     _id: "661a2c3fab10a4b012e8f59a",
@@ -371,7 +403,7 @@ app.post("/users/signup", (req, res) => {
 
 app.post("/users/login", (req, res) => {
   const { username, password } = req.body;
-  const user = users.find(
+  const user = credentials.find(
     (user) => user.username === username && user.password === password
   );
 
@@ -1720,6 +1752,37 @@ app.post("/posts-or-comments/vote", (req, res) => {
       return post;
     });
   } else {
+
+    postReplies = postReplies.map((post) => {
+      console.log(post.id, id, 'cmp');
+      if (post.id === id) {
+        post.rank = rank;
+        if (rank === 1) {
+          post.upvotes_count++;
+
+        } else {
+          post.downvotes_count++;
+        }
+        console.log(post);
+      }
+      return post;
+    });
+
+    usernameMentions = usernameMentions.map((post) => {
+      console.log(post.id, id, 'cmp');
+      if (post.id === id) {
+        post.rank = rank;
+        if (rank === 1) {
+          post.upvotes_count++;
+
+        } else {
+          post.downvotes_count++;
+        }
+        console.log('reply');
+      }
+      return post;
+    });
+    // console.log(postReplies, req.body);
     comments.comments = comments.comments.map((comment) => {
       if (comment._id === id) {
         if (rank === 1) {
@@ -1734,8 +1797,479 @@ app.post("/posts-or-comments/vote", (req, res) => {
   res.sendStatus(200);
 });
 
+app.post("/posts-or-comments/report", (req, res) => {
+  const { id, is_post, reason } = req.body;
+  if (is_post) {
+
+  } else {
+
+    postReplies = postReplies.filter(post => post.id !== id);
+    usernameMentions = usernameMentions.filter(post => post.id !== id);
+
+    // console.log(postReplies, 'postReplies');
+    console.log(reason, 'reason');
+
+  }
+  res.sendStatus(200);
+});
+
+app.post("/posts-or-comments/delete", (req, res) => {
+  const { id, is_post } = req.body;
+  if (is_post) {
+
+  } else {
+
+    postReplies = postReplies.filter(post => post.id !== id);
+    usernameMentions = usernameMentions.filter(post => post.id !== id);
+    // console.log(postReplies, 'postReplies');
+
+  }
+  res.sendStatus(200);
+});
+
+app.post("/comments/reply", (req, res) => {
+  const { id, description } = req.body;
+  console.log(req.body);
+  res.sendStatus(200);
+});
+
+let sentMessages = [
+  {
+    "_id": "5da454f4307b0a8b30838839",
+    "sender_username": "ahmed",
+    "sender_type": "user",
+    "receiver_username": "aww",
+    "receiver_type": 'moderator',
+    "senderVia": "aww",
+    "message": "content 1",
+    "created_at": "10/15/2023",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": true,
+    "isReply": true,
+    "parentMessageId": '5da454f4307b0a8b30838830',
+    "subject": "header 2",
+
+  },
+  {
+    "_id": "5da454f4307b0a8b30838830",
+    "sender_username": "ahmed",
+    "sender_type": 'user',
+    "receiver_username": "aww",
+    "receiver_type": "moderator",
+    "senderVia": "aww",
+    "subject": "header 2",
+    "message": "content 11",
+    "created_at": "09/15/2023",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": true,
+    "isReply": false,
+    "parentMessageId": null
+
+  }, {
+    "_id": "5da454f4307b0a8b30838831",
+    "sender_username": "ahmed",
+    "sender_type": "moderator",
+    "senderVia": "subreddit",
+    "receiver_username": "reem",
+    "receiver_type": 'user',
+    "subject": "header 3",
+    "message": "content 12",
+    "created_at": "01/01/2024",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": true,
+    "isReply": false,
+    "parentMessageId": null
+  },
+  {
+    "_id": "5da456f4307b0a8b30838831",
+    "sender_username": "ahmed",
+    "sender_type": "moderator",
+    "senderVia": "subreddit",
+    "receiver_username": "reem",
+    "receiver_type": "user",
+    "message": "content 10",
+    "created_at": "01/01/2024",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": true,
+    "isReply": true,
+    "parentMessageId": '5da454f4307b0a8b30838831',
+    "subject": "header 3", //subject of parent message
+
+
+
+
+  },
+  {
+    "_id": "5da456f4307b0a8b30898831",
+    "sender_username": "ahmed",
+    "sender_type": "user",
+    "senderVia": "subreddit",
+    "receiver_username": "walid",
+    "receiver_type": "user",
+    "message": "content 60",
+    "created_at": "01/02/2024",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": true,
+    "isReply": true,
+    "parentMessageId": '5da454f430712430a8b308938830',
+    "subject": "header 5",
+
+
+
+
+  }
+
+
+
+
+]
+let recievedMessages = [
+  {
+    "_id": "5daqq4f4307b0a8b30838839",
+    "sender_username": "aww",
+    "sender_type": "moderator",
+    "senderVia": "aww",
+    "receiver_username": "ahmed",
+    "receiver_type": 'user',
+    "subject": "header 2",
+    "message": "content 99",
+    "created_at": "10/15/2023",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": false,
+    "isReply": true,
+    "parentMessageId": '5da454f4307b0a8b30838830',
+  },
+  {
+    "_id": "5da454f430712430a8b308938830",
+    "sender_username": "walid",
+    "sender_type": 'user',
+    "senderVia": "aww",
+    "receiver_username": "ahmed",
+    "receiver_type": "user",
+    "subject": "header 5",
+    "message": "content 2",
+    "created_at": "09/15/2023",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": false,
+    "isReply": false,
+    "parentMessageId": null
+
+  }, {
+    "_id": "5da454f4323407b0a8b3760838831",
+    "sender_username": "subreddit",
+    "sender_type": "moderator",
+    "senderVia": "subreddit",
+    "receiver_username": "ahmed",
+    "receiver_type": 'user',
+    "subject": "header 6",
+    "message": "content 3",
+    "created_at": "01/01/2024",
+    "deleted_at": "15/10/2024",
+    "unread_flag": true,
+    "isSent": false,
+    "isReply": false,
+    "parentMessageId": null
+  },
+  {
+    "_id": "5da456f4307b0a8b308384k53831",
+    "sender_username": "reem",
+    "sender_type": "user",
+    "senderVia": "subreddit",
+    "receiver_username": "subreddit",
+    "receiver_type": "moderator",
+    "message": "content 4",
+    "created_at": "01/01/2024",
+    "deleted_at": "15/10/2024",
+    "unread_flag": false,
+    "isSent": false,
+    "isReply": true,
+    "parentMessageId": '5da454f4307b0a8b30838831',
+    "subject": "header 3",
+
+
+
+
+  },
+  {
+    "_id": "5da456f4307b0a8b35670898831",
+    "sender_username": "reem",
+    "sender_type": "user",
+    "senderVia": "subreddit",
+    "receiver_username": "subreddit",
+    "receiver_type": "moderator",
+    "message": "content 5",
+    "created_at": "01/01/2024",
+    "deleted_at": "15/10/2024",
+    "unread_flag": true,
+    "isSent": false,
+    "isReply": true,
+    "parentMessageId": '5da454f4307b0a8b30838831',
+    "subject": "header 3",
+
+  }
+
+]
+
+app.get('/messages/sent/', (req, res) => {
+  sentMessages.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  res.status(200).json(sentMessages);
+
+})
+
+app.get('/messages/read-all-messages', (req, res) => {
+  const allMessages = [...sentMessages, ...recievedMessages]
+  allMessages.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  console.log(allMessages)
+  res.status(200).json(allMessages);
+
+})
+
+app.get('/messages/unread', (req, res) => {
+  const unreadMessages = recievedMessages.filter((val) => val.unread_flag == true)
+
+  unreadMessages.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  res.status(200).json(unreadMessages);
+
+})
+// createDate={new Date()}
+// senderUsername='mido'
+// postCreator='reem'
+// postCreatorType='user'
+// postSubject='da post reply'
+// replyContent='post reply content'
+// replyId='1212'
+// unread={true}
+// commentsCount={3}
+// key={i}
+// vote={0}
+let postReplies = [
+  {
+    "created_at": "09/15/2023",
+    "senderUsername": "reem",
+    "postCreator": "ahmed",
+    "postCreatorType": "user",
+    "postSubject": "post reply 1",
+    "replyContent": "<strong>reply content 1</strong>",
+    "id": "1",
+    "unread": false,
+    "commentsCount": 3,
+    "rank": -1,
+    'upvotes_count': 3,
+    'downvotes_count': 2
+  },
+  {
+    "created_at": "10/15/2023",
+    "senderUsername": "walid",
+    "postCreator": "subreddit",
+    "postCreatorType": "moderator",
+    "postSubject": "post reply 2",
+    "replyContent": "<ul><li><i>list content 1</i></li><li>list content 2</li><li>list content 3</li></ul>",
+    "id": "2",
+    "unread": true,
+    "commentsCount": 15,
+    "rank": 0,
+    'upvotes_count': 100,
+    'downvotes_count': 3
+  },
+  {
+    "created_at": "11/15/2023",
+    "senderUsername": "tarek",
+    "postCreator": "ahmed",
+    "postCreatorType": "user",
+    "postSubject": "post reply 3",
+    "replyContent": "reply content 3",
+    "id": "3",
+    "unread": false,
+    "commentsCount": 1,
+    "rank": 1,
+    'upvotes_count': 6,
+    'downvotes_count': 10
+  }
+]
+
+app.get('/messages/get-post-replies', (req, res) => {
+
+  postReplies.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  res.status(200).json(postReplies);
+
+})
+
+app.get('/messages/inbox', (req, res) => {
+  const allInbox = [...postReplies, ...recievedMessages, ...usernameMentions];
+  allInbox.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  console.log(allInbox)
+  res.status(200).json(allInbox);
+
+})
+
+
+app.post('/messages/compose/', (req, res) => {
+  let c = 0;
+  console.log(req.body, 'compose');
+  if (req.body.receiver_username != 'mido') {
+    sentMessages.push({
+      ...req.body, "isSent": true,
+      "isReply": false,
+      "parentMessageId": null,
+      "_id": c
+      // "subject": "header 5",
+    })
+    c++;
+
+    res.sendStatus(200);
+  } else {
+    res.status(400).send("Hmm, that user doesn't exist. Try checking the spelling.")
+  }
+
+
+})
+
+app.post('/messages/reply', (req, res) => {
+  let c = 100;
+  console.log(req.body, 'compose');
+  sentMessages.push({
+    ...req.body,
+    "_id": c
+    // "subject": "header 5",
+  })
+  c++;
+
+  res.sendStatus(200);
+
+
+})
+
+app.post('/messages/del-msg', (req, res) => {
+
+  console.log(req.body, 'delmsg');
+  recievedMessages = recievedMessages.filter(message => message._id !== req.body['_id'] && message.parentMessageId !== req.body['_id']);
+  sentMessages = sentMessages.filter(message => message.parentMessageId !== req.body['_id']);
+
+
+
+  res.sendStatus(200);
+
+
+})
+app.post('/messages/report-msg', (req, res) => {
+
+  console.log(req.body, 'repmsg');
+  recievedMessages = recievedMessages.filter(message => message._id !== req.body['_id'] && message.parentMessageId !== req.body['_id']);
+  sentMessages = sentMessages.filter(message => message.parentMessageId !== req.body['_id']);
+
+
+
+  res.sendStatus(200);
+
+
+})
+
+let usernameMentions = [
+  {
+    "created_at": "09/15/2023",
+    "senderUsername": "reem",
+    "postCreator": "ahmed",
+    "postCreatorType": "user",
+    "postSubject": "post 1",
+    "replyContent": "<a href='/user/ahmed'>u/ahmed</a><h1>content 1</h1>",
+    "id": "11",
+    "unread": false,
+    "commentsCount": 3,
+    "rank": -1,
+    'upvotes_count': 3,
+    'downvotes_count': 2
+  },
+  {
+    "created_at": "10/15/2023",
+    "senderUsername": "walid",
+    "postCreator": "subreddit",
+    "postCreatorType": "moderator",
+    "postSubject": "post 2",
+    "replyContent": "<a href='/user/ahmed'>u/ahmed</a><h1>content 2</h1>",
+    "id": "21",
+    "unread": true,
+    "commentsCount": 15,
+    "rank": 0,
+    'upvotes_count': 100,
+    'downvotes_count': 3
+  },
+  {
+    "created_at": "11/15/2023",
+    "senderUsername": "tarek",
+    "postCreator": "ahmed",
+    "postCreatorType": "user",
+    "postSubject": "post 3",
+    "replyContent": "<a href='/user/ahmed'>u/ahmed</a><h1>content 3</h1>",
+    "id": "31",
+    "unread": false,
+    "commentsCount": 1,
+    "vote": 1,
+    'upvotes_count': 6,
+    'downvotes_count': 10
+  }
+];
+
+app.get('/messages/get-user-mentions', (req, res) => {
+
+  usernameMentions.sort((a, b) => {
+    if (new Date(a.created_at) < new Date(b.created_at)) {
+      return 1
+    }
+    else {
+      return -1
+    }
+  })
+  res.status(200).json(usernameMentions);
+
+})
+
+
+
 app.get("/user/about/:id", (req, res) => {
   const { id } = req.params;
+  console.log(id, 'hiiii');
   const user = users.find((user) => user.id === id);
   if (!user) return res.status(404).json({ message: "User not found" });
   res.status(200).json(post);
@@ -2045,6 +2579,29 @@ let postsComments = [
 app.get("/users/:username/about", (req, res) => {
   res.status(200).json(userAbout);
 });
+app.get("/users/moderated-communities2", (req, res) => {
+  res.status(200).json({
+    "success": true,
+    "status": 200,
+    "msg": "Your moderated communities are retrieved successfully",
+    "moderated_communities": [
+      {
+        "id": "661732b95ef02bd2dddfde17",
+        "name": "Russel, Friesen and Volkman",
+        "profile_picture": "",
+        "favorite_flag": true,
+        "members_count": 163
+      },
+      {
+        "id": "661732b95ef02bd2dddfde1e",
+        "name": "Rowe, Heller and McKenzie",
+        "profile_picture": "",
+        "favorite_flag": false,
+        "members_count": 924
+      }
+    ]
+  });
+});
 app.get("/users/moderated-communities", (req, res) => {
   res.status(200).json(moderatedCommunities);
 });
@@ -2070,4 +2627,244 @@ app.get("/users/:username/comments", (req, res) => {
 });
 app.get("/users/:username/overview", (req, res) => {
   res.status(200).json(postsComments);
+});
+
+const CommunityModerators = [
+  {
+    community_name: "sports",
+    moderators: [
+      {
+        username: "FirstModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_1.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "SecondModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_2.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "ThirdModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "FourthModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "FifthModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_5.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "SixthModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_6.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "SeventhModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_7.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+    ],
+  },
+  {
+    community_name: "programming",
+    moderators: [
+      {
+        username: "SixthModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_6.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "SeventhModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_7.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+    ],
+  },
+];
+
+app.get("/communities/about/moderators/:communityName", (req, res) => {
+  const { communityName } = req.params;
+  const community = CommunityModerators.find(
+    (community) => community.community_name === communityName
+  );
+  if (community) {
+    res.status(200).json(community.moderators);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+
+const communityRules = [
+  {
+    community_name: "sports",
+    rules: [
+      {
+        _id: "111",
+        rule_title: "Civil Behavior",
+        rule_order: 1,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Keep posts and comments civil at all times. Follow proper reddiquette. Please try to be respectful to everyone. Hateful or otherwise inappropriate behaviour will not be tolerated. No witch-hunting.",
+        __v: 0,
+      },
+      {
+        _id: "222",
+        rule_title: "Self-Promotion",
+        rule_order: 2,
+        applies_to: "comments_only",
+        report_reason: "string",
+        full_description:
+          "Self-promotion/original content is allowed in certain circumstances. Profile sharing is only permitted through setting your user flair to your Letterboxd Username, using our profile sharing mega-thread, or in other mod-approved threads. Original content (LB lists/reviews, third-party OC etc.) is generally only permitted within our weekly threads. If you feel your original content promotes discussion, is of relevance/importance to the sub, or is high-effort/high-quality, exceptions will be made pending mod discretion.",
+        __v: 0,
+      },
+      {
+        _id: "3333",
+        rule_title: "Low-Effort Content",
+        rule_order: 3,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Low-effort/low-quality posts will be removed. Low-effort questions, low-quality shared content, or any content deemed by mods to lack honest intent, will be removed. Shared content must be relevant to Letterboxd or Film, and must be of an acceptable standard. Content that pushes agendas, has excessive ads, or is otherwise deemed to be a negative contribution, will be removed at mod discretion. Image macros, screen-grabs or commonly used memes/image formats must make an honest attempt at humor.",
+        __v: 0,
+      },
+      {
+        _id: "444",
+        rule_title: "No Wank/Circlejerking",
+        rule_order: 4,
+        applies_to: "comments_only",
+        report_reason: "string",
+        full_description:
+          "No wank/circlejerking posts allowed. Standalone posts and/or comments that are considered to be bait and/or wank about specific or non-specific users or reviews on Letterboxd will be removed. These types of posts have been deemed to be low-effort and, most importantly, unwelcoming to all individuals who use both the subreddit and Letterboxd.",
+        __v: 0,
+      },
+      {
+        _id: "555",
+        rule_title: "Duplicate Posts/Reposts",
+        rule_order: 5,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Duplicate posts/reposts will be removed. Individual posts that belong in an existing masterthread will be removed.",
+        __v: 0,
+      },
+    ],
+  },
+  {
+    community_name: "programming",
+    rules: [
+      {
+        _id: "666",
+        rule_title: "No Vandalism",
+        rule_order: 1,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "TMDb/Letterboxd vandalism posts are not allowed. Screenshots/links to content vandalism on either TMDb and/or Letterboxd will be removed. These posts fall under low effort and do not encourage adequate discussion on the subreddit.",
+        __v: 0,
+      },
+      {
+        _id: "777",
+        rule_title: "Suggestions for Letterboxd",
+        rule_order: 2,
+        applies_to: "comments_only",
+        report_reason: "string",
+        full_description:
+          "Suggestions for additions to the Letterboxd site will be redirected. Standalone posts offering original and/or common suggestions for Letterboxd will be directed to the official Letterboxd feedback site (letterboxd.nolt.io). Posts discussing new updates to the website and/or app are allowed.",
+        __v: 0,
+      },
+      {
+        _id: "888",
+        rule_title: "Miscellaneous Content",
+        rule_order: 3,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Miscellaneous content that is addressed in the FAQ will be removed. Any posts or comments discussing or asking about issues that are addressed in the sub FAQ will be removed. The poster will be directed to the FAQ page.",
+        __v: 0,
+      },
+      {
+        _id: "999",
+        rule_title: "Spoiler Policy",
+        rule_order: 4,
+        applies_to: "comments_only",
+        report_reason: "string",
+        full_description:
+          "Spoiler posts/comments must be marked as such. Absolutely no spoilers, intentional or otherwise, in post titles. This will be considered a serious offense and could result in a permanent ban. All posts with spoilers INSIDE the body of said post must be marked with the spoiler flair. When commenting on a post that is NOT labelled with the spoiler flair, please use proper spoiler formatting. Comments containing spoilers are acceptable within posts marked with the spoiler flair.",
+        __v: 0,
+      },
+    ],
+  },
+];
+
+app.get("/communities/rules/:communityName", (req, res) => {
+  const { communityName } = req.params;
+  const community = communityRules.find(
+    (community) => community.community_name === communityName
+  );
+  if (community) {
+    res.status(200).json(community.rules);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+
+app.post("/comments/new-comment", (req, res) => {
+  const { id, description } = req.body;
+
+  const username = getAuthUsername(req);
+  console.log("username", username);
+  if (!username) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  console.log("username", username);
+  const commentId = crypto.randomUUID();
+
+  comments.comments = comments.comments.concat([
+    {
+      id: commentId,
+      post_id: id,
+      user_id: "567",
+      username: username,
+      parent_id: commentId,
+      replies_comments_ids: [],
+      created_at: new Date(),
+      edited_at: "",
+      deleted_at: "",
+      description: description,
+      upvotes_count: 14,
+      downvotes_count: 1,
+      allowreplies_flag: true,
+      spam_flag: false,
+      locked_flag: false,
+      show_comment_flag: true,
+      moderator_details: {
+        approved_by: "",
+        approved_date: "",
+        removed_by: "",
+        removed_date: "",
+        spammed_by: "",
+        spammed_type: "",
+      },
+    },
+  ]);
+
+  console.log(comments);
+
+  res.status(200).json({ message: "Comment added successfully." });
 });

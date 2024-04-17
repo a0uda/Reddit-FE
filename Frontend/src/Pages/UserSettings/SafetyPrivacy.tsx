@@ -70,10 +70,8 @@ function SafetyPrivacy() {
     fetchRequest('users/safety-settings')
   );
 
-  const blocked_users =
-    data?.data.safety_and_privacy_settings?.blocked_users ?? [];
-  const muted_communities =
-    data?.data.safety_and_privacy_settings?.muted_communities ?? [];
+  const blocked_users = data?.data?.blocked_users ?? [];
+  const muted_communities = data?.data?.muted_communities ?? [];
 
   const postReq = useMutation(postRequest, {
     onSuccess: () => {
@@ -108,10 +106,10 @@ function SafetyPrivacy() {
             inputValue={blockVal}
             setInputValue={setBlockVal}
             onClick={() => {
-              handleAddButton('users/block-unblock-user', {
-                block: true,
-                blocked_username: blockVal,
-              });
+              handleAddButton(
+                `users/block-unblock-user?blocked_username=${blockVal}&block=${true}`,
+                {}
+              );
               setBlockVal('');
             }}
           />
@@ -122,7 +120,7 @@ function SafetyPrivacy() {
                 date={user.blocked_date}
                 id={user.id}
                 name={user.username}
-                endPoint='users/block-unblock-user'
+                endPoint={`users/block-unblock-user?blocked_username=${user.username}&block=${false}`}
                 data={{ blocked_username: user.username, block: false }}
                 key={user.id + user.username + i}
                 refetch={refetch}

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Section from './Containers/Section';
 import Card from './Containers/Card';
 import RoundedButton from '../../Components/RoundedButton';
-import SwitchButton from './Containers/SwitchButton';
+import SwitchButton from '../../Components/SwitchButton';
 import { PlusIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest, postRequest } from '../../API/User';
@@ -126,7 +126,7 @@ function Profile() {
     allow_followers,
     content_visibility,
     active_communities_visibility,
-  } = data?.data.profile_settings || {};
+  } = data?.data || {};
 
   const [openSLModal, setOpenSLModal] = React.useState(false);
   const [enterLinkDetails, setEnterLinkDetails] = React.useState(false);
