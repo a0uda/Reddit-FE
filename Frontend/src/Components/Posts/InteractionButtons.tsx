@@ -43,7 +43,14 @@ const InteractionButtons = ({
         // Invalidate or refetch a query on success
         queryClient.invalidateQueries(['listings']);
         queryClient.invalidateQueries(['post']);
+        queryClient.invalidateQueries(['posts']);
         queryClient.invalidateQueries(['comments']);
+        queryClient.invalidateQueries(['downvoted']);
+        queryClient.invalidateQueries(['upvoted']);
+        queryClient.invalidateQueries(['hidden']);
+        queryClient.invalidateQueries(['saved']);
+        queryClient.invalidateQueries(['userComments']);
+
       },
       onError: () => {
         // Perform any actions on error, like showing an error message

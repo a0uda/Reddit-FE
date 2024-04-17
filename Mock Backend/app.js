@@ -5,6 +5,19 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 
+const getAuthUsername = (req) => {
+  const token = req.headers?.authorization;
+  console.log("req.headers", req.headers);
+  console.log("token", token.split(' ')[1]);
+
+  if (!token) return null;
+  const decodedToken = jwt.verify(token.split(' ')[1], "RedditToken@");
+  const username = decodedToken.username;
+  // console.log(token,'userrrrname');
+
+  return username;
+};
+
 app.use(
   cors({
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Add PATCH method here
@@ -1736,6 +1749,7 @@ app.post("/posts-or-comments/vote", (req, res) => {
 
 app.get("/user/about/:id", (req, res) => {
   const { id } = req.params;
+  console.log(id,'hiiii');
   const user = users.find((user) => user.id === id);
   if (!user) return res.status(404).json({ message: "User not found" });
   res.status(200).json(post);
@@ -2070,4 +2084,244 @@ app.get("/users/:username/comments", (req, res) => {
 });
 app.get("/users/:username/overview", (req, res) => {
   res.status(200).json(postsComments);
+});
+
+const CommunityModerators = [
+  {
+    community_name: "sports",
+    moderators: [
+      {
+        username: "FirstModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_1.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "SecondModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_2.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "ThirdModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_3.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "FourthModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "FifthModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_5.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "SixthModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_6.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "SeventhModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_7.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+    ],
+  },
+  {
+    community_name: "programming",
+    moderators: [
+      {
+        username: "SixthModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_6.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "SeventhModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_7.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+    ],
+  },
+];
+
+app.get("/communities/about/moderators/:communityName", (req, res) => {
+  const { communityName } = req.params;
+  const community = CommunityModerators.find(
+    (community) => community.community_name === communityName
+  );
+  if (community) {
+    res.status(200).json(community.moderators);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+
+const communityRules = [
+  {
+    community_name: "sports",
+    rules: [
+      {
+        _id: "111",
+        rule_title: "Civil Behavior",
+        rule_order: 1,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Keep posts and comments civil at all times. Follow proper reddiquette. Please try to be respectful to everyone. Hateful or otherwise inappropriate behaviour will not be tolerated. No witch-hunting.",
+        __v: 0,
+      },
+      {
+        _id: "222",
+        rule_title: "Self-Promotion",
+        rule_order: 2,
+        applies_to: "comments_only",
+        report_reason: "string",
+        full_description:
+          "Self-promotion/original content is allowed in certain circumstances. Profile sharing is only permitted through setting your user flair to your Letterboxd Username, using our profile sharing mega-thread, or in other mod-approved threads. Original content (LB lists/reviews, third-party OC etc.) is generally only permitted within our weekly threads. If you feel your original content promotes discussion, is of relevance/importance to the sub, or is high-effort/high-quality, exceptions will be made pending mod discretion.",
+        __v: 0,
+      },
+      {
+        _id: "3333",
+        rule_title: "Low-Effort Content",
+        rule_order: 3,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Low-effort/low-quality posts will be removed. Low-effort questions, low-quality shared content, or any content deemed by mods to lack honest intent, will be removed. Shared content must be relevant to Letterboxd or Film, and must be of an acceptable standard. Content that pushes agendas, has excessive ads, or is otherwise deemed to be a negative contribution, will be removed at mod discretion. Image macros, screen-grabs or commonly used memes/image formats must make an honest attempt at humor.",
+        __v: 0,
+      },
+      {
+        _id: "444",
+        rule_title: "No Wank/Circlejerking",
+        rule_order: 4,
+        applies_to: "comments_only",
+        report_reason: "string",
+        full_description:
+          "No wank/circlejerking posts allowed. Standalone posts and/or comments that are considered to be bait and/or wank about specific or non-specific users or reviews on Letterboxd will be removed. These types of posts have been deemed to be low-effort and, most importantly, unwelcoming to all individuals who use both the subreddit and Letterboxd.",
+        __v: 0,
+      },
+      {
+        _id: "555",
+        rule_title: "Duplicate Posts/Reposts",
+        rule_order: 5,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Duplicate posts/reposts will be removed. Individual posts that belong in an existing masterthread will be removed.",
+        __v: 0,
+      },
+    ],
+  },
+  {
+    community_name: "programming",
+    rules: [
+      {
+        _id: "666",
+        rule_title: "No Vandalism",
+        rule_order: 1,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "TMDb/Letterboxd vandalism posts are not allowed. Screenshots/links to content vandalism on either TMDb and/or Letterboxd will be removed. These posts fall under low effort and do not encourage adequate discussion on the subreddit.",
+        __v: 0,
+      },
+      {
+        _id: "777",
+        rule_title: "Suggestions for Letterboxd",
+        rule_order: 2,
+        applies_to: "comments_only",
+        report_reason: "string",
+        full_description:
+          "Suggestions for additions to the Letterboxd site will be redirected. Standalone posts offering original and/or common suggestions for Letterboxd will be directed to the official Letterboxd feedback site (letterboxd.nolt.io). Posts discussing new updates to the website and/or app are allowed.",
+        __v: 0,
+      },
+      {
+        _id: "888",
+        rule_title: "Miscellaneous Content",
+        rule_order: 3,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Miscellaneous content that is addressed in the FAQ will be removed. Any posts or comments discussing or asking about issues that are addressed in the sub FAQ will be removed. The poster will be directed to the FAQ page.",
+        __v: 0,
+      },
+      {
+        _id: "999",
+        rule_title: "Spoiler Policy",
+        rule_order: 4,
+        applies_to: "comments_only",
+        report_reason: "string",
+        full_description:
+          "Spoiler posts/comments must be marked as such. Absolutely no spoilers, intentional or otherwise, in post titles. This will be considered a serious offense and could result in a permanent ban. All posts with spoilers INSIDE the body of said post must be marked with the spoiler flair. When commenting on a post that is NOT labelled with the spoiler flair, please use proper spoiler formatting. Comments containing spoilers are acceptable within posts marked with the spoiler flair.",
+        __v: 0,
+      },
+    ],
+  },
+];
+
+app.get("/communities/rules/:communityName", (req, res) => {
+  const { communityName } = req.params;
+  const community = communityRules.find(
+    (community) => community.community_name === communityName
+  );
+  if (community) {
+    res.status(200).json(community.rules);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+
+app.post("/comments/new-comment", (req, res) => {
+  const { id, description } = req.body;
+
+  const username = getAuthUsername(req);
+  console.log("username", username);
+  if (!username) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  console.log("username", username);
+  const commentId = crypto.randomUUID();
+
+  comments.comments = comments.comments.concat([
+    {
+      id: commentId,
+      post_id: id,
+      user_id: "567",
+      username: username,
+      parent_id: commentId,
+      replies_comments_ids: [],
+      created_at: new Date(),
+      edited_at: "",
+      deleted_at: "",
+      description: description,
+      upvotes_count: 14,
+      downvotes_count: 1,
+      allowreplies_flag: true,
+      spam_flag: false,
+      locked_flag: false,
+      show_comment_flag: true,
+      moderator_details: {
+        approved_by: "",
+        approved_date: "",
+        removed_by: "",
+        removed_date: "",
+        spammed_by: "",
+        spammed_type: "",
+      },
+    },
+  ]);
+
+  console.log(comments);
+
+  res.status(200).json({ message: "Comment added successfully." });
 });

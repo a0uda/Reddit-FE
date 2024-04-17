@@ -53,7 +53,7 @@ function Notifications() {
     new_followers,
     invitations,
     posts,
-  } = data?.data.notifications_settings || {};
+  } = data?.data || {};
 
   return (
     <LoadingProvider error={error} isLoading={isLoading}>

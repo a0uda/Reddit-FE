@@ -15,7 +15,7 @@ const config = {
 axios.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
-    if (token) config.headers.Authorization = `Bearer ${token}`;
+    if (token) config.headers.Authorization = `${token}`;
     return config;
   },
   (error) => {
@@ -84,7 +84,10 @@ const postRequest = async ({
   const response = await axios.post(baseUrl + endPoint, data, config);
   console.log(response);
 
-  return response.data;
+  return {
+    ...response.data,
+    token: response.headers['authorization'],
+  };
 };
 
 export { fetchRequest, patchRequest, postRequest };

@@ -13,8 +13,9 @@ import useSession from '../../hooks/auth/useSession';
 
 function Posts() {
   const { user } = useSession();
-  const { data, error, isLoading } = useQuery(['posts', 'listings'], () =>
-    fetchRequest(`users/${user?.username}/posts`)
+  const { data, error, isLoading, refetch } = useQuery(
+    ['posts', 'listings'],
+    () => fetchRequest(`users/${user?.username}/posts`)
   );
   console.log(data);
   return (
