@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik, FormikErrors } from 'formik';
+import { Formik } from 'formik';
 import Validation from '../../../validate/validate';
 import {
   Dialog,
@@ -19,15 +19,15 @@ import { useMutation } from 'react-query';
 import { patchRequest, postRequest } from '../../../API/User';
 import { useAlert } from '../../../Providers/AlertProvider';
 
-function validateEmail(email) {
+function validateEmail(email: string) {
   // Regular expression for validating email addresses
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 }
 
 export const ChangeEmailModalError = (props: {
-  handleOpen;
-  open;
+  handleOpen: () => void;
+  open: boolean;
   email: string;
 }) => {
   const [modalNum, setModalNum] = React.useState(0);
@@ -123,8 +123,8 @@ export const ChangeEmailModalError = (props: {
 };
 
 export const ChangeEmailModal = (props: {
-  handleOpen;
-  open;
+  handleOpen: () => void;
+  open: boolean;
   refetch;
   email: string;
 }) => {
