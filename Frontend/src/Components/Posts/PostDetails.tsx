@@ -13,7 +13,7 @@ import PostOptions from './PostOptions';
 import InteractionButtons from './InteractionButtons';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
-import { CommentType, PostType } from '../../types/types';
+import { CommentType, CommunityType, PostType } from '../../types/types';
 import { useEffect, useState } from 'react';
 import LoadingProvider from '../LoadingProvider';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
@@ -23,6 +23,18 @@ import AddComment from './AddComment';
 import { useParams } from 'react-router-dom';
 
 const PostDetails = ({ post }: { post?: PostType }) => {
+  const [community, setCommunity] = useState<CommunityType | undefined>();
+
+  useQuery({
+    queryKey: ['community'],
+    queryFn: () =>
+      fetchRequest(`communities/get-community-view/${post?.community_name}`),
+    onSuccess: (data) => {
+      const community: CommunityType = data.data;
+      console.log(community);
+      setCommunity(community);
+    },
+  });
   const { id: postId } = useParams();
   const [comments, setComments] = useState<CommentType[] | undefined>();
   const commentsResponse = useQuery({
@@ -70,11 +82,11 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 >
                   <ArrowLeftIcon className='h-6 w-6 fill-black' />
                 </IconButton>
-                {post.communityAvatarSrc ? (
+                {post.avatar ? (
                   <Avatar
                     variant='circular'
                     alt={post.community_name}
-                    src={post.communityAvatarSrc}
+                    src={post.avatar}
                     className='w-10 h-10'
                   />
                 ) : (
@@ -84,13 +96,11 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                   <div className='flex flex-row items-center justify-between gap-1 m-0'>
                     <CommunityBadge
                       name={post.community_name}
-                      joined={post.joined}
-                      avatar={post.communityAvatarSrc}
-                      displayAvatar={false}
-                      coverImage={post.communityCoverSrc}
-                      members={post.communityMembers}
-                      online={post.communityOnline}
-                      description={post.description}
+                      joined={community?.joined}
+                      avatar={community?.profile_picture}
+                      coverImage={community?.banner_picture}
+                      members={community?.members_count}
+                      description={community?.description}
                     />
                     <span className='relative -top-0.5'>•</span>
                     <Typography variant='small' className='text-xs'>
@@ -127,11 +137,11 @@ const PostDetails = ({ post }: { post?: PostType }) => {
             </CardBody>
             <CardFooter className='px-0'>
               <InteractionButtons
-                id={post.id}
+                id={post._id}
                 upvotes={post.upvotes_count}
                 downvotes={post.downvotes_count}
                 comments_replies={post.comments_count}
-                refLink={`/r/${post.community_name}/comments/${post.id}/${post.title
+                refLink={`/r/${post.community_name}/comments/${post._id}/${post.title
                   .split(' ')
                   .splice(0, 10)
                   .join('_')}/`}

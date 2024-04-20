@@ -8,21 +8,32 @@ import { dateDuration } from '../../utils/helper_functions';
 import CommunityBadge from '../CommunityBadge';
 
 import InteractionButtons from './InteractionButtons';
-import { PostType } from '../../types/types';
+import { CommunityType, PostType } from '../../types/types';
 import PostOptions from './PostOptions';
 import { Link } from 'react-router-dom';
+import { fetchRequest } from '../../API/User';
+import { useQuery } from 'react-query';
+import { useState } from 'react';
 
 const PostPreview = ({ post }: { post: PostType }) => {
   // TODO Fetch Community
-  // const data = useQuery({
-  //   queryKey: ['community', post.community_id],
-  //   queryFn: () => fetchRequest('community', post.community_id),
-  // });
+  const [community, setCommunity] = useState<CommunityType | undefined>();
+
+  useQuery({
+    queryKey: ['community'],
+    queryFn: () =>
+      fetchRequest(`communities/get-community-view/${post.community_name}`),
+    onSuccess: (data) => {
+      const community: CommunityType = data.data;
+      console.log(community);
+      setCommunity(community);
+    },
+  });
 
   return (
     <div className='relative'>
       <Link
-        to={`/r/${post.community_name}/comments/${post.id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
+        to={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
         reloadDocument
         // className='absolute inset-0'
       >
@@ -38,12 +49,11 @@ const PostPreview = ({ post }: { post: PostType }) => {
             <div className='flex flex-row items-center justify-between gap-1 m-0'>
               <CommunityBadge
                 name={post.community_name}
-                joined={post.joined}
-                avatar={post.communityAvatarSrc}
-                coverImage={post.communityCoverSrc}
-                members={post.communityMembers}
-                online={post.communityOnline}
-                description={post.description}
+                joined={community?.joined}
+                avatar={community?.profile_picture}
+                coverImage={community?.banner_picture}
+                members={community?.members_count}
+                description={community?.description}
               />
               <span className='relative -top-0.5'>•</span>
               <Typography variant='small' className=''>
@@ -60,11 +70,11 @@ const PostPreview = ({ post }: { post: PostType }) => {
                 {post.title}
               </Typography>
               <InteractionButtons
-                id={post.id}
+                id={post._id}
                 upvotes={post.upvotes_count}
                 downvotes={post.downvotes_count}
                 comments_replies={post.comments_count}
-                refLink={`/r/${post.community_name}/comments/${post.id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
+                refLink={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
               />
             </div>
             {post.images?.[0] && (

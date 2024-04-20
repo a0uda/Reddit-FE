@@ -14,13 +14,12 @@ interface CommunityPopupItemProps {
   joined?: boolean;
   communityDescription?: string;
   communityMembers?: number;
-  communityOnline?: number;
 }
 
 const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
   const [isJoined, setIsJoined] = useState(props.joined);
   const [JustJoined, setJustJoined] = useState(false); // to handle the appearance of leave button if the user has just joined the community
-
+  console.log('v', props.communityMembers);
   useEffect(() => {
     // Check if the user has just joined the community
     if (!isJoined) {
@@ -127,7 +126,7 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
               Members
             </p>
           </div>
-          <div className='flex flex-col'>
+          {/* <div className='flex flex-col'>
             <p className='font-body font-bold -tracking-tight text-sm'>
               {props.communityOnline}
             </p>
@@ -139,12 +138,12 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
                 width='10'
                 height='10'
               >
-                {/* Online green light icon */}
+               
                 <circle cx='12' cy='12' r='10' fill='#4caf50' />
               </svg>
               Online
             </p>
-          </div>
+          </div> */}
         </footer>
       </CardBody>
     </Card>

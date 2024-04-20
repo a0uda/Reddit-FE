@@ -17,7 +17,6 @@ type Community = {
   coverImage?: string;
   description?: string;
   members?: number;
-  online?: number;
   displayAvatar?: boolean;
 };
 
@@ -30,7 +29,6 @@ const CommunityBadge = ({
   coverImage,
   description,
   members,
-  online,
   displayAvatar = true,
 }: CommunityBadgeProps) => {
   const [openPopover, setOpenPopover] = useState(false);
@@ -80,7 +78,6 @@ const CommunityBadge = ({
             joined={joined}
             communityDescription={description}
             communityMembers={members}
-            communityOnline={online}
           />
         </PopoverContent>
       </Popover>

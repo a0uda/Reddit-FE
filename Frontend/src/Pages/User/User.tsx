@@ -11,6 +11,7 @@ import { fetchRequest } from '../../API/User';
 import { useQuery } from 'react-query';
 import ContentLayout from '../../Components/ContentLayout';
 import useSession from '../../hooks/auth/useSession';
+import Saved from './Saved';
 
 const NavButton = (props: {
   active?: boolean | undefined;
@@ -123,10 +124,7 @@ function User() {
               ) : page == 'comments' ? (
                 <Comments />
               ) : page == 'saved' ? (
-                <UserContent
-                  endpoint='users/saved-posts-and-comments'
-                  queryName='saved'
-                />
+                <Saved />
               ) : page == 'hidden' ? (
                 <UserContent
                   endpoint='users/hidden-and-reported-posts'
