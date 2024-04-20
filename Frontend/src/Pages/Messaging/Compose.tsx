@@ -122,10 +122,7 @@ const Compose = () => {
             <option>op3</option> */}
           </select>
           {fromBool && (
-            <p className='text-danger-red text-sm'>
-              You can&apos;t send a message from a Subreddit to another
-              Subreddit
-            </p>
+            <p className='text-danger-red text-sm'>{fromFeedback}</p>
           )}
         </div>
         <div className='mb-3'>

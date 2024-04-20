@@ -144,6 +144,7 @@ const NewPost: React.FC = () => {
       }}
     >
       {(formik) => {
+        console.log(formik.errors);
         return (
           <div
             className={`pb-8 md:pb-12 lg:pb-16 pl-2 lg:pl-48 py-10 ${heightClass} h-full bg-grayLight w-full`}
