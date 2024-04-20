@@ -4,6 +4,7 @@ import { Button } from '@material-tailwind/react';
 export default function RoundedButton(props: {
   buttonColor: string;
   buttonBorderColor: string;
+  buttonIcon?: ReactNode;
   buttonText: string;
   buttonTextColor: string;
   buttonShape?: string;
@@ -30,6 +31,7 @@ export default function RoundedButton(props: {
     >
       <div className='flex justify-between items-center gap-1'>
         {props.children}
+        {props.buttonIcon}
         {props.buttonText}
         {props.imgRight}
       </div>

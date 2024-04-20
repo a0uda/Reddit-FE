@@ -36,7 +36,7 @@ const InteractionButtons = ({
     ({ id, rank }: { id: string; rank: number }) =>
       postRequest({
         endPoint: 'posts-or-comments/vote',
-        data: { id: id, is_post: isPost, rank: rank },
+        data: { id: id, is_post: isPost, vote: rank },
       }),
     {
       onSuccess: () => {

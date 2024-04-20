@@ -91,7 +91,7 @@ const PostReply = (props: {
               postReq.mutate(
                 {
                   endPoint: 'posts-or-comments/vote',
-                  data: { id: props.replyId, is_post: false, rank: newVote },
+                  data: { id: props.replyId, is_post: false, vote: newVote },
                 },
                 {
                   onError: () => {
@@ -122,7 +122,7 @@ const PostReply = (props: {
               postReq.mutate(
                 {
                   endPoint: 'posts-or-comments/vote',
-                  data: { id: props.replyId, is_post: false, rank: newVote },
+                  data: { id: props.replyId, is_post: false, vote: newVote },
                 },
                 {
                   onError: () => {

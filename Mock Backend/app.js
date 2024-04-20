@@ -31,8 +31,9 @@ app.use((req, res, next) => {
   next();
 });
 const accountSettings = {
-  msg: "asdasd",
-  account_settings: {
+  msg: 'asdasd',
+  content: {
+
     email: "ahmedkhaled1029@gmail.com",
     verified_email_flag: "string",
     country: "Egypt",
@@ -41,7 +42,8 @@ const accountSettings = {
     connected_google: true,
     hasPassword: true,
   },
-};
+}
+
 
 app.get("/users/account-settings", (req, res) => {
   res.status(200).json(accountSettings);
@@ -49,10 +51,7 @@ app.get("/users/account-settings", (req, res) => {
 
 let c = 0;
 app.patch("/users/change-account-settings", (req, res) => {
-  accountSettings.account_settings = {
-    ...accountSettings.account_settings,
-    ...req.body.account_settings,
-  };
+  accountSettings.content = { ...accountSettings.content, ...req.body.account_settings }
 
   console.log(req.body);
   if (c < 5) {
@@ -65,14 +64,14 @@ app.patch("/users/change-account-settings", (req, res) => {
 app.post("/users/disconnect-google", (req, res) => {
   const { password } = req.body;
   console.log(password);
-  accountSettings.account_settings.connected_google = false;
+  accountSettings.content.connected_google = false;
   console.log(accountSettings);
   res.sendStatus(200);
 });
 
 app.patch("/users/change-email", (req, res) => {
   const { password, new_email } = req.body;
-  accountSettings.account_settings.email = new_email;
+  accountSettings.content.email = new_email;
   res.sendStatus(200);
 });
 app.patch("/users/change-password", (req, res) => {
@@ -82,14 +81,14 @@ app.patch("/users/change-password", (req, res) => {
 });
 
 app.post("/users/delete-account", (req, res) => {
-  accountSettings.account_settings = {};
+  accountSettings.content = {};
   console.log(accountSettings);
   res.sendStatus(200);
 });
 
 let profileSettings = {
-  msg: "adasd",
-  profile_settings: {
+  msg: 'adasd',
+  content: {
     display_name: "string",
     about: "string",
     social_links: [
@@ -109,6 +108,7 @@ let profileSettings = {
     content_visibility: true,
     active_communities_visibility: false,
   },
+
 };
 
 app.get("/users/profile-settings", (req, res) => {
@@ -116,10 +116,7 @@ app.get("/users/profile-settings", (req, res) => {
 });
 
 app.patch("/users/change-profile-settings", (req, res) => {
-  profileSettings.profile_settings = {
-    ...profileSettings.profile_settings,
-    ...req.body.profile_settings,
-  };
+  profileSettings.content = { ...profileSettings.content, ...req.body.profile_settings }
 
   res.status(200).json(profileSettings);
 });
@@ -129,8 +126,8 @@ app.post("/users/clear-history", (req, res) => {
 });
 
 let notificationSettings = {
-  msg: "asda",
-  notifications_settings: {
+  msg: 'asda',
+  content: {
     private_messages: false,
     chat_messages: false,
     chat_requests: false,
@@ -143,42 +140,44 @@ let notificationSettings = {
     invitations: true,
     posts: true,
   },
+
 };
 app.get("/users/notification-settings", (req, res) => {
   res.status(200).json(notificationSettings);
 });
 app.patch("/users/change-notification-settings", (req, res) => {
   const updatedSettings = req.body;
-  notificationSettings.notifications_settings = {
-    ...notificationSettings.notifications_settings,
+  notificationSettings.content = {
+    ...notificationSettings.content,
     ...updatedSettings.notifications_settings,
   };
   res.status(200).json(notificationSettings);
 });
 
 let emailSettings = {
-  msg: "asdasd",
-  settings: {
+  msg: 'asdasd',
+  content: {
     new_follower_email: true,
     chat_request_email: true,
     unsubscribe_from_all_emails: true,
-  },
+  }
+
 };
 app.get("/users/email-settings", (req, res) => {
   res.status(200).json(emailSettings);
 });
 app.patch("/users/change-email-settings", (req, res) => {
   const updatedSettings = req.body;
-  emailSettings.settings = {
-    ...emailSettings.settings,
+  emailSettings.content = {
+    ...emailSettings.content,
     ...updatedSettings.email_settings,
   };
   res.status(200).json(emailSettings);
 });
 
 let feedSettings = {
-  msg: "asds",
-  settings: {
+  msg: 'asds',
+  content: {
     Adult_content_flag: true,
     autoplay_media: true,
     community_content_sort: {
@@ -199,8 +198,8 @@ app.get("/users/feed-settings", (req, res) => {
 app.patch("/users/change-feed-settings", (req, res) => {
   console.log(req.body);
   const updatedSettings = req.body;
-  feedSettings.settings = {
-    ...feedSettings.settings,
+  feedSettings.content = {
+    ...feedSettings.content,
     ...updatedSettings.feed_settings,
   };
   res.sendStatus(200);
@@ -208,7 +207,7 @@ app.patch("/users/change-feed-settings", (req, res) => {
 
 app.post("/users/add-social-link", (req, res) => {
   const { icon, username, displayName } = req.body;
-  profileSettings.profile_settings.social_links.push({
+  profileSettings.content.social_links.push({
     icon: icon,
     username: username,
     displayName: displayName,
@@ -218,7 +217,7 @@ app.post("/users/add-social-link", (req, res) => {
 
 app.post("/users/delete-social-link", (req, res) => {
   const { icon, username, displayName } = req.body;
-  profileSettings.profile_settings.social_links.pop({
+  profileSettings.content.social_links.pop({
     icon: icon,
     username: username,
     displayName: displayName,
@@ -227,8 +226,8 @@ app.post("/users/delete-social-link", (req, res) => {
 });
 
 const safetySettings = {
-  msg: "asda",
-  safety_and_privacy_settings: {
+  msg: 'asda',
+  content: {
     blocked_users: [
       {
         id: "1",
@@ -277,13 +276,14 @@ app.get("/users/safety-settings", (req, res) => {
 
 app.post("/users/block-unblock-user", (req, res) => {
   const { blocked_username, block } = req.query;
-  if (!block) {
-    safetySettings.safety_and_privacy_settings.blocked_users =
-      safetySettings.safety_and_privacy_settings.blocked_users.filter(
+  if (block === 'false') {
+    console.log(blocked_username, block);
+    safetySettings.content.blocked_users =
+      safetySettings.content.blocked_users.filter(
         (user) => user.username !== blocked_username
       );
   } else {
-    safetySettings.safety_and_privacy_settings.blocked_users.push({
+    safetySettings.content.blocked_users.push({
       username: blocked_username,
       blocked_date: new Date(),
     });
@@ -300,12 +300,12 @@ app.post("/users/block-unblock-user", (req, res) => {
 
 app.post("/users/mute-unmute-community", (req, res) => {
   if (!req.body.mute) {
-    safetySettings.safety_and_privacy_settings.muted_communities =
-      safetySettings.safety_and_privacy_settings.muted_communities.filter(
+    safetySettings.content.muted_communities =
+      safetySettings.content.muted_communities.filter(
         (user) => user["community-title"] !== req.body["community-title"]
       );
   } else {
-    safetySettings.safety_and_privacy_settings.muted_communities.push({
+    safetySettings.content.muted_communities.push({
       "community-title": req.body["community-title"],
       muted_date: new Date(),
     });
@@ -314,8 +314,8 @@ app.post("/users/mute-unmute-community", (req, res) => {
 });
 
 let chatSettings = {
-  msg: "asdad",
-  settings: {
+  msg: 'asdad',
+  content: {
     who_send_chat_request_flag: "Everyone",
     who_send_private_messages_flag: "Everyone",
   },
@@ -325,10 +325,7 @@ app.get("/users/chats-and-msgs-settings", (req, res) => {
 });
 app.patch("/users/change-chats-and-msgs-settings", (req, res) => {
   console.log(req.body);
-  chatSettings.settings = {
-    ...chatSettings.settings,
-    ...req.body.chat_and_messaging_settings,
-  };
+  chatSettings.content = { ...chatSettings.content, ...req.body.chat_and_messaging_settings }
 
   console.log(chatSettings);
   res.sendStatus(200);
@@ -1310,7 +1307,7 @@ let postsListings = [
 
 let comments = {
   message: "Comments Retrieved sucessfully",
-  comments: [
+  content: [
     {
       moderator_details: {
         approved_by: "",
@@ -1741,19 +1738,19 @@ function shuffleList(list) {
 }
 
 app.get("/listing/posts/random", (req, res) => {
-  res.status(200).json({ success: true, status: 200, posts: postsListings });
+  res.status(200).json({ success: true, status: 200, content: postsListings });
 });
 
 app.get("/listing/posts/best", (req, res) => {
   res
     .status(200)
-    .json({ success: true, status: 200, posts: [...postsListings].reverse() });
+    .json({ success: true, status: 200, content: [...postsListings].reverse() });
 });
 
 app.get("/listing/posts/hot", (req, res) => {
   res
     .status(200)
-    .json({ success: true, status: 200, posts: shuffleList(postsListings) });
+    .json({ success: true, status: 200, content: shuffleList(postsListings) });
 
   // res.status(200).json(shuffleList(postsListings));
 });
@@ -1761,7 +1758,7 @@ app.get("/listing/posts/hot", (req, res) => {
 app.get("/listing/posts/new", (req, res) => {
   res
     .status(200)
-    .json({ success: true, status: 200, posts: shuffleList(postsListings) });
+    .json({ success: true, status: 200, content: shuffleList(postsListings) });
 
   // res.status(200).json(shuffleList(postsListings));
 });
@@ -1769,16 +1766,16 @@ app.get("/listing/posts/new", (req, res) => {
 app.get("/listing/posts/top", (req, res) => {
   res
     .status(200)
-    .json({ success: true, status: 200, posts: shuffleList(postsListings) });
+    .json({ success: true, status: 200, content: shuffleList(postsListings) });
 });
 
 app.post("/posts-or-comments/vote", (req, res) => {
-  const { id, is_post, rank } = req.body;
-  console.log("id", id, "is_post", is_post, "rank", rank);
+  const { id, is_post, vote } = req.body;
+  console.log("id", id, "is_post", is_post, "rank", vote);
   if (is_post) {
     postsListings = postsListings.map((post) => {
       if (post.id === id) {
-        if (rank === 1) {
+        if (vote === 1) {
           post.upvotes_count++;
         } else {
           post.downvotes_count++;
@@ -1790,8 +1787,8 @@ app.post("/posts-or-comments/vote", (req, res) => {
     postReplies = postReplies.map((post) => {
       console.log(post.id, id, "cmp");
       if (post.id === id) {
-        post.rank = rank;
-        if (rank === 1) {
+        post.rank = vote;
+        if (vote === 1) {
           post.upvotes_count++;
         } else {
           post.downvotes_count++;
@@ -1804,8 +1801,8 @@ app.post("/posts-or-comments/vote", (req, res) => {
     usernameMentions = usernameMentions.map((post) => {
       console.log(post.id, id, "cmp");
       if (post.id === id) {
-        post.rank = rank;
-        if (rank === 1) {
+        post.rank = vote;
+        if (vote === 1) {
           post.upvotes_count++;
         } else {
           post.downvotes_count++;
@@ -1817,7 +1814,7 @@ app.post("/posts-or-comments/vote", (req, res) => {
     // console.log(postReplies, req.body);
     comments.comments = comments.comments.map((comment) => {
       if (comment._id === id) {
-        if (rank === 1) {
+        if (vote === 1) {
           comment.upvotes_count++;
         } else {
           comment.downvotes_count++;
@@ -2291,7 +2288,7 @@ app.get("/posts/get-comments/:id", (req, res) => {
 });
 let userAbout = {
   message: "About retrieved successfully",
-  about: {
+  content: {
     _id: "661a2c3fab10a4b012e8f59a",
     username: "u/Icy-Cry-5376",
     created_at: "2024-02-24T06:53:20.537Z",
@@ -2320,7 +2317,7 @@ let moderatedCommunities = {
   success: true,
   status: 200,
   msg: "Your moderated communities are retrieved successfully",
-  moderated_communities: [
+  content: [
     {
       id: "661732b95ef02bd2dddfde17",
       name: "Russel, Friesen and Volkman",
@@ -2575,10 +2572,10 @@ app.get("/users/:username/about", (req, res) => {
 });
 app.get("/users/moderated-communities2", (req, res) => {
   res.status(200).json({
-    success: true,
-    status: 200,
-    msg: "Your moderated communities are retrieved successfully",
-    moderated_communities: [
+    "success": true,
+    "status": 200,
+    "msg": "Your moderated communities are retrieved successfully",
+    "content": [
       {
         id: "661732b95ef02bd2dddfde17",
         name: "Russel, Friesen and Volkman",

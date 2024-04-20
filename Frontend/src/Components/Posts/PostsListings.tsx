@@ -27,6 +27,7 @@ const PostsListings = () => {
       return fetchRequest(`listing/posts/${sortOption.toLowerCase()}`);
     },
   });
+  console.log(response);
 
   const navigate = useNavigate();
   const isFirstRender = useRef(true);
