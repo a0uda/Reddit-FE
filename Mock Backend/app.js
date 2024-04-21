@@ -31,9 +31,8 @@ app.use((req, res, next) => {
   next();
 });
 const accountSettings = {
-  msg: 'asdasd',
+  msg: "asdasd",
   content: {
-
     email: "ahmedkhaled1029@gmail.com",
     verified_email_flag: "string",
     country: "Egypt",
@@ -42,8 +41,7 @@ const accountSettings = {
     connected_google: true,
     hasPassword: true,
   },
-}
-
+};
 
 app.get("/users/account-settings", (req, res) => {
   res.status(200).json(accountSettings);
@@ -51,7 +49,10 @@ app.get("/users/account-settings", (req, res) => {
 
 let c = 0;
 app.patch("/users/change-account-settings", (req, res) => {
-  accountSettings.content = { ...accountSettings.content, ...req.body.account_settings }
+  accountSettings.content = {
+    ...accountSettings.content,
+    ...req.body.account_settings,
+  };
 
   console.log(req.body);
   if (c < 5) {
@@ -87,7 +88,7 @@ app.post("/users/delete-account", (req, res) => {
 });
 
 let profileSettings = {
-  msg: 'adasd',
+  msg: "adasd",
   content: {
     display_name: "string",
     about: "string",
@@ -108,7 +109,6 @@ let profileSettings = {
     content_visibility: true,
     active_communities_visibility: false,
   },
-
 };
 
 app.get("/users/profile-settings", (req, res) => {
@@ -116,7 +116,10 @@ app.get("/users/profile-settings", (req, res) => {
 });
 
 app.patch("/users/change-profile-settings", (req, res) => {
-  profileSettings.content = { ...profileSettings.content, ...req.body.profile_settings }
+  profileSettings.content = {
+    ...profileSettings.content,
+    ...req.body.profile_settings,
+  };
 
   res.status(200).json(profileSettings);
 });
@@ -126,7 +129,7 @@ app.post("/users/clear-history", (req, res) => {
 });
 
 let notificationSettings = {
-  msg: 'asda',
+  msg: "asda",
   content: {
     private_messages: false,
     chat_messages: false,
@@ -140,7 +143,6 @@ let notificationSettings = {
     invitations: true,
     posts: true,
   },
-
 };
 app.get("/users/notification-settings", (req, res) => {
   res.status(200).json(notificationSettings);
@@ -155,13 +157,12 @@ app.patch("/users/change-notification-settings", (req, res) => {
 });
 
 let emailSettings = {
-  msg: 'asdasd',
+  msg: "asdasd",
   content: {
     new_follower_email: true,
     chat_request_email: true,
     unsubscribe_from_all_emails: true,
-  }
-
+  },
 };
 app.get("/users/email-settings", (req, res) => {
   res.status(200).json(emailSettings);
@@ -176,7 +177,7 @@ app.patch("/users/change-email-settings", (req, res) => {
 });
 
 let feedSettings = {
-  msg: 'asds',
+  msg: "asds",
   content: {
     Adult_content_flag: true,
     autoplay_media: true,
@@ -226,7 +227,7 @@ app.post("/users/delete-social-link", (req, res) => {
 });
 
 const safetySettings = {
-  msg: 'asda',
+  msg: "asda",
   content: {
     blocked_users: [
       {
@@ -276,7 +277,7 @@ app.get("/users/safety-settings", (req, res) => {
 
 app.post("/users/block-unblock-user", (req, res) => {
   const { blocked_username, block } = req.query;
-  if (block === 'false') {
+  if (block === "false") {
     console.log(blocked_username, block);
     safetySettings.content.blocked_users =
       safetySettings.content.blocked_users.filter(
@@ -314,7 +315,7 @@ app.post("/users/mute-unmute-community", (req, res) => {
 });
 
 let chatSettings = {
-  msg: 'asdad',
+  msg: "asdad",
   content: {
     who_send_chat_request_flag: "Everyone",
     who_send_private_messages_flag: "Everyone",
@@ -325,7 +326,10 @@ app.get("/users/chats-and-msgs-settings", (req, res) => {
 });
 app.patch("/users/change-chats-and-msgs-settings", (req, res) => {
   console.log(req.body);
-  chatSettings.content = { ...chatSettings.content, ...req.body.chat_and_messaging_settings }
+  chatSettings.content = {
+    ...chatSettings.content,
+    ...req.body.chat_and_messaging_settings,
+  };
 
   console.log(chatSettings);
   res.sendStatus(200);
@@ -574,7 +578,7 @@ let communities = [
       "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/373.jpg",
     created_at: "2024-04-16T15:06:52.270Z",
     rank: 5,
-    joined: false,
+    joined_flag: false,
   },
   {
     name: "programming",
@@ -589,7 +593,7 @@ let communities = [
       "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/373.jpg",
     created_at: "2024-04-16T15:06:52.270Z",
     rank: 1,
-    joined: false,
+    joined_flag: false,
   },
   {
     name: "sports",
@@ -604,7 +608,7 @@ let communities = [
       "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/373.jpg",
     created_at: "2024-04-16T15:06:52.270Z",
     rank: 3,
-    joined: false,
+    joined_flag: false,
   },
 ];
 
@@ -616,7 +620,7 @@ app.get("/communities/get-history-posts/", (req, res) => {
 //(return the community details by passing the community name as a prameter in the path)
 app.get("/communities/get-community-view/:communityname", (req, res) => {
   const { communityname } = req.params;
-  
+
   const community = communities.find(
     (community) => community.name === communityname
   );
@@ -1020,7 +1024,7 @@ let postsListings = [
   // },
   {
     is_post: true,
-    id: "18",
+    _id: "18",
     user_id: "user2",
     username: "jane_smith",
     title: "Second Post",
@@ -1077,7 +1081,7 @@ let postsListings = [
   },
   {
     is_post: true,
-    id: "3",
+    _id: "3",
     user_id: "user3",
     username: "joe_bloggs",
     title: "Third Post",
@@ -1134,7 +1138,7 @@ let postsListings = [
   },
   {
     is_post: true,
-    id: "4",
+    _id: "4",
     user_id: "user4",
     username: "john_doe",
     title: "First Post",
@@ -1191,7 +1195,7 @@ let postsListings = [
   },
   {
     is_post: true,
-    id: "5",
+    _id: "5",
     user_id: "user5",
     username: "joe_bloggs",
     title: "Third Post",
@@ -1248,7 +1252,7 @@ let postsListings = [
   },
   {
     is_post: true,
-    id: "6",
+    _id: "6",
     user_id: "user6",
     username: "jane_smith",
     title: "Second Post",
@@ -1742,9 +1746,11 @@ app.get("/listing/posts/random", (req, res) => {
 });
 
 app.get("/listing/posts/best", (req, res) => {
-  res
-    .status(200)
-    .json({ success: true, status: 200, content: [...postsListings].reverse() });
+  res.status(200).json({
+    success: true,
+    status: 200,
+    content: [...postsListings].reverse(),
+  });
 });
 
 app.get("/listing/posts/hot", (req, res) => {
@@ -2269,7 +2275,8 @@ app.get("/user/about/:id", (req, res) => {
 // * Post
 app.get("/posts/get-post/:id", (req, res) => {
   const { id } = req.params;
-  const post = postsListings.find((post) => post.id === id);
+  console.log(id);
+  const post = postsListings.find((postt) => postt._id === id);
   if (!post) {
     return res.status(404).json({ message: "Post not found" });
   }
@@ -2278,7 +2285,7 @@ app.get("/posts/get-post/:id", (req, res) => {
 
 app.get("/posts/get-comments/:id", (req, res) => {
   const { id } = req.params;
-  const postComments = comments.comments.filter(
+  const postComments = comments.content.filter(
     (comment) => comment.post_id === id
   );
   if (!postComments) {
@@ -2572,10 +2579,10 @@ app.get("/users/:username/about", (req, res) => {
 });
 app.get("/users/moderated-communities2", (req, res) => {
   res.status(200).json({
-    "success": true,
-    "status": 200,
-    "msg": "Your moderated communities are retrieved successfully",
-    "content": [
+    success: true,
+    status: 200,
+    msg: "Your moderated communities are retrieved successfully",
+    content: [
       {
         id: "661732b95ef02bd2dddfde17",
         name: "Russel, Friesen and Volkman",
@@ -2670,6 +2677,23 @@ const CommunityModerators = [
   },
   {
     community_name: "programming",
+    moderators: [
+      {
+        username: "SixthModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_6.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+      {
+        username: "SeventhModerator",
+        profile_picture:
+          "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_7.png",
+        moderator_since: "2024-03-29T00:00:00.000Z",
+      },
+    ],
+  },
+  {
+    community_name: "Community2",
     moderators: [
       {
         username: "SixthModerator",
@@ -2796,6 +2820,41 @@ const communityRules = [
         report_reason: "string",
         full_description:
           "Spoiler posts/comments must be marked as such. Absolutely no spoilers, intentional or otherwise, in post titles. This will be considered a serious offense and could result in a permanent ban. All posts with spoilers INSIDE the body of said post must be marked with the spoiler flair. When commenting on a post that is NOT labelled with the spoiler flair, please use proper spoiler formatting. Comments containing spoilers are acceptable within posts marked with the spoiler flair.",
+        __v: 0,
+      },
+    ],
+  },
+  {
+    community_name: "Community2",
+    rules: [
+      {
+        _id: "432",
+        rule_title: "Civil Behavior",
+        rule_order: 1,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Keep posts and comments civil at all times. Follow proper reddiquette. Please try to be respectful to everyone. Hateful or otherwise inappropriate behaviour will not be tolerated. No witch-hunting.",
+        __v: 0,
+      },
+      {
+        _id: "234",
+        rule_title: "Self-Promotion",
+        rule_order: 2,
+        applies_to: "comments_only",
+        report_reason: "string",
+        full_description:
+          "Self-promotion/original content is allowed in certain circumstances. Profile sharing is only permitted through setting your user flair to your Letterboxd Username, using our profile sharing mega-thread, or in other mod-approved threads. Original content (LB lists/reviews, third-party OC etc.) is generally only permitted within our weekly threads. If you feel your original content promotes discussion, is of relevance/importance to the sub, or is high-effort/high-quality, exceptions will be made pending mod discretion.",
+        __v: 0,
+      },
+      {
+        _id: "11",
+        rule_title: "Low-Effort Content",
+        rule_order: 3,
+        applies_to: "posts_and_comments",
+        report_reason: "string",
+        full_description:
+          "Low-effort/low-quality posts will be removed. Low-effort questions, low-quality shared content, or any content deemed by mods to lack honest intent, will be removed. Shared content must be relevant to Letterboxd or Film, and must be of an acceptable standard. Content that pushes agendas, has excessive ads, or is otherwise deemed to be a negative contribution, will be removed at mod discretion. Image macros, screen-grabs or commonly used memes/image formats must make an honest attempt at humor.",
         __v: 0,
       },
     ],

@@ -11,11 +11,12 @@ import { PostType } from '../types/types';
 const Post = () => {
   const { id: postId } = useParams();
 
+  console.log(postId);
   // const [community, setCommunity] = useState<PostType | undefined>();
   const [post, setPost] = useState<PostType | undefined>();
   const { isLoading, isError } = useQuery({
     queryKey: ['post', 'listings', postId],
-    queryFn: () => fetchRequest(`posts/get-post/${postId}/`),
+    queryFn: () => fetchRequest(`posts/get-post/${postId}`),
     onSuccess: (data) => {
       setPost(data.data);
     },
@@ -31,7 +32,7 @@ const Post = () => {
                 <PostDetails post={post} />
               </ContentLayout.Main>
               <ContentLayout.RightSideBar>
-                <CommunityRSB name={post.community_name} joined={post.joined} />
+                <CommunityRSB name={post.community_name} />
               </ContentLayout.RightSideBar>
             </>
           )}

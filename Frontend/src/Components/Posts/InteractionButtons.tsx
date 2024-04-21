@@ -50,7 +50,6 @@ const InteractionButtons = ({
         queryClient.invalidateQueries(['hidden']);
         queryClient.invalidateQueries(['saved']);
         queryClient.invalidateQueries(['userComments']);
-
       },
       onError: () => {
         // Perform any actions on error, like showing an error message

@@ -19,7 +19,6 @@ interface CommunityPopupItemProps {
 const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
   const [isJoined, setIsJoined] = useState(props.joined);
   const [JustJoined, setJustJoined] = useState(false); // to handle the appearance of leave button if the user has just joined the community
-  console.log('v', props.communityMembers);
   useEffect(() => {
     // Check if the user has just joined the community
     if (!isJoined) {

@@ -268,7 +268,6 @@ export type ModeratedCommunity = {
 // };
 
 export type CommunityType = {
-  _id: string;
   description: string;
   welcome_message: string;
   type: string;
@@ -277,5 +276,6 @@ export type CommunityType = {
   profile_picture: string;
   banner_picture: string;
   created_at: string;
-  joined: boolean;
+  joined_flag: boolean;
+  title: string;
 };

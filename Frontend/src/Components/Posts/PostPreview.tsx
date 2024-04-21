@@ -29,7 +29,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
       setCommunity(community);
     },
   });
-
+  console.log('post', post._id);
   return (
     <div className='relative'>
       <Link
@@ -49,7 +49,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
             <div className='flex flex-row items-center justify-between gap-1 m-0'>
               <CommunityBadge
                 name={post.community_name}
-                joined={community?.joined}
+                joined={community?.joined_flag}
                 avatar={community?.profile_picture}
                 coverImage={community?.banner_picture}
                 members={community?.members_count}
