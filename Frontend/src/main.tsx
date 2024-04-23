@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { AlertProvider } from './Providers/AlertProvider.tsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './Providers/AuthProvider.tsx';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import 'react-quill/dist/quill.snow.css';
 
 const queryClient = new QueryClient();
@@ -19,6 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <ThemeProvider value={theme}>
             <AlertProvider>
               <App />
+              {/* <ReactQueryDevtools client={queryClient} initialIsOpen={true} /> */}
             </AlertProvider>
           </ThemeProvider>
         </GoogleOAuthProvider>

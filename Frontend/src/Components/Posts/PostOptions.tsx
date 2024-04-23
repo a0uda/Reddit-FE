@@ -12,14 +12,39 @@ import {
   EyeIcon,
   EyeSlashIcon,
   FlagIcon,
+  PencilIcon,
+  TrashIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
+import eighteenPic from '../../assets/18Pic.svg';
 
 type PostOptionsProps = {
   saved: boolean;
-  hidden: boolean;
+  NSFW: boolean;
+  spoiler: boolean;
+  myPost: boolean;
+  handleEditPost: (editedText: string) => void;
+  handleSavePost: () => void;
+  handleHidePost: () => void;
+  handleReportPost: () => void;
+  handleDeletePost: () => void;
+  handleSpoiler: () => void;
+  handleNSFW: () => void;
 };
 
-const PostOptions = ({ saved, hidden }: PostOptionsProps) => {
+const PostOptions = ({
+  saved,
+  NSFW,
+  spoiler,
+  myPost,
+  handleEditPost,
+  handleSavePost,
+  handleHidePost,
+  handleReportPost,
+  handleDeletePost,
+  handleSpoiler,
+  handleNSFW,
+}: PostOptionsProps) => {
   return (
     <Menu placement='bottom-end'>
       <MenuHandler>
@@ -37,35 +62,65 @@ const PostOptions = ({ saved, hidden }: PostOptionsProps) => {
       </MenuHandler>
       <MenuList className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'>
         <MenuItem className='py-3 flex gap-2 items-center'>
+          <PencilIcon className='w-5 h-5' />
+          <span>Edit post</span>
+        </MenuItem>
+        <MenuItem
+          onClick={handleSavePost}
+          className='py-3 flex gap-2 items-center'
+        >
           {saved ? (
             <>
               <BookmarkSlashIcon className='w-5 h-5' />
-              <a href='#'>Unsave</a>
+              <span>Unsave</span>
             </>
           ) : (
             <>
               <BookmarkIcon className='w-5 h-5' />
-              <a href='#'>Save</a>
+              <span>Save</span>
             </>
           )}
         </MenuItem>
-        <MenuItem className='py-3 flex gap-2 items-center'>
-          {hidden ? (
-            <>
-              <EyeSlashIcon className='w-5 h-5' />
-              <a href='#'>Unhide</a>
-            </>
-          ) : (
-            <>
-              <EyeIcon className='w-5 h-5' />
-              <a href='#'>Hide</a>
-            </>
-          )}
+        <MenuItem
+          onClick={handleHidePost}
+          className='py-3 flex gap-2 items-center'
+        >
+          <EyeIcon className='w-5 h-5' />
+          <span>Hide</span>
         </MenuItem>
-        <MenuItem className='py-3 flex gap-2 items-center'>
+
+        <MenuItem
+          className='py-3 flex gap-2 items-center'
+          onClick={handleReportPost}
+        >
           <FlagIcon className='w-5 h-5' />
-          <a href='#'>Report</a>
+          <span>Report</span>
         </MenuItem>
+        <MenuItem
+          onClick={handleDeletePost}
+          className='py-3 flex gap-2 items-center'
+        >
+          <TrashIcon className='w-5 h-5' />
+          <span>Delete</span>
+        </MenuItem>
+        {!spoiler && (
+          <MenuItem
+            onClick={handleSpoiler}
+            className='py-3 flex gap-2 items-center'
+          >
+            <ExclamationTriangleIcon className='w-5 h-5' />
+            <span>Add spoiler tag</span>
+          </MenuItem>
+        )}
+        {!NSFW && (
+          <MenuItem
+            onClick={handleNSFW}
+            className='py-3 flex gap-2 items-center'
+          >
+            <img src={eighteenPic} className='w-5 h-5' />
+            <span>Add NSFW tag</span>
+          </MenuItem>
+        )}
       </MenuList>
     </Menu>
   );

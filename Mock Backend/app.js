@@ -690,7 +690,7 @@ let recentPostsList = [
     nsfw_flag: false,
     locked_flag: false,
     allowreplies_flag: true,
-    set_suggested_sort: "None (Recommended)",
+    set_suggested_sort: "null (Recommended)",
     moderator_details: {
       approved_by: "moderator1",
       approved_date: "2024-03-29",
@@ -763,7 +763,7 @@ let recentPostsList = [
     nsfw_flag: false,
     locked_flag: false,
     allowreplies_flag: true,
-    set_suggested_sort: "None (Recommended)",
+    set_suggested_sort: "null (Recommended)",
     moderator_details: {
       approved_by: "moderator1",
       approved_date: "2024-03-29",
@@ -935,379 +935,567 @@ app.patch("/notifications/hide/:id", (req, res) => {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+// let postsListings = [
+//   {
+//     deleted: false, //mtzwda
+//     is_post: true,
+//     _id: "15",
+//     user_id: "user1",
+//     // username: "john_doe",
+//     title: "First Post",
+//     description: "This is the first post",
+//     created_at: "2024-03-29",
+//     edited_at: "2024-03-29",
+//     deleted_at: "2024-03-29",
+//     type: "image_and_videos",
+//     link_url: "https://example.com",
+//     images: [
+//       {
+//         path: "image1.jpg",
+//         caption: "Image 1",
+//         link: "https://source.unsplash.com/random",
+//         ////
+//         _id: "asdasdasd",
+//       },
+//     ],
+//     videos: [
+//       {
+//         path: "video1.mp4",
+//         caption: "Video 1",
+//         link: "https://example.com/video1.mp4",
+//         _id: "qqqqqq",
+//       },
+//     ],
+//     //metghyr
+//     polls: [
+//       {
+//         options: "option 1",
+//         votes: 0,
+//         _id: "6617aec5023c99b0dcaf4399",
+//       },
+//       {
+//         options: "option 2",
+//         votes: 0,
+//         _id: "6617aec5023c99b0dcaf439a",
+//       },
+//       {
+//         options: "option 3",
+//         votes: 4,
+//         _id: "6817aec5023c99b0dcaf439a",
+//       },
+//     ],
+//     polls_voting_length: 3, //mtzwd
+//     polls_voting_is_expired_flag: false, ////mtzwd
+//     post_in_community_flag: false,
+//     // community_id: "community1", etshal
+//     community_name: "Community 1",
+//     comments_count: 0,
+//     views_count: 0,
+//     shares_count: 0,
+//     upvotes_count: 0,
+//     downvotes_count: 0,
+//     oc_flag: true,
+//     spoiler_flag: true,
+//     nsfw_flag: true,
+//     locked_flag: true,
+//     allowreplies_flag: true,
+//     scheduled_flag: false, //mtzwd
+//     set_suggested_sort: "null (Recommended)",
+//     moderator_details: {
+//       approved_by: "moderator1",
+//       approved_date: "2024-03-29",
+//       removed_by: "moderator2",
+//       removed_date: "2024-03-29",
+//       spammed_by: "moderator3",
+//       spammed_type: "spam",
+//       spammed_flag: false,
+//       approved_flag: false,
+//       removed_flag: false,
+//     },
+//     user_details: {
+//       total_views: 0,
+//       upvote_rate: 0,
+//       total_shares: 0,
+//     },
+//     is_reposted_flag: false, //mtzwd
+//     reposted: [], // mtzwd
+//     user_id: "661574f4faed34e05f91ded3", //mtzwd
+//     __v: 0, //mtzwd
+// },
+// {
+//   is_post: true,
+//   id: "18",
+//   avatar: "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+//   user_id: "user2",
+//   username: "jane_smith",
+//   title: "Second Post",
+//   description: "This is the second post",
+//   created_at: "2024-03-26",
+//   edited_at: "2024-03-26",
+//   deleted_at: "2024-03-26",
+//   type: "image_and_videos",
+//   link_url: "https://example.com",
+//   images: [
+//     {
+//       path: "image2.jpg",
+//       caption: "Image 2",
+//       link: "https://source.unsplash.com/random",
+//     },
+//   ],
+//   videos: [
+//     {
+//       path: "video2.mp4",
+//       caption: "Video 2",
+//       link: "https://example.com/video2.mp4",
+//     },
+//   ],
+//   poll: {
+//     options: ["Option 1", "Option 2", "Option 3"],
+//     votes: [0, 0, 0],
+//   },
+//   community_id: "community2",
+//   community_name: "programming",
+//   comments_count: 0,
+//   views_count: 0,
+//   shares_count: 0,
+//   upvotes_count: 0,
+//   downvotes_count: 0,
+//   oc_flag: true,
+//   spoiler_flag: true,
+//   nsfw_flag: true,
+//   locked_flag: true,
+//   allowreplies_flag: true,
+//   set_suggested_sort: "null (Recommended)",
+//   moderator_details: {
+//     approved_flag: true,
+//     approved_by: "moderator1",
+//     approved_date: "2024-03-26",
+//     removed_by: "moderator2",
+//     removed_date: "2024-03-26",
+//     spammed_by: "moderator3",
+//     spammed_type: "spam",
+//   },
+//   user_details: {
+//     total_views: 0,
+//     upvote_rate: 0,
+//     total_shares: 0,
+//   },
+// },
+// {
+//   is_post: true,
+//   _id: "3",
+//   user_id: "user3",
+//   username: "username",
+//   avatar: "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+//   title: "Third Post",
+//   description: "This is the third post",
+//   created_at: "2024-03-27",
+//   edited_at: "2024-03-27",
+//   deleted_at: "2024-03-27",
+//   type: "image_and_videos",
+//   link_url: "https://example.com",
+//   images: [
+//     {
+//       path: "image3.jpg",
+//       caption: "Image 3",
+//       link: "https://source.unsplash.com/random",
+//     },
+//   ],
+//   videos: [
+//     {
+//       path: "video3.mp4",
+//       caption: "Video 3",
+//       link: "https://example.com/video3.mp4",
+//     },
+//   ],
+//   poll: {
+//     options: ["Option 1", "Option 2", "Option 3"],
+//     votes: [0, 0, 0],
+//   },
+//   community_id: "community3",
+//   community_name: "programming",
+//   comments_count: 0,
+//   views_count: 0,
+//   shares_count: 0,
+//   upvotes_count: 0,
+//   downvotes_count: 0,
+//   oc_flag: true,
+//   spoiler_flag: true,
+//   nsfw_flag: true,
+//   locked_flag: true,
+//   allowreplies_flag: true,
+//   set_suggested_sort: "null (Recommended)",
+//   moderator_details: {
+//     approved_flag: false,
+//     approved_by: "moderator1",
+//     approved_date: "2024-03-27",
+//     removed_by: "moderator2",
+//     removed_date: "2024-03-27",
+//     spammed_by: "moderator3",
+//     spammed_type: "spam",
+//   },
+//   user_details: {
+//     total_views: 0,
+//     upvote_rate: 0,
+//     total_shares: 0,
+//   },
+// },
+// {
+//   is_post: true,
+//   _id: "4",
+//   user_id: "user4",
+//   username: "john_doe",
+//   avatar: "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+//   title: "First Post",
+//   description: "This is the first post",
+//   created_at: "2024-03-29",
+//   edited_at: "2024-03-29",
+//   deleted_at: "2024-03-29",
+//   type: "image_and_videos",
+//   link_url: "https://example.com",
+//   images: [
+//     {
+//       path: "image4.jpg",
+//       caption: "Image 4",
+//       link: "https://source.unsplash.com/random",
+//     },
+//   ],
+//   videos: [
+//     {
+//       path: "video4.mp4",
+//       caption: "Video 4",
+//       link: "https://example.com/video4.mp4",
+//     },
+//   ],
+//   poll: {
+//     options: ["Option 4", "Option 2", "Option 3"],
+//     votes: [0, 0, 0],
+//   },
+//   community_id: "community4",
+//   community_name: "Community2",
+//   comments_count: 0,
+//   views_count: 0,
+//   shares_count: 0,
+//   upvotes_count: 0,
+//   downvotes_count: 0,
+//   oc_flag: true,
+//   spoiler_flag: true,
+//   nsfw_flag: true,
+//   locked_flag: true,
+//   allowreplies_flag: true,
+//   set_suggested_sort: "null (Recommended)",
+//   moderator_details: {
+//     approved_by: "moderator4",
+//     approved_date: "2024-03-29",
+//     removed_by: "moderator2",
+//     removed_date: "2024-03-29",
+//     spammed_by: "moderator3",
+//     spammed_type: "spam",
+//   },
+//   user_details: {
+//     total_views: 0,
+//     upvote_rate: 0,
+//     total_shares: 0,
+//   },
+// },
+// {
+//   is_post: true,
+//   _id: "5",
+//   user_id: "user5",
+//   username: "joe_bloggs",
+//   avatar: "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+//   title: "Third Post",
+//   description: "This is the third post",
+//   created_at: "2024-05-27",
+//   edited_at: "2024-05-27",
+//   deleted_at: "2024-05-27",
+//   type: "image_and_videos",
+//   link_url: "https://example.com",
+//   images: [
+//     {
+//       path: "image5.jpg",
+//       caption: "Image 5",
+//       link: "https://source.unsplash.com/random",
+//     },
+//   ],
+//   videos: [
+//     {
+//       path: "video5.mp4",
+//       caption: "Video 5",
+//       link: "https://example.com/video5.mp4",
+//     },
+//   ],
+//   poll: {
+//     options: ["Option 1", "Option 2", "Option 3"],
+//     votes: [0, 0, 0],
+//   },
+//   community_id: "community3",
+//   community_name: "Community2",
+//   comments_count: 0,
+//   views_count: 0,
+//   shares_count: 0,
+//   upvotes_count: 0,
+//   downvotes_count: 0,
+//   oc_flag: true,
+//   spoiler_flag: true,
+//   nsfw_flag: true,
+//   locked_flag: true,
+//   allowreplies_flag: true,
+//   set_suggested_sort: "null (Recommended)",
+//   moderator_details: {
+//     approved_by: "moderator1",
+//     approved_date: "2024-03-27",
+//     removed_by: "moderator2",
+//     removed_date: "2024-03-27",
+//     spammed_by: "moderator3",
+//     spammed_type: "spam",
+//   },
+//   user_details: {
+//     total_views: 0,
+//     upvote_rate: 0,
+//     total_shares: 0,
+//   },
+// },
+// {
+//   is_post: true,
+//   _id: "6",
+//   user_id: "user6",
+//   username: "jane_smith",
+//   title: "Second Post",
+//   avatar: "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+//   description: "This is the second post",
+//   created_at: "2024-03-26",
+//   edited_at: "2024-03-26",
+//   deleted_at: "2024-03-26",
+//   type: "image_and_videos",
+//   link_url: "https://example.com",
+//   images: [
+//     {
+//       path: "image2.jpg",
+//       caption: "Image 2",
+//       link: "https://source.unsplash.com/random",
+//     },
+//   ],
+//   videos: [
+//     {
+//       path: "video2.mp4",
+//       caption: "Video 2",
+//       link: "https://example.com/video2.mp4",
+//     },
+//   ],
+//   poll: {
+//     options: ["Option 1", "Option 2", "Option 3"],
+//     votes: [0, 0, 0],
+//   },
+//   community_id: "community2",
+//   community_name: "Community2",
+//   comments_count: 0,
+//   views_count: 0,
+//   shares_count: 0,
+//   upvotes_count: 0,
+//   downvotes_count: 0,
+//   oc_flag: true,
+//   spoiler_flag: true,
+//   nsfw_flag: true,
+//   locked_flag: true,
+//   allowreplies_flag: true,
+//   set_suggested_sort: "null (Recommended)",
+//   moderator_details: {
+//     approved_by: "moderator1",
+//     approved_date: "2024-03-26",
+//     removed_by: "moderator2",
+//     removed_date: "2024-03-26",
+//     spammed_by: "moderator3",
+//     spammed_type: "spam",
+//   },
+//   user_details: {
+//     total_views: 0,
+//     upvote_rate: 0,
+//     total_shares: 0,
+//   },
+// },
+// ].concat(recentPostsList); // m3 haget osama
+
 let postsListings = [
-  // {
-  //   deleted: false, //mtzwda
-  //   is_post: true,
-  //   _id: "15",
-  //   user_id: "user1",
-  //   // username: "john_doe",
-  //   title: "First Post",
-  //   description: "This is the first post",
-  //   created_at: "2024-03-29",
-  //   edited_at: "2024-03-29",
-  //   deleted_at: "2024-03-29",
-  //   type: "image_and_videos",
-  //   link_url: "https://example.com",
-  //   images: [
-  //     {
-  //       path: "image1.jpg",
-  //       caption: "Image 1",
-  //       link: "https://source.unsplash.com/random",
-  //       ////
-  //       _id: "asdasdasd",
-  //     },
-  //   ],
-  //   videos: [
-  //     {
-  //       path: "video1.mp4",
-  //       caption: "Video 1",
-  //       link: "https://example.com/video1.mp4",
-  //       _id: "qqqqqq",
-  //     },
-  //   ],
-  //   //metghyr
-  //   polls: [
-  //     {
-  //       options: "option 1",
-  //       votes: 0,
-  //       _id: "6617aec5023c99b0dcaf4399",
-  //     },
-  //     {
-  //       options: "option 2",
-  //       votes: 0,
-  //       _id: "6617aec5023c99b0dcaf439a",
-  //     },
-  //     {
-  //       options: "option 3",
-  //       votes: 4,
-  //       _id: "6817aec5023c99b0dcaf439a",
-  //     },
-  //   ],
-  //   polls_voting_length: 3, //mtzwd
-  //   polls_voting_is_expired_flag: false, ////mtzwd
-  //   post_in_community_flag: false,
-  //   // community_id: "community1", etshal
-  //   community_name: "Community 1",
-  //   comments_count: 0,
-  //   views_count: 0,
-  //   shares_count: 0,
-  //   upvotes_count: 0,
-  //   downvotes_count: 0,
-  //   oc_flag: true,
-  //   spoiler_flag: true,
-  //   nsfw_flag: true,
-  //   locked_flag: true,
-  //   allowreplies_flag: true,
-  //   scheduled_flag: false, //mtzwd
-  //   set_suggested_sort: "None (Recommended)",
-  //   moderator_details: {
-  //     // approved_by: "moderator1",
-  //     // approved_date: "2024-03-29",//sheel
-  //     // removed_by: "moderator2",
-  //     // removed_date: "2024-03-29",//sheel
-  //     // spammed_by: "moderator3",//sheel
-  //     // spammed_type: "spam",//sheel
-  //     spammed_flag: false,
-  //     approved_flag: false,
-  //     removed_flag: false,
-  //   },
-  //   user_details: {
-  //     total_views: 0,
-  //     upvote_rate: 0,
-  //     total_shares: 0,
-  //   },
-  //   is_reposted_flag: false, //mtzwd
-  //   reposted: [], // mtzwd
-  //   user_id: "661574f4faed34e05f91ded3", //mtzwd
-  //   __v: 0, //mtzwd
-  // },
   {
-    is_post: true,
-    _id: "18",
-    user_id: "user2",
-    username: "jane_smith",
-    title: "Second Post",
-    description: "This is the second post",
-    created_at: "2024-03-26",
-    edited_at: "2024-03-26",
-    deleted_at: "2024-03-26",
-    type: "image_and_videos",
-    link_url: "https://example.com",
-    images: [
-      {
-        path: "image2.jpg",
-        caption: "Image 2",
-        link: "https://source.unsplash.com/random",
-      },
-    ],
-    videos: [
-      {
-        path: "video2.mp4",
-        caption: "Video 2",
-        link: "https://example.com/video2.mp4",
-      },
-    ],
-    poll: {
-      options: ["Option 1", "Option 2", "Option 3"],
-      votes: [0, 0, 0],
+    "_id": '1',
+    "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
+    "saved": true,
+    "user_id": '2',
+    "username": "user123",
+    "title": "A Random Post",
+    "description": "A random post description.",
+    "created_at": new Date(),
+    "deleted": false,
+    "type": "text",
+    "link_url": null,
+    "images": [],
+    "videos": [],
+    "polls": [],
+    "polls_voting_length": 3,
+    "polls_voting_is_expired_flag": false,
+    "post_in_community_flag": false,
+    "community_id": null,
+    "community_name": null,
+    "comments_count": 2,
+    "views_count": 10,
+    "shares_count": 1,
+    "upvotes_count": 5,
+    "downvotes_count": 0,
+    "oc_flag": true,
+    "spoiler_flag": true,
+    "nsfw_flag": false,
+    "locked_flag": false,
+    "allowreplies_flag": true,
+    "set_suggested_sort": "Best",
+    "scheduled_flag": false,
+    "moderator_details": {
+      "approved_flag": true,
+      "approved_by": 'hazem',
+      "approved_date": new Date(),
+      "removed_flag": false,
+      "removed_by": null,
+      "removed_date": null,
+      "removed_removal_reason": null,
+      "spammed_flag": false,
+      "spammed_by": null,
+      "spammed_type": null,
+      "spammed_removal_reason": null,
+      "reported_flag": false,
+      "reported_by": null,
+      "reported_type": null,
     },
-    community_id: "community2",
-    community_name: "Community2",
-    comments_count: 0,
-    views_count: 0,
-    shares_count: 0,
-    upvotes_count: 0,
-    downvotes_count: 0,
-    oc_flag: true,
-    spoiler_flag: true,
-    nsfw_flag: true,
-    locked_flag: true,
-    allowreplies_flag: true,
-    set_suggested_sort: "None (Recommended)",
-    moderator_details: {
-      approved_by: "moderator1",
-      approved_date: "2024-03-26",
-      removed_by: "moderator2",
-      removed_date: "2024-03-26",
-      spammed_by: "moderator3",
-      spammed_type: "spam",
+    "user_details": {
+      "total_views": 10,
+      "upvote_rate": 0.8,
+      "total_shares": 1,
     },
-    user_details: {
-      total_views: 0,
-      upvote_rate: 0,
-      total_shares: 0,
-    },
+    "is_reposted_flag": false,
+    "reposted": [],
   },
   {
-    is_post: true,
-    _id: "3",
-    user_id: "user3",
-    username: "joe_bloggs",
-    title: "Third Post",
-    description: "This is the third post",
-    created_at: "2024-03-27",
-    edited_at: "2024-03-27",
-    deleted_at: "2024-03-27",
-    type: "image_and_videos",
-    link_url: "https://example.com",
-    images: [
-      {
-        path: "image3.jpg",
-        caption: "Image 3",
-        link: "https://source.unsplash.com/random",
-      },
+    "_id": '4',
+    "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
+    "saved": true,
+    "user_id": '5',
+    "username": "user456",
+    "title": "Another Random Post",
+    "description": 'description',
+    "created_at": new Date(),
+    "deleted": false,
+    "type": "image_and_videos",
+    "link_url": "https://example.com",
+    "images": [
+      { "path": "/images/img1.jpg", "caption": "First Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" },
+      { "path": "/images/img1.jpg", "caption": "sec Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" }
     ],
-    videos: [
-      {
-        path: "video3.mp4",
-        caption: "Video 3",
-        link: "https://example.com/video3.mp4",
-      },
+    "videos": [
+      { "path": "/videos/video1.mp4", "caption": "First Video", "link": "https://example.com/video1" }
     ],
-    poll: {
-      options: ["Option 1", "Option 2", "Option 3"],
-      votes: [0, 0, 0],
+    "polls": [
+      { "options": "Option 1", "votes": 10 },
+      { "options": "Option 2", "votes": 5 },
+    ],
+    "polls_voting_length": 7,
+    "polls_voting_is_expired_flag": false,
+    "post_in_community_flag": true,
+    "community_id": '6',
+    "community_name": "programming",
+    "comments_count": 10,
+    "views_count": 50,
+    "shares_count": 5,
+    "upvotes_count": 25,
+    "downvotes_count": 2,
+    "oc_flag": false,
+    "spoiler_flag": true,
+    "nsfw_flag": true,
+    "locked_flag": false,
+    "allowreplies_flag": true,
+    "set_suggested_sort": "New",
+    "scheduled_flag": false,
+    "moderator_details": {
+      "approved_flag": false,
+      "approved_by": 'ahmed',
+      "approved_date": new Date(),
+      "removed_flag": false,
+      "removed_by": null,
+      "removed_date": new Date(),
+      "removed_removal_reason": null,
+      "spammed_flag": false,
+      "spammed_by": null,
+      "spammed_type": null,
+      "spammed_removal_reason": null,
+      "reported_flag": false,
+      "reported_by": null,
+      "reported_type": null,
     },
-    community_id: "community3",
-    community_name: "Community2",
-    comments_count: 0,
-    views_count: 0,
-    shares_count: 0,
-    upvotes_count: 0,
-    downvotes_count: 0,
-    oc_flag: true,
-    spoiler_flag: true,
-    nsfw_flag: true,
-    locked_flag: true,
-    allowreplies_flag: true,
-    set_suggested_sort: "None (Recommended)",
-    moderator_details: {
-      approved_by: "moderator1",
-      approved_date: "2024-03-27",
-      removed_by: "moderator2",
-      removed_date: "2024-03-27",
-      spammed_by: "moderator3",
-      spammed_type: "spam",
+    "user_details": {
+      "total_views": 50,
+      "upvote_rate": 0.9,
+      "total_shares": 5,
     },
-    user_details: {
-      total_views: 0,
-      upvote_rate: 0,
-      total_shares: 0,
-    },
+    "is_reposted_flag": false,
+    "reposted": [],
   },
   {
-    is_post: true,
-    _id: "4",
-    user_id: "user4",
-    username: "john_doe",
-    title: "First Post",
-    description: "This is the first post",
-    created_at: "2024-03-29",
-    edited_at: "2024-03-29",
-    deleted_at: "2024-03-29",
-    type: "image_and_videos",
-    link_url: "https://example.com",
-    images: [
-      {
-        path: "image4.jpg",
-        caption: "Image 4",
-        link: "https://source.unsplash.com/random",
-      },
-    ],
-    videos: [
-      {
-        path: "video4.mp4",
-        caption: "Video 4",
-        link: "https://example.com/video4.mp4",
-      },
-    ],
-    poll: {
-      options: ["Option 4", "Option 2", "Option 3"],
-      votes: [0, 0, 0],
+    "_id": '6',
+    "avatar": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
+    "saved": true,
+    "user_id": '7',
+    "username": "user789",
+    "title": "Third Random Post",
+    "description": "Yet another random post with different details.",
+    "created_at": new Date(),
+    "deleted": false,
+    "type": "url",
+    "link_url": "https://example2.com",
+    "images": [],
+    "videos": [],
+    "polls": [],
+    "polls_voting_length": 3,
+    "polls_voting_is_expired_flag": false,
+    "post_in_community_flag": true,
+    "community_id": '8',
+    "community_name": "Community B",
+    "comments_count": 5,
+    "views_count": 20,
+    "shares_count": 2,
+    "upvotes_count": 10,
+    "downvotes_count": 1,
+    "oc_flag": false,
+    "spoiler_flag": false,
+    "nsfw_flag": false,
+    "locked_flag": false,
+    "allowreplies_flag": true,
+    "set_suggested_sort": "Top",
+    "scheduled_flag": false,
+    "moderator_details": {
+      "approved_flag": true,
+      "approved_by": 'youssef',
+      "approved_date": new Date(),
+      "removed_flag": false,
+      "removed_by": null,
+      "removed_date": null,
+      "removed_removal_reason": null,
+      "spammed_flag": false,
+      "spammed_by": null,
+      "spammed_type": null,
+      "spammed_removal_reason": null,
+      "reported_flag": false,
+      "reported_by": null,
+      "reported_type": null,
     },
-    community_id: "community4",
-    community_name: "Community2",
-    comments_count: 0,
-    views_count: 0,
-    shares_count: 0,
-    upvotes_count: 0,
-    downvotes_count: 0,
-    oc_flag: true,
-    spoiler_flag: true,
-    nsfw_flag: true,
-    locked_flag: true,
-    allowreplies_flag: true,
-    set_suggested_sort: "None (Recommended)",
-    moderator_details: {
-      approved_by: "moderator4",
-      approved_date: "2024-03-29",
-      removed_by: "moderator2",
-      removed_date: "2024-03-29",
-      spammed_by: "moderator3",
-      spammed_type: "spam",
+    "user_details": {
+      "total_views": 20,
+      "upvote_rate": 0.7,
+      "total_shares": 2,
     },
-    user_details: {
-      total_views: 0,
-      upvote_rate: 0,
-      total_shares: 0,
-    },
+    "is_reposted_flag": false,
+    "reposted": [],
   },
-  {
-    is_post: true,
-    _id: "5",
-    user_id: "user5",
-    username: "joe_bloggs",
-    title: "Third Post",
-    description: "This is the third post",
-    created_at: "2024-05-27",
-    edited_at: "2024-05-27",
-    deleted_at: "2024-05-27",
-    type: "image_and_videos",
-    link_url: "https://example.com",
-    images: [
-      {
-        path: "image5.jpg",
-        caption: "Image 5",
-        link: "https://source.unsplash.com/random",
-      },
-    ],
-    videos: [
-      {
-        path: "video5.mp4",
-        caption: "Video 5",
-        link: "https://example.com/video5.mp4",
-      },
-    ],
-    poll: {
-      options: ["Option 1", "Option 2", "Option 3"],
-      votes: [0, 0, 0],
-    },
-    community_id: "community3",
-    community_name: "Community2",
-    comments_count: 0,
-    views_count: 0,
-    shares_count: 0,
-    upvotes_count: 0,
-    downvotes_count: 0,
-    oc_flag: true,
-    spoiler_flag: true,
-    nsfw_flag: true,
-    locked_flag: true,
-    allowreplies_flag: true,
-    set_suggested_sort: "None (Recommended)",
-    moderator_details: {
-      approved_by: "moderator1",
-      approved_date: "2024-03-27",
-      removed_by: "moderator2",
-      removed_date: "2024-03-27",
-      spammed_by: "moderator3",
-      spammed_type: "spam",
-    },
-    user_details: {
-      total_views: 0,
-      upvote_rate: 0,
-      total_shares: 0,
-    },
-  },
-  {
-    is_post: true,
-    _id: "6",
-    user_id: "user6",
-    username: "jane_smith",
-    title: "Second Post",
-    description: "This is the second post",
-    created_at: "2024-03-26",
-    edited_at: "2024-03-26",
-    deleted_at: "2024-03-26",
-    type: "image_and_videos",
-    link_url: "https://example.com",
-    images: [
-      {
-        path: "image2.jpg",
-        caption: "Image 2",
-        link: "https://source.unsplash.com/random",
-      },
-    ],
-    videos: [
-      {
-        path: "video2.mp4",
-        caption: "Video 2",
-        link: "https://example.com/video2.mp4",
-      },
-    ],
-    poll: {
-      options: ["Option 1", "Option 2", "Option 3"],
-      votes: [0, 0, 0],
-    },
-    community_id: "community2",
-    community_name: "Community2",
-    comments_count: 0,
-    views_count: 0,
-    shares_count: 0,
-    upvotes_count: 0,
-    downvotes_count: 0,
-    oc_flag: true,
-    spoiler_flag: true,
-    nsfw_flag: true,
-    locked_flag: true,
-    allowreplies_flag: true,
-    set_suggested_sort: "None (Recommended)",
-    moderator_details: {
-      approved_by: "moderator1",
-      approved_date: "2024-03-26",
-      removed_by: "moderator2",
-      removed_date: "2024-03-26",
-      spammed_by: "moderator3",
-      spammed_type: "spam",
-    },
-    user_details: {
-      total_views: 0,
-      upvote_rate: 0,
-      total_shares: 0,
-    },
-  },
-].concat(recentPostsList); // m3 haget osama
+]
+
+
 
 let comments = {
   message: "Comments Retrieved sucessfully",
@@ -1780,7 +1968,8 @@ app.post("/posts-or-comments/vote", (req, res) => {
   console.log("id", id, "is_post", is_post, "rank", vote);
   if (is_post) {
     postsListings = postsListings.map((post) => {
-      if (post.id === id) {
+      console.log(post._id);
+      if (post._id === id) {
         if (vote === 1) {
           post.upvotes_count++;
         } else {
@@ -1791,8 +1980,8 @@ app.post("/posts-or-comments/vote", (req, res) => {
     });
   } else {
     postReplies = postReplies.map((post) => {
-      console.log(post.id, id, "cmp");
-      if (post.id === id) {
+      console.log(post._id, id, "cmp");
+      if (post._id === id) {
         post.rank = vote;
         if (vote === 1) {
           post.upvotes_count++;
@@ -1805,8 +1994,8 @@ app.post("/posts-or-comments/vote", (req, res) => {
     });
 
     usernameMentions = usernameMentions.map((post) => {
-      console.log(post.id, id, "cmp");
-      if (post.id === id) {
+      console.log(post._id, id, "cmp");
+      if (post._id === id) {
         post.rank = vote;
         if (vote === 1) {
           post.upvotes_count++;
@@ -2327,7 +2516,7 @@ let moderatedCommunities = {
   content: [
     {
       id: "661732b95ef02bd2dddfde17",
-      name: "Russel, Friesen and Volkman",
+      name: "r/programming",
       profile_picture:
         "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
       favorite_flag: true,
@@ -2447,7 +2636,7 @@ let postsComments = [
     nsfw_flag: true,
     locked_flag: true,
     allowreplies_flag: true,
-    set_suggested_sort: "None (Recommended)",
+    set_suggested_sort: "null (Recommended)",
     moderator_details: {
       approved_by: "moderator1",
       approved_date: "2024-03-29",
@@ -2504,7 +2693,7 @@ let postsComments = [
     nsfw_flag: true,
     locked_flag: true,
     allowreplies_flag: true,
-    set_suggested_sort: "None (Recommended)",
+    set_suggested_sort: "null (Recommended)",
     moderator_details: {
       approved_by: "moderator1",
       approved_date: "2024-03-26",
@@ -2585,7 +2774,7 @@ app.get("/users/moderated-communities2", (req, res) => {
     content: [
       {
         id: "661732b95ef02bd2dddfde17",
-        name: "Russel, Friesen and Volkman",
+        name: "programming",
         profile_picture: "",
         favorite_flag: true,
         members_count: 163,

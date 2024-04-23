@@ -32,6 +32,7 @@ const CommunityBadge = ({
   displayAvatar = true,
 }: CommunityBadgeProps) => {
   const [openPopover, setOpenPopover] = useState(false);
+console.log(avatar);
 
   const triggers = {
     onMouseEnter: () => setOpenPopover(true),
@@ -62,7 +63,7 @@ const CommunityBadge = ({
               className='font-body -tracking-tight text-gray-600'
             >
               <Link to={`/r/${name}`} className='hover:underline'>
-                r/{name}
+                {name}
               </Link>
             </Typography>
           </div>

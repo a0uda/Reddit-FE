@@ -22,7 +22,7 @@ const Compose = () => {
     setFrom(user?.username);
   }, [user]);
 
-  const getCommResponse = useQuery('getCommunities', () =>
+  const getCommResponse = useQuery('getModeratedCommunities', () =>
     fetchRequest('users/moderated-communities2')
   );
   console.log(getCommResponse.data, 'getCommResponse.data');

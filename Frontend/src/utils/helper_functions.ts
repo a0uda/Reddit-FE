@@ -60,12 +60,17 @@ export function getTimeDifferenceAsString(date: Date) {
   return momDate.fromNow();
 }
 
-export function addPrefixToUsername(username: string, userType: string) {
+export function addPrefixToUsername(
+  username: string,
+  userType: 'moderator' | 'community' | 'user'
+) {
   console.log(username, userType);
-
-  if (userType == 'moderator') {
+  if (!username) return null;
+  if (userType == 'moderator' || userType == 'community') {
     return 'r/' + username;
-  } else {
+  } else if (userType == 'user') {
     return 'u/' + username;
+  } else {
+    return null;
   }
 }
