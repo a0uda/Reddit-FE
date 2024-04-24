@@ -1562,10 +1562,10 @@ let postsListings = [
       "reported_by": null,
       "reported_type": null,
     },
-    "user_details": {
-      "total_views": 10,
-      "upvote_rate": 0.8,
-      "total_shares": 1,
+    user_details: {
+      total_views: 10,
+      upvote_rate: 0.8,
+      total_shares: 1,
     },
     "is_reposted_flag": true,
     "reposted": '9',
@@ -1586,12 +1586,16 @@ let postsListings = [
       // { "path": "/images/img1.jpg", "caption": "First Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" },
       // { "path": "/images/img1.jpg", "caption": "sec Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" }
     ],
-    "videos": [
-      { "path": "/videos/video1.mp4", "caption": "First Video", "link": "https://example.com/video1" }
+    videos: [
+      {
+        path: "/videos/video1.mp4",
+        caption: "First Video",
+        link: "https://example.com/video1",
+      },
     ],
-    "polls": [
-      { "options": "Option 1", "votes": 10 },
-      { "options": "Option 2", "votes": 5 },
+    polls: [
+      { options: "Option 1", votes: 10 },
+      { options: "Option 2", votes: 5 },
     ],
     "polls_voting_length": 7,
     "polls_voting_is_expired_flag": false,
@@ -1626,10 +1630,10 @@ let postsListings = [
       "reported_by": null,
       "reported_type": null,
     },
-    "user_details": {
-      "total_views": 50,
-      "upvote_rate": 0.9,
-      "total_shares": 5,
+    user_details: {
+      total_views: 50,
+      upvote_rate: 0.9,
+      total_shares: 5,
     },
     "is_reposted_flag": false,
     "reposted": null,
@@ -1685,10 +1689,10 @@ let postsListings = [
       "reported_by": null,
       "reported_type": null,
     },
-    "user_details": {
-      "total_views": 20,
-      "upvote_rate": 0.7,
-      "total_shares": 2,
+    user_details: {
+      total_views: 20,
+      upvote_rate: 0.7,
+      total_shares: 2,
     },
     "is_reposted_flag": false,
     "reposted": null,
@@ -3000,18 +3004,152 @@ app.get("/users/hidden-and-reported-posts", (req, res) => {
   res.status(200).json(postsListings);
 });
 app.get("/users/saved-posts-and-comments", (req, res) => {
-  res.status(200).json(postsComments);
+  res.status(200).json(postscom);
 });
 
-app.get("/users/:username/posts", (req, res) => {
+app.get("/users/posts/:username", (req, res) => {
   res.status(200).json(postsListings);
 });
 
-app.get("/users/:username/comments", (req, res) => {
+app.get("/users/comments/:username", (req, res) => {
   res.status(200).json(comments);
 });
-app.get("/users/:username/overview", (req, res) => {
-  res.status(200).json(postsComments);
+let postscom = {
+  content: {
+    posts: [
+      {
+        is_post:true,
+        _id: "6",
+        avatar:
+          "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
+        saved: true,
+        user_id: "7",
+        username: "user789",
+        title: "Third Random Post",
+        description: "Yet another random post with different details.",
+        created_at:  "2024-04-20T11:30:00",
+        deleted: false,
+        type: "url",
+        link_url: "https://example2.com",
+        images: [],
+        videos: [],
+        polls: [],
+        polls_voting_length: 3,
+        polls_voting_is_expired_flag: false,
+        post_in_community_flag: true,
+        community_id: "8",
+        community_name: "Community B",
+        comments_count: 5,
+        views_count: 20,
+        shares_count: 2,
+        upvotes_count: 10,
+        downvotes_count: 1,
+        oc_flag: false,
+        spoiler_flag: false,
+        nsfw_flag: false,
+        locked_flag: false,
+        allowreplies_flag: true,
+        set_suggested_sort: "Top",
+        scheduled_flag: false,
+        moderator_details: {
+          approved_flag: true,
+          approved_by: "youssef",
+          approved_date: new Date(),
+          removed_flag: false,
+          removed_by: null,
+          removed_date: null,
+          removed_removal_reason: null,
+          spammed_flag: false,
+          spammed_by: null,
+          spammed_type: null,
+          spammed_removal_reason: null,
+          reported_flag: false,
+          reported_by: null,
+          reported_type: null,
+        },
+        user_details: {
+          total_views: 20,
+          upvote_rate: 0.7,
+          total_shares: 2,
+        },
+        is_reposted_flag: false,
+        reposted: [],
+      },
+    ],
+    comments: [
+      {
+        moderator_details: {
+          approved_by: "",
+          approved_date: "",
+          removed_by: "",
+          removed_date: "",
+          spammed_by: "",
+          spammed_type: "",
+          removed_flag: false,
+          spammed_flag: false,
+        },
+        is_post: false,
+        votes_count: 0,
+        _id: "11",
+        post_id: "7",
+        user_id: "567",
+        username: "commenter567",
+        parent_id: "",
+        replies_comments_ids: [],
+        created_at: "2024-03-30T11:30:00",
+        edited_at: "",
+        deleted_at: "",
+        approved: false,
+        deleted: false,
+        description:
+          "I found this post thought-provoking. It made me reconsider my own perspective.",
+        upvotes_count: 14,
+        downvotes_count: 1,
+        allowreplies_flag: true,
+        spam_flag: false,
+        locked_flag: false,
+        show_comment_flag: true,
+        __v: 0,
+      },
+      {
+        moderator_details: {
+          approved_by: "",
+          approved_date: "",
+          removed_by: "",
+          removed_date: "",
+          spammed_by: "",
+          spammed_type: "",
+          removed_flag: false,
+          spammed_flag: false,
+        },
+        is_post: false,
+        votes_count: 0,
+        _id: "12",
+        post_id: "7",
+        user_id: "678",
+        username: "user678",
+        parent_id: "",
+        replies_comments_ids: [],
+        created_at: "2023-03-29T14:45:00",
+        edited_at: "",
+        deleted_at: "",
+        approved: false,
+        deleted: false,
+        description:
+          "I have a question regarding one of the points you raised. Can you elaborate?",
+        upvotes_count: 6,
+        downvotes_count: 3,
+        allowreplies_flag: true,
+        spam_flag: false,
+        locked_flag: false,
+        show_comment_flag: true,
+        __v: 0,
+      },
+    ],
+  },
+};
+app.get("/users/overview/:username", (req, res) => {
+  res.status(200).json(postscom);
 });
 
 const CommunityModerators = [

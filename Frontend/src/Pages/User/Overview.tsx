@@ -12,14 +12,23 @@ import {
   PlusIcon,
 } from '@heroicons/react/24/outline';
 import useSession from '../../hooks/auth/useSession';
+import React from 'react';
 
 function Overview() {
   const { user } = useSession();
   const { data, error, isLoading } = useQuery(
     ['userComments', 'comments', 'posts', 'listings'],
-    () => fetchRequest(`users/${user?.username}/overview`)
+    () => fetchRequest(`users/overview/${user?.username}`)
   );
-  console.log(data);
+
+  console.log(
+    data?.data.posts
+      .concat(data?.data.comments)
+      .sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      )
+  );
   return (
     <>
       <LoadingProvider error={error} isLoading={isLoading}>
@@ -34,69 +43,82 @@ function Overview() {
         </Link>
         {data && (
           <>
-            {data.data.map((content) =>
-              content.is_post ? (
-                <div key={content.id}>
-                  <PostPreview page='profile' post={content} />
-                  <div className='text-black m-2 text-sm'>
-                    Lifetime Performance
-                  </div>
-                  <div className='flex flex-row border-b-[1px]'>
-                    <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
-                      <div className='text-black text-xl font-bold '>
-                        {content.user_details.total_views === 0
-                          ? 'N/A'
-                          : content.user_details.total_views}
-                      </div>
-                      <div className='text-xs  gap-2 flex '>
-                        <EyeIcon strokeWidth={2.5} className='h-4 w-4' />
-                        Total Views
-                      </div>
-                    </div>
-
-                    <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
-                      <div className='text-black text-xl font-bold '>
-                        {content.user_details.upvote_rate}%
-                      </div>
-                      <div className='text-xs  gap-2 flex '>
-                        <ArrowUpIcon strokeWidth={2.5} className='h-4 w-4' />
-                        Upvote Rate
-                      </div>
-                    </div>
-
-                    <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
-                      <div className='text-black text-xl font-bold '>
-                        {content.user_details.upvote_rate}
-                      </div>
-                      <div className='text-xs  gap-2 flex '>
-                        <ChatBubbleBottomCenterIcon
-                          strokeWidth={2.5}
-                          className='h-4 w-4'
-                        />
-                        Comments
-                      </div>
-                    </div>
-
-                    <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
-                      <div className='text-black text-xl font-bold '>
-                        {content.user_details.total_views}
-                      </div>
-                      <div className='text-xs  gap-2 flex '>
-                        <ArrowUturnRightIcon
-                          strokeWidth={2.5}
-                          className='h-4 w-4'
-                        />
-                        Total Shares
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                //uncomment when deployed reem
-                <Comment key={content.id} comment={content} />
-                //<PostPreview key={content.id} post={content} />
+            {data.data.posts
+              .concat(data.data.comments)
+              .sort(
+                (a, b) =>
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime()
               )
-            )}
+              .map((content) => (
+                <React.Fragment key={content._id}>
+                  {content.is_post ? (
+                    <div>
+                      <PostPreview page='profile' post={content} />
+                      <div className='text-black m-2 text-sm'>
+                        Lifetime Performance
+                      </div>
+                      <div className='flex flex-row border-b-[1px]'>
+                        <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
+                          <div className='text-black text-xl font-bold '>
+                            {content.user_details.total_views === 0
+                              ? 'N/A'
+                              : content.user_details.total_views}
+                          </div>
+                          <div className='text-xs  gap-2 flex '>
+                            <EyeIcon strokeWidth={2.5} className='h-4 w-4' />
+                            Total Views
+                          </div>
+                        </div>
+
+                        <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
+                          <div className='text-black text-xl font-bold '>
+                            {content.user_details.upvote_rate}%
+                          </div>
+                          <div className='text-xs  gap-2 flex '>
+                            <ArrowUpIcon
+                              strokeWidth={2.5}
+                              className='h-4 w-4'
+                            />
+                            Upvote Rate
+                          </div>
+                        </div>
+
+                        <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
+                          <div className='text-black text-xl font-bold '>
+                            {content.user_details.upvote_rate}
+                          </div>
+                          <div className='text-xs  gap-2 flex '>
+                            <ChatBubbleBottomCenterIcon
+                              strokeWidth={2.5}
+                              className='h-4 w-4'
+                            />
+                            Comments
+                          </div>
+                        </div>
+
+                        <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
+                          <div className='text-black text-xl font-bold '>
+                            {content.user_details.total_views}
+                          </div>
+                          <div className='text-xs  gap-2 flex '>
+                            <ArrowUturnRightIcon
+                              strokeWidth={2.5}
+                              className='h-4 w-4'
+                            />
+                            Total Shares
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    //uncomment when deployed reem
+                    <Comment key={content.id} comment={content} />
+
+                    //<PostPreview key={content.id} post={content} />
+                  )}
+                </React.Fragment>
+              ))}
           </>
         )}
       </LoadingProvider>

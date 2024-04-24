@@ -13,9 +13,8 @@ import useSession from '../../hooks/auth/useSession';
 
 function Posts() {
   const { user } = useSession();
-  const { data, error, isLoading, refetch } = useQuery(
-    ['posts', 'listings'],
-    () => fetchRequest(`users/${user?.username}/posts`)
+  const { data, error, isLoading } = useQuery(['posts', 'listings'], () =>
+    fetchRequest(`users/posts/${user?.username}`)
   );
   console.log(data);
   return (
@@ -24,7 +23,7 @@ function Posts() {
         {data && (
           <>
             {data.data.map((post: PostType) => (
-              <div key={post.id}>
+              <div key={post._id}>
                 <PostPreview page='profile' post={post} />
                 <div className='text-black m-2 text-sm'>
                   Lifetime Performance

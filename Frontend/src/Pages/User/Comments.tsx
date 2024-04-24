@@ -9,7 +9,7 @@ function Comments() {
   const { user } = useSession();
   const { data, error, isLoading } = useQuery(
     ['userComments', 'comments'],
-    () => fetchRequest(`users/${user?.username}/comments`)
+    () => fetchRequest(`users/comments/${user?.username}`)
   );
 
   return (
