@@ -60,7 +60,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
   });
   useQuery({
     queryKey: ['getModeratedCommunities'],
-    queryFn: () => fetchRequest('users/moderated-communities2'),
+    queryFn: () => fetchRequest('users/moderated-communities'),
     onSuccess: (data) => {
       console.log(data);
       const moderatedCommunityNames = data?.data.map((com) => com.name);
