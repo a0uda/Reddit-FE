@@ -233,9 +233,9 @@ const PostPreview = ({ post }: { post: PostType }) => {
     <div
       className='relative'
       onClick={() => {
-        // navigate(
-        //   `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
-        // );
+        navigate(
+          `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+        );
       }}
     >
       {/* <Link

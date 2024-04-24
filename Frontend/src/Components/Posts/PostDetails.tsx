@@ -115,7 +115,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 </div>
               </div>
               <div>
-                <PostOptions saved={post.saved} hidden={post.hidden} />
+                <PostOptions saved={post.saved} />
               </div>
             </CardHeader>
             <CardBody className='flex flex-col justify-between gap-2 m-0 p-0'>
@@ -161,7 +161,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
         <>
           {comments &&
             comments.map((comment) => (
-              <Comment key={comment._id} comment={comment} />
+              <Comment key={comment._id} comment={comment} showButton={true} />
             ))}
         </>
       </LoadingProvider>
