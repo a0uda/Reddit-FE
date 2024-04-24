@@ -63,7 +63,7 @@ function User() {
   const { page } = useParams();
 
   const { data } = useQuery('about data', () =>
-    fetchRequest(`users/${user?.username}/about`)
+    fetchRequest(`users/about/${user?.username}`)
   );
 
   const about = data?.data || {};
