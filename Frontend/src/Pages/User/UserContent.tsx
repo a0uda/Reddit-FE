@@ -17,7 +17,7 @@ function UserContent(props: { endpoint: string; queryName: string }) {
         {data && (
           <>
             {data.data.map((post: PostType) => (
-              <PostPreview key={post._id} post={post} />
+              <PostPreview page='profile' key={post._id} post={post} />
             ))}
           </>
         )}

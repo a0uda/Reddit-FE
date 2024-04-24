@@ -10,6 +10,7 @@ import {
   MenuHandler,
   MenuItem,
   MenuList,
+  Radio,
 } from '@material-tailwind/react';
 import {
   addPrefixToUsername,
@@ -37,11 +38,29 @@ import useSession from '../../hooks/auth/useSession';
 import { CommunityIcon } from '../../assets/icons/Icons';
 import RoundedButton from '../RoundedButton';
 
-const PostPreview = ({ post }: { post: PostType }) => {
+const PostPreview = ({
+  post,
+  page,
+}: {
+  post: PostType;
+  page: 'profile' | 'home' | 'community';
+}) => {
   // TODO Fetch Community
   const [community, setCommunity] = useState<CommunityType | undefined>();
-  const [moderatedCommunities, setModeratedCommunities] = useState<[string]>();
-  const [viewSpoiler, setViewSpoiler] = useState<boolean>(post.spoiler_flag);
+  const [viewSpoiler, setViewSpoiler] = useState<boolean>(
+    post.spoiler_flag ||
+      (post.description &&
+        post.images?.length != 0 &&
+        post.polls?.length != 0 &&
+        post.link_url)
+  );
+  const [viewNSFW, setViewNSFW] = useState<boolean>(
+    post.nsfw_flag ||
+      (post.description &&
+        post.images?.length != 0 &&
+        post.polls?.length != 0 &&
+        post.link_url)
+  );
   const [isMyPost, setIsMyPost] = useState<boolean>();
   const { user } = useSession();
   const navigate = useNavigate();
@@ -60,16 +79,17 @@ const PostPreview = ({ post }: { post: PostType }) => {
   });
   useQuery({
     queryKey: ['getModeratedCommunities'],
-    queryFn: () => fetchRequest('users/moderated-communities2'),
+    queryFn: () => fetchRequest('users/moderated-communities'),
     onSuccess: (data) => {
-      console.log(data);
+      console.log(
+        post.spoiler_flag && !(post.description && post.images?.length != 0),
+        'images'
+      );
       const moderatedCommunityNames = data?.data.map((com) => com.name);
-      // const modCommunity: CommunityType = data.data;
       console.log(moderatedCommunityNames);
-      setModeratedCommunities(moderatedCommunityNames);
       setIsMyPost(
         post.username == user?.username ||
-          moderatedCommunities?.includes(post.community_name || '')
+          moderatedCommunityNames?.includes(post.community_name || '')
       );
     },
   });
@@ -77,51 +97,354 @@ const PostPreview = ({ post }: { post: PostType }) => {
   const postReq = useMutation(postRequest);
   const patchReq = useMutation(patchRequest);
 
-  const SpoilerContainer = (props: { handleViewSpoiler: () => void }) => {
+  const LinkPostContainer = (props: { post: PostType }) => {
+    return (
+      <div className='flex flex-col justify-center gap-1'>
+        {props.post.description && (
+          <Typography
+            variant='paragraph'
+            className='mb-2 font-normal text-[#2A3C42]'
+          >
+            {props.post.description}
+          </Typography>
+        )}
+        <Link
+          to={props.post.link_url || '/'}
+          className='text-purple-600 hover:underline'
+        >
+          {props.post.link_url}
+        </Link>
+      </div>
+    );
+  };
+  const PollPostContainer = (props: { post: PostType }) => {
+    const [chosenOption, setChosenOption] = useState<string>('');
+    const [alreadyVoted, setAlreadyVoted] = useState<boolean>(false);
+
+    return (
+      <div className='bg-white rounded-lg flex flex-col gap-2 p-2 border-2 border-lines-color mb-1 w-full'>
+        <div className='flex flex-col gap-1'>
+          {props.post.polls &&
+            props.post.polls.map((poll, i) => (
+              <Radio
+                name={props.post._id}
+                label={
+                  poll.options + ' ' + '(Number of votes: ' + poll.votes + ')'
+                }
+                value={poll.options}
+                checked={poll.options == chosenOption}
+                key={poll.options + i}
+                crossOrigin={undefined}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setChosenOption(e.target.value);
+                }}
+                disabled={alreadyVoted}
+              />
+            ))}
+        </div>
+        <div className='flex gap-2 items-center'>
+          <RoundedButton
+            buttonBorderColor='border-lines-color'
+            buttonColor='bg-lines-color'
+            buttonText='Vote'
+            buttonTextColor='text-black'
+            disabled={!chosenOption}
+          />
+          <span>
+            {props.post.polls_voting_is_expired_flag
+              ? 'Expired!'
+              : "Didn't expire yet!"}
+          </span>
+        </div>
+      </div>
+    );
+  };
+
+  const SharedPostContainer = (props: { sharedPostId: string }) => {
+    const [sharedPost, setSharedPost] = useState<PostType>();
+    const [sharedPostSpoiler, setSharedPostSpoiler] = useState<boolean>();
+    const [sharedViewNSFW, setSharedViewNSFW] = useState<boolean>();
+
+    const [name, setName] = useState<string>();
+    useQuery({
+      queryKey: `posts/get-post?id=${props.sharedPostId}`,
+      queryFn: () => fetchRequest(`posts/get-post?id=${props.sharedPostId}`),
+      onSuccess: (data) => {
+        console.log(data, 'sharedPost');
+        setSharedPost(data.data);
+        setName(
+          addPrefixToUsername(data.data.community_name || '', 'moderator') ||
+            addPrefixToUsername(data.data.username, 'user') ||
+            ''
+        );
+        setSharedPostSpoiler(data.data.spoiler_flag);
+      },
+      // refetchOnMount: false,
+    });
+
     return (
       <>
         <div>
           <Typography variant='h5' className='mb-2 font-normal text-black'>
             {post.title}
           </Typography>
-          <div className='flex gap-2 mb-2'>
-            {post.spoiler_flag && (
-              <div className='flex gap-1 items-center'>
-                <ExclamationTriangleIcon
-                  strokeWidth={3}
-                  className='w-4 h-4 font-bold text-black'
-                />
+          {post?.spoiler_flag ||
+            (post?.nsfw_flag && (
+              <div className='flex gap-2 mb-2'>
+                {post?.spoiler_flag && (
+                  <div className='flex gap-1 items-center'>
+                    <ExclamationTriangleIcon
+                      strokeWidth={3}
+                      className='w-4 h-4 font-bold text-black'
+                    />
+                    <Typography
+                      variant='small'
+                      className='font-bold text-black text-xs'
+                    >
+                      SPOILER
+                    </Typography>
+                  </div>
+                )}
+                {post?.nsfw_flag && (
+                  <div className='flex gap-1 items-center'>
+                    <img
+                      src={eighteenPic}
+                      // strokeWidth={3}
+                      className='w-4 h-4 font-bold text-black'
+                    />
+                    <Typography
+                      variant='small'
+                      className='font-bold text-black text-xs'
+                    >
+                      NSFW
+                    </Typography>
+                  </div>
+                )}
+              </div>
+            ))}
+        </div>
+        <div className='bg-white rounded-lg flex flex-col p-2 border-2 border-lines-color mb-1'>
+          {sharedPost?.spoiler_flag && sharedPostSpoiler && (
+            <div className='flex flex-col justify-start pt-0'>
+              <div className='flex gap-2'>
                 <Typography
                   variant='small'
-                  className='font-bold text-black text-xs'
+                  className='font-body -tracking-tight text-gray-600'
                 >
-                  SPOILER
+                  <Link to={`/r/${name}`} className='hover:underline'>
+                    {name}
+                  </Link>
+                </Typography>
+                <span className='relative -top-0.5'>•</span>
+                <Typography variant='small' className=''>
+                  {dateDuration(new Date(sharedPost?.created_at))}
                 </Typography>
               </div>
-            )}
-            {post.nsfw_flag && (
-              <div className='flex gap-1 items-center'>
-                <img
-                  src={eighteenPic}
-                  // strokeWidth={3}
-                  className='w-4 h-4 font-bold text-black'
-                />
-                <Typography
-                  variant='small'
-                  className='font-bold text-black text-xs'
-                >
-                  NSFW
-                </Typography>
+              <Typography variant='h5' className='text-blue'>
+                {sharedPost?.title}
+              </Typography>
+            </div>
+          )}
+          <div>
+            {sharedPost?.spoiler_flag &&
+            sharedPostSpoiler &&
+            (sharedPost?.description ||
+              sharedPost?.images?.length != 0 ||
+              sharedPost.polls?.length != 0 ||
+              sharedPost.link_url) ? (
+              <SpoilerContainer
+                handleViewSpoiler={() => {
+                  console.log(viewSpoiler, 'spoilerrrr');
+
+                  setSharedPostSpoiler(false);
+                }}
+                spoilerPost={sharedPost}
+                sharedPost={true}
+                text='View Spoiler'
+              />
+            ) : sharedPost?.nsfw_flag &&
+              sharedViewNSFW &&
+              (sharedPost?.description ||
+                sharedPost?.images?.length != 0 ||
+                sharedPost.polls?.length != 0 ||
+                sharedPost.link_url) ? (
+              <SpoilerContainer
+                handleViewSpoiler={() => {
+                  // console.log(viewSpoiler, 'spoilerrrr');
+
+                  setSharedViewNSFW(false);
+                }}
+                spoilerPost={post}
+                sharedPost={true}
+                text='View NSFW Content'
+              />
+            ) : (
+              <div className='flex gap-7 justify-between pb-2'>
+                <div className='flex flex-col justify-start space-y-2 overflow-hidden w-full'>
+                  <div>
+                    <div className='flex flex-col justify-start pt-0'>
+                      <div className='flex gap-2'>
+                        <Typography
+                          variant='small'
+                          className='font-body -tracking-tight text-gray-600'
+                        >
+                          <Link to={`/r/${name}`} className='hover:underline'>
+                            {name}
+                          </Link>
+                        </Typography>
+                        <span className='relative -top-0.5'>•</span>
+                        <Typography variant='small' className=''>
+                          {dateDuration(new Date(sharedPost?.created_at))}
+                        </Typography>
+                      </div>
+                    </div>
+                    <Typography variant='h5' className='mb-2 text-blue'>
+                      {sharedPost?.title}
+                    </Typography>
+                    {(sharedPost?.spoiler_flag || sharedPost?.nsfw_flag) && (
+                      <div className='flex gap-2 mb-2'>
+                        {sharedPost?.spoiler_flag && (
+                          <div className='flex gap-1 items-center'>
+                            <ExclamationTriangleIcon
+                              strokeWidth={3}
+                              className='w-4 h-4 font-bold text-black'
+                            />
+                            <Typography
+                              variant='small'
+                              className='font-bold text-black text-xs'
+                            >
+                              SPOILER
+                            </Typography>
+                          </div>
+                        )}
+                        {sharedPost?.nsfw_flag && (
+                          <div className='flex gap-1 items-center'>
+                            <img
+                              src={eighteenPic}
+                              // strokeWidth={3}
+                              className='w-4 h-4 font-bold text-black'
+                            />
+                            <Typography
+                              variant='small'
+                              className='font-bold text-black text-xs'
+                            >
+                              NSFW
+                            </Typography>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className='w-full'>
+                    {sharedPost?.moderator_details.removed_flag ||
+                    sharedPost?.moderator_details.spammed_flag ? (
+                      '[removed]'
+                    ) : sharedPost?.type == 'text' ? (
+                      <div className='flex justify-between gap-7'>
+                        <div className='flex items-center'>
+                          <Typography
+                            variant='paragraph'
+                            className='mb-2 font-normal text-[#2A3C42]'
+                          >
+                            {sharedPost?.description}
+                          </Typography>
+                        </div>
+                      </div>
+                    ) : sharedPost?.type == 'polls' ? (
+                      <PollPostContainer post={sharedPost} />
+                    ) : sharedPost?.type == 'url' ? (
+                      <LinkPostContainer post={sharedPost} />
+                    ) : null}
+                  </div>
+                </div>
+                {!(
+                  sharedPost?.moderator_details.removed_flag ||
+                  sharedPost?.moderator_details.spammed_flag
+                ) &&
+                  sharedPost?.images?.[0] && (
+                    <Tooltip
+                      content={
+                        sharedPost?.images?.length > 1
+                          ? `Click to show ${sharedPost?.images?.length} images`
+                          : 'Click to show image'
+                      }
+                    >
+                      <div className='flex w-32 justify-end items-center gap-1'>
+                        <img
+                          src={sharedPost?.images?.[0].link}
+                          alt='post'
+                          className='object-cover rounded-md w-32 h-24'
+                        />
+                      </div>
+                    </Tooltip>
+                  )}
               </div>
             )}
           </div>
+        </div>
+      </>
+    );
+  };
+
+  const SpoilerContainer = (props: {
+    handleViewSpoiler: () => void;
+    spoilerPost: PostType;
+    sharedPost: boolean;
+    text: string;
+  }) => {
+    console.log('spoilerPost', post.title);
+
+    return (
+      <>
+        <div>
+          {!props.sharedPost && (
+            <Typography variant='h5' className='mb-2 font-normal text-black'>
+              {post.title}
+            </Typography>
+          )}
+          {props.spoilerPost.spoiler_flag ||
+            (props.spoilerPost.nsfw_flag && (
+              <div className='flex gap-2 mb-2'>
+                {props.spoilerPost.spoiler_flag && (
+                  <div className='flex gap-1 items-center'>
+                    <ExclamationTriangleIcon
+                      strokeWidth={3}
+                      className='w-4 h-4 font-bold text-black'
+                    />
+                    <Typography
+                      variant='small'
+                      className='font-bold text-black text-xs'
+                    >
+                      SPOILER
+                    </Typography>
+                  </div>
+                )}
+                {props.spoilerPost.nsfw_flag && (
+                  <div className='flex gap-1 items-center'>
+                    <img
+                      src={eighteenPic}
+                      // strokeWidth={3}
+                      className='w-4 h-4 font-bold text-black'
+                    />
+                    <Typography
+                      variant='small'
+                      className='font-bold text-black text-xs'
+                    >
+                      NSFW
+                    </Typography>
+                  </div>
+                )}
+              </div>
+            ))}
         </div>
         <div className='bg-gray-800 h-20 rounded-lg flex items-center justify-center mb-1'>
           {' '}
           <RoundedButton
             buttonBorderColor='border-black'
             buttonColor='bg-black'
-            buttonText='View Spoiler'
+            buttonText={props.text}
             buttonTextColor='text-white'
             onClick={props.handleViewSpoiler}
           />
@@ -232,11 +555,11 @@ const PostPreview = ({ post }: { post: PostType }) => {
   return (
     <div
       className='relative'
-      onClick={() => {
-        // navigate(
-        //   `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
-        // );
-      }}
+      // onClick={() => {
+      //   navigate(
+      //     `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+      //   );
+      // }}
     >
       {/* <Link
         to={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
@@ -275,7 +598,8 @@ const PostPreview = ({ post }: { post: PostType }) => {
               saved={post.saved}
               NSFW={post.nsfw_flag}
               spoiler={post.spoiler_flag}
-              myPost={isMyPost}
+              myPost={isMyPost || false}
+              page={page}
               handleEditPost={handleEditPost}
               handleSavePost={handleSaveUnsavePost}
               handleHidePost={handleHideUnhidePost}
@@ -288,9 +612,45 @@ const PostPreview = ({ post }: { post: PostType }) => {
         </CardHeader>
         <CardBody className='m-0 p-0'>
           <div>
-            {!post.spoiler_flag || !viewSpoiler ? (
+            {post.spoiler_flag &&
+            viewSpoiler &&
+            (post.description ||
+              post.images?.length != 0 ||
+              post.link_url ||
+              post.polls?.length != 0 ||
+              post.is_reposted_flag) ? (
+              <SpoilerContainer
+                handleViewSpoiler={() => {
+                  console.log(viewSpoiler, 'spoilerrrr');
+
+                  setViewSpoiler(false);
+                }}
+                spoilerPost={post}
+                sharedPost={false}
+                text='View Spoiler'
+              />
+            ) : post.nsfw_flag &&
+              viewNSFW &&
+              (post.description ||
+                post.images?.length != 0 ||
+                post.link_url ||
+                post.polls?.length != 0 ||
+                post.is_reposted_flag) ? (
+              <SpoilerContainer
+                handleViewSpoiler={() => {
+                  console.log(viewSpoiler, 'spoilerrrr');
+
+                  setViewNSFW(false);
+                }}
+                spoilerPost={post}
+                sharedPost={false}
+                text='View NSFW Content'
+              />
+            ) : post.is_reposted_flag && post.reposted ? (
+              <SharedPostContainer sharedPostId={post.reposted} />
+            ) : (
               <div className='flex gap-7 justify-between pb-2'>
-                <div className='flex flex-col justify-between space-y-2 overflow-hidden'>
+                <div className='flex flex-col justify-start space-y-2 overflow-hidden w-full'>
                   <div>
                     <Typography
                       variant='h5'
@@ -298,76 +658,87 @@ const PostPreview = ({ post }: { post: PostType }) => {
                     >
                       {post.title}
                     </Typography>
-                    <div className='flex gap-2 mb-2'>
-                      {post.spoiler_flag && (
-                        <div className='flex gap-1 items-center'>
-                          <ExclamationTriangleIcon
-                            strokeWidth={3}
-                            className='w-4 h-4 font-bold text-black'
-                          />
-                          <Typography
-                            variant='small'
-                            className='font-bold text-black text-xs'
-                          >
-                            SPOILER
-                          </Typography>
-                        </div>
-                      )}
-                      {post.nsfw_flag && (
-                        <div className='flex gap-1 items-center'>
-                          <img
-                            src={eighteenPic}
-                            // strokeWidth={3}
-                            className='w-4 h-4 font-bold text-black'
-                          />
-                          <Typography
-                            variant='small'
-                            className='font-bold text-black text-xs'
-                          >
-                            NSFW
-                          </Typography>
-                        </div>
-                      )}
-                    </div>
+                    {(post.spoiler_flag || post.nsfw_flag) && (
+                      <div className='flex gap-2 mb-2'>
+                        {post.spoiler_flag && (
+                          <div className='flex gap-1 items-center'>
+                            <ExclamationTriangleIcon
+                              strokeWidth={3}
+                              className='w-4 h-4 font-bold text-black'
+                            />
+                            <Typography
+                              variant='small'
+                              className='font-bold text-black text-xs'
+                            >
+                              SPOILER
+                            </Typography>
+                          </div>
+                        )}
+                        {post.nsfw_flag && (
+                          <div className='flex gap-1 items-center'>
+                            <img
+                              src={eighteenPic}
+                              // strokeWidth={3}
+                              className='w-4 h-4 font-bold text-black'
+                            />
+                            <Typography
+                              variant='small'
+                              className='font-bold text-black text-xs'
+                            >
+                              NSFW
+                            </Typography>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <div className='w-full'>
                     {post.moderator_details.removed_flag ||
-                    post.moderator_details.spammed_flag
-                      ? '[removed]'
-                      : post.description && (
-                          <div className='flex justify-between gap-7'>
-                            <div className='flex items-center'>
-                              <Typography
-                                variant='paragraph'
-                                className='mb-2 font-normal text-[#2A3C42]'
-                              >
-                                {post.description}
-                              </Typography>
-                            </div>
-                          </div>
-                        )}
+                    post.moderator_details.spammed_flag ? (
+                      '[removed]'
+                    ) : post.type == 'text' ? (
+                      <div className='flex justify-between gap-7'>
+                        <div className='flex items-center'>
+                          <Typography
+                            variant='paragraph'
+                            className='mb-2 font-normal text-[#2A3C42]'
+                          >
+                            {post.description}
+                          </Typography>
+                        </div>
+                      </div>
+                    ) : post.type == 'polls' ? (
+                      <PollPostContainer post={post} />
+                    ) : (
+                      <LinkPostContainer post={post} />
+                    )}
                   </div>
                 </div>
-                <div className='flex items-center gap-1'>
-                  {post.images?.[0] &&
-                    post.images.map((img) => (
-                      <img
-                        src={img.link}
-                        alt='post'
-                        className='object-cover rounded-md w-32 h-24'
-                        key={img.link}
-                      />
-                    ))}
-                </div>
+                {!(
+                  post.moderator_details.removed_flag ||
+                  post.moderator_details.spammed_flag
+                ) &&
+                  post.images?.[0] && (
+                    <Tooltip
+                      content={
+                        post.images?.length > 1
+                          ? `Click to show ${post.images?.length} images`
+                          : 'Click to show image'
+                      }
+                    >
+                      <div className='flex items-center gap-1'>
+                        <img
+                          src={post.images?.[0].link}
+                          alt='post'
+                          className='object-cover rounded-md w-32 h-24'
+                        />
+                      </div>
+                    </Tooltip>
+                  )}
               </div>
-            ) : (
-              <SpoilerContainer
-                handleViewSpoiler={() => {
-                  setViewSpoiler(false);
-                }}
-              />
             )}
+
             <div className='flex justify-between'>
               <InteractionButtons
                 id={post._id}

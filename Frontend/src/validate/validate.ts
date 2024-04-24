@@ -24,7 +24,8 @@ type FormSchema = {
     newPassword: yup.Schema<string>;
     confirmNewPassword: yup.Schema<string>;
   };
-  createPost: {
+
+  text: {
     title: yup.Schema<string>;
     type: yup.Schema<string>;
     description: yup.Schema<string | undefined>;
@@ -34,7 +35,7 @@ type FormSchema = {
     nsfw_flag: yup.Schema<boolean>;
     post_in_community_flag: yup.Schema<boolean>;
   };
-  createPostImageAndVideo: {
+  image_and_videos: {
     title: yup.Schema<string>;
     community_name: yup.Schema<string>;
     images: yup.Schema<any>;
@@ -43,7 +44,7 @@ type FormSchema = {
     nsfw_flag: yup.Schema<boolean>;
     post_in_community_flag: yup.Schema<boolean>;
   };
-  createPostLink: {
+  url: {
     title: yup.Schema<string>;
     type: yup.Schema<string>;
     community_name: yup.Schema<string>;
@@ -53,7 +54,7 @@ type FormSchema = {
     nsfw_flag: yup.Schema<boolean>;
     post_in_community_flag: yup.Schema<boolean>;
   };
-  createPostPoll: {
+  polls: {
     title: yup.Schema<string>;
     type: yup.Schema<string>;
     oc_flag: yup.Schema<boolean>;
@@ -90,7 +91,8 @@ const Validation = (type: keyof FormSchema) => {
       newPassword: validationSchema['newPassword'],
       confirmNewPassword: validationSchema['confirmNewPassword'],
     },
-    createPost: {
+
+    text: {
       title: validationSchema['title'],
       description: validationSchema['description'],
       community_name: validationSchema['community_name'],
@@ -100,7 +102,7 @@ const Validation = (type: keyof FormSchema) => {
       nsfw_flag: validationSchema['nsfw_flag'],
       post_in_community_flag: validationSchema['post_in_community_flag'],
     },
-    createPostLink: {
+    url: {
       title: validationSchema['title'],
       community_name: validationSchema['community_name'],
       link_url: validationSchema['link_url'],
@@ -110,7 +112,7 @@ const Validation = (type: keyof FormSchema) => {
       nsfw_flag: validationSchema['nsfw_flag'],
       post_in_community_flag: validationSchema['post_in_community_flag'],
     },
-    createPostImageAndVideo: {
+    image_and_videos: {
       title: validationSchema['title'],
       community_name: validationSchema['community_name'],
       images: validationSchema['images'],
@@ -119,7 +121,7 @@ const Validation = (type: keyof FormSchema) => {
       nsfw_flag: validationSchema['nsfw_flag'],
       post_in_community_flag: validationSchema['post_in_community_flag'],
     },
-    createPostPoll: {
+    polls: {
       title: validationSchema['title'],
       type: validationSchema['type'],
       spoiler_flag: validationSchema['spoiler_flag'],

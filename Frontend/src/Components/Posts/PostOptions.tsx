@@ -23,6 +23,7 @@ type PostOptionsProps = {
   NSFW: boolean;
   spoiler: boolean;
   myPost: boolean;
+  page: 'profile' | 'home' | 'community';
   handleEditPost: (editedText: string) => void;
   handleSavePost: () => void;
   handleHidePost: () => void;
@@ -37,6 +38,7 @@ const PostOptions = ({
   NSFW,
   spoiler,
   myPost,
+  page,
   handleEditPost,
   handleSavePost,
   handleHidePost,
@@ -61,10 +63,12 @@ const PostOptions = ({
         </Button>
       </MenuHandler>
       <MenuList className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'>
-        <MenuItem className='py-3 flex gap-2 items-center'>
-          <PencilIcon className='w-5 h-5' />
-          <span>Edit post</span>
-        </MenuItem>
+        {myPost && page === 'profile' && (
+          <MenuItem className='py-3 flex gap-2 items-center'>
+            <PencilIcon className='w-5 h-5' />
+            <span>Edit post</span>
+          </MenuItem>
+        )}
         <MenuItem
           onClick={handleSavePost}
           className='py-3 flex gap-2 items-center'
@@ -96,14 +100,16 @@ const PostOptions = ({
           <FlagIcon className='w-5 h-5' />
           <span>Report</span>
         </MenuItem>
-        <MenuItem
-          onClick={handleDeletePost}
-          className='py-3 flex gap-2 items-center'
-        >
-          <TrashIcon className='w-5 h-5' />
-          <span>Delete</span>
-        </MenuItem>
-        {!spoiler && (
+        {myPost && (
+          <MenuItem
+            onClick={handleDeletePost}
+            className='py-3 flex gap-2 items-center'
+          >
+            <TrashIcon className='w-5 h-5' />
+            <span>Delete</span>
+          </MenuItem>
+        )}
+        {!spoiler && myPost && (
           <MenuItem
             onClick={handleSpoiler}
             className='py-3 flex gap-2 items-center'
@@ -112,7 +118,7 @@ const PostOptions = ({
             <span>Add spoiler tag</span>
           </MenuItem>
         )}
-        {!NSFW && (
+        {!NSFW && myPost && (
           <MenuItem
             onClick={handleNSFW}
             className='py-3 flex gap-2 items-center'

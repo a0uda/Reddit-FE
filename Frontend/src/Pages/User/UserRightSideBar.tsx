@@ -27,7 +27,7 @@ function UserRightSideBar() {
   const [aboutData, setAboutData] = useState<AboutType | undefined>();
   useQuery({
     queryKey: 'about data',
-    queryFn: () => fetchRequest(`users/${user?.username}/about`),
+    queryFn: () => fetchRequest(`users/about/${user?.username}`),
     onSuccess: (data) => {
       setAboutData(data.data);
     },

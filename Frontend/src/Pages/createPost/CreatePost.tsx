@@ -14,11 +14,13 @@ import { useMutation } from 'react-query';
 import { postRequest } from '../../API/User';
 import { useNavigate } from 'react-router-dom';
 
-type FormSchema =
-  | 'createPost'
-  | 'createPostImageAndVideo'
-  | 'createPostLink'
-  | 'createPostPoll';
+// type FormSchema =
+//   | 'createPost'
+//   | 'createPostImageAndVideo'
+//   | 'createPostLink'
+//   | 'createPostPoll';
+type FormSchema = 'image_and_videos' | 'polls' | 'url' | 'text';
+
 interface Image {
   id: number;
   path: string;
@@ -28,7 +30,7 @@ interface Image {
 
 const NewPost: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
-  const [formType, setFormType] = useState<FormSchema>('createPost');
+  const [formType, setFormType] = useState<FormSchema>('text');
   const [HandleOpen, setHandleOpen] = useState(false);
   const [oc, setOC] = useState(false);
   const [NSFW, SetNSFW] = useState(false);
@@ -70,15 +72,15 @@ const NewPost: React.FC = () => {
     console.log(index);
     setActiveIndex(index);
     if (index === 0) {
-      setFormType('createPost');
+      setFormType('text');
       setInputArr(initialInputs);
     }
     if (index == 1) {
-      setFormType('createPostImageAndVideo');
+      setFormType('image_and_videos');
       setInputArr(initialInputs);
     }
     if (index == 2) {
-      setFormType('createPostLink');
+      setFormType('url');
       const LinkInput = [
         {
           className:
@@ -93,7 +95,7 @@ const NewPost: React.FC = () => {
       setInputArr([...initialInputs, ...LinkInput]);
     }
     if (index == 3) {
-      setFormType('createPostPoll');
+      setFormType('polls');
       setInputArr(initialInputs);
     }
   };
@@ -185,12 +187,12 @@ const NewPost: React.FC = () => {
                     )}
                   </div>
                 ))}
-              {formType == 'createPost' || formType == 'createPostPoll' ? (
+              {formType == 'text' || formType == 'polls' ? (
                 <div className='mt-4 mb-10'>
                   <MyEditor setFieldValue={formik.setFieldValue} />
                 </div>
               ) : null}
-              {formType == 'createPostImageAndVideo' ? (
+              {formType == 'image_and_videos' ? (
                 <>
                   <ImageUpload
                     setFieldValue={formik.setFieldValue}
@@ -201,7 +203,7 @@ const NewPost: React.FC = () => {
                   />
                 </>
               ) : null}
-              {formType == 'createPostPoll' ? (
+              {formType == 'polls' ? (
                 <div className='w-full border-bottom'>
                   <OptionsPoll setFieldValue={formik.setFieldValue} />
                 </div>
