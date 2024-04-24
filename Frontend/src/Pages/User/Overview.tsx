@@ -54,7 +54,7 @@ function Overview() {
                 <React.Fragment key={content._id}>
                   {content.is_post ? (
                     <div>
-                      <PostPreview post={content} />
+                      <PostPreview page='profile' post={content} />
                       <div className='text-black m-2 text-sm'>
                         Lifetime Performance
                       </div>
