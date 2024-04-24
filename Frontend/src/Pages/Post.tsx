@@ -16,7 +16,7 @@ const Post = () => {
   const [post, setPost] = useState<PostType | undefined>();
   const { isLoading, isError } = useQuery({
     queryKey: ['post', 'listings', postId],
-    queryFn: () => fetchRequest(`posts/get-post/${postId}`),
+    queryFn: () => fetchRequest(`posts/get-post?id=${postId}`),
     onSuccess: (data) => {
       setPost(data.data);
     },

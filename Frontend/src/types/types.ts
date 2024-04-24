@@ -156,9 +156,7 @@ export type PostType = {
   };
 
   is_reposted_flag: boolean; // If the post is reposted
-  reposted?: {
-    original_post_id: string; // Reference to the original post
-  }[];
+  reposted?: string; // Reference to the original post
 };
 
 // export type PostType = {

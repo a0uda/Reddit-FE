@@ -25,7 +25,7 @@ function Posts() {
           <>
             {data.data.map((post: PostType) => (
               <div key={post.id}>
-                <PostPreview post={post} />
+                <PostPreview page='profile' post={post} />
                 <div className='text-black m-2 text-sm'>
                   Lifetime Performance
                 </div>

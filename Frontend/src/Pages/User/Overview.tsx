@@ -37,7 +37,7 @@ function Overview() {
             {data.data.map((content) =>
               content.is_post ? (
                 <div key={content.id}>
-                  <PostPreview post={content} />
+                  <PostPreview page='profile' post={content} />
                   <div className='text-black m-2 text-sm'>
                     Lifetime Performance
                   </div>

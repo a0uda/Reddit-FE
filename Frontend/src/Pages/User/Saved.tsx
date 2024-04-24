@@ -17,7 +17,7 @@ function Saved() {
           <>
             {data.data.map((content) =>
               content.is_post ? (
-                <PostPreview post={content} key={content.id} />
+                <PostPreview page='profile' post={content} key={content.id} />
               ) : (
                 <Comment key={content.id} comment={content} />
               )
