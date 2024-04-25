@@ -65,4 +65,15 @@ export const validationSchema = {
     .min(2, 'At least 2 options are required')
     .required(),
   gender: yup.string(),
+  rule_title: yup.string().required,
+  community_name: yup.string().required,
+  applies_to: yup.string().required,
 };
+// '{
+//   "community_name": "Bahringer___Dietrich",
+//   "rule_title": "unique title 1",
+//   "applies_to": "posts_and_comments",
+//   "report_reason":"dummy reason",
+//   "full_description":"this is a full description example"
+
+// }'
