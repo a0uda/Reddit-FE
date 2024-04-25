@@ -456,19 +456,37 @@ const PostPreview = ({
   const handleDeletePost = () => {};
   const handleApproveDisapprovePost = (approve: boolean) => {
     if (approve) {
-      postReq.mutate({
-        endPoint: 'posts/approve',
-        data: {
-          id: post._id,
+      postReq.mutate(
+        {
+          endPoint: 'posts/approve',
+          data: {
+            id: post._id,
+          },
         },
-      });
+        {
+          onSuccess: () => {
+            post.moderator_details.approved_flag = true;
+            post.moderator_details.approved_by = user?.username;
+            post.moderator_details.approved_date = new Date();
+          },
+        }
+      );
     } else {
-      postReq.mutate({
-        endPoint: 'posts/remove',
-        data: {
-          id: post._id,
+      postReq.mutate(
+        {
+          endPoint: 'posts/remove',
+          data: {
+            id: post._id,
+          },
         },
-      });
+        {
+          onSuccess: () => {
+            post.moderator_details.removed_flag = true;
+            post.moderator_details.removed_by = user?.username;
+            post.moderator_details.removed_date = new Date();
+          },
+        }
+      );
     }
   };
   const handleSharePost = (caption: string) => {
@@ -483,65 +501,116 @@ const PostPreview = ({
     });
   };
   const handleReportPost = () => {
-    postReq.mutate({
-      endPoint: 'posts/report',
-      data: {
-        id: post._id,
-      },
-    });
+    postReq.mutate(
+      {
+        endPoint: 'posts/report',
+        data: {
+          id: post._id,
+        },
+      }
+      // {
+      //   onSuccess: () => {
+      //     // post.moderator_details.approved_flag = true;
+      //     // post.moderator_details.approved_by = user?.username;
+      //     // post.moderator_details.approved_date = new Date();
+      //   },
+      // }
+    );
   };
   const handleNSFWFlag = () => {
-    patchReq.mutate({
-      endPoint: 'posts/marknsfw',
-      newSettings: {
-        id: post._id,
+    patchReq.mutate(
+      {
+        endPoint: 'posts/marknsfw',
+        newSettings: {
+          id: post._id,
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          post.nsfw_flag = !post.nsfw_flag;
+        },
+      }
+    );
   };
   const handleSpoilPost = () => {
-    patchReq.mutate({
-      endPoint: 'posts-or-comments/spoiler',
-      newSettings: {
-        is_post: true,
-        id: post._id,
+    patchReq.mutate(
+      {
+        endPoint: 'posts-or-comments/spoiler',
+        newSettings: {
+          is_post: true,
+          id: post._id,
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          post.spoiler_flag = !post.spoiler_flag;
+        },
+      }
+    );
   };
   const handleLockUnlockPost = () => {
-    patchReq.mutate({
-      endPoint: 'posts-or-comments/lock-unlock',
-      newSettings: {
-        is_post: true,
-        id: post._id,
+    patchReq.mutate(
+      {
+        endPoint: 'posts-or-comments/lock-unlock',
+        newSettings: {
+          is_post: true,
+          id: post._id,
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          post.locked_flag = !post.locked_flag;
+        },
+      }
+    );
   };
   const handleEditPost = (editedText: string) => {
-    patchReq.mutate({
-      endPoint: 'posts-or-comments/edit-text',
-      newSettings: {
-        is_post: true,
-        id: post._id,
-        edited_text: editedText,
+    patchReq.mutate(
+      {
+        endPoint: 'posts-or-comments/edit-text',
+        newSettings: {
+          is_post: true,
+          id: post._id,
+          edited_text: editedText,
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          post.description = editedText;
+        },
+      }
+    );
   };
   const handleSaveUnsavePost = () => {
-    patchReq.mutate({
-      endPoint: 'posts-or-comments/save',
-      newSettings: {
-        is_post: true,
-        id: post._id,
+    patchReq.mutate(
+      {
+        endPoint: 'posts-or-comments/save',
+        newSettings: {
+          is_post: true,
+          id: post._id,
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          post.saved = !post.saved;
+        },
+      }
+    );
   };
   const handleAllowDisallowReplies = () => {
-    patchReq.mutate({
-      endPoint: 'posts/allow-replies',
-      newSettings: {
-        id: post._id,
+    patchReq.mutate(
+      {
+        endPoint: 'posts/allow-replies',
+        newSettings: {
+          id: post._id,
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          post.allowreplies_flag = !post.allowreplies_flag;
+        },
+      }
+    );
   };
   const handleHideUnhidePost = () => {
     patchReq.mutate({

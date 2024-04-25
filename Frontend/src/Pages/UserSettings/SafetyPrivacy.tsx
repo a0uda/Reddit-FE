@@ -30,9 +30,11 @@ const ListCard = (props: {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
   const momDate = moment(props.date);
@@ -81,9 +83,11 @@ function SafetyPrivacy() {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
   const handleAddButton = (endPoint, data) => {

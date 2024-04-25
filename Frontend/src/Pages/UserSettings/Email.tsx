@@ -23,9 +23,11 @@ function Email() {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
 
