@@ -647,7 +647,9 @@ const PostPreview = ({
                 text='View NSFW Content'
               />
             ) : post.is_reposted_flag && post.reposted ? (
-              <SharedPostContainer sharedPostId={post.reposted} />
+              <SharedPostContainer
+                sharedPostId={post.reposted.original_post_id}
+              />
             ) : (
               <div className='flex gap-7 justify-between pb-2'>
                 <div className='flex flex-col justify-start space-y-2 overflow-hidden w-full'>
