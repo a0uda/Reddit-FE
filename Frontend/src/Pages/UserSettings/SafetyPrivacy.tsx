@@ -7,7 +7,7 @@ import { fetchRequest, postRequest } from '../../API/User';
 import { AxiosPromise } from 'axios';
 import moment from 'moment';
 import { Typography } from '@material-tailwind/react';
-import LoadingProvider from '../../Components/LoadingProvider';
+import LoadingProvider from './Containers/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
 
 const ListCard = (props: {

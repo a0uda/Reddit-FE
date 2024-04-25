@@ -13,7 +13,7 @@ import instagramIcon from '../../assets/instagramIcon.svg';
 import SocialLinksModal, {
   EnterLinkDetails,
 } from './Containers/SocialLinksModal';
-import LoadingProvider from '../../Components/LoadingProvider';
+import LoadingProvider from './Containers/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
 
 function ImageInput(props: {

@@ -6,7 +6,7 @@ import DropDownButton from './Containers/DropDownButton';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest } from '../../API/User';
-import LoadingProvider from '../../Components/LoadingProvider';
+import LoadingProvider from './Containers/LoadingProvider';
 import {
   DeleteAccountModal,
   ChangeEmailModal,

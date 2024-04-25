@@ -4,7 +4,7 @@ import DropDownButton from './Containers/DropDownButton';
 import Section from './Containers/Section';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest } from '../../API/User';
-import LoadingProvider from '../../Components/LoadingProvider';
+import LoadingProvider from './Containers/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
 
 function ChatsandMessaging() {
