@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
 import Comment from '../../Components/Posts/Comment';
@@ -12,36 +12,23 @@ import {
   PlusIcon,
 } from '@heroicons/react/24/outline';
 import useSession from '../../hooks/auth/useSession';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 function Overview() {
   const { user } = useSession();
-  // const { data, error, isLoading } = useQuery(
-  //   ['userComments', 'comments', 'posts', 'listings'],
-  //   () => fetchRequest(`users/overview/${user?.username}`)
-  // );
+  const { data, error, isLoading } = useQuery(
+    ['userComments', 'comments', 'posts', 'listings'],
+    () => fetchRequest(`users/overview/${user?.username}`)
+  );
 
-  const [response, setResponse] = useState();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const fetchReq = useMutation(fetchRequest);
-  useEffect(() => {
-    if (user?.username) {
-      setIsLoading(true);
-      fetchReq.mutate(`users/overview/${user?.username}`, {
-        onSuccess: (data) => {
-          setIsLoading(false);
-          console.log('reem', data.data);
-          setResponse(data.data);
-        },
-        onError: (err) => {
-          setIsLoading(false); // Set loading state to false on error
-          setError(err); // Set error state
-        },
-      });
-    }
-  }, [user?.username]);
-
+  console.log(
+    data?.data.posts
+      .concat(data?.data.comments)
+      .sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      )
+  );
   return (
     <>
       <LoadingProvider error={error} isLoading={isLoading}>
@@ -54,10 +41,10 @@ function Overview() {
             Create Post
           </div>
         </Link>
-        {response && (
+        {data && (
           <>
-            {response.posts
-              .concat(response.comments)
+            {data.data.posts
+              .concat(data.data.comments)
               .sort(
                 (a, b) =>
                   new Date(b.created_at).getTime() -

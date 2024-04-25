@@ -1,25 +1,7 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  Dispatch,
-  SetStateAction,
-} from 'react';
+import { createContext, useContext, useState } from 'react';
 import Alert from '../Components/Alert';
 
-type AlertContextType = {
-  trigger: boolean;
-  setTrigger: Dispatch<SetStateAction<boolean>>; // accepts boolean and returns void
-  setIsError: Dispatch<SetStateAction<boolean>>;
-  setAlertMessage: Dispatch<SetStateAction<string>>;
-};
-
-const AlertContext = createContext<AlertContextType>({
-  trigger: false,
-  setTrigger: () => {}, // Dummy function to satisfy default context type
-  setIsError: () => {},
-  setAlertMessage: () => {},
-});
+const AlertContext = createContext();
 
 console.log('AlertContext', AlertContext);
 export const useAlert = () => useContext(AlertContext);
