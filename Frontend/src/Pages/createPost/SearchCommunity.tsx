@@ -10,7 +10,7 @@ interface Suggestion {
 }
 
 interface Props {
-  setFieldValue: (fieldName: string, value: string) => void;
+  setFieldValue: (fieldName: string, value) => void;
 }
 
 const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
@@ -53,7 +53,7 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
     setImageQuery(suggestion.profile_picture);
     setShowSuggestions(false);
     setFieldValue('community_name', suggestion.name);
-    setFieldValue('post_in_community_flag', true.toString());
+    setFieldValue('post_in_community_flag', true);
   };
   const handleOptionClickUser = (user: {
     username: string;
@@ -62,7 +62,7 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
     setSearchQuery(user.username);
     setImageQuery(user.imageUrl);
     setShowSuggestions(false);
-    setFieldValue('post_in_community_flag', false.toString());
+    setFieldValue('post_in_community_flag', false);
     // setFieldValue('community_name', '');
   };
   const handleClickOutside = (event: MouseEvent) => {
