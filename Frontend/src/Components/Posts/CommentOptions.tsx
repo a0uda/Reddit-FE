@@ -12,6 +12,7 @@ import {
   PencilIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
+import { useState } from 'react';
 
 type CommentOptionsProps = {
   saved: boolean;
@@ -28,6 +29,13 @@ const CommentOptions = ({
   handleDeleteComment,
   isMyComment,
 }: CommentOptionsProps) => {
+  const [isSaved, setIsSaved] = useState(saved);
+
+  const handleSave = () => {
+    setIsSaved(!isSaved);
+    console.log('saved trigger', isSaved);
+    handleSaveComment();
+  };
   return (
     <Menu placement='bottom-end'>
       <MenuHandler>
@@ -50,11 +58,8 @@ const CommentOptions = ({
             <span>Edit comment</span>
           </MenuItem>
         )}
-        <MenuItem
-          onClick={handleSaveComment}
-          className='py-3 flex gap-2 items-center'
-        >
-          {saved ? (
+        <MenuItem onClick={handleSave} className='py-3 flex gap-2 items-center'>
+          {isSaved ? (
             <>
               <BookmarkSlashIcon className='w-5 h-5' />
               <span>Unsave</span>

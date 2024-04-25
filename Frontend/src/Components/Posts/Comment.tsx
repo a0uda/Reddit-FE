@@ -47,7 +47,7 @@ const Comment = ({
   const { user } = useSession();
   const isMyComment = comment.username == user?.username;
   const handleButtonClick = () => {
-    setShowAddReply(true);
+    setShowAddReply((prevState) => !prevState);
   };
 
   const mutate = useMutation(
@@ -246,7 +246,7 @@ const Comment = ({
                       className='py-3 flex gap-2 items-center'
                       onClick={() => {
                         navigator.clipboard.writeText(
-                          `${window.location.origin}`
+                          `${window.location.href}`
                         );
                       }}
                     >

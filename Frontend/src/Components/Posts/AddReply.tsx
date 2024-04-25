@@ -155,14 +155,14 @@ const MenuFooter = ({
   editor,
   openMenuBar,
   setOpenMenuBar,
-
+  setFocused,
   setError,
 }: {
   commentId: string;
   editor: Editor | null;
   openMenuBar: boolean;
   setOpenMenuBar: Dispatch<SetStateAction<boolean>>;
-
+  setFocused: Dispatch<SetStateAction<boolean>>;
   setError: Dispatch<SetStateAction<string>>;
 }) => {
   const queryClient = useQueryClient();
@@ -214,7 +214,10 @@ const MenuFooter = ({
           </IconButton>
         </div>
         <div className='space-x-2'>
-          <Button className='bg-neutral-muted text-black hover:bg-[#003e36]'>
+          <Button
+            className='bg-neutral-muted text-black hover:bg-[#003e36]'
+            onClick={() => setFocused((prevValue: boolean) => !prevValue)}
+          >
             Cancel
           </Button>
           <Button
@@ -243,44 +246,54 @@ export default function AddReply({ commentId }: { commentId: string }) {
     },
   });
   const [openMenuBar, setOpenMenuBar] = useState<boolean>(false);
-
+  const [focused, setFocused] = useState<boolean>(false);
   const [error, setError] = useState('');
 
   return (
     <>
-      <>
-        <div
-          className={cn(
-            'border-2 border-neutral-muted rounded-3xl',
-            error.length > 0 && 'border-orange-red'
+      {focused ? (
+        <>
+          <div
+            className={cn(
+              'border-2 border-neutral-muted rounded-3xl',
+              error.length > 0 && 'border-orange-red'
+            )}
+          >
+            {openMenuBar && <MenuBar editor={editor} />}
+            <div className='p-5'>
+              <EditorContent editor={editor} />
+            </div>
+            <div>
+              <MenuFooter
+                commentId={commentId}
+                editor={editor}
+                openMenuBar
+                setOpenMenuBar={setOpenMenuBar}
+                setFocused={setFocused}
+                setError={setError}
+              />
+            </div>
+          </div>
+          {error.length > 0 && (
+            <>
+              <Typography
+                variant='paragraph'
+                className='flex items-center gap-2 text-orange-red'
+              >
+                <ExclamationCircleIcon className='h-5 w-5' />
+                The field is required and cannot be empty
+              </Typography>
+            </>
           )}
+        </>
+      ) : (
+        <div
+          className='py-2 px-4 flex text-neutral-900 border-2 w-56 border-neutral-muted rounded-3xl'
+          onClick={() => setFocused(true)}
         >
-          {openMenuBar && <MenuBar editor={editor} />}
-          <div className='p-5'>
-            <EditorContent editor={editor} />
-          </div>
-          <div>
-            <MenuFooter
-              commentId={commentId}
-              editor={editor}
-              openMenuBar
-              setOpenMenuBar={setOpenMenuBar}
-              setError={setError}
-            />
-          </div>
+          Add a Reply
         </div>
-        {error.length > 0 && (
-          <>
-            <Typography
-              variant='paragraph'
-              className='flex items-center gap-2 text-orange-red'
-            >
-              <ExclamationCircleIcon className='h-5 w-5' />
-              The field is required and cannot be empty
-            </Typography>
-          </>
-        )}
-      </>
+      )}
     </>
   );
 }
