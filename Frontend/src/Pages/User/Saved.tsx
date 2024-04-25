@@ -19,7 +19,7 @@ function Saved() {
               content.is_post ? (
                 <PostPreview post={content} key={content.id} />
               ) : (
-                <Comment key={content.id} comment={content} />
+                <Comment key={content.id} comment={content} showButton={true} />
               )
             )}
           </>

@@ -93,7 +93,7 @@ function Overview() {
                 </div>
               ) : (
                 //uncomment when deployed reem
-                <Comment key={content.id} comment={content} />
+                <Comment key={content.id} comment={content} showButton={true} />
                 //<PostPreview key={content.id} post={content} />
               )
             )}
