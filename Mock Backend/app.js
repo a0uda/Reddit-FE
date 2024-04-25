@@ -2965,7 +2965,7 @@ let postsComments = [
     },
   },
 ];
-app.get("/users/:username/about", (req, res) => {
+app.get("/users/about/:username", (req, res) => {
   res.status(200).json(userAbout);
 });
 app.get("/users/moderated-communities", (req, res) => {
