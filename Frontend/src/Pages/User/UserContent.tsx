@@ -6,14 +6,14 @@ import { PostType } from '../../types/types';
 import PostPreview from '../../Components/Posts/PostPreview';
 
 function UserContent(props: { endpoint: string; queryName: string }) {
-  const { data, isError, isLoading } = useQuery(
+  const { data, error, isLoading } = useQuery(
     [props.queryName, 'listings'],
     () => fetchRequest(props.endpoint)
   );
   console.log(data);
   return (
     <>
-      <LoadingProvider error={isError} isLoading={isLoading}>
+      <LoadingProvider error={error} isLoading={isLoading}>
         {data && (
           <>
             {data.data.map((post: PostType) => (
