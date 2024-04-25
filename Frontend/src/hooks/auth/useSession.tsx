@@ -16,6 +16,7 @@ type Session = {
 };
 
 function useSession() {
+  console.log('useSession', AuthContext);
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useToken must be used within an AuthProvider');
