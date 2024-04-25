@@ -62,8 +62,8 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
     setSearchQuery(user.username);
     setImageQuery(user.imageUrl);
     setShowSuggestions(false);
-    setFieldValue('community_name', user.username);
     setFieldValue('post_in_community_flag', false.toString());
+    // setFieldValue('community_name', '');
   };
   const handleClickOutside = (event: MouseEvent) => {
     if (
