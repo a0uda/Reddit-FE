@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
-import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
+import LoadingProvider from '../../Components/LoadingProvider';
 import Comment from '../../Components/Posts/Comment';
 import PostPreview from '../../Components/Posts/PostPreview';
 import React from 'react';

@@ -1,4 +1,4 @@
-import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
+import LoadingProvider from '../../Components/LoadingProvider';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import { PostType } from '../../types/types';
