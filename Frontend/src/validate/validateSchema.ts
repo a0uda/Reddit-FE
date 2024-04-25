@@ -26,17 +26,13 @@ export const validationSchema = {
     .string()
     .required('Link URl is required')
     .url('Invalid URL format'),
-  images: yup
-    .array()
-    .of(
-      yup.object().shape({
-        path: yup.string().required('Path is required'),
-        caption: yup.string().required('Caption is required'),
-        link: yup.string().required('Link is required'),
-      })
-    )
-    .min(1, 'At least one image is required')
-    .required(),
+  images: yup.array().of(
+    yup.object().shape({
+      path: yup.string().required('Path is required'),
+      caption: yup.string().required('Caption is required'),
+      link: yup.string().required('Link is required'),
+    })
+  ),
   videos: yup.array().of(
     yup.object().shape({
       path: yup.string().required('Path is required'),
