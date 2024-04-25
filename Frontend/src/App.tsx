@@ -40,6 +40,10 @@ function App() {
             element={<HandleRoutes element={<CreatePost />} />}
           />
           <Route
+            path={'/r/:community_name/submit'}
+            element={<HandleRoutes element={<CreatePost />} />}
+          />
+          <Route
             path='/notifications'
             element={<HandleRoutes element={<Notifications />} />}
           />
