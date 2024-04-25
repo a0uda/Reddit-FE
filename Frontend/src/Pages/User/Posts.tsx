@@ -1,5 +1,5 @@
 import { fetchRequest } from '../../API/User';
-import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
+import LoadingProvider from '../../Components/LoadingProvider';
 import { PostType } from '../../types/types';
 import { useMutation } from 'react-query';
 import {
@@ -20,7 +20,7 @@ function Posts() {
 
   const [response, setResponse] = useState<[PostType]>();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const fetchReq = useMutation(fetchRequest);
   useEffect(() => {
     if (user?.username) {
@@ -33,7 +33,7 @@ function Posts() {
         },
         onError: (err) => {
           setIsLoading(false); // Set loading state to false on error
-          setError(err); // Set error state
+          setError(true); // Set error state
         },
       });
     }

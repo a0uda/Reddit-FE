@@ -1,6 +1,6 @@
 import { useMutation } from 'react-query';
 import { fetchRequest } from '../../API/User';
-import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
+import LoadingProvider from '../../Components/LoadingProvider';
 import Comment from '../../Components/Posts/Comment';
 import PostPreview from '../../Components/Posts/PostPreview';
 import { Link } from 'react-router-dom';
@@ -23,7 +23,7 @@ function Overview() {
 
   const [response, setResponse] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const fetchReq = useMutation(fetchRequest);
   useEffect(() => {
     if (user?.username) {
@@ -36,7 +36,7 @@ function Overview() {
         },
         onError: (err) => {
           setIsLoading(false); // Set loading state to false on error
-          setError(err); // Set error state
+          setError(true); // Set error state
         },
       });
     }
