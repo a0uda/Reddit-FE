@@ -3,7 +3,6 @@ import Alert from '../Components/Alert';
 
 const AlertContext = createContext();
 
-console.log('AlertContext', AlertContext);
 export const useAlert = () => useContext(AlertContext);
 
 export const AlertProvider = (props: { children: React.ReactNode }) => {
