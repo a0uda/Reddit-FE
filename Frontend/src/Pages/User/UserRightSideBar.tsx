@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RoundedButton from '../../Components/RoundedButton';
 import {
   Avatar,
@@ -25,13 +25,25 @@ import useSession from '../../hooks/auth/useSession';
 function UserRightSideBar() {
   const { user } = useSession();
   const [aboutData, setAboutData] = useState<AboutType | undefined>();
-  useQuery({
-    queryKey: 'about data',
-    queryFn: () => fetchRequest(`users/about/${user?.username}`),
-    onSuccess: (data) => {
-      setAboutData(data.data);
-    },
-  });
+  // useQuery({
+  //   queryKey: 'about data',
+  //   queryFn: () => fetchRequest(`users/about/${user?.username}`),
+  //   onSuccess: (data) => {
+  //     setAboutData(data.data);
+  //   },
+  // });
+
+  const fetchReq = useMutation(fetchRequest);
+  useEffect(() => {
+    if (user?.username) {
+      fetchReq.mutate(`users/about/${user?.username}`, {
+        onSuccess: (data) => {
+          console.log('reem', data.data);
+          setAboutData(data.data);
+        },
+      });
+    }
+  }, [user?.username]);
 
   const [moderatedCommunities, setModeratedCommunities] = useState<
     ModeratedCommunity[]
@@ -69,23 +81,6 @@ function UserRightSideBar() {
       },
     }
   );
-
-  // const {
-  //   id,
-  //   created_at,
-  //   username,
-  //   email,
-  //   gmail,
-  //   facebook_email,
-  //   profile_settings,
-  //   country,
-  //   gender,
-  //   connected_google,
-  //   connected_twitter,
-  //   connected_apple,
-  //   communities,
-  //   moderated_communities,
-  // } = data?.data || {};
 
   const social_links = aboutData?.social_links ?? [];
   const display_name = aboutData?.display_name ?? '';

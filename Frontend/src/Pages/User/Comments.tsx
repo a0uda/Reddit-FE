@@ -1,10 +1,10 @@
 import { fetchRequest } from '../../API/User';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
 import { CommentType } from '../../types/types';
 import Comment from '../../Components/Posts/Comment';
 import useSession from '../../hooks/auth/useSession';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function Comments() {
   const { user } = useSession();
