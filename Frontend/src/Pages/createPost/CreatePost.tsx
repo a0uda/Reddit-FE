@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import OvalButton from './OvalButton';
 import SchedulePostComponent from './schedulePost';
+import * as yup from 'yup';
 
 // type FormSchema =
 //   | 'createPost'
@@ -65,14 +66,24 @@ const NewPost: React.FC = () => {
     oc_flag: false,
     spoiler_flag: false,
     nsfw_flag: false,
-    post_in_community_flag: false,
+    post_in_community_flag: true,
   });
 
   useEffect(() => {
-    const schema = Validation(formType);
-    setValidateSchema(schema);
+    const baseSchema = Validation(formType);
+    const schemaWithCommunityName = baseSchema.shape({
+      community_name: yup
+        .string()
+        .when('post_in_community_flag', (postInCommunityFlag, schema) => {
+          return postInCommunityFlag[0]
+            ? schema.required('Community name is required')
+            : schema.notRequired();
+        }),
+    });
+
+    setValidateSchema(schemaWithCommunityName);
     console.log(formType);
-  }, [formType]);
+  }, [formType, initialValues.post_in_community_flag]);
 
   const handleDivClick = (index: number) => {
     console.log(index);
