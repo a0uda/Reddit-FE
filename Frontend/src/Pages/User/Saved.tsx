@@ -6,14 +6,14 @@ import PostPreview from '../../Components/Posts/PostPreview';
 import React from 'react';
 
 function Saved() {
-  const { data, error, isLoading } = useQuery(
+  const { data, isError, isLoading } = useQuery(
     ['userComments', 'comments', 'posts', 'listings'],
     () => fetchRequest('users/saved-posts-and-comments')
   );
   console.log(data);
   return (
     <>
-      <LoadingProvider error={error} isLoading={isLoading}>
+      <LoadingProvider error={isError} isLoading={isLoading}>
         {data && (
           <>
             {data.data.posts
