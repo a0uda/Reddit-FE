@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useState } from 'react';
 import { cn } from '../../utils/helper_functions';
 import { Link } from 'react-router-dom';
+import { PostType } from '../../types/types';
 
 const InteractionButtons = ({
   id,
@@ -19,6 +20,7 @@ const InteractionButtons = ({
   isPost = true,
   refLink,
   className,
+  myVote,
 }: {
   id: string;
   upvotes: number;
@@ -27,9 +29,10 @@ const InteractionButtons = ({
   isPost?: boolean;
   refLink?: string;
   className?: string;
+  myVote: number;
 }) => {
-  const [upvote, setUpvote] = useState(false);
-  const [downvote, setDownvote] = useState(false);
+  const [vote, setVote] = useState<number>(myVote);
+  const [totalVotes, setTotalVotes] = useState(upvotes - downvotes);
   const queryClient = useQueryClient();
 
   const mutate = useMutation(
@@ -75,41 +78,84 @@ const InteractionButtons = ({
         <ButtonContainer
           className={cn(
             !isPost && 'bg-inherit',
-            upvote ? 'bg-orange' : downvote ? 'bg-violet-muted' : ''
+            vote ? 'bg-orange' : vote == -1 ? 'bg-violet-muted' : ''
           )}
         >
           <IconButton
             variant='text'
             className={cn(
-              upvote ? 'bg-orange' : '',
-              upvote || downvote ? 'text-white' : ''
+              vote ? 'bg-orange' : '',
+              vote != 0 ? 'text-white' : ''
             )}
             onClick={() => {
-              setUpvote(!upvote);
-              downvote && mutate.mutate({ id, rank: 1 });
-              mutate.mutate({ id, rank: upvote ? -1 : 1 });
-              setDownvote(false);
+              const lastVote = vote;
+              let newVote = vote;
+
+              if (vote === 1) {
+                setVote(0);
+                newVote = 0;
+              } else {
+                setVote(1);
+                newVote = 1;
+              }
+              // const { id, isPost, rank } = req.body;
+              console.log(newVote);
+
+              mutate.mutate(
+                { id, rank: newVote },
+                {
+                  onSuccess: () => {
+                    setTotalVotes(totalVotes + newVote);
+                  },
+                  onError: () => {
+                    setVote(lastVote);
+                  },
+                }
+              );
             }}
           >
             <VoteArrow className='h-5 w-5 hover:fill-orange-muted' />
           </IconButton>
           <Typography
             variant='lead'
-            className={cn('text-sm', upvote || downvote ? 'text-white' : '')}
+            className={cn('text-sm', vote != 0 ? 'text-white' : '')}
           >
-            {upvotes - downvotes}
+            {totalVotes}
           </Typography>
           <IconButton
             variant='text'
             className={cn(
-              downvote ? 'bg-violet-muted' : '',
-              upvote || downvote ? 'text-white' : ''
+              vote == -1 ? 'bg-violet-muted' : '',
+              vote != 0 ? 'text-white' : ''
             )}
             onClick={() => {
-              setDownvote(!downvote);
-              upvote && mutate.mutate({ id, rank: -1 });
-              mutate.mutate({ id, rank: downvote ? 1 : -1 });
-              setUpvote(false);
+              const lastVote = vote;
+              let newVote = vote;
+
+              if (vote === -1) {
+                setVote(0);
+                newVote = 0;
+              } else {
+                setVote(-1);
+                newVote = -1;
+              }
+              // const { id, isPost, rank } = req.body;
+              console.log(newVote);
+
+              mutate.mutate(
+                {
+                  id,
+                  rank: newVote,
+                },
+                {
+                  onSuccess: () => {
+                    setTotalVotes(totalVotes + newVote);
+                  },
+                  onError: () => {
+                    setVote(lastVote);
+                  },
+                }
+              );
             }}
           >
             <VoteArrow className='h-5 w-5 hover:fill-violet rotate-180' />
