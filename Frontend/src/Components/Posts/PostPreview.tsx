@@ -5,7 +5,6 @@ import {
   Typography,
   IconButton,
   Tooltip,
-  Avatar,
   Menu,
   MenuHandler,
   MenuItem,
@@ -22,7 +21,7 @@ import shieldPic from '../../assets/shieldPic.svg';
 import InteractionButtons from './InteractionButtons';
 import { CommunityType, PostType } from '../../types/types';
 import PostOptions from './PostOptions';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { fetchRequest, patchRequest, postRequest } from '../../API/User';
 import { useMutation, useQuery } from 'react-query';
 import { useState } from 'react';
@@ -35,7 +34,6 @@ import {
 } from '@heroicons/react/24/outline';
 import eighteenPic from '../../assets/18Pic.svg';
 import useSession from '../../hooks/auth/useSession';
-import { CommunityIcon } from '../../assets/icons/Icons';
 import RoundedButton from '../RoundedButton';
 
 const PostPreview = ({
@@ -49,21 +47,20 @@ const PostPreview = ({
   const [community, setCommunity] = useState<CommunityType | undefined>();
   const [viewSpoiler, setViewSpoiler] = useState<boolean>(
     post.spoiler_flag ||
-      (post.description &&
+      ((post.description?.length || 0) > 0 &&
         post.images?.length != 0 &&
         post.polls?.length != 0 &&
-        post.link_url)
+        (post.link_url?.length || 0) > 0)
   );
   const [viewNSFW, setViewNSFW] = useState<boolean>(
     post.nsfw_flag ||
-      (post.description &&
+      ((post.description?.length || 0) > 0 &&
         post.images?.length != 0 &&
         post.polls?.length != 0 &&
-        post.link_url)
+        (post.link_url?.length || 0) > 0)
   );
   const [isMyPost, setIsMyPost] = useState<boolean>();
   const { user } = useSession();
-  const navigate = useNavigate();
 
   useQuery({
     queryKey: ['community'],
@@ -295,7 +292,7 @@ const PostPreview = ({
                         </Typography>
                         <span className='relative -top-0.5'>•</span>
                         <Typography variant='small' className=''>
-                          {dateDuration(new Date(sharedPost?.created_at))}
+                          {dateDuration(new Date(sharedPost?.created_at || ''))}
                         </Typography>
                       </div>
                     </div>

@@ -1,8 +1,8 @@
 import { useQuery } from 'react-query';
 import SortOptions from '../SortOptions';
 import { fetchRequest } from '../../API/User';
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import { CommunityType, PostType } from '../../types/types';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { PostType } from '../../types/types';
 import { useNavigate, useParams } from 'react-router-dom';
 import { capitalizeString } from '../../utils/helper_functions';
 import LoadingProvider from '../LoadingProvider';
@@ -34,45 +34,91 @@ const PostsListings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption]);
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const pageSize = 10;
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [noMorePosts, setNoMorePosts] = useState(false);
   const response = useQuery({
     queryKey: ['listings', sortOption, page, pageSize],
-    queryFn: () => {
+    queryFn: async () => {
       console.log('sortOption', sortOption);
-      return fetchRequest(
+      const res = await fetchRequest(
         `listing/posts/${sortOption.toLowerCase()}?page=${page}&pageSize=${pageSize}`
       );
+      console.log('res.data', res.data);
+      if (res.data.length === 0) {
+        setNoMorePosts(true);
+        return;
+      }
+      setPosts((prevPosts) => [...prevPosts, ...res.data]);
     },
   });
-  console.log('response', response);
 
-  let moderatedCommunityNames: [];
-  useQuery({
-    queryKey: ['getModeratedCommunities'],
-    queryFn: () => fetchRequest('users/moderated-communities'),
-    onSuccess: (data) => {
-      moderatedCommunityNames = data?.data.map((com) => com.name);
-      console.log(moderatedCommunityNames);
-    },
-  });
+  console.log('posts', posts);
+  // console.log('response', response);
 
   const observer = useRef<IntersectionObserver | null>(null);
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (response.isLoading) return;
+      if (response.isLoading || noMorePosts) return;
       // Disconnect the previous observer after each
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
           setPage((prevPageNumber) => prevPageNumber + 1);
-          response.refetch();
         }
       });
       if (node) observer.current.observe(node);
     },
-    [response.isLoading]
+    [response.isLoading, noMorePosts]
   );
+
+  const PostComponent = React.memo(
+    ({
+      post,
+      index,
+      lastPostElementRef,
+    }: {
+      post: PostType;
+      index: number;
+      lastPostElementRef: HTMLDivElement | null;
+    }) => (
+      <>
+        <div ref={lastPostElementRef} key={post._id}>
+          {posts.length === index + 1 ? (
+            <div>
+              <hr className='border-neutral-muted' />
+              <PostPreview
+                post={post}
+                page='home'
+                // isMyPost={
+                //   post.username == user?.username ||
+                //   moderatedCommunityNames?.includes(
+                //     post.community_name || ''
+                //   )
+                // }
+              />
+            </div>
+          ) : (
+            <div>
+              <hr className='border-neutral-muted' />
+              <PostPreview
+                post={post}
+                page='home'
+                // isMyPost={
+                //   post.username == user?.username ||
+                //   moderatedCommunityNames?.includes(
+                //     post.community_name || ''
+                //   )
+                // }
+              />
+            </div>
+          )}
+        </div>
+      </>
+    )
+  );
+  PostComponent.displayName = 'PostComponent';
 
   return (
     <>
@@ -85,37 +131,14 @@ const PostsListings = () => {
       <LoadingProvider error={response.isError} isLoading={response.isLoading}>
         {response.isSuccess && (
           <>
-            {response.data.data.map((post: PostType, index: number) => {
-              if (response.data.data.length === index + 1) {
-                <div ref={lastPostElementRef} key={post._id}>
-                  <hr className='border-neutral-muted' />
-                  <PostPreview
-                    post={post}
-                    page='home'
-                    isMyPost={
-                      post.username == user?.username ||
-                      moderatedCommunityNames?.includes(
-                        post.community_name || ''
-                      )
-                    }
-                  />
-                </div>;
-              } else {
-                <div key={post._id}>
-                  <hr className='border-neutral-muted' />
-                  <PostPreview
-                    post={post}
-                    page='home'
-                    isMyPost={
-                      post.username == user?.username ||
-                      moderatedCommunityNames?.includes(
-                        post.community_name || ''
-                      )
-                    }
-                  />
-                </div>;
-              }
-            })}
+            {posts.map((post: PostType, index: number) => (
+              <PostComponent
+                post={post}
+                index={index}
+                lastPostElementRef={lastPostElementRef}
+                key={post._id}
+              />
+            ))}
           </>
         )}
       </LoadingProvider>
