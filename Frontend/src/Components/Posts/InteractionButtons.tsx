@@ -31,7 +31,7 @@ const InteractionButtons = ({
   className?: string;
   myVote: number;
 }) => {
-  const [vote, setVote] = useState<number>(myVote);
+  const [vote, setVote] = useState<number>(myVote || 0);
   const [totalVotes, setTotalVotes] = useState(upvotes - downvotes);
   const queryClient = useQueryClient();
 
@@ -78,13 +78,13 @@ const InteractionButtons = ({
         <ButtonContainer
           className={cn(
             !isPost && 'bg-inherit',
-            vote ? 'bg-orange' : vote == -1 ? 'bg-violet-muted' : ''
+            vote == 1 ? 'bg-orange' : vote == -1 ? 'bg-violet-muted' : ''
           )}
         >
           <IconButton
             variant='text'
             className={cn(
-              vote ? 'bg-orange' : '',
+              vote == 1 ? 'bg-orange' : '',
               vote != 0 ? 'text-white' : ''
             )}
             onClick={() => {
@@ -105,7 +105,7 @@ const InteractionButtons = ({
                 { id, rank: newVote },
                 {
                   onSuccess: () => {
-                    setTotalVotes(totalVotes + newVote);
+                    setTotalVotes(totalVotes + newVote == 0 ? -1 : 1);
                   },
                   onError: () => {
                     setVote(lastVote);
@@ -149,7 +149,7 @@ const InteractionButtons = ({
                 },
                 {
                   onSuccess: () => {
-                    setTotalVotes(totalVotes + newVote);
+                    setTotalVotes(totalVotes + newVote == 0 ? 1 : -1);
                   },
                   onError: () => {
                     setVote(lastVote);
