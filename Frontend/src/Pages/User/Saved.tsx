@@ -26,10 +26,18 @@ function Saved() {
               .map((content) => (
                 <React.Fragment key={content._id}>
                   {content.is_post ? (
-                    <PostPreview page='profile' post={content} />
+                    <PostPreview
+                      page='profile'
+                      post={content}
+                      isMyPost={true}
+                    />
                   ) : (
                     //uncomment when deployed reem
-                    <Comment key={content.id} comment={content} />
+                    <Comment
+                      key={content.id}
+                      comment={content}
+                      showButton={true}
+                    />
 
                     //<PostPreview key={content.id} post={content} />
                   )}

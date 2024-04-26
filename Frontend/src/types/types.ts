@@ -112,6 +112,8 @@ export type PostType = {
   community_id?: string; // Community ID reference
   community_name?: string; // Community name
   comments_count: number; // Number of comments
+  comments_ids: [];
+  followers_ids: [];
   views_count: number; // Number of views
   shares_count: number; // Number of shares
   upvotes_count: number; // Number of upvotes
@@ -157,6 +159,8 @@ export type PostType = {
 
   is_reposted_flag: boolean; // If the post is reposted
   reposted?: { original_post_id: string }; // Reference to the original post
+  vote: number;
+  poll_vote: number;
 };
 
 // export type PostType = {
@@ -244,20 +248,27 @@ export type UserType = {
   gender: string;
   connected_google: boolean;
 };
-
 export type CommentType = {
   moderator_details: {
+    approved_flag: boolean;
     approved_by: string;
     approved_date: string;
+    removed_flag: boolean;
     removed_by: string;
     removed_date: string;
+    removed_removal_reason: string;
+    spammed_flag: boolean;
     spammed_by: string;
     spammed_type: string;
-    removed_flag: false;
-    spammed_flag: false;
+    spammed_removal_reason: string;
+    reported_flag: boolean;
+    reported_by: string;
+    reported_type: string;
   };
   is_post: boolean;
-  votes_count: 0;
+  saved: boolean;
+  is_reply: boolean;
+  parent_username: string;
   _id: string;
   post_id: string;
   user_id: string;
@@ -267,21 +278,57 @@ export type CommentType = {
   created_at: string;
   edited_at: string;
   deleted_at: string;
-  approved: false;
-  deleted: false;
+  deleted: boolean;
   description: string;
+  comment_in_community_flag: boolean;
+  community_id: string;
+  community_name: string;
   upvotes_count: number;
-  //
-  saved: boolean;
-  hidden: boolean;
-  //
   downvotes_count: number;
-  allowreplies_flag: boolean;
   spam_flag: boolean;
   locked_flag: boolean;
+  spoiler_flag: boolean;
   show_comment_flag: boolean;
-  __v: 0;
+  __v: number;
 };
+
+// export type CommentType = {
+//   moderator_details: {
+//     approved_by: string;
+//     approved_date: string;
+//     removed_by: string;
+//     removed_date: string;
+//     spammed_by: string;
+//     spammed_type: string;
+//     removed_flag: false;
+//     spammed_flag: false;
+//   };
+//   is_post: boolean;
+//   votes_count: 0;
+//   _id: string;
+//   post_id: string;
+//   user_id: string;
+//   username: string;
+//   parent_id: string;
+//   replies_comments_ids: CommentType[];
+//   created_at: string;
+//   edited_at: string;
+//   deleted_at: string;
+//   approved: false;
+//   deleted: false;
+//   description: string;
+//   upvotes_count: number;
+//   //
+//   saved: boolean;
+//   hidden: boolean;
+//   //
+//   downvotes_count: number;
+//   allowreplies_flag: boolean;
+//   spam_flag: boolean;
+//   locked_flag: boolean;
+//   show_comment_flag: boolean;
+//   __v: 0;
+// };
 
 export type AboutType = {
   _id: string;

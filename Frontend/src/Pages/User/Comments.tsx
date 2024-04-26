@@ -40,7 +40,7 @@ function Comments() {
         {response && (
           <>
             {response.map((comment: CommentType) => (
-              <Comment key={comment._id} comment={comment} />
+              <Comment key={comment._id} comment={comment} showButton={true} />
             ))}
           </>
         )}

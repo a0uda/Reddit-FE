@@ -67,7 +67,11 @@ function Overview() {
                 <React.Fragment key={content._id}>
                   {content.is_post ? (
                     <div>
-                      <PostPreview page='profile' post={content} />
+                      <PostPreview
+                        page='profile'
+                        post={content}
+                        isMyPost={true}
+                      />
                       <div className='text-black m-2 text-sm'>
                         Lifetime Performance
                       </div>
@@ -126,7 +130,11 @@ function Overview() {
                     </div>
                   ) : (
                     //uncomment when deployed reem
-                    <Comment key={content.id} comment={content} />
+                    <Comment
+                      key={content.id}
+                      comment={content}
+                      showButton={true}
+                    />
 
                     //<PostPreview key={content.id} post={content} />
                   )}

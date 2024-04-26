@@ -5,7 +5,7 @@ const Reply = ({ reply }: { reply: CommentType }) => {
   return (
     <>
       <>
-        <Comment comment={reply} />
+        <Comment comment={reply} showButton={false} />
       </>
     </>
   );

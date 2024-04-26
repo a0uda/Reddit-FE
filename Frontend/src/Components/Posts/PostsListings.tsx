@@ -7,10 +7,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { capitalizeString } from '../../utils/helper_functions';
 import LoadingProvider from '../LoadingProvider';
 import PostPreview from './PostPreview';
+import useSession from '../../hooks/auth/useSession';
 
 const PostsListings = () => {
   const { sortOption: initialSortOption } = useParams();
-
+  const { user } = useSession();
   const sortOptions = ['Best', 'Hot', 'New', 'Top'];
   const [sortOption, setSortOption] = useState(
     capitalizeString(initialSortOption || '') || sortOptions[0]
@@ -128,6 +129,7 @@ const PostsListings = () => {
         sortOption={sortOption}
         setSortOption={setSortOption}
       />
+      <hr className='border-neutral-muted' />
       <LoadingProvider error={response.isError} isLoading={response.isLoading}>
         {response.isSuccess && (
           <>
