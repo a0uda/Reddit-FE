@@ -46,7 +46,7 @@ function Posts() {
           <>
             {response.map((post: PostType) => (
               <div key={post._id}>
-                <PostPreview page='profile' post={post} />
+                <PostPreview page='profile' post={post} isMyPost />
                 <div className='text-black m-2 text-sm'>
                   Lifetime Performance
                 </div>
