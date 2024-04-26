@@ -339,7 +339,7 @@ let credentials = [{ username: "username", password: "password" }];
 let users = [
   {
     _id: "661a2c3fab10a4b012e8f59a",
-    username: "m",
+    username: "Osama",
     created_at: "2024-04-13T06:53:20.537Z",
     email: "me22@gmail.com",
     verified_email_flag: false,
@@ -347,9 +347,10 @@ let users = [
     display_name: "m",
     about: "",
     social_links: [],
-    profile_picture: "",
+    profile_picture:
+      "https://conflictresolutionmn.org/wp-content/uploads/2020/01/flat-business-man-user-profile-avatar-icon-vector-4333097.jpg",
     banner_picture: "",
-    gender: "Female",
+    gender: "Male",
   },
   {
     _id: "661a2c3fab10a4b012e8f59b",
@@ -644,7 +645,7 @@ let communities = [
     joined_flag: false,
   },
   {
-    name: "music",
+    name: "musicFLASE",
     description: "The musical community of reddit",
     welcome_message: "",
     type: "Private",
@@ -2295,7 +2296,7 @@ function shuffleList(list) {
   return list;
 }
 
-let bestPosts = {
+let historyPosts = {
   success: true,
   status: 200,
   posts: [
@@ -2439,7 +2440,7 @@ let bestPosts = {
       is_post: true,
       _id: "3",
       user_id: "user3",
-      username: "username",
+      username: "Osama",
       avatar:
         "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
       title: "Third Post",
@@ -2695,6 +2696,14 @@ let bestPosts = {
   msg: "Posts retrieved successfully.",
 };
 
+app.get("/users/history-posts", (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: 200,
+    content: historyPosts.posts,
+  });
+});
+
 app.get("/listing/posts/random", (req, res) => {
   res.status(200).json({ success: true, status: 200, content: postsListings });
 });
@@ -2703,7 +2712,7 @@ app.get("/listing/posts/best", (req, res) => {
   res.status(200).json({
     success: true,
     status: 200,
-    content: bestPosts.posts,
+    content: postsListings.reverse(),
   });
 });
 
@@ -4046,7 +4055,7 @@ app.patch("/communities/change-general-settings/:communityname", (req, res) => {
     approved_users_have_the_ability_to;
   setting.accepting_new_requests_to_post = accepting_new_requests_to_post;
   setting.accepting_requests_to_join = accepting_requests_to_join;
-  setting.title=title;
+  setting.title = title;
   console.log("new general setting", setting);
   res.sendStatus(200);
 });
