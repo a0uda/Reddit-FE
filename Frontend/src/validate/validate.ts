@@ -65,6 +65,12 @@ type FormSchema = {
     // community_name: yup.Schema<string>;
     post_in_community_flag: yup.Schema<boolean>;
   };
+  rules: {
+    rules_title: yup.Schema<string>;
+    applies_to: yup.Schema<string>;
+    report_reason: yup.Schema<string>;
+    full_description: yup.Schema<string | undefined>;
+  };
 };
 
 const Validation = (type: keyof FormSchema) => {
@@ -131,6 +137,12 @@ const Validation = (type: keyof FormSchema) => {
       oc_flag: validationSchema['oc_flag'],
       // community_name: validationSchema['community_name'],
       post_in_community_flag: validationSchema['post_in_community_flag'],
+    },
+    rules: {
+      rules_title: validationSchema['rule_title'],
+      applies_to: validationSchema['applies_to'],
+      report_reason: validationSchema['report_reason'],
+      full_description: validationSchema['full_description'],
     },
   };
 
