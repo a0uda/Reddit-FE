@@ -8,10 +8,12 @@ import Comments from './Comments';
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import UserContent from './UserContent';
 import { fetchRequest } from '../../API/User';
-import { useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import ContentLayout from '../../Components/ContentLayout';
 import useSession from '../../hooks/auth/useSession';
 import Saved from './Saved';
+import { useEffect, useState } from 'react';
+import { AboutType } from '../../types/types';
 
 const NavButton = (props: {
   active?: boolean | undefined;
@@ -62,12 +64,23 @@ function User() {
 
   const { page } = useParams();
 
-  const { data } = useQuery('about data', () =>
-    fetchRequest(`users/${user?.username}/about`)
-  );
+  // const { data } = useQuery('about data', () =>
+  //   fetchRequest(`users/about/${user?.username}`)
+  // );
+  const [response, setResponse] = useState<AboutType>();
 
-  const about = data?.data || {};
-
+  const fetchReq = useMutation(fetchRequest);
+  useEffect(() => {
+    if (user?.username) {
+      fetchReq.mutate(`users/about/${user?.username}`, {
+        onSuccess: (data) => {
+          console.log('reem', data.data);
+          setResponse(data.data);
+        },
+      });
+    }
+  }, [user?.username]);
+  const about = response;
   const username = about?.username ?? '';
   const display_name = about?.display_name ?? '';
   const profile_picture = about?.profile_picture ?? '';

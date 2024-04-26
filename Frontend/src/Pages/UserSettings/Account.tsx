@@ -6,7 +6,7 @@ import DropDownButton from './Containers/DropDownButton';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest } from '../../API/User';
-import LoadingProvider from './Containers/LoadingProvider';
+import LoadingProvider from '../../Components/LoadingProvider';
 import {
   DeleteAccountModal,
   ChangeEmailModal,
@@ -53,9 +53,11 @@ function Account() {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
   const handleChange = (endPoint, newSettings) => {

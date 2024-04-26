@@ -11,7 +11,7 @@ export default function NavBarCreatePost({
   setFieldValue,
 }: PropsType) {
   useEffect(() => {
-    setFieldValue('type', 'createPost');
+    setFieldValue('type', 'text');
   }, [setFieldValue]);
   return (
     <div className='border-collapse'>
@@ -22,7 +22,7 @@ export default function NavBarCreatePost({
           }`}
           onClick={() => {
             handleDivClick(0);
-            setFieldValue('type', 'createPost');
+            setFieldValue('type', 'text');
           }}
         >
           <svg
@@ -48,7 +48,7 @@ export default function NavBarCreatePost({
           }`}
           onClick={() => {
             handleDivClick(1);
-            setFieldValue('type', 'createPostImageAndVideo');
+            setFieldValue('type', 'image_and_videos');
           }}
         >
           <svg
@@ -74,7 +74,7 @@ export default function NavBarCreatePost({
           }`}
           onClick={() => {
             handleDivClick(2);
-            setFieldValue('type', 'createPostLink');
+            setFieldValue('type', 'url');
           }}
         >
           <svg
@@ -100,7 +100,7 @@ export default function NavBarCreatePost({
           }`}
           onClick={() => {
             handleDivClick(3);
-            setFieldValue('type', 'createPostPoll');
+            setFieldValue('type', 'polls');
           }}
         >
           <svg

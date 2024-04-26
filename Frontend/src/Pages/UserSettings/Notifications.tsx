@@ -5,7 +5,7 @@ import SwitchButton from '../../Components/SwitchButton';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest } from '../../API/User';
 import { Spinner } from '@material-tailwind/react';
-import LoadingProvider from './Containers/LoadingProvider';
+import LoadingProvider from '../../Components/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
 
 function Notifications() {
@@ -23,9 +23,11 @@ function Notifications() {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
 

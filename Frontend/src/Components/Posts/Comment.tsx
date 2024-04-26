@@ -78,7 +78,7 @@ const Comment = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   useQuery({
     queryKey: ['users/about/comment', comment.username],
-    queryFn: () => fetchRequest(`user/about/${comment.username}`),
+    queryFn: () => fetchRequest(`users/about/${comment.username}`),
     onSuccess: (data) => {
       setAuthor(data.data);
     },

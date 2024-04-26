@@ -4,7 +4,7 @@ import DropDownButton from './Containers/DropDownButton';
 import Section from './Containers/Section';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest } from '../../API/User';
-import LoadingProvider from './Containers/LoadingProvider';
+import LoadingProvider from '../../Components/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
 
 function ChatsandMessaging() {
@@ -21,9 +21,11 @@ function ChatsandMessaging() {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
 

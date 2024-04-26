@@ -7,10 +7,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { capitalizeString } from '../../utils/helper_functions';
 import LoadingProvider from '../LoadingProvider';
 import PostPreview from './PostPreview';
+import useSession from '../../hooks/auth/useSession';
 
 const PostsListings = () => {
   const { sortOption: initialSortOption } = useParams();
-
+  const { user } = useSession();
   const sortOptions = ['Best', 'Hot', 'New', 'Top'];
   const [sortOption, setSortOption] = useState(
     capitalizeString(initialSortOption || '') || sortOptions[0]
@@ -25,6 +26,15 @@ const PostsListings = () => {
     queryFn: () => {
       console.log('sortOption', sortOption);
       return fetchRequest(`listing/posts/${sortOption.toLowerCase()}`);
+    },
+  });
+  let moderatedCommunityNames: [];
+  useQuery({
+    queryKey: ['getModeratedCommunities'],
+    queryFn: () => fetchRequest('users/moderated-communities'),
+    onSuccess: (data) => {
+      moderatedCommunityNames = data?.data.map((com) => com.name);
+      console.log(moderatedCommunityNames);
     },
   });
   console.log(response);
@@ -56,7 +66,14 @@ const PostsListings = () => {
           <>
             {response.data.data.map((post: PostType) => (
               <div key={post._id}>
-                <PostPreview post={post} />
+                <PostPreview
+                  post={post}
+                  page='home'
+                  isMyPost={
+                    post.username == user?.username ||
+                    moderatedCommunityNames?.includes(post.community_name || '')
+                  }
+                />
                 <hr className='border-neutral-muted' />
               </div>
             ))}

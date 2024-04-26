@@ -5,7 +5,7 @@ import Section from './Containers/Section';
 import { fetchRequest, patchRequest } from '../../API/User';
 import { useMutation, useQuery } from 'react-query';
 import { Spinner } from '@material-tailwind/react';
-import LoadingProvider from './Containers/LoadingProvider';
+import LoadingProvider from '../../Components/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
 
 function Email() {
@@ -23,9 +23,11 @@ function Email() {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
 

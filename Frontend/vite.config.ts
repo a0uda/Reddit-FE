@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
-import replace from '@rollup/plugin-replace';
+// import replace from '@rollup/plugin-replace';
 import dotenv from 'dotenv';
 import EnvironmentPlugin from 'vite-plugin-environment';
 

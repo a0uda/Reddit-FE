@@ -13,7 +13,7 @@ import instagramIcon from '../../assets/instagramIcon.svg';
 import SocialLinksModal, {
   EnterLinkDetails,
 } from './Containers/SocialLinksModal';
-import LoadingProvider from './Containers/LoadingProvider';
+import LoadingProvider from '../../Components/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
 
 function ImageInput(props: {
@@ -95,10 +95,11 @@ function Profile() {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
-      console.log(error.message);
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
   const patchReq = useMutation(patchRequest, {
@@ -109,9 +110,11 @@ function Profile() {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
   // console.log(data);
