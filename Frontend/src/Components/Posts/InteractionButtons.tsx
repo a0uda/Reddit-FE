@@ -105,7 +105,7 @@ const InteractionButtons = ({
                 { id, rank: newVote },
                 {
                   onSuccess: () => {
-                    setTotalVotes(totalVotes + newVote == 0 ? -1 : 1);
+                    setTotalVotes(totalVotes + (newVote == 0 ? -1 : 1));
                   },
                   onError: () => {
                     setVote(lastVote);
@@ -149,7 +149,7 @@ const InteractionButtons = ({
                 },
                 {
                   onSuccess: () => {
-                    setTotalVotes(totalVotes + newVote == 0 ? 1 : -1);
+                    setTotalVotes(totalVotes + (newVote == 0 ? 1 : -1));
                   },
                   onError: () => {
                     setVote(lastVote);
