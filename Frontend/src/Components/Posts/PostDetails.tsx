@@ -160,9 +160,17 @@ const PostDetails = ({ post }: { post?: PostType }) => {
       >
         <>
           {comments &&
-            comments.map((comment) => (
-              <Comment key={comment._id} comment={comment} showButton={true} />
-            ))}
+            comments.map((comment) => {
+              return (
+                !comment.is_reply && (
+                  <Comment
+                    key={comment._id}
+                    comment={comment}
+                    showButton={true}
+                  />
+                )
+              );
+            })}
         </>
       </LoadingProvider>
     </>
