@@ -7,7 +7,6 @@ import SwitchButton from '../../Components/SwitchButton';
 import { PlusIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest, postRequest } from '../../API/User';
-import { Spinner } from '@material-tailwind/react';
 import facebookIcon from '../../assets/facebookIcon.svg';
 import instagramIcon from '../../assets/instagramIcon.svg';
 import SocialLinksModal, {
