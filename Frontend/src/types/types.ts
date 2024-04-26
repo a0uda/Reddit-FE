@@ -157,6 +157,8 @@ export type PostType = {
 
   is_reposted_flag: boolean; // If the post is reposted
   reposted?: { original_post_id: string }; // Reference to the original post
+  vote: number;
+  poll_vote: number;
 };
 
 // export type PostType = {
