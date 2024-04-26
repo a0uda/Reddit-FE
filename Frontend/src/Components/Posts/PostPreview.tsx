@@ -98,6 +98,9 @@ const PollPostContainer = (props: { post: PostType }) => {
                   console.log(e.target.value);
                   setChosenOptionId(e.target.value);
                 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
                 disabled={alreadyVoted}
               />
             ))}
@@ -109,7 +112,8 @@ const PollPostContainer = (props: { post: PostType }) => {
             buttonText='Vote'
             buttonTextColor='text-black'
             disabled={!chosenOptionId || alreadyVoted}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               postReq.mutate(
                 {
                   endPoint: 'posts/poll-vote',
