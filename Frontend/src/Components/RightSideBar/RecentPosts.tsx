@@ -4,18 +4,17 @@ import PostItem from './PostItem';
 // import postList from './PostList.ts';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
-import LoadingProvider from '../LoadingProvider';
 import { PostType } from '../../types/types';
 
 export function RecentPosts() {
   const [isContentVisible, setContentVisible] = useState(true);
 
-  const { data, isError, isLoading } = useQuery('recent posts data', () =>
-    fetchRequest('communities/get-history-posts')
+  const { data } = useQuery('recent posts data', () =>
+    fetchRequest('listing/posts/best')
   );
   console.log(data);
 
-  const postList: PostType[] = data?.data ?? [];
+  const postList: PostType[] = data?.data.slice(0, 5) ?? [];
 
   return (
     <>
@@ -43,30 +42,24 @@ export function RecentPosts() {
                 Clear
               </button>
             </div>
-            <LoadingProvider error={isError} isLoading={isLoading}>
-              {postList.map((post, index) => (
-                <div key={index}>
-                  <PostItem
-                    communityCoverImage={post.communityCoverSrc}
-                    communityIcon={post.communityAvatarSrc}
-                    communityName={post.community_name}
-                    joined={post.joined}
-                    communityDescription={post.communityDescription}
-                    communityMembers={post.communityMembers}
-                    communityOnline={post.communityOnline}
-                    postId={post.id}
-                    postTitle={post.title}
-                    postDescription={post.description}
-                    postMediaSrc={post.images[0].link} // show the first image only
-                    upvotes={post.upvotes_count}
-                    comments={post.comments_count}
-                  />
-                  {index !== postList.length - 1 && (
-                    <div className='w-100 min-h-px mb-4 mt-1 bg-gray-300'></div>
-                  )}
-                </div>
-              ))}
-            </LoadingProvider>
+            {/* <LoadingProvider error={isError} isLoading={isLoading}> */}
+            {postList.map((post, index) => (
+              <div key={index}>
+                <PostItem
+                  communityName={post.community_name ?? ''}
+                  postId={post._id}
+                  postTitle={post.title}
+                  postDescription={post.description ?? ''}
+                  postMediaSrc={post.images?.[0]?.link ?? ''} // show the first image only
+                  upvotes={post.upvotes_count}
+                  comments={post.comments_count}
+                />
+                {index !== postList.length - 1 && (
+                  <div className='w-100 min-h-px mb-4 mt-1 bg-gray-300'></div>
+                )}
+              </div>
+            ))}
+            {/* </LoadingProvider> */}
           </Card>
         </div>
       )}
