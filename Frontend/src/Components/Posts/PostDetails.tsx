@@ -39,7 +39,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
   const [comments, setComments] = useState<CommentType[] | undefined>();
   const commentsResponse = useQuery({
     queryKey: ['comments', comments],
-    queryFn: () => fetchRequest(`posts/get-comments/${postId}/`),
+    queryFn: () => fetchRequest(`posts/get-comments?id=${postId}`),
     onSuccess: (data) => {
       const comments: CommentType[] = data.data;
       setComments(
