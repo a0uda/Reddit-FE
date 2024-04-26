@@ -445,6 +445,7 @@ const PostPreview = ({
         post.link_url)
   );
   const { user } = useSession();
+  const navigate = useNavigate();
 
   // useQuery({
   //   queryKey: ['community'],
@@ -635,11 +636,11 @@ const PostPreview = ({
   return (
     <div
       className='relative'
-      // onClick={() => {
-      //   navigate(
-      //     `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
-      //   );
-      // }}
+      onClick={() => {
+        navigate(
+          `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+        );
+      }}
     >
       {/* <Link
         to={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
