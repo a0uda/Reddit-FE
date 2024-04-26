@@ -39,7 +39,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
   const [comments, setComments] = useState<CommentType[] | undefined>();
   const commentsResponse = useQuery({
     queryKey: ['comments', comments],
-    queryFn: () => fetchRequest(`posts/get-comments/${postId}/`),
+    queryFn: () => fetchRequest(`posts/get-comments?id=${postId}`),
     onSuccess: (data) => {
       const comments: CommentType[] = data.data;
       setComments(
@@ -115,7 +115,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 </div>
               </div>
               <div>
-                <PostOptions saved={post.saved} hidden={post.hidden} />
+                <PostOptions saved={post.saved} />
               </div>
             </CardHeader>
             <CardBody className='flex flex-col justify-between gap-2 m-0 p-0'>
@@ -160,9 +160,17 @@ const PostDetails = ({ post }: { post?: PostType }) => {
       >
         <>
           {comments &&
-            comments.map((comment) => (
-              <Comment key={comment._id} comment={comment} />
-            ))}
+            comments.map((comment) => {
+              return (
+                !comment.is_reply && (
+                  <Comment
+                    key={comment._id}
+                    comment={comment}
+                    showButton={true}
+                  />
+                )
+              );
+            })}
         </>
       </LoadingProvider>
     </>

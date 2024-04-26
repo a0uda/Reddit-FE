@@ -1,9 +1,18 @@
 import ButtonContainer from '../ButtonContainer';
-import { Button, IconButton, Typography } from '@material-tailwind/react';
+import {
+  Button,
+  IconButton,
+  Menu,
+  MenuHandler,
+  MenuItem,
+  MenuList,
+  Typography,
+} from '@material-tailwind/react';
 import { VoteArrow } from '../../assets/icons/Icons';
 import {
   ArrowUpTrayIcon,
   ChatBubbleLeftIcon,
+  LinkIcon,
 } from '@heroicons/react/24/outline';
 import { postRequest } from '../../API/User';
 import { useMutation, useQueryClient } from 'react-query';
@@ -186,24 +195,44 @@ const InteractionButtons = ({
             </div>
           </Button>
         </ButtonContainer>
-        <ButtonContainer className={!isPost ? 'bg-inherit' : ''}>
-          <Button
-            variant='text'
-            className='flex flex-row items-center justify-center gap-1 rounded-full'
-            onClick={() => {
-              navigator.clipboard.writeText(
-                `${window.location.origin}${refLink}`
-              );
-            }}
-          >
-            <ArrowUpTrayIcon className='h-5 w-5' />
-            <div className='hidden sm:block'>
-              <Typography variant='lead' className='text-sm'>
-                Share
-              </Typography>
-            </div>
-          </Button>
-        </ButtonContainer>
+
+        <Menu placement='bottom-end'>
+          <MenuHandler>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                e.nativeEvent.stopImmediatePropagation();
+                e.stopPropagation();
+              }}
+              variant='text'
+              className={`flex flex-row items-center justify-center gap-1 rounded-full ${isPost ? 'bg-neutral-500' : ''}`}
+            >
+              <ArrowUpTrayIcon className='h-5 w-5' />
+              Share
+            </Button>
+          </MenuHandler>
+          <MenuList className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'>
+            <MenuItem
+              className='py-3 flex gap-2 items-center'
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `${window.location.origin}${refLink}`
+                );
+              }}
+            >
+              <LinkIcon strokeWidth={1.5} className='h-4 w-4' />
+              <span>Copy Link</span>
+            </MenuItem>
+
+            {isPost ? (
+              <MenuItem className='py-3 flex gap-2 items-center'>
+                <span>Cross Post</span>
+              </MenuItem>
+            ) : (
+              <span></span>
+            )}
+          </MenuList>
+        </Menu>
       </div>
     </>
   );

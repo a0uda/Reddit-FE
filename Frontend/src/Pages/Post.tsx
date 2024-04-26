@@ -10,8 +10,8 @@ import { PostType } from '../types/types';
 
 const Post = () => {
   const { id: postId } = useParams();
+  console.log('reem testing', postId);
 
-  console.log(postId);
   // const [community, setCommunity] = useState<PostType | undefined>();
   const [post, setPost] = useState<PostType | undefined>();
   const { isLoading, isError } = useQuery({
