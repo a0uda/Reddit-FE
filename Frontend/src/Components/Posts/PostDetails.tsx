@@ -95,7 +95,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 <div className='flex flex-col justify-between m-0'>
                   <div className='flex flex-row items-center justify-between gap-1 m-0'>
                     <CommunityBadge
-                      name={post.community_name!}
+                      name={post.community_name}
                       joined={community?.joined_flag}
                       avatar={community?.profile_picture}
                       coverImage={community?.banner_picture}
