@@ -45,6 +45,7 @@ const LinkPostContainer = (props: { post: PostType }) => {
         <Typography
           variant='paragraph'
           className='mb-2 font-normal text-[#2A3C42]'
+          // dangerouslySetInnerHTML={{ __html: props.post.description }}
         >
           {props.post.description}
         </Typography>
@@ -64,40 +65,52 @@ const PollPostContainer = (props: { post: PostType }) => {
   const [alreadyVoted, setAlreadyVoted] = useState<boolean>(false);
 
   return (
-    <div className='bg-white rounded-lg flex flex-col gap-2 p-2 border-2 border-lines-color mb-1 w-full'>
-      <div className='flex flex-col gap-1'>
-        {props.post.polls &&
-          props.post.polls.map((poll, i) => (
-            <Radio
-              name={props.post._id}
-              label={
-                poll.options + ' ' + '(Number of votes: ' + poll.votes + ')'
-              }
-              value={poll.options}
-              checked={poll.options == chosenOption}
-              key={poll.options + i}
-              crossOrigin={undefined}
-              onChange={(e) => {
-                console.log(e.target.value);
-                setChosenOption(e.target.value);
-              }}
-              disabled={alreadyVoted}
-            />
-          ))}
-      </div>
-      <div className='flex gap-2 items-center'>
-        <RoundedButton
-          buttonBorderColor='border-lines-color'
-          buttonColor='bg-lines-color'
-          buttonText='Vote'
-          buttonTextColor='text-black'
-          disabled={!chosenOption}
-        />
-        <span>
-          {props.post.polls_voting_is_expired_flag
-            ? 'Expired!'
-            : "Didn't expire yet!"}
-        </span>
+    <div>
+      {props.post.description && (
+        <Typography
+          variant='paragraph'
+          className='mb-2 font-normal text-[#2A3C42]'
+          dangerouslySetInnerHTML={{ __html: props.post.description }}
+        >
+          {/* <></> */}
+          {/* {props.post.description} */}
+        </Typography>
+      )}
+      <div className='bg-white rounded-lg flex flex-col gap-2 p-2 border-2 border-lines-color mb-1 w-full'>
+        <div className='flex flex-col gap-1'>
+          {props.post.polls &&
+            props.post.polls.map((poll, i) => (
+              <Radio
+                name={props.post._id}
+                label={
+                  poll.options + ' ' + '(Number of votes: ' + poll.votes + ')'
+                }
+                value={poll.options}
+                checked={poll.options == chosenOption}
+                key={poll.options + i}
+                crossOrigin={undefined}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setChosenOption(e.target.value);
+                }}
+                disabled={alreadyVoted}
+              />
+            ))}
+        </div>
+        <div className='flex gap-2 items-center'>
+          <RoundedButton
+            buttonBorderColor='border-lines-color'
+            buttonColor='bg-lines-color'
+            buttonText='Vote'
+            buttonTextColor='text-black'
+            disabled={!chosenOption}
+          />
+          <span>
+            {props.post.polls_voting_is_expired_flag
+              ? 'Expired!'
+              : "Didn't expire yet!"}
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -162,7 +175,10 @@ const SpoilerContainer = (props: {
           buttonColor='bg-black'
           buttonText={props.text}
           buttonTextColor='text-white'
-          onClick={props.handleViewSpoiler}
+          onClick={(e) => {
+            props.handleViewSpoiler();
+            e.stopPropagation();
+          }}
         />
       </div>
     </>
@@ -377,8 +393,12 @@ const SharedPostContainer = (props: {
                           <Typography
                             variant='paragraph'
                             className='mb-2 font-normal text-[#2A3C42]'
+                            dangerouslySetInnerHTML={{
+                              __html: sharedPost.description || '',
+                            }}
                           >
-                            {sharedPost?.description}
+                            {/* <></> */}
+                            {/* {sharedPost?.description} */}
                           </Typography>
                         </div>
                       </div>
@@ -788,8 +808,12 @@ const PostPreview = ({
                           <Typography
                             variant='paragraph'
                             className='mb-2 font-normal text-[#2A3C42]'
+                            dangerouslySetInnerHTML={{
+                              __html: post.description || '',
+                            }}
                           >
-                            {post.description}
+                            {/* <></> */}
+                            {/* {post.description} */}
                           </Typography>
                         </div>
                       </div>
@@ -837,7 +861,12 @@ const PostPreview = ({
                 <div className=' flex justify-end gap-4'>
                   {post.moderator_details.approved_flag == false &&
                     post.moderator_details.removed_flag == false && (
-                      <div className='flex gap-2 items-center'>
+                      <div
+                        className='flex gap-2 items-center'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
                         <Tooltip content='Approve'>
                           <IconButton
                             className='bg-[#EAEDEF] text-black'
@@ -904,17 +933,21 @@ const PostPreview = ({
                   )}
 
                   <Menu placement='bottom-end'>
-                    <MenuHandler>
-                      <IconButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        className='bg-[#EAEDEF] text-black'
-                      >
+                    <MenuHandler
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <IconButton className='bg-[#EAEDEF] text-black'>
                         <img src={shieldPic} />
                       </IconButton>
                     </MenuHandler>
-                    <MenuList className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'>
+                    <MenuList
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'
+                    >
                       <MenuItem
                         onClick={() => {
                           handleApproveDisapprovePost(

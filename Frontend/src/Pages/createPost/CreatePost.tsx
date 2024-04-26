@@ -153,7 +153,7 @@ const NewPost: React.FC = () => {
       onSubmit={(values, { setSubmitting, resetForm }) => {
         handleOnSubmit(values);
         setTimeout(() => {
-          alert(JSON.stringify(values));
+          // alert(JSON.stringify(values));
           setSubmitting(true);
           resetForm();
           setOC(false);
