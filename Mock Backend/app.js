@@ -562,52 +562,99 @@ app.get("/communities/get-popular-communities", (req, res) => {
   res.status(200).json(popularComunities);
 });
 
+// let communities = [
+//   {
+//     name: "Community2",
+//     _id: "jdhdjsdb",
+//     description:
+//       "Sports News and Highlights from the NFL, NBA, NHL, MLB, MLS, and leagues around the world.",
+//     members_count: 5000,
+//     welcome_message: "",
+//     type: "Private",
+//     nsfw_flag: false,
+//     profile_picture:
+//       "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+//     banner_picture:
+//       "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/373.jpg",
+//     created_at: "2024-04-16T15:06:52.270Z",
+//     rank: 5,
+//     joined_flag: false,
+//   },
+//   {
+//     name: "programming",
+//     description: "Computer Programming",
+//     members_count: 5000,
+//     welcome_message: "",
+//     type: "Private",
+//     nsfw_flag: false,
+//     profile_picture:
+//       "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+//     banner_picture:
+//       "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/373.jpg",
+//     created_at: "2024-04-16T15:06:52.270Z",
+//     rank: 1,
+//     joined_flag: false,
+//   },
+//   {
+//     name: "sports",
+//     description: "The musical community of reddit",
+//     members_count: 2000,
+//     welcome_message: "",
+//     type: "Private",
+//     nsfw_flag: false,
+//     profile_picture:
+//       "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+//     banner_picture:
+//       "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/373.jpg",
+//     created_at: "2024-04-16T15:06:52.270Z",
+//     rank: 3,
+//     joined_flag: false,
+//   },
+// ];
+
 let communities = [
   {
-    name: "Community2",
-    _id: "jdhdjsdb",
+    name: "sports",
     description:
       "Sports News and Highlights from the NFL, NBA, NHL, MLB, MLS, and leagues around the world.",
-    members_count: 5000,
     welcome_message: "",
     type: "Private",
     nsfw_flag: false,
+    members_count: 5000,
     profile_picture:
-      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
     banner_picture:
-      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/373.jpg",
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
     created_at: "2024-04-16T15:06:52.270Z",
-    rank: 5,
-    joined_flag: false,
+    joined_flag: true,
   },
   {
     name: "programming",
-    description: "Computer Programming",
-    members_count: 5000,
+    description:
+      "programming news and discussion about programming culture and programming history",
     welcome_message: "",
     type: "Private",
     nsfw_flag: false,
+    members_count: 5000,
     profile_picture:
-      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
     banner_picture:
-      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/373.jpg",
+      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
     created_at: "2024-04-16T15:06:52.270Z",
-    rank: 1,
     joined_flag: false,
   },
   {
-    name: "sports",
+    name: "music",
     description: "The musical community of reddit",
-    members_count: 2000,
     welcome_message: "",
     type: "Private",
     nsfw_flag: false,
+    members_count: 2000,
     profile_picture:
-      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+      "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
     banner_picture:
-      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/373.jpg",
+      "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
     created_at: "2024-04-16T15:06:52.270Z",
-    rank: 3,
     joined_flag: false,
   },
 ];
@@ -2248,6 +2295,406 @@ function shuffleList(list) {
   return list;
 }
 
+let bestPosts = {
+  success: true,
+  status: 200,
+  posts: [
+    {
+      _id: "15",
+      title: "First Post",
+      description: "This is the first post",
+      created_at: "2024-03-29",
+      edited_at: "2024-03-29",
+      deleted_at: "2024-03-29",
+      deleted: false,
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        {
+          path: "image1.jpg",
+          caption: "Image 1",
+          link: "https://source.unsplash.com/random",
+        },
+      ],
+      videos: [
+        {
+          path: "video1.mp4",
+          caption: "Video 1",
+          link: "https://example.com/video1.mp4",
+        },
+      ],
+      polls: [
+        {
+          options: "option 1",
+          votes: 0,
+        },
+        {
+          options: "option 2",
+          votes: 0,
+        },
+        {
+          options: "option 3",
+          votes: 4,
+        },
+      ],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_name: "sports",
+      comments_count: 1,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 2,
+      downvotes_count: 3,
+      oc_flag: true,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: true,
+      allowreplies_flag: true,
+      scheduled_flag: false,
+      set_suggested_sort: "null (Recommended)",
+      moderator_details: {
+        approved_by: "moderator1",
+        approved_date: "2024-03-29",
+        removed_by: "moderator2",
+        removed_date: "2024-03-29",
+        spammed_by: "moderator3",
+        spammed_type: "spam",
+        spammed_flag: false,
+        approved_flag: false,
+        removed_flag: false,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      is_reposted_flag: false,
+      reposted: [],
+      user_id: "661574f4faed34e05f91ded3",
+      username: "john_doe",
+      __v: 0,
+    },
+    {
+      is_post: true,
+      id: "18",
+      avatar:
+        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+      user_id: "user2",
+      username: "jane_smith",
+      title: "Second Post",
+      description: "This is the second post",
+      created_at: "2024-03-26",
+      edited_at: "2024-03-26",
+      deleted_at: "2024-03-26",
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        {
+          path: "image2.jpg",
+          caption: "Image 2",
+          link: "https://source.unsplash.com/random",
+        },
+      ],
+      videos: [
+        {
+          path: "video2.mp4",
+          caption: "Video 2",
+          link: "https://example.com/video2.mp4",
+        },
+      ],
+      poll: {
+        options: ["Option 1", "Option 2", "Option 3"],
+        votes: [0, 0, 0],
+      },
+      community_id: "community2",
+      community_name: "programming",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 0,
+      downvotes_count: 0,
+      oc_flag: true,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: true,
+      allowreplies_flag: true,
+      set_suggested_sort: "null (Recommended)",
+      moderator_details: {
+        approved_flag: true,
+        approved_by: "moderator1",
+        approved_date: "2024-03-26",
+        removed_by: "moderator2",
+        removed_date: "2024-03-26",
+        spammed_by: "moderator3",
+        spammed_type: "spam",
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+    },
+    {
+      is_post: true,
+      _id: "3",
+      user_id: "user3",
+      username: "username",
+      avatar:
+        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+      title: "Third Post",
+      description: "This is the third post",
+      created_at: "2024-03-27",
+      edited_at: "2024-03-27",
+      deleted_at: "2024-03-27",
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        {
+          path: "image3.jpg",
+          caption: "Image 3",
+          link: "https://source.unsplash.com/random",
+        },
+      ],
+      videos: [
+        {
+          path: "video3.mp4",
+          caption: "Video 3",
+          link: "https://example.com/video3.mp4",
+        },
+      ],
+      poll: {
+        options: ["Option 1", "Option 2", "Option 3"],
+        votes: [0, 0, 0],
+      },
+      community_id: "community3",
+      community_name: "music",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 0,
+      downvotes_count: 0,
+      oc_flag: true,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: true,
+      allowreplies_flag: true,
+      set_suggested_sort: "null (Recommended)",
+      moderator_details: {
+        approved_flag: false,
+        approved_by: "moderator1",
+        approved_date: "2024-03-27",
+        removed_by: "moderator2",
+        removed_date: "2024-03-27",
+        spammed_by: "moderator3",
+        spammed_type: "spam",
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+    },
+    {
+      _id: "15",
+      title: "First Post",
+      description: "This is the first post",
+      created_at: "2024-03-29",
+      edited_at: "2024-03-29",
+      deleted_at: "2024-03-29",
+      deleted: false,
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        {
+          path: "image1.jpg",
+          caption: "Image 1",
+          link: "https://source.unsplash.com/random",
+        },
+      ],
+      videos: [
+        {
+          path: "video1.mp4",
+          caption: "Video 1",
+          link: "https://example.com/video1.mp4",
+        },
+      ],
+      polls: [
+        {
+          options: "option 1",
+          votes: 0,
+        },
+        {
+          options: "option 2",
+          votes: 0,
+        },
+        {
+          options: "option 3",
+          votes: 4,
+        },
+      ],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_name: "sports",
+      comments_count: 1,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 2,
+      downvotes_count: 3,
+      oc_flag: true,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: true,
+      allowreplies_flag: true,
+      scheduled_flag: false,
+      set_suggested_sort: "null (Recommended)",
+      moderator_details: {
+        approved_by: "moderator1",
+        approved_date: "2024-03-29",
+        removed_by: "moderator2",
+        removed_date: "2024-03-29",
+        spammed_by: "moderator3",
+        spammed_type: "spam",
+        spammed_flag: false,
+        approved_flag: false,
+        removed_flag: false,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      is_reposted_flag: false,
+      reposted: [],
+      user_id: "661574f4faed34e05f91ded3",
+      username: "john_doe",
+      __v: 0,
+    },
+    {
+      is_post: true,
+      id: "18",
+      avatar:
+        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+      user_id: "user2",
+      username: "jane_smith",
+      title: "Second Post",
+      description: "This is the second post",
+      created_at: "2024-03-26",
+      edited_at: "2024-03-26",
+      deleted_at: "2024-03-26",
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        {
+          path: "image2.jpg",
+          caption: "Image 2",
+          link: "https://source.unsplash.com/random",
+        },
+      ],
+      videos: [
+        {
+          path: "video2.mp4",
+          caption: "Video 2",
+          link: "https://example.com/video2.mp4",
+        },
+      ],
+      poll: {
+        options: ["Option 1", "Option 2", "Option 3"],
+        votes: [0, 0, 0],
+      },
+      community_id: "community2",
+      community_name: "programming",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 0,
+      downvotes_count: 0,
+      oc_flag: true,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: true,
+      allowreplies_flag: true,
+      set_suggested_sort: "null (Recommended)",
+      moderator_details: {
+        approved_flag: true,
+        approved_by: "moderator1",
+        approved_date: "2024-03-26",
+        removed_by: "moderator2",
+        removed_date: "2024-03-26",
+        spammed_by: "moderator3",
+        spammed_type: "spam",
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+    },
+    {
+      is_post: true,
+      _id: "3",
+      user_id: "user3",
+      username: "username",
+      avatar:
+        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+      title: "Third Post",
+      description: "This is the third post",
+      created_at: "2024-03-27",
+      edited_at: "2024-03-27",
+      deleted_at: "2024-03-27",
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        {
+          path: "image3.jpg",
+          caption: "Image 3",
+          link: "https://source.unsplash.com/random",
+        },
+      ],
+      videos: [
+        {
+          path: "video3.mp4",
+          caption: "Video 3",
+          link: "https://example.com/video3.mp4",
+        },
+      ],
+      poll: {
+        options: ["Option 1", "Option 2", "Option 3"],
+        votes: [0, 0, 0],
+      },
+      community_id: "community3",
+      community_name: "music",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 0,
+      downvotes_count: 0,
+      oc_flag: true,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: true,
+      allowreplies_flag: true,
+      set_suggested_sort: "null (Recommended)",
+      moderator_details: {
+        approved_flag: false,
+        approved_by: "moderator1",
+        approved_date: "2024-03-27",
+        removed_by: "moderator2",
+        removed_date: "2024-03-27",
+        spammed_by: "moderator3",
+        spammed_type: "spam",
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+    },
+  ],
+  msg: "Posts retrieved successfully.",
+};
+
 app.get("/listing/posts/random", (req, res) => {
   res.status(200).json({ success: true, status: 200, content: postsListings });
 });
@@ -2256,7 +2703,7 @@ app.get("/listing/posts/best", (req, res) => {
   res.status(200).json({
     success: true,
     status: 200,
-    content: [...postsListings].reverse(),
+    content: bestPosts.posts,
   });
 });
 
@@ -3447,7 +3894,6 @@ app.post("/comments/reply", (req, res) => {
   const commentId = crypto.randomUUID();
   const updatedComments = comments.content.map((comment) => {
     if (comment._id === id) {
-      
       return {
         ...comment,
         replies_comments_ids: comment.replies_comments_ids.concat({
@@ -3495,10 +3941,9 @@ app.post("/comments/reply", (req, res) => {
         }),
       };
     }
-    return comment; 
+    return comment;
   });
 
-  
   comments.content = updatedComments;
 
   console.log(comments.content);

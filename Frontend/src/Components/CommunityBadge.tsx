@@ -32,7 +32,7 @@ const CommunityBadge = ({
   displayAvatar = true,
 }: CommunityBadgeProps) => {
   const [openPopover, setOpenPopover] = useState(false);
-console.log(avatar);
+  // console.log(avatar);
 
   const triggers = {
     onMouseEnter: () => setOpenPopover(true),
