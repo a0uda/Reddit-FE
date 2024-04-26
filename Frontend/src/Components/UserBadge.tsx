@@ -1,67 +1,51 @@
-import {
-  Avatar,
-  Popover,
-  PopoverContent,
-  PopoverHandler,
-  Typography,
-} from '@material-tailwind/react';
-import CommunityPopup from './RightSideBar/CommunityPopup';
-import { useState } from 'react';
+import { Avatar, Typography } from '@material-tailwind/react';
+// import CommunityPopup from './RightSideBar/CommunityPopup';
 import { Link } from 'react-router-dom';
-import { UserType } from '../types/types';
+// import { CommunityIcon } from '../assets/icons/Icons';
+import { addPrefixToUsername } from '../utils/helper_functions';
 
-type CommunityBadgeProps = {
-  props: {
-    user: UserType;
-  };
+type user = {
+  username?: string;
+  profilePicture?: string;
+  //   page?: 'profile' | 'home' | 'community' | 'post';
 };
 
-const CommunityBadge = ({
-  name,
-  joined = false,
-  avatar,
-  coverImage,
-  description,
-  members,
-  online,
-  displayAvatar = true,
-}: CommunityBadgeProps) => {
-  const [openPopover, setOpenPopover] = useState(false);
+type UserBadgeProps = user;
 
-  const triggers = {
-    onMouseEnter: () => setOpenPopover(true),
-    onMouseLeave: () => setOpenPopover(false),
-  };
+const UserBadge = ({ username, profilePicture }: UserBadgeProps) => {
+  //   const [openPopover, setOpenPopover] = useState(false);
+  //   // console.log(avatar);
+
+  //   const triggers = {
+  //     onMouseEnter: () => setOpenPopover(true),
+  //     onMouseLeave: () => setOpenPopover(false),
+  //   };
+
+  const userNameWithPrefix = addPrefixToUsername(username ?? '', 'user');
 
   return (
     <>
-      <Popover open={openPopover} handler={setOpenPopover}>
-        <PopoverHandler {...triggers}>
-          <div className='flex justify-start items-center gap-2 pt-0'>
-            {displayAvatar && (
-              <>
-                {avatar ? (
-                  <Avatar
-                    variant='circular'
-                    alt={name}
-                    src={avatar}
-                    style={{ width: '25px', height: '25px' }}
-                  />
-                ) : (
-                  <CommunityIcon className='h-5 w-5' />
-                )}
-              </>
-            )}
-            <Typography
-              variant='small'
-              className='font-body -tracking-tight text-gray-600'
-            >
-              <Link to={`/${name}`} className='hover:underline'>
-                {name}
-              </Link>
-            </Typography>
-          </div>
-        </PopoverHandler>
+      {/* <Popover open={openPopover} handler={setOpenPopover}>
+        <PopoverHandler {...triggers}> */}
+      <div className='flex justify-start items-center gap-2 pt-0'>
+        <Avatar
+          variant='circular'
+          alt={username}
+          src={profilePicture}
+          style={{ width: '35px', height: '35px' }}
+        />
+        <div>
+          <Typography
+            variant='small'
+            className='font-body -tracking-tight text-xs font-bold text-gray-600'
+          >
+            <Link to={`/${userNameWithPrefix}`} className='hover:underline'>
+              {userNameWithPrefix}
+            </Link>
+          </Typography>
+        </div>
+      </div>
+      {/* </PopoverHandler>
         <PopoverContent
           {...triggers}
           className='z-50 max-w-[24rem] rounded-2xl p-0 transition-all delay-200'
@@ -73,12 +57,11 @@ const CommunityBadge = ({
             joined={joined}
             communityDescription={description}
             communityMembers={members}
-            communityOnline={online}
           />
         </PopoverContent>
-      </Popover>
+      </Popover> */}
     </>
   );
 };
 
-export default CommunityBadge;
+export default UserBadge;
