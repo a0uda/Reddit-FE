@@ -3950,3 +3950,103 @@ app.post("/comments/reply", (req, res) => {
 
   res.status(200).json({ message: "Comment added successfully." });
 });
+
+let communityGeneralSettings = [
+  {
+    community_name: "reem",
+    welcome_message: {
+      send_welcome_message_flag: false,
+      message:
+        "Welcome to our community! We're excited to have you join us. Feel free to explore the discussions and share your thoughts.",
+    },
+    _id: "661d40f3481ae66a900fb918",
+    title: "Cheese Lovers Club",
+    description:
+      "Are you passionate about all things cheese? Join our community to discuss your favorite cheeses, recipes, and more!",
+    type: "Public",
+    nsfw_flag: false,
+    approved_users_have_the_ability_to: "Post Only (Default)",
+    accepting_new_requests_to_post: false,
+    accepting_requests_to_join: true,
+    __v: 0,
+  },
+  {
+    community_name: "habiba",
+    welcome_message: {
+      send_welcome_message_flag: true,
+      message:
+        "Welcome to the Grated Cheese Enthusiasts community! Get ready to dive into discussions about the world of grated cheese.",
+    },
+    _id: "661d40f3481ae66a900fb918",
+    title: "Grated Cheese Enthusiasts",
+    description:
+      "Join our community of cheese lovers as we explore the world of grated cheese. Share your favorite recipes, tips, and more!",
+    type: "Public",
+    nsfw_flag: false,
+    approved_users_have_the_ability_to: "Post Only (Default)",
+    accepting_new_requests_to_post: false,
+    accepting_requests_to_join: true,
+    __v: 0,
+  },
+  {
+    community_name: "halla",
+    welcome_message: {
+      send_welcome_message_flag: true,
+      message:
+        "Welcome to the Cheese Connoisseurs Club! Prepare to indulge in discussions about the finest cheeses from around the world.",
+    },
+    _id: "661d40f3481ae66a900fb918",
+    title: "Cheese Connoisseurs Club",
+    description:
+      "Calling all cheese enthusiasts! Join us in exploring the art of cheese appreciation. From aged cheddars to creamy bries, there's something for every cheese lover here.",
+    type: "Public",
+    nsfw_flag: false,
+    approved_users_have_the_ability_to: "Post Only (Default)",
+    accepting_new_requests_to_post: false,
+    accepting_requests_to_join: true,
+    __v: 0,
+  },
+];
+
+app.get("/communities/get-general-settings/:communityname", (req, res) => {
+  const { communityname } = req.params;
+  console.log(communityname);
+  const community = communityGeneralSettings.find(
+    (community) => community.community_name === communityname
+  );
+  if (community) {
+    res.status(200).json(community);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+app.patch("/communities/change-general-settings/:communityname", (req, res) => {
+  const { communityname } = req.params;
+  const {
+    welcome_message,
+    description,
+    type,
+    nsfw_flag,
+    approved_users_have_the_ability_to,
+    accepting_new_requests_to_post,
+    accepting_requests_to_join,
+    title,
+  } = req.body;
+  const setting = communityGeneralSettings.find(
+    (sett) => sett.community_name === communityname
+  );
+  if (!setting) {
+    return res.status(404).json({ message: "Notification not found" });
+  }
+  setting.welcome_message = welcome_message;
+  setting.description = description;
+  setting.type = type;
+  setting.nsfw_flag = nsfw_flag;
+  setting.approved_users_have_the_ability_to =
+    approved_users_have_the_ability_to;
+  setting.accepting_new_requests_to_post = accepting_new_requests_to_post;
+  setting.accepting_requests_to_join = accepting_requests_to_join;
+  setting.title=title;
+  console.log("new general setting", setting);
+  res.sendStatus(200);
+});

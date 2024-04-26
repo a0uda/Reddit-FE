@@ -10,6 +10,7 @@ import Notifications from './Pages/Notifications.tsx';
 import Post from './Pages/Post.tsx';
 import User from './Pages/User/User.tsx';
 import CreatePost from './Pages/createPost/CreatePost.tsx';
+import GeneralSettings from './Pages/Community/GeneralSettings.tsx';
 
 function App() {
   const { status } = useSession();
@@ -46,6 +47,10 @@ function App() {
           <Route
             path='/message/*'
             element={<HandleRoutes element={<MessageRouter />} />}
+          />
+          <Route
+            path='/communitysettings'
+            element={<HandleRoutes element={<GeneralSettings />} />}
           />
         </Routes>
       </Router>
