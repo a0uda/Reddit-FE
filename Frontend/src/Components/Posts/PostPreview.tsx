@@ -25,7 +25,7 @@ import PostOptions from './PostOptions';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { fetchRequest, patchRequest, postRequest } from '../../API/User';
 import { useMutation, useQuery } from 'react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   CheckIcon,
   XMarkIcon,
@@ -38,220 +38,192 @@ import useSession from '../../hooks/auth/useSession';
 import { CommunityIcon } from '../../assets/icons/Icons';
 import RoundedButton from '../RoundedButton';
 
-const LinkPostContainer = (props: { post: PostType }) => {
-  return (
-    <div className='flex flex-col justify-center gap-1'>
-      {props.post.description && (
-        <Typography
-          variant='paragraph'
-          className='mb-2 font-normal text-[#2A3C42]'
-        >
-          {props.post.description}
-        </Typography>
-      )}
-      <Link
-        to={props.post.link_url || '/'}
-        className='text-purple-600 hover:underline'
-      >
-        {props.post.link_url}
-      </Link>
-    </div>
-  );
-};
-
-const PollPostContainer = (props: { post: PostType }) => {
-  const [chosenOption, setChosenOption] = useState<string>();
-  const [alreadyVoted, setAlreadyVoted] = useState<boolean>(false);
-
-  return (
-    <div className='bg-white rounded-lg flex flex-col gap-2 p-2 border-2 border-lines-color mb-1 w-full'>
-      <div className='flex flex-col gap-1'>
-        {props.post.polls &&
-          props.post.polls.map((poll, i) => (
-            <Radio
-              name={props.post._id}
-              label={
-                poll.options + ' ' + '(Number of votes: ' + poll.votes + ')'
-              }
-              value={poll.options}
-              checked={poll.options == chosenOption}
-              key={poll.options + i}
-              crossOrigin={undefined}
-              onChange={(e) => {
-                console.log(e.target.value);
-                setChosenOption(e.target.value);
-              }}
-              disabled={alreadyVoted}
-            />
-          ))}
-      </div>
-      <div className='flex gap-2 items-center'>
-        <RoundedButton
-          buttonBorderColor='border-lines-color'
-          buttonColor='bg-lines-color'
-          buttonText='Vote'
-          buttonTextColor='text-black'
-          disabled={!chosenOption}
-        />
-        <span>
-          {props.post.polls_voting_is_expired_flag
-            ? 'Expired!'
-            : "Didn't expire yet!"}
-        </span>
-      </div>
-    </div>
-  );
-};
-
-const SpoilerContainer = (props: {
-  handleViewSpoiler: () => void;
-  spoilerPost: PostType;
-  sharedPost: boolean;
-  text: string;
-  title: string;
+const PostPreview = ({
+  post,
+  page,
+}: {
+  post: PostType;
+  page: 'profile' | 'home' | 'community';
 }) => {
-  console.log('spoilerPost', props.title);
+  // TODO Fetch Community
+  const [community, setCommunity] = useState<CommunityType | undefined>();
+  const [viewSpoiler, setViewSpoiler] = useState<boolean>(
+    post.spoiler_flag ||
+      (post.description &&
+        post.images?.length != 0 &&
+        post.polls?.length != 0 &&
+        post.link_url)
+  );
+  const [viewNSFW, setViewNSFW] = useState<boolean>(
+    post.nsfw_flag ||
+      (post.description &&
+        post.images?.length != 0 &&
+        post.polls?.length != 0 &&
+        post.link_url)
+  );
+  const [isMyPost, setIsMyPost] = useState<boolean>();
+  const { user } = useSession();
+  const navigate = useNavigate();
 
-  return (
-    <>
-      <div>
-        {!props.sharedPost && (
-          <Typography variant='h5' className='mb-2 font-normal text-black'>
-            {props.title}
+  useQuery({
+    queryKey: ['community'],
+    queryFn: () =>
+      fetchRequest(`communities/get-community-view/${post.community_name}`),
+    onSuccess: (data) => {
+      console.log(data);
+
+      const community: CommunityType = data.data;
+      console.log(community);
+      setCommunity(community);
+    },
+  });
+  useQuery({
+    queryKey: ['getModeratedCommunities'],
+    queryFn: () => fetchRequest('users/moderated-communities'),
+    onSuccess: (data) => {
+      console.log(
+        post.spoiler_flag && !(post.description && post.images?.length != 0),
+        'images'
+      );
+      const moderatedCommunityNames = data?.data.map((com) => com.name);
+      console.log(moderatedCommunityNames);
+      setIsMyPost(
+        post.username == user?.username ||
+          moderatedCommunityNames?.includes(post.community_name || '')
+      );
+    },
+  });
+
+  const postReq = useMutation(postRequest);
+  const patchReq = useMutation(patchRequest);
+
+  const LinkPostContainer = (props: { post: PostType }) => {
+    return (
+      <div className='flex flex-col justify-center gap-1'>
+        {props.post.description && (
+          <Typography
+            variant='paragraph'
+            className='mb-2 font-normal text-[#2A3C42]'
+          >
+            {props.post.description}
           </Typography>
         )}
-        {props.spoilerPost.spoiler_flag ||
-          (props.spoilerPost.nsfw_flag && (
-            <div className='flex gap-2 mb-2'>
-              {props.spoilerPost.spoiler_flag && (
-                <div className='flex gap-1 items-center'>
-                  <ExclamationTriangleIcon
-                    strokeWidth={3}
-                    className='w-4 h-4 font-bold text-black'
-                  />
-                  <Typography
-                    variant='small'
-                    className='font-bold text-black text-xs'
-                  >
-                    SPOILER
-                  </Typography>
-                </div>
-              )}
-              {props.spoilerPost.nsfw_flag && (
-                <div className='flex gap-1 items-center'>
-                  <img
-                    src={eighteenPic}
-                    // strokeWidth={3}
-                    className='w-4 h-4 font-bold text-black'
-                  />
-                  <Typography
-                    variant='small'
-                    className='font-bold text-black text-xs'
-                  >
-                    NSFW
-                  </Typography>
-                </div>
-              )}
-            </div>
-          ))}
+        <Link
+          to={props.post.link_url || '/'}
+          className='text-purple-600 hover:underline'
+        >
+          {props.post.link_url}
+        </Link>
       </div>
-      <div className='bg-gray-800 h-20 rounded-lg flex items-center justify-center mb-1'>
-        {' '}
-        <RoundedButton
-          buttonBorderColor='border-black'
-          buttonColor='bg-black'
-          buttonText={props.text}
-          buttonTextColor='text-white'
-          onClick={props.handleViewSpoiler}
-        />
+    );
+  };
+  const PollPostContainer = (props: { post: PostType }) => {
+    const [chosenOption, setChosenOption] = useState<string>('');
+    const [alreadyVoted, setAlreadyVoted] = useState<boolean>(false);
+
+    return (
+      <div className='bg-white rounded-lg flex flex-col gap-2 p-2 border-2 border-lines-color mb-1 w-full'>
+        <div className='flex flex-col gap-1'>
+          {props.post.polls &&
+            props.post.polls.map((poll, i) => (
+              <Radio
+                name={props.post._id}
+                label={
+                  poll.options + ' ' + '(Number of votes: ' + poll.votes + ')'
+                }
+                value={poll.options}
+                checked={poll.options == chosenOption}
+                key={poll.options + i}
+                crossOrigin={undefined}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setChosenOption(e.target.value);
+                }}
+                disabled={alreadyVoted}
+              />
+            ))}
+        </div>
+        <div className='flex gap-2 items-center'>
+          <RoundedButton
+            buttonBorderColor='border-lines-color'
+            buttonColor='bg-lines-color'
+            buttonText='Vote'
+            buttonTextColor='text-black'
+            disabled={!chosenOption}
+          />
+          <span>
+            {props.post.polls_voting_is_expired_flag
+              ? 'Expired!'
+              : "Didn't expire yet!"}
+          </span>
+        </div>
       </div>
-    </>
-  );
-};
+    );
+  };
 
-const SharedPostContainer = (props: {
-  sharedPostId: string;
-  post: PostType;
-}) => {
-  const [sharedPost, setSharedPost] = useState();
-  const [sharedPostSpoiler, setSharedPostSpoiler] = useState<boolean>();
-  const [sharedViewNSFW, setSharedViewNSFW] = useState<boolean>();
+  const SharedPostContainer = (props: { sharedPostId: string }) => {
+    const [sharedPost, setSharedPost] = useState<PostType>();
+    const [sharedPostSpoiler, setSharedPostSpoiler] = useState<boolean>();
+    const [sharedViewNSFW, setSharedViewNSFW] = useState<boolean>();
 
-  const [name, setName] = useState<string>();
-  useQuery({
-    queryKey: ['post', 'listings', props.sharedPostId],
-    queryFn: () => fetchRequest(`posts/get-post?id=${props.sharedPostId}`),
-    onSuccess: (data) => {
-      console.log(data.data, 'sharedPost');
-      setSharedPost(data.data);
-      setName(
-        addPrefixToUsername(data.data.community_name || '', 'moderator') ||
-          addPrefixToUsername(data.data.username, 'user') ||
-          ''
-      );
-      setSharedPostSpoiler(data.data.spoiler_flag);
-    },
-    retry(failureCount, error) {
-      console.log(failureCount, 'failureCount');
+    const [name, setName] = useState<string>();
+    useQuery({
+      queryKey: `posts/get-post?id=${props.sharedPostId}`,
+      queryFn: () => fetchRequest(`posts/get-post?id=${props.sharedPostId}`),
+      onSuccess: (data) => {
+        console.log(data, 'sharedPost');
+        setSharedPost(data.data);
+        setName(
+          addPrefixToUsername(data.data.community_name || '', 'moderator') ||
+            addPrefixToUsername(data.data.username, 'user') ||
+            ''
+        );
+        setSharedPostSpoiler(data.data.spoiler_flag);
+      },
+      // refetchOnMount: false,
+    });
 
-      return !sharedPost;
-    },
-    onError: (error) => {
-      console.error(error, 'Error fetching shared post');
-    },
-
-    // refetchOnMount: false,
-  });
-  // console.log(props.sharedPostId, 'sharedPostId');
-  useEffect(() => {
-    if (sharedPost) {
-      console.log(sharedPost, props.sharedPostId, 'Updated SharedPost'); // Check if `sharedPost` is updated
-    }
-  }, [sharedPost]);
-  console.log(sharedPost, props.sharedPostId, 'Updated SharedPost barra'); // Check if `sharedPost` is updated
-
-  return (
-    <>
-      <div>
-        <Typography variant='h5' className='mb-2 font-normal text-black'>
-          {props.post.title}
-        </Typography>
-        {props.post?.spoiler_flag ||
-          (props.post?.nsfw_flag && (
-            <div className='flex gap-2 mb-2'>
-              {props.post?.spoiler_flag && (
-                <div className='flex gap-1 items-center'>
-                  <ExclamationTriangleIcon
-                    strokeWidth={3}
-                    className='w-4 h-4 font-bold text-black'
-                  />
-                  <Typography
-                    variant='small'
-                    className='font-bold text-black text-xs'
-                  >
-                    SPOILER
-                  </Typography>
-                </div>
-              )}
-              {props.post?.nsfw_flag && (
-                <div className='flex gap-1 items-center'>
-                  <img
-                    src={eighteenPic}
-                    // strokeWidth={3}
-                    className='w-4 h-4 font-bold text-black'
-                  />
-                  <Typography
-                    variant='small'
-                    className='font-bold text-black text-xs'
-                  >
-                    NSFW
-                  </Typography>
-                </div>
-              )}
-            </div>
-          ))}
-      </div>
-      {sharedPost && (
+    return (
+      <>
+        <div>
+          <Typography variant='h5' className='mb-2 font-normal text-black'>
+            {post.title}
+          </Typography>
+          {post?.spoiler_flag ||
+            (post?.nsfw_flag && (
+              <div className='flex gap-2 mb-2'>
+                {post?.spoiler_flag && (
+                  <div className='flex gap-1 items-center'>
+                    <ExclamationTriangleIcon
+                      strokeWidth={3}
+                      className='w-4 h-4 font-bold text-black'
+                    />
+                    <Typography
+                      variant='small'
+                      className='font-bold text-black text-xs'
+                    >
+                      SPOILER
+                    </Typography>
+                  </div>
+                )}
+                {post?.nsfw_flag && (
+                  <div className='flex gap-1 items-center'>
+                    <img
+                      src={eighteenPic}
+                      // strokeWidth={3}
+                      className='w-4 h-4 font-bold text-black'
+                    />
+                    <Typography
+                      variant='small'
+                      className='font-bold text-black text-xs'
+                    >
+                      NSFW
+                    </Typography>
+                  </div>
+                )}
+              </div>
+            ))}
+        </div>
         <div className='bg-white rounded-lg flex flex-col p-2 border-2 border-lines-color mb-1'>
           {sharedPost?.spoiler_flag && sharedPostSpoiler && (
             <div className='flex flex-col justify-start pt-0'>
@@ -283,14 +255,13 @@ const SharedPostContainer = (props: {
               sharedPost.link_url) ? (
               <SpoilerContainer
                 handleViewSpoiler={() => {
-                  // console.log(viewSpoiler, 'spoilerrrr');
+                  console.log(viewSpoiler, 'spoilerrrr');
 
                   setSharedPostSpoiler(false);
                 }}
                 spoilerPost={sharedPost}
                 sharedPost={true}
                 text='View Spoiler'
-                title={props.post.title}
               />
             ) : sharedPost?.nsfw_flag &&
               sharedViewNSFW &&
@@ -304,10 +275,9 @@ const SharedPostContainer = (props: {
 
                   setSharedViewNSFW(false);
                 }}
-                spoilerPost={props.post}
+                spoilerPost={post}
                 sharedPost={true}
                 text='View NSFW Content'
-                title={props.post.title}
               />
             ) : (
               <div className='flex gap-7 justify-between pb-2'>
@@ -414,53 +384,74 @@ const SharedPostContainer = (props: {
             )}
           </div>
         </div>
-      )}
-    </>
-  );
-};
+      </>
+    );
+  };
 
-const PostPreview = ({
-  post,
-  page,
-  isMyPost,
-}: {
-  post: PostType;
-  page: 'profile' | 'home' | 'community';
-  isMyPost: boolean;
-}) => {
-  // TODO Fetch Community
-  // const [community, setCommunity] = useState<CommunityType | undefined>();
-  const [viewSpoiler, setViewSpoiler] = useState<boolean>(
-    post.spoiler_flag ||
-      (post.description &&
-        post.images?.length != 0 &&
-        post.polls?.length != 0 &&
-        post.link_url)
-  );
-  const [viewNSFW, setViewNSFW] = useState<boolean>(
-    post.nsfw_flag ||
-      (post.description &&
-        post.images?.length != 0 &&
-        post.polls?.length != 0 &&
-        post.link_url)
-  );
-  const { user } = useSession();
+  const SpoilerContainer = (props: {
+    handleViewSpoiler: () => void;
+    spoilerPost: PostType;
+    sharedPost: boolean;
+    text: string;
+  }) => {
+    console.log('spoilerPost', post.title);
 
-  // useQuery({
-  //   queryKey: ['community'],
-  //   queryFn: () =>
-  //     fetchRequest(`communities/get-community-view/${post.community_name}`),
-  //   onSuccess: (data) => {
-  //     console.log(data);
-
-  //     const community: CommunityType = data.data;
-  //     console.log(community);
-  //     setCommunity(community);
-  //   },
-  // });
-
-  const postReq = useMutation(postRequest);
-  const patchReq = useMutation(patchRequest);
+    return (
+      <>
+        <div>
+          {!props.sharedPost && (
+            <Typography variant='h5' className='mb-2 font-normal text-black'>
+              {post.title}
+            </Typography>
+          )}
+          {props.spoilerPost.spoiler_flag ||
+            (props.spoilerPost.nsfw_flag && (
+              <div className='flex gap-2 mb-2'>
+                {props.spoilerPost.spoiler_flag && (
+                  <div className='flex gap-1 items-center'>
+                    <ExclamationTriangleIcon
+                      strokeWidth={3}
+                      className='w-4 h-4 font-bold text-black'
+                    />
+                    <Typography
+                      variant='small'
+                      className='font-bold text-black text-xs'
+                    >
+                      SPOILER
+                    </Typography>
+                  </div>
+                )}
+                {props.spoilerPost.nsfw_flag && (
+                  <div className='flex gap-1 items-center'>
+                    <img
+                      src={eighteenPic}
+                      // strokeWidth={3}
+                      className='w-4 h-4 font-bold text-black'
+                    />
+                    <Typography
+                      variant='small'
+                      className='font-bold text-black text-xs'
+                    >
+                      NSFW
+                    </Typography>
+                  </div>
+                )}
+              </div>
+            ))}
+        </div>
+        <div className='bg-gray-800 h-20 rounded-lg flex items-center justify-center mb-1'>
+          {' '}
+          <RoundedButton
+            buttonBorderColor='border-black'
+            buttonColor='bg-black'
+            buttonText={props.text}
+            buttonTextColor='text-white'
+            onClick={props.handleViewSpoiler}
+          />
+        </div>
+      </>
+    );
+  };
 
   const handleDeletePost = () => {};
   const handleApproveDisapprovePost = (approve: boolean) => {
@@ -477,7 +468,6 @@ const PostPreview = ({
             post.moderator_details.approved_flag = true;
             post.moderator_details.approved_by = user?.username;
             post.moderator_details.approved_date = new Date();
-            post.moderator_details.removed_flag = false;
           },
         }
       );
@@ -494,7 +484,6 @@ const PostPreview = ({
             post.moderator_details.removed_flag = true;
             post.moderator_details.removed_by = user?.username;
             post.moderator_details.removed_date = new Date();
-            post.moderator_details.approved_flag = false;
           },
         }
       );
@@ -662,11 +651,11 @@ const PostPreview = ({
                 addPrefixToUsername(post.username, 'user') ||
                 ''
               }
-              // joined={community?.joined_flag}
+              joined={community?.joined_flag}
               avatar={post.avatar} //3dlt
-              // coverImage={community?.banner_picture}
-              // members={community?.members_count}
-              // description={community?.description}
+              coverImage={community?.banner_picture}
+              members={community?.members_count}
+              description={community?.description}
             />
             <span className='relative -top-0.5'>•</span>
             <Typography variant='small' className=''>
@@ -708,7 +697,6 @@ const PostPreview = ({
                 spoilerPost={post}
                 sharedPost={false}
                 text='View Spoiler'
-                title={post.title}
               />
             ) : post.nsfw_flag &&
               viewNSFW &&
@@ -726,12 +714,10 @@ const PostPreview = ({
                 spoilerPost={post}
                 sharedPost={false}
                 text='View NSFW Content'
-                title={post.title}
               />
             ) : post.is_reposted_flag && post.reposted ? (
               <SharedPostContainer
                 sharedPostId={post.reposted.original_post_id}
-                post={post}
               />
             ) : (
               <div className='flex gap-7 justify-between pb-2'>
@@ -831,7 +817,6 @@ const PostPreview = ({
                 downvotes={post.downvotes_count}
                 comments_replies={post.comments_count}
                 refLink={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
-                myVote={post.vote}
               />
               {isMyPost && (
                 <div className=' flex justify-end gap-4'>
@@ -864,7 +849,7 @@ const PostPreview = ({
                   {post.moderator_details.approved_flag === true && (
                     <div className='flex gap-2 items-center'>
                       <Tooltip
-                        content={`At ${post.moderator_details.approved_date}`}
+                        content={`${addPrefixToUsername(post.moderator_details.approved_by || '', 'user')} at ${post.moderator_details.approved_date}`}
                       >
                         <div className='flex items-center gap-2'>
                           <div className='text-sm'>
@@ -882,7 +867,7 @@ const PostPreview = ({
                   {post.moderator_details.removed_flag === true && (
                     <div className='flex gap-2 items-center'>
                       <Tooltip
-                        content={`At ${post.moderator_details.removed_date}`}
+                        content={`${addPrefixToUsername(post.moderator_details.removed_by || '', 'user')} at ${post.moderator_details.removed_date}`}
                       >
                         <div className='text-sm'>
                           Removed{' '}

@@ -11,14 +11,7 @@ import { AuthProvider } from './Providers/AuthProvider.tsx';
 // import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import 'react-quill/dist/quill.snow.css';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    },
-  },
-});
+const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
