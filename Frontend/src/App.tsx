@@ -11,6 +11,7 @@ import Post from './Pages/Post.tsx';
 import User from './Pages/User/User.tsx';
 import CreatePost from './Pages/createPost/CreatePost.tsx';
 import GeneralSettings from './Pages/Community/GeneralSettings.tsx';
+import PostsCommentsSettings from './Pages/Community/PostsCommentsSettings.tsx';
 
 function App() {
   const { status } = useSession();
@@ -51,6 +52,10 @@ function App() {
           <Route
             path='/communitysettings'
             element={<HandleRoutes element={<GeneralSettings />} />}
+          />
+          <Route
+            path='/postcommentsettings'
+            element={<HandleRoutes element={<PostsCommentsSettings />} />}
           />
         </Routes>
       </Router>

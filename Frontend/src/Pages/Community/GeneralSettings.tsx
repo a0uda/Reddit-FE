@@ -50,6 +50,7 @@ function GeneralSettings() {
       );
       setWelcomeMessage(data.data.welcome_message.message);
       setNsfw(data.data.nsfw_flag);
+
       if (data.data.type == 'Public') {
         setSelectedOption('Public');
       } else if (data.data.type == 'Restricted') {
