@@ -4010,7 +4010,7 @@ let communityGeneralSettings = [
 
 app.get("/communities/get-general-settings/:communityname", (req, res) => {
   const { communityname } = req.params;
-  console.log(communityname);
+
   const community = communityGeneralSettings.find(
     (community) => community.community_name === communityname
   );
@@ -4022,6 +4022,7 @@ app.get("/communities/get-general-settings/:communityname", (req, res) => {
 });
 app.patch("/communities/change-general-settings/:communityname", (req, res) => {
   const { communityname } = req.params;
+  console.log(communityname);
   const {
     welcome_message,
     description,
@@ -4032,6 +4033,7 @@ app.patch("/communities/change-general-settings/:communityname", (req, res) => {
     accepting_requests_to_join,
     title,
   } = req.body;
+  console.log('approved_users_have_the_ability_to', nsfw_flag);
   const setting = communityGeneralSettings.find(
     (sett) => sett.community_name === communityname
   );
@@ -4046,7 +4048,7 @@ app.patch("/communities/change-general-settings/:communityname", (req, res) => {
     approved_users_have_the_ability_to;
   setting.accepting_new_requests_to_post = accepting_new_requests_to_post;
   setting.accepting_requests_to_join = accepting_requests_to_join;
-  setting.title=title;
+  setting.title = title;
   console.log("new general setting", setting);
   res.sendStatus(200);
 });
