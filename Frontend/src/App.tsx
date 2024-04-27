@@ -26,7 +26,7 @@ function App() {
           <Route path={'/'} element={<Mainfeed />} />
           <Route path={'/:sortOption'} element={<Mainfeed />} />
           <Route
-            path={'/r/:communityName/comments/:id/:title/'}
+            path={'/:prefix/:communityNameOrUsername/comments/:id/:title/'}
             element={<HandleRoutes element={<Post />} />}
           />
           <Route

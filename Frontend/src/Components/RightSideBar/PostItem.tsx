@@ -72,15 +72,17 @@ const PostItem: React.FC<PostItemProps> = (props) => {
               )}
               {!Community && <UserBadge username={props.username} />}
               <p className='font-body font-bold -tracking-tight text-xs text-gray-700 line-clamp-2 overflow-hidden text-ellipsis'>
-                {props.postDescription}
+                {props.postTitle}
               </p>
             </div>
-            <Avatar
-              variant='rounded'
-              alt='candice'
-              src={props.postMediaSrc}
-              style={{ width: '80px', height: '80px' }}
-            />
+            {props.postMediaSrc !== '' && (
+              <Avatar
+                variant='rounded'
+                alt='candice'
+                src={props.postMediaSrc}
+                style={{ width: '80px', height: '80px' }}
+              />
+            )}
           </CardBody>
           <CardFooter
             color='transparent'

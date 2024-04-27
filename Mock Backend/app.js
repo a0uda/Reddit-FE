@@ -2311,11 +2311,11 @@ let historyPosts = {
       type: "image_and_videos",
       link_url: "https://example.com",
       images: [
-        {
-          path: "image1.jpg",
-          caption: "Image 1",
-          link: "https://source.unsplash.com/random",
-        },
+        // {
+        //   path: "image1.jpg",
+        //   caption: "Image 1",
+        //   link: "https://source.unsplash.com/random",
+        // },
       ],
       videos: [
         {
@@ -4042,7 +4042,7 @@ app.patch("/communities/change-general-settings/:communityname", (req, res) => {
     accepting_requests_to_join,
     title,
   } = req.body;
-  console.log('approved_users_have_the_ability_to', nsfw_flag);
+  console.log("approved_users_have_the_ability_to", nsfw_flag);
   const setting = communityGeneralSettings.find(
     (sett) => sett.community_name === communityname
   );
