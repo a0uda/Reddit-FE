@@ -35,6 +35,7 @@ import {
 import eighteenPic from '../../assets/18Pic.svg';
 import useSession from '../../hooks/auth/useSession';
 import RoundedButton from '../RoundedButton';
+import { useAlert } from '../../Providers/AlertProvider';
 
 const LinkPostContainer = (props: { post: PostType }) => {
   return (
@@ -59,8 +60,14 @@ const LinkPostContainer = (props: { post: PostType }) => {
 };
 
 const PollPostContainer = (props: { post: PostType }) => {
-  const [chosenOption, setChosenOption] = useState<string>();
-  const [alreadyVoted, setAlreadyVoted] = useState<boolean>(false);
+  const [chosenOptionId, setChosenOptionId] = useState<string>(
+    props.post.poll_vote
+  );
+  const [alreadyVoted, setAlreadyVoted] = useState<boolean>(
+    !!props.post.poll_vote
+  );
+  const postReq = useMutation(postRequest);
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
 
   return (
     <div>
@@ -83,13 +90,16 @@ const PollPostContainer = (props: { post: PostType }) => {
                 label={
                   poll.options + ' ' + '(Number of votes: ' + poll.votes + ')'
                 }
-                value={poll.options}
-                checked={poll.options == chosenOption}
-                key={poll.options + i}
+                value={poll._id}
+                checked={poll._id == chosenOptionId}
+                key={poll._id}
                 crossOrigin={undefined}
                 onChange={(e) => {
                   console.log(e.target.value);
-                  setChosenOption(e.target.value);
+                  setChosenOptionId(e.target.value);
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
                 }}
                 disabled={alreadyVoted}
               />
@@ -101,7 +111,27 @@ const PollPostContainer = (props: { post: PostType }) => {
             buttonColor='bg-lines-color'
             buttonText='Vote'
             buttonTextColor='text-black'
-            disabled={!chosenOption}
+            disabled={!chosenOptionId || alreadyVoted}
+            onClick={(e) => {
+              e.stopPropagation();
+              postReq.mutate(
+                {
+                  endPoint: 'posts/poll-vote',
+                  data: { id: props.post._id, option_id: chosenOptionId },
+                },
+                {
+                  onSuccess: () => {
+                    setAlreadyVoted(true);
+                  },
+                  onError: () => {
+                    setIsError(true);
+                    setAlreadyVoted(false);
+                    setTrigger(!trigger);
+                    setAlertMessage('Unable to vote!');
+                  },
+                }
+              );
+            }}
           />
           <span>
             {props.post.polls_voting_is_expired_flag

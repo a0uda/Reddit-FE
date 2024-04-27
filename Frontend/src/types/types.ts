@@ -105,6 +105,7 @@ export type PostType = {
   polls?: {
     options: string;
     votes: number;
+    _id: string;
   }[]; // List of poll options with their vote counts
   polls_voting_length: number; // Length of the poll voting period in days
   polls_voting_is_expired_flag: boolean; // If the poll voting has expired
@@ -160,7 +161,7 @@ export type PostType = {
   is_reposted_flag: boolean; // If the post is reposted
   reposted?: { original_post_id: string }; // Reference to the original post
   vote: number;
-  poll_vote: number;
+  poll_vote: string;
 };
 
 // export type PostType = {

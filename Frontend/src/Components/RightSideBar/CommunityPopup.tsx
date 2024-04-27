@@ -113,11 +113,7 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
             </button>
           )}
         </div>
-        <Typography
-          variant='small'
-          color='gray'
-          className='font-norma text-xs relative w-80'
-        >
+        <Typography variant='small' color='gray' className='font-norma text-xs'>
           {props.communityDescription}
         </Typography>
         <footer className='mt-6 flex items-center gap-8 border-t border-blue-gray-50 pt-4'>

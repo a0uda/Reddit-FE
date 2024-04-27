@@ -1,12 +1,12 @@
 import {
   Avatar,
-  // Popover,
-  // PopoverContent,
-  // PopoverHandler,
+  // // Popover,
+  // // PopoverContent,
+  // // PopoverHandler,
   Typography,
 } from '@material-tailwind/react';
-// import CommunityPopup from './RightSideBar/CommunityPopup';
-// import { useState } from 'react';
+// // import CommunityPopup from './RightSideBar/CommunityPopup';
+// // import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CommunityIcon } from '../assets/icons/Icons';
 
@@ -24,16 +24,20 @@ type CommunityBadgeProps = Community;
 
 const CommunityBadge = ({
   name,
-  // joined = false,
+  // // joined = false,
   avatar,
-  // coverImage,
-  // description,
-  // members,
+  // // coverImage,
+  // // description,
+  // // members,
   displayAvatar = true,
 }: CommunityBadgeProps) => {
-  // const [openPopover, setOpenPopover] = useState(false);
-  // console.log(avatar);
+  // // const [openPopover, setOpenPopover] = useState(false);
+  console.log(avatar);
 
+  // const triggers = {
+  //   onMouseEnter: () => setOpenPopover(true),
+  //   onMouseLeave: () => setOpenPopover(false),
+  // };
   // const triggers = {
   //   onMouseEnter: () => setOpenPopover(true),
   //   onMouseLeave: () => setOpenPopover(false),
@@ -67,8 +71,8 @@ const CommunityBadge = ({
           </Link>
         </Typography>
       </div>
-      {/* </PopoverHandler>
-        <PopoverContent
+      {/* </PopoverHandler> */}
+      {/* <PopoverContent
           {...triggers}
           className='z-50 max-w-[24rem] rounded-2xl p-0 transition-all delay-200'
         >
@@ -80,8 +84,8 @@ const CommunityBadge = ({
             communityDescription={description}
             communityMembers={members}
           />
-        </PopoverContent>
-      </Popover> */}
+        </PopoverContent> */}
+      {/* // </Popover> */}
     </>
   );
 };
