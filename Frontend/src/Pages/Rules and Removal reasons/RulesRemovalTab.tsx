@@ -3,6 +3,7 @@ import RoundedButton from '../../Components/RoundedButton';
 import { useParams } from 'react-router-dom';
 import SideBar from '../../Components/SideBar';
 import AddRule from './AddRule';
+import AddRemovalReason from './AddRemovalReason';
 export default function RuleRemoval() {
   const [buttonSelect, setButtonSelect] = useState(0);
   const { community_name } = useParams();
@@ -12,6 +13,11 @@ export default function RuleRemoval() {
     applies_to: '',
     report_reason: '',
     full_description: '',
+  };
+  const initialVal = {
+    community_name: '',
+    removal_reason_title: '',
+    removal_reason: '',
   };
   return (
     <>
@@ -49,28 +55,37 @@ export default function RuleRemoval() {
             </div>
             <div className='float-right mt-2'>
               {buttonSelect == 0 ? (
-                <RoundedButton
-                  buttonBorderColor='text-white'
-                  buttonText='Add rule'
-                  buttonTextColor='text-white font-bold'
-                  buttonColor='bg-blue-light'
-                  onClick={() => setOpenAddRule(true)}
-                />
+                <>
+                  <RoundedButton
+                    buttonBorderColor='text-white'
+                    buttonText='Add rule'
+                    buttonTextColor='text-white font-bold'
+                    buttonColor='bg-blue-light'
+                    onClick={() => setOpenAddRule(true)}
+                  />
+                  <AddRule
+                    open={openAddRule}
+                    handleOpen={() => setOpenAddRule(!openAddRule)}
+                    initialValues={initialValues}
+                  />
+                </>
               ) : (
-                <RoundedButton
-                  buttonBorderColor='text-white'
-                  buttonText='Add removal reason'
-                  buttonTextColor='text-white font-bold'
-                  buttonColor='bg-blue-light'
-                  onClick={() => setOpenAddRule(!openAddRule)}
-                />
+                <>
+                  <RoundedButton
+                    buttonBorderColor='text-white'
+                    buttonText='Add removal reason'
+                    buttonTextColor='text-white font-bold'
+                    buttonColor='bg-blue-light'
+                    onClick={() => setOpenAddRule(!openAddRule)}
+                  />
+                  <AddRemovalReason
+                    open={openAddRule}
+                    handleOpen={() => setOpenAddRule(!openAddRule)}
+                    initialValues={initialVal}
+                  />
+                </>
               )}
             </div>
-            <AddRule
-              open={openAddRule}
-              handleOpen={() => setOpenAddRule(!openAddRule)}
-              initialValues={initialValues}
-            />
 
             <div className='mt-10'>
               {buttonSelect == 0 ? <RuleList /> : null}
@@ -81,15 +96,6 @@ export default function RuleRemoval() {
     </>
   );
 }
-// {
-//   "_id": "6618282ceafa8bfb1c5a6253",
-//   "rule_title": "volutabrum",
-//   "rule_order": 1868276239958016,
-//   "applies_to": "comments_only",
-//   "report_reason": "incidunt",
-//   "full_description": "Cresco supplanto attero tego. Confero apparatus solvo explicabo trucido. Optio consequuntur minus desparatus utrimque.",
-//   "__v": 0
-// },
 
 function RuleList() {
   const rule = [
@@ -107,7 +113,7 @@ function RuleList() {
       _id: '6618282ceafa8bfb1c5a6253',
       rule_title: 'No photos',
       rule_order: 1868276239958016,
-      applies_to: 'comments_only',
+      applies_to: 'commentsonly',
       report_reason: 'incidunt',
       full_description:
         'Cresco supplanto attero tego. Confero apparatus solvo explicabo trucido. Optio consequuntur minus desparatus utrimque.',
@@ -116,7 +122,9 @@ function RuleList() {
   ];
 
   const [openAddRule, setOpenAddRule] = useState(false);
-  const [rulesList] = useState(rule);
+  const [rulesList, setRulesList] = useState(
+    rule.map((item) => ({ ...item, selected: false }))
+  );
   const [initialValues, setInitialValues] = useState({
     rule_title: '',
     applies_to: '',
@@ -127,15 +135,25 @@ function RuleList() {
   const handleSelectRule = (ruleData) => {
     const { rule_title, applies_to, report_reason, full_description } =
       ruleData;
-    console.log(ruleData);
     setInitialValues({
       rule_title,
       applies_to,
       report_reason,
       full_description,
     });
-    console.log(initialValues);
     setOpenAddRule(true);
+  };
+  const handleSelectDetails = (index) => {
+    setRulesList((prevRulesList) => {
+      // Create a copy of the rules list
+      const updatedRulesList = [...prevRulesList];
+      // Toggle the 'selected' property of the rule at the specified index
+      updatedRulesList[index] = {
+        ...updatedRulesList[index],
+        selected: !updatedRulesList[index].selected,
+      };
+      return updatedRulesList;
+    });
   };
   return (
     <>
@@ -160,38 +178,93 @@ function RuleList() {
       ) : (
         <div className='mt-20'>
           {rulesList.map((ruleData, index) => (
-            <div key={index} className='border p-4 flex'>
-              <div className='flex-1'>
-                {index + 1} {ruleData.rule_title}
-              </div>
-              <div
-                className='flex items-center'
-                onClick={() => handleSelectRule(ruleData)}
-              >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  strokeWidth={1.5}
-                  stroke='currentColor'
-                  className='w-6 h-6'
+            <div key={index} className=' flex flex-col'>
+              <div className='flex p-4 border'>
+                <div className='flex-1'>
+                  {index + 1}. {ruleData.rule_title}
+                </div>
+                <div
+                  className='flex items-center cursor-pointer'
+                  onClick={() => handleSelectRule(ruleData)}
                 >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125'
-                  />
-                </svg>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth={1.5}
+                    stroke='currentColor'
+                    className='w-6 h-6'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125'
+                    />
+                  </svg>
+                </div>
+                <div
+                  className='ms-4'
+                  onClick={() => handleSelectDetails(index)}
+                >
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth={1.5}
+                    stroke='currentColor'
+                    className='w-6 h-6'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15'
+                    />
+                  </svg>
+                </div>
+                <AddRule
+                  open={openAddRule}
+                  handleOpen={() => setOpenAddRule(!openAddRule)}
+                  initialValues={initialValues}
+                />
               </div>
-              <AddRule
-                open={openAddRule}
-                handleOpen={() => setOpenAddRule(!openAddRule)}
-                initialValues={initialValues}
-              />
+
+              {ruleData.selected ? (
+                <RuleDetails
+                  applies_to={ruleData.applies_to}
+                  report_reason={ruleData.report_reason}
+                  full_description={ruleData.full_description}
+                />
+              ) : null}
             </div>
           ))}
         </div>
       )}
     </>
+  );
+}
+
+function RuleDetails(props: {
+  applies_to: string;
+  report_reason: string;
+  full_description: string;
+}) {
+  const { applies_to, report_reason, full_description } = props;
+
+  return (
+    <div className='bg-gray-300 text-black p-4 text-xs'>
+      <div>
+        REPORT REASON
+        <div className='text-gray-700'>{report_reason}</div>
+      </div>
+      <div className='mt-2'>
+        APPLIES TO
+        <div className='text-gray-700'>{applies_to}</div>
+      </div>
+
+      <div className='mt-2'>
+        FULL DESCRIPTION
+        <div className='text-gray-700'>{full_description}</div>
+      </div>
+    </div>
   );
 }
