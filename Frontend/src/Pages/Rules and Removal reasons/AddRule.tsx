@@ -3,26 +3,87 @@ import RoundedButton from '../../Components/RoundedButton';
 import { IoMdClose } from 'react-icons/io';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useParams } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { postRequest } from '../../API/User';
+import { useState } from 'react';
 
 interface RuleFormProps {
   handleOpen: () => void;
   open: boolean;
   initialValues: {
+    community_name: string;
     rule_title: string;
     applies_to: string;
     report_reason: string;
     full_description: string;
+    rule_id: string;
   };
+  isEdit?: boolean;
 }
-
+interface valueDataType {
+  community_name: string;
+  rule_title: string;
+  applies_to: string;
+  report_reason: string;
+  full_description: string;
+  rule_id: string;
+}
 export default function AddRule(props: RuleFormProps): JSX.Element {
-  const handleSubmit = (values: unknown) => {
-    console.log('Submitted values:', values);
-    props.handleOpen();
+  const { community_name } = useParams();
+  const [buttonSelect, setButtonSelect] = useState(0);
+
+  const mutationAdd = useMutation(postRequest, {
+    onSuccess: () => {
+      console.log('added reason successfully');
+    },
+    onError: () => {
+      console.log('added reason failed');
+    },
+  });
+
+  const mutationDelete = useMutation(postRequest, {
+    onSuccess: () => {
+      console.log('added reason successfully');
+    },
+    onError: () => {
+      console.log('added reason failed');
+    },
+  });
+
+  const mutationEdit = useMutation(postRequest, {
+    onSuccess: () => {
+      console.log('added reason successfully');
+    },
+    onError: () => {
+      console.log('added reason failed');
+    },
+  });
+
+  const handleOnSubmit = (values: valueDataType) => {
+    if (buttonSelect == 0) {
+      mutationAdd.mutate({
+        endPoint: 'communities/add-rule',
+        data: values,
+      });
+    } else if (buttonSelect == 1) {
+      mutationDelete.mutate({
+        endPoint: 'communities/delete-rule',
+        data: {
+          community_name: values.community_name,
+          rule_id: values.rule_id,
+        },
+      });
+    } else if (buttonSelect == 2) {
+      mutationEdit.mutate({
+        endPoint: 'communities/edit-rule',
+        data: values,
+      });
+    }
   };
 
   return (
-    <Dialog size='sm' open={props.open}>
+    <Dialog size='sm' open={props.open} handler={undefined}>
       <DialogHeader className='!block relative flex justify-between'>
         <div className='block relative border-b border-lines-color flex justify-between'>
           <h2 className='text-left'>Add rule</h2>
@@ -35,12 +96,21 @@ export default function AddRule(props: RuleFormProps): JSX.Element {
         <Formik
           initialValues={props.initialValues}
           validationSchema={Yup.object({
+            community_name: Yup.string(),
             rule_title: Yup.string().required('Rule is required'),
             applies_to: Yup.string().required('Applies to is required'),
             report_reason: Yup.string(),
             full_description: Yup.string().required('Description is required'),
           })}
-          onSubmit={handleSubmit}
+          onSubmit={(values, { setSubmitting }) => {
+            if (community_name) {
+              values.community_name = community_name;
+            }
+            console.log('Submitted values:', values);
+            handleOnSubmit(values);
+            setSubmitting(false);
+            props.handleOpen();
+          }}
         >
           {(formik) => (
             <Form className='w-full' onSubmit={formik.handleSubmit}>
@@ -134,21 +204,44 @@ export default function AddRule(props: RuleFormProps): JSX.Element {
                 />
               </div>
               <DialogFooter className='bg-gray-200 rounded space-x-2'>
+                {props.isEdit ? (
+                  <RoundedButton
+                    type='submit'
+                    buttonBorderColor='border-gray-200'
+                    buttonText='Delete'
+                    buttonTextColor='text-red-muted font-bold'
+                    buttonColor='bg-gray-200 '
+                    onClick={() => setButtonSelect(1)}
+                  />
+                ) : null}
+                <div className='flex-grow'></div>
                 <RoundedButton
                   type='button'
-                  buttonBorderColor='border-white'
-                  buttonText='cancel'
-                  buttonTextColor='text-blue-light'
+                  buttonBorderColor='border-blue-light'
+                  buttonText='Cancel'
+                  buttonTextColor='text-blue-light font-bold'
                   buttonColor='bg-gray-200 '
                   onClick={props.handleOpen}
                 />
-                <RoundedButton
-                  type='submit'
-                  buttonBorderColor='border-white'
-                  buttonText='Add new rule'
-                  buttonTextColor='text-blue-light'
-                  buttonColor='bg-gray-200 '
-                />
+                {props.isEdit ? (
+                  <RoundedButton
+                    type='submit'
+                    buttonBorderColor='border-white'
+                    buttonText='Save'
+                    buttonTextColor='text-white font-bold'
+                    buttonColor='bg-blue-light '
+                    onClick={() => setButtonSelect(2)}
+                  />
+                ) : (
+                  <RoundedButton
+                    type='submit'
+                    buttonBorderColor='border-white'
+                    buttonText='Add new rule'
+                    buttonTextColor='text-white font-bold'
+                    buttonColor='bg-blue-light'
+                    onClick={() => setButtonSelect(0)}
+                  />
+                )}
               </DialogFooter>
             </Form>
           )}

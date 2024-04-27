@@ -3,8 +3,9 @@ import RoundedButton from '../../Components/RoundedButton';
 import { IoMdClose } from 'react-icons/io';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { postRequest } from '../../API/User';
 
 interface RuleFormProps {
   handleOpen: () => void;
@@ -12,27 +13,30 @@ interface RuleFormProps {
   initialValues: {
     community_name: string;
     removal_reason_title: string;
-    removal_reason: string;
+    reason_message: string;
+    removal_reason_id: string;
   };
+  removal_reason_id?: string;
 }
 
+// communities/add-rule
 export default function AddRemovalReason(props: RuleFormProps): JSX.Element {
-  const [formInitialValues, setFormInitialValues] = useState(
-    props.initialValues
-  );
   const { community_name } = useParams();
 
-  useEffect(() => {
-    setFormInitialValues((prevInitialValues) => ({
-      ...prevInitialValues,
-      community_name: community_name ? community_name.toString() : '',
-    }));
-  }, [community_name]);
+  const mutation = useMutation(postRequest, {
+    onSuccess: () => {
+      console.log('added reason successfully');
+    },
+    onError: () => {
+      console.log('added reason failed');
+    },
+  });
 
-  const handleSubmit = (values: unknown) => {
-    alert('Form submitted successfully!');
-    console.log('Submitted values:', values);
-    props.handleOpen();
+  const handleOnSubmit = (values: object) => {
+    mutation.mutate({
+      endPoint: 'communities/add-removal-reason',
+      data: values,
+    });
   };
 
   return (
@@ -47,15 +51,20 @@ export default function AddRemovalReason(props: RuleFormProps): JSX.Element {
       </DialogHeader>
       <div className='flex flex-col md:flex-row gap-2'>
         <Formik
-          initialValues={formInitialValues}
+          initialValues={props.initialValues}
           validationSchema={Yup.object({
-            community_name: Yup.string().required('Community is required'),
+            community_name: Yup.string(),
             removal_reason_title: Yup.string().required(
               'Reason title is required'
             ),
             removal_reason: Yup.string().required('Reason is required'),
           })}
-          onSubmit={handleSubmit}
+          onSubmit={(values) => {
+            values.community_name = community_name;
+            console.log('Submitted values:', values);
+            handleOnSubmit(values);
+            props.handleOpen();
+          }}
         >
           {(formik) => (
             <Form className='w-full' onSubmit={formik.handleSubmit}>
@@ -84,14 +93,14 @@ export default function AddRemovalReason(props: RuleFormProps): JSX.Element {
                 </label>
                 <Field
                   as='textarea'
-                  name='removal_reason'
+                  name='reason_message'
                   className='form-input mt-1 block w-full border p-2 pb-10 rounded text-black'
                   placeholder='Write a message that will communicate to the user why their post was removed.'
                 />
                 <div className='text-gray-400 text-xs mt-1'>
-                  {formik.values.removal_reason.length > 1000
+                  {formik.values.reason_message.length > 1000
                     ? `0 Characters remaining`
-                    : `${1000 - formik.values.removal_reason.length} Characters remaining`}
+                    : `${1000 - formik.values.reason_message.length} Characters remaining`}
                 </div>
                 <ErrorMessage
                   name='removal_reason'
