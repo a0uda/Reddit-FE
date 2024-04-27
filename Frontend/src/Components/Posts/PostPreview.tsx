@@ -725,8 +725,8 @@ const PostPreview = ({
                 members={community?.members_count}
                 // online={Community.communityOnline}
                 username={post.username}
-                // page={page}
-                page='home'
+                page={page}
+                // page='home'
               />
             )}
             {!community && <UserBadge username={post.username} />}

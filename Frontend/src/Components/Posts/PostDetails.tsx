@@ -83,7 +83,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 >
                   <ArrowLeftIcon className='h-6 w-6 fill-black' />
                 </IconButton>
-                {post.avatar ? (
+                {/* {post.avatar ? (
                   <Avatar
                     variant='circular'
                     alt={post.community_name}
@@ -92,7 +92,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                   />
                 ) : (
                   <CommunityIcon className='h-5 w-5' />
-                )}
+                )} */}
                 <div className='flex flex-col justify-between m-0'>
                   <div className='flex flex-row items-center justify-between gap-1 m-0'>
                     {/* <CommunityBadge
@@ -114,7 +114,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                         // online={Community.communityOnline}
                         username={post.username}
                         // page={page}
-                        page='home'
+                        page='post'
                       />
                     )}
                     {!community && <UserBadge username={post.username} />}

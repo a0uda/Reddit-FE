@@ -10,7 +10,7 @@ import { PostType } from '../types/types';
 
 const Post = () => {
   const { id: postId } = useParams();
-  console.log('reem testing', postId);
+  const { prefix } = useParams();
 
   // const [community, setCommunity] = useState<PostType | undefined>();
   const [post, setPost] = useState<PostType | undefined>();
@@ -32,7 +32,9 @@ const Post = () => {
                 <PostDetails post={post} />
               </ContentLayout.Main>
               <ContentLayout.RightSideBar>
-                <CommunityRSB name={post.community_name} />
+                {prefix === '/r' && post.community_name && (
+                  <CommunityRSB name={post.community_name} />
+                )}
               </ContentLayout.RightSideBar>
             </>
           )}
