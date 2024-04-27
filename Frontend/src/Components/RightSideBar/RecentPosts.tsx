@@ -10,7 +10,7 @@ export function RecentPosts() {
   const [isContentVisible, setContentVisible] = useState(true);
 
   const { data } = useQuery('recent posts data', () =>
-    fetchRequest('listing/posts/best')
+    fetchRequest('users/history-posts')
   );
   console.log(data);
 
