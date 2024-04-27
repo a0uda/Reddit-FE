@@ -38,6 +38,9 @@ const PostItem: React.FC<PostItemProps> = (props) => {
     // },
   });
   const [Community, setCommunity] = useState<CommunityType | undefined>();
+  const link = Community
+    ? `/r/${props.communityName}/comments/${props.postId}/${props.postTitle.split(' ').splice(0, 10).join('_')}/`
+    : `/user/${props.username}/comments/${props.postId}/${props.postTitle.split(' ').splice(0, 10).join('_')}/`;
 
   return (
     <div>
@@ -46,10 +49,7 @@ const PostItem: React.FC<PostItemProps> = (props) => {
         shadow={false}
         className='w-full max-w-[26rem] px-4'
       >
-        <Link
-          to={`/r/${props.communityName}/comments/${props.postId}/${props.postTitle.split(' ').splice(0, 10).join('_')}/`}
-          reloadDocument
-        >
+        <Link to={link} reloadDocument>
           <CardBody
             color='transparent'
             className='mx-0 flex justify-between items-start gap-4 pt-0 pb-2 p-0 m-0'

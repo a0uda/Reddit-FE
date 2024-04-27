@@ -17,6 +17,7 @@ import {
   getTimeDifferenceAsString,
 } from '../../utils/helper_functions';
 import CommunityBadge from '../CommunityBadge';
+import UserBadge from '../UserBadge';
 import shieldPic from '../../assets/shieldPic.svg';
 import InteractionButtons from './InteractionButtons';
 import { CommunityType, PostType } from '../../types/types';
@@ -229,13 +230,23 @@ const PostPreview = ({ post }: { post: PostType }) => {
     });
   };
 
+  // const { isLoading, isError } = useQuery({
+  //   queryKey: ['communities', props.communityName],
+  //   queryFn: () =>
+  //     fetchRequest(`communities/get-community-view/${props.communityName}/`),
+  //   onSuccess: (data) => {
+  //     setCommunity(data.data);
+  //   },
+
+  const link = community
+    ? `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+    : `/user/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`;
+
   return (
     <div
       className='relative'
       onClick={() => {
-        navigate(
-          `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
-        );
+        navigate(link);
       }}
     >
       {/* <Link
@@ -253,7 +264,7 @@ const PostPreview = ({ post }: { post: PostType }) => {
           className='flex flex-row items-center justify-between gap-2 m-0 bg-inherit'
         >
           <div className='flex flex-row items-center justify-between gap-1 m-0'>
-            <CommunityBadge
+            {/* <CommunityBadge
               name={
                 addPrefixToUsername(post.community_name || '', 'moderator') ||
                 addPrefixToUsername(post.username, 'user') ||
@@ -264,7 +275,22 @@ const PostPreview = ({ post }: { post: PostType }) => {
               coverImage={community?.banner_picture}
               members={community?.members_count}
               description={community?.description}
-            />
+            /> */}
+            {community && (
+              <CommunityBadge
+                name={post.community_name ?? ''}
+                joined={community?.joined_flag}
+                avatar={community?.profile_picture}
+                coverImage={community?.banner_picture}
+                description={community?.description}
+                members={community?.members_count}
+                // online={Community.communityOnline}
+                username={post.username}
+                // page={page}
+                page='home'
+              />
+            )}
+            {!community && <UserBadge username={post.username} />}
             <span className='relative -top-0.5'>•</span>
             <Typography variant='small' className=''>
               {dateDuration(new Date(post.created_at))}
