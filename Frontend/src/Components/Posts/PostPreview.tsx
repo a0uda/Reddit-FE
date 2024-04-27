@@ -444,7 +444,7 @@ const PostPreview = ({
 }: {
   post: PostType;
   page: 'profile' | 'home' | 'community';
-  isMyPost: boolean;
+  isMyPost?: boolean;
 }) => {
   // TODO Fetch Community
   // const [community, setCommunity] = useState<CommunityType | undefined>();

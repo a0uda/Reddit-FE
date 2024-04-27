@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const baseUrl = process.env.VITE_BASE_URL;
-// const baseUrl = 'http://localhost:4000/';
 
 //const baseUrl = String(process.env.VITE_BASE_URL);
 console.log('baseUrl ', baseUrl);

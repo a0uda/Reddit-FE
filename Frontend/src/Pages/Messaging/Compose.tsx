@@ -5,6 +5,7 @@ import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, postRequest } from '../../API/User';
 import { addPrefixToUsername } from '../../utils/helper_functions';
 import useSession from '../../hooks/auth/useSession';
+import { CommunityOverviewType } from '../../types/types';
 
 const Compose = () => {
   const { user } = useSession();
@@ -61,7 +62,7 @@ const Compose = () => {
       return;
     }
     const moderatedCommunityNames = getCommResponse.data?.data.map(
-      (com) => com.name
+      (com: CommunityOverviewType) => com.name
     );
     console.log(moderatedCommunityNames, 'mmmmm');
     const senderType = moderatedCommunityNames.includes(from)
