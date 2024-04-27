@@ -690,11 +690,6 @@ const PostPreview = ({
         );
       }}
     >
-      {/* <Link
-        to={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
-        reloadDocument
-        // className='absolute inset-0'
-      > */}
       <Card
         className='relative w-full px-4 py-2 hover:bg-neutral-200'
         shadow={false}
@@ -722,7 +717,11 @@ const PostPreview = ({
               {dateDuration(new Date(post.created_at))}
             </Typography>
           </div>
-          <div>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
             <PostOptions
               saved={post.saved}
               NSFW={post.nsfw_flag}
@@ -1043,7 +1042,6 @@ const PostPreview = ({
           </div>
         </CardBody>
       </Card>
-      {/* </Link> */}
     </div>
   );
 };
