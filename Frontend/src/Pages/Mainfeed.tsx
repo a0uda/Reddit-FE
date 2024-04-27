@@ -2,10 +2,8 @@ import { PopularCommunities } from '../Components/RightSideBar/PopularCommunitie
 import { RecentPosts } from '../Components/RightSideBar/RecentPosts';
 import PostsListings from '../Components/Posts/PostsListings';
 import ContentLayout from '../Components/ContentLayout';
-import useSession from '../hooks/auth/useSession';
 
 const Mainfeed = () => {
-  const { status } = useSession();
   return (
     <>
       <ContentLayout>
@@ -13,11 +11,8 @@ const Mainfeed = () => {
           <PostsListings />
         </ContentLayout.Main>
         <ContentLayout.RightSideBar>
-          {status === 'authenticated' ? (
-            <RecentPosts />
-          ) : (
-            <PopularCommunities />
-          )}
+          <RecentPosts />
+          <PopularCommunities />
         </ContentLayout.RightSideBar>
       </ContentLayout>
     </>
