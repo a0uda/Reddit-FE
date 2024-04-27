@@ -1,13 +1,13 @@
 import { useQuery } from 'react-query';
 import SortOptions from '../SortOptions';
 import { fetchRequest } from '../../API/User';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { PostType } from '../../types/types';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { CommunityOverviewType, PostType } from '../../types/types';
 import { useNavigate, useParams } from 'react-router-dom';
 import { capitalizeString } from '../../utils/helper_functions';
 import LoadingProvider from '../LoadingProvider';
-import PostPreview from './PostPreview';
 import useSession from '../../hooks/auth/useSession';
+import PostComponent from './PostComponent';
 
 const PostsListings = () => {
   const { sortOption: initialSortOption } = useParams();
@@ -55,8 +55,16 @@ const PostsListings = () => {
     },
   });
 
-  console.log('posts', posts);
-  // console.log('response', response);
+  let moderatedCommunityNames: string[] = [];
+  useQuery({
+    queryKey: ['getModeratedCommunities'],
+    queryFn: async () => await fetchRequest('users/moderated-communities'),
+    onSuccess: (data) => {
+      moderatedCommunityNames = data?.data.map(
+        (com: CommunityOverviewType) => com.name
+      );
+    },
+  });
 
   const observer = useRef<IntersectionObserver | null>(null);
   const lastPostElementRef = useCallback(
@@ -74,53 +82,6 @@ const PostsListings = () => {
     [response.isLoading, noMorePosts]
   );
 
-  const PostComponent = React.memo(
-    ({
-      post,
-      index,
-      lastPostElementRef,
-    }: {
-      post: PostType;
-      index: number;
-      lastPostElementRef: HTMLDivElement | null;
-    }) => (
-      <>
-        <div ref={lastPostElementRef} key={post._id}>
-          {posts.length === index + 1 ? (
-            <div>
-              <hr className='border-neutral-muted' />
-              <PostPreview
-                post={post}
-                page='home'
-                // isMyPost={
-                //   post.username == user?.username ||
-                //   moderatedCommunityNames?.includes(
-                //     post.community_name || ''
-                //   )
-                // }
-              />
-            </div>
-          ) : (
-            <div>
-              <hr className='border-neutral-muted' />
-              <PostPreview
-                post={post}
-                page='home'
-                // isMyPost={
-                //   post.username == user?.username ||
-                //   moderatedCommunityNames?.includes(
-                //     post.community_name || ''
-                //   )
-                // }
-              />
-            </div>
-          )}
-        </div>
-      </>
-    )
-  );
-  PostComponent.displayName = 'PostComponent';
-
   return (
     <>
       {/* Sort by dropdown */}
@@ -130,19 +91,25 @@ const PostsListings = () => {
         setSortOption={setSortOption}
       />
       <hr className='border-neutral-muted' />
+      <PostComponent
+        posts={posts}
+        lastPostElementRef={lastPostElementRef}
+        user={user}
+        moderatedCommunityNames={moderatedCommunityNames}
+      />
       <LoadingProvider error={response.isError} isLoading={response.isLoading}>
-        {response.isSuccess && (
+        {response.isError ? (
+          <div className='text-center text-red-500'>Error fetching data</div>
+        ) : null}
+        {response.isLoading ? (
+          <div className='text-center'>Loading...</div>
+        ) : null}
+        {noMorePosts ? (
           <>
-            {posts.map((post: PostType, index: number) => (
-              <PostComponent
-                post={post}
-                index={index}
-                lastPostElementRef={lastPostElementRef}
-                key={post._id}
-              />
-            ))}
+            <hr className='border-neutral-muted' />
+            <div className='text-center my-5'>No more posts to show</div>
           </>
-        )}
+        ) : null}
       </LoadingProvider>
     </>
   );

@@ -408,3 +408,11 @@ export type CommunityType = {
   joined_flag: boolean;
   title: string;
 };
+
+export type CommunityOverviewType = {
+  id: string;
+  name: string;
+  profile_picture: string;
+  favorite_flag: boolean;
+  members_count: number;
+};
