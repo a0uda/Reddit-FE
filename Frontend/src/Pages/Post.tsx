@@ -32,9 +32,7 @@ const Post = () => {
                 <PostDetails post={post} />
               </ContentLayout.Main>
               <ContentLayout.RightSideBar>
-                {prefix === '/r' && post.community_name && (
-                  <CommunityRSB name={post.community_name} />
-                )}
+                {prefix == 'r' && <CommunityRSB name={post.community_name} />}
               </ContentLayout.RightSideBar>
             </>
           )}

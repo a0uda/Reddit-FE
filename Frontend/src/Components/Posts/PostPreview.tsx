@@ -479,6 +479,9 @@ const PostPreview = ({
 }) => {
   // TODO Fetch Community
   const [community, setCommunity] = useState<CommunityType | undefined>();
+  const [link, setLink] = useState<string>(
+    `/user/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+  );
   const [viewSpoiler, setViewSpoiler] = useState<boolean>(
     post.spoiler_flag ||
       ((post.description?.length || 0) > 0 &&
@@ -506,6 +509,9 @@ const PostPreview = ({
       const community: CommunityType = data.data;
       console.log(community);
       setCommunity(community);
+      setLink(
+        `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+      );
     },
   });
 
@@ -682,9 +688,9 @@ const PostPreview = ({
     });
   };
 
-  const link = community
-    ? `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
-    : `/user/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`;
+  // const link = community
+  //   ? `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+  //   : `/user/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`;
 
   return (
     <div
