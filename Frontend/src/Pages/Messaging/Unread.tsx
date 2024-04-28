@@ -15,7 +15,7 @@ const Sent = () => {
       <ContentContainer length={data?.data.length}>
         <div className=''>
           {!!data?.data &&
-            data?.data.map((mess) => (
+            data?.data.messages.map((mess) => (
               <Message
                 unread={mess['unread_flag']}
                 type='received'
