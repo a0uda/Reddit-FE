@@ -636,7 +636,7 @@ let communities = [
     welcome_message: "",
     type: "Private",
     nsfw_flag: false,
-    members_count: 5000,
+    members_count: 1500,
     profile_picture:
       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
     banner_picture:
@@ -1523,7 +1523,7 @@ let postsListings = [
     polls_voting_is_expired_flag: false,
     post_in_community_flag: true,
     community_id: "8",
-    community_name: "Community B",
+    community_name: "sports",
     comments_count: 2,
     comments_ids: [16, 13],
     followers_ids: [],

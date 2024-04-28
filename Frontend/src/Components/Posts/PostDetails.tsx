@@ -106,7 +106,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                         // online={Community.communityOnline}
                         username={post.username}
                         // page={page}
-                        page='home'
+                        page='post'
                       />
                     )}
                     {!community && <UserBadge username={post.username} />}

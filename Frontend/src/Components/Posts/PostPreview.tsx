@@ -41,6 +41,9 @@ import RoundedButton from '../RoundedButton';
 const PostPreview = ({ post }: { post: PostType }) => {
   // TODO Fetch Community
   const [community, setCommunity] = useState<CommunityType | undefined>();
+  const [link, setLink] = useState<string>(
+    `/user/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+  );
   const [moderatedCommunities, setModeratedCommunities] = useState<[string]>();
   const [viewSpoiler, setViewSpoiler] = useState<boolean>(post.spoiler_flag);
   const [isMyPost, setIsMyPost] = useState<boolean>();
@@ -57,6 +60,9 @@ const PostPreview = ({ post }: { post: PostType }) => {
       const community: CommunityType = data.data;
       console.log(community);
       setCommunity(community);
+      setLink(
+        `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+      );
     },
   });
   useQuery({
@@ -238,9 +244,9 @@ const PostPreview = ({ post }: { post: PostType }) => {
   //     setCommunity(data.data);
   //   },
 
-  const link = community
-    ? `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
-    : `/user/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`;
+  // const link = community
+  //   ? `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+  //   : `/user/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`;
 
   return (
     <div
