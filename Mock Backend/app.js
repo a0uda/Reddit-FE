@@ -2884,6 +2884,41 @@ app.post("/posts-or-comments/delete", (req, res) => {
   res.sendStatus(200);
 });
 
+app.get("/search", (req, res) => {
+  const { q, type, sort } = req.query;
+  console.log(q, type, sort);
+
+  if (type === "link") {
+    // posts
+    res.status(200).json({
+      success: true,
+      status: 200,
+      content: postsListings,
+    });
+  } else if (type === "sr") {
+    // communities
+    res.status(200).json({
+      success: true,
+      status: 200,
+      content: communitiesPost,
+    });
+  } else if (type === "comment") {
+    // comments
+    res.status(200).json({
+      success: true,
+      status: 200,
+      content: comments,
+    });
+  } else if (type === "user") {
+    // users
+    res.status(200).json({
+      success: true,
+      status: 200,
+      content: users,
+    });
+  }
+});
+
 // app.post("/comments/reply", (req, res) => {
 //   const { id, description } = req.body;
 //   console.log(req.body);
@@ -4101,7 +4136,6 @@ app.post("/comments/reply", (req, res) => {
   const commentId = crypto.randomUUID();
   const updatedComments = comments.content.map((comment) => {
     if (comment._id === id) {
-      
       return {
         ...comment,
         replies_comments_ids: comment.replies_comments_ids.concat({
@@ -4149,10 +4183,9 @@ app.post("/comments/reply", (req, res) => {
         }),
       };
     }
-    return comment; 
+    return comment;
   });
 
-  
   comments.content = updatedComments;
 
   console.log(comments.content);
