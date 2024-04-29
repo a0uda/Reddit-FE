@@ -9,6 +9,7 @@ import { useAlert } from '../../Providers/AlertProvider';
 import { Radio, Typography } from '@material-tailwind/react';
 import { UserIcon, EyeIcon, LockClosedIcon } from '@heroicons/react/24/solid';
 import DropDownButton from '../UserSettings/Containers/DropDownButton';
+import LoadingProvider from '../../Components/LoadingProvider';
 
 function GeneralSettings() {
   const [communityName, setCommunityName] = useState('reem');
@@ -39,11 +40,12 @@ function GeneralSettings() {
     }
   };
 
-  const { data, error, isLoading, refetch } = useQuery('general settings', () =>
-    fetchRequest('communities/get-general-settings/reem')
+  const { data, isError, isLoading, refetch } = useQuery(
+    'general settings',
+    () => fetchRequest('communities/get-general-settings/reem')
   );
   useEffect(() => {
-    if (data) {
+    if (data?.data) {
       setCommunityDescription(data.data.description);
       setSendWelcomeMessage(
         data.data.welcome_message.send_welcome_message_flag
@@ -96,8 +98,21 @@ function GeneralSettings() {
     });
   };
 
+  ///character length validation
+  const maxCommunityNameLength = 100;
+  const remainingCommunityNameCharacters =
+    maxCommunityNameLength - communityTitle.length;
+
+  const maxCommunityDescriptionLength = 500;
+  const remainingCommunityDescriptionCharacters =
+    maxCommunityDescriptionLength - communityDescription.length;
+
+  const maxWelcomeMessageLength = 5000;
+  const remainingWelcomeMessageCharacters =
+    maxWelcomeMessageLength - welcomeMessage.length;
+
   return (
-    <>
+    <LoadingProvider error={isError} isLoading={isLoading}>
       <div className='flex justify-end my-4'>
         <RoundedButton
           buttonText='Save changes'
@@ -118,6 +133,9 @@ function GeneralSettings() {
             onChange={(e) => setCommunityTitle(e.target.value)}
           />
         </Card>
+        <div className='text-sm text-gray-500'>
+          {remainingCommunityNameCharacters} characters remaining
+        </div>
         <Card
           title='Community description'
           description='This is how new members come to understand your community.'
@@ -130,6 +148,9 @@ function GeneralSettings() {
             onChange={(e) => setCommunityDescription(e.target.value)}
           />
         </Card>
+        <div className='text-sm text-gray-500'>
+          {remainingCommunityDescriptionCharacters} characters remaining
+        </div>
         <Card
           title='Send welcome message to new members'
           description='Create a custom welcome message to greet people the instant they join your community. New community members will see this in a direct message 1 hour after joining.'
@@ -140,17 +161,22 @@ function GeneralSettings() {
           />
         </Card>
         {sendWelcomeMessage && (
-          <Card title='' description=''>
-            <input
-              value={welcomeMessage}
-              placeholder="Welcome to our community! We're here to discuss our passion for all things
+          <>
+            <Card title='' description=''>
+              <input
+                value={welcomeMessage}
+                placeholder="Welcome to our community! We're here to discuss our passion for all things
              related to grated cheese. Heads up-we're a text-only community, so sorry no image posts. 
              get started by introducing yourself in our post fro newbies, then check out our rules 
              to learn more and dive in"
-              className='!border border-[#EDEFF1] rounded bg-white text-gray-900 ring-4 ring-transparent placeholder:text-gray-500 w-full p-2 pt-3'
-              onChange={(e) => setWelcomeMessage(e.target.value)}
-            />
-          </Card>
+                className='!border border-[#EDEFF1] rounded bg-white text-gray-900 ring-4 ring-transparent placeholder:text-gray-500 w-full p-2 pt-3'
+                onChange={(e) => setWelcomeMessage(e.target.value)}
+              />
+            </Card>
+            <div className='text-sm text-gray-500'>
+              {remainingWelcomeMessageCharacters} characters remaining
+            </div>
+          </>
         )}
       </Section>
       <Section sectionTitle='Community Type'>
@@ -280,7 +306,7 @@ function GeneralSettings() {
           </Card>
         </Section>
       )}
-    </>
+    </LoadingProvider>
   );
 }
 

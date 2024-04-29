@@ -7,6 +7,7 @@ import Card from '../UserSettings/Containers/Card';
 import SwitchButton from '../../Components/SwitchButton';
 import DropDownButton from '../UserSettings/Containers/DropDownButton';
 import { useEffect, useState } from 'react';
+import LoadingProvider from '../../Components/LoadingProvider';
 
 function PostsCommentsSettings() {
   const [crossPost, setCrossPost] = useState(false);
@@ -27,7 +28,7 @@ function PostsCommentsSettings() {
   const [collapse, setCollpase] = useState(false);
   const [commentScores, setCommentScores] = useState(0);
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
-  const { data, error, isLoading, refetch } = useQuery(
+  const { data, isError, isLoading, refetch } = useQuery(
     'posts comments settings',
     () => fetchRequest('communities/get-posts-and-comments/reem')
   );
@@ -100,7 +101,7 @@ function PostsCommentsSettings() {
     });
   };
   return (
-    <>
+    <LoadingProvider error={isError} isLoading={isLoading}>
       <div className='flex justify-end my-4'>
         <RoundedButton
           buttonText='Save changes'
@@ -227,6 +228,7 @@ function PostsCommentsSettings() {
         <Card title='' description=''>
           <input
             type='number'
+            min={1}
             value={commentScores}
             onChange={(e) => setCommentScores(parseInt(e.target.value))}
             className='appearance-none w-36  h-11 px-3 py-1 text-left text-gray-900 bg-white border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent'
@@ -268,7 +270,7 @@ function PostsCommentsSettings() {
           <SwitchButton checked={gifs} onChange={(value) => setGifs(value)} />
         </Card>
       </Section>
-    </>
+    </LoadingProvider>
   );
 }
 

@@ -3955,7 +3955,7 @@ let communityGeneralSettings = [
   {
     community_name: "reem",
     welcome_message: {
-      send_welcome_message_flag: false,
+      send_welcome_message_flag: true,
       message:
         "Welcome to our community! We're excited to have you join us. Feel free to explore the discussions and share your thoughts.",
     },
@@ -3964,9 +3964,9 @@ let communityGeneralSettings = [
     description:
       "Are you passionate about all things cheese? Join our community to discuss your favorite cheeses, recipes, and more!",
     type: "Public",
-    nsfw_flag: false,
+    nsfw_flag: true,
     approved_users_have_the_ability_to: "Post Only (Default)",
-    accepting_new_requests_to_post: false,
+    accepting_new_requests_to_post: true,
     accepting_requests_to_join: true,
     __v: 0,
   },
@@ -4033,7 +4033,7 @@ app.patch("/communities/change-general-settings/:communityname", (req, res) => {
     accepting_requests_to_join,
     title,
   } = req.body;
-  console.log('approved_users_have_the_ability_to', nsfw_flag);
+  console.log("approved_users_have_the_ability_to", nsfw_flag);
   const setting = communityGeneralSettings.find(
     (sett) => sett.community_name === communityname
   );
@@ -4051,4 +4051,116 @@ app.patch("/communities/change-general-settings/:communityname", (req, res) => {
   setting.title = title;
   console.log("new general setting", setting);
   res.sendStatus(200);
+});
+
+let postandcommentsettings = [
+  {
+    community_name: "reem",
+    posts: {
+      spam_filter_strength: {
+        posts: "High (default)",
+        links: "All",
+        comments: "High",
+      },
+      post_type_options: "Text Posts Only",
+      allow_crossposting_of_posts: false,
+      archive_posts: true,
+      enable_spoiler_tag: false,
+      allow_image_uploads_and_links_to_image_hosting_sites: true,
+      allow_multiple_images_per_post: true,
+      allow_polls: false,
+      allow_videos: false,
+    },
+    comments: {
+      media_in_comments: {
+        gifs_from_giphy: false,
+        collectible_expressions: true,
+        images: true,
+        gifs: false,
+      },
+      suggested_sort: "Best",
+      collapse_deleted_and_removed_comments: false,
+      minutes_to_hide_comment_scores: 59,
+    },
+    _id: "661d40f3481ae66a900fb942",
+    __v: 0,
+  },
+];
+
+app.get("/communities/get-posts-and-comments/:communityname", (req, res) => {
+  const { communityname } = req.params;
+
+  const community = postandcommentsettings.find(
+    (community) => community.community_name === communityname
+  );
+  if (community) {
+    res.status(200).json(community);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+app.patch(
+  "/communities/change-posts-and-comments/:communityname",
+  (req, res) => {
+    const { communityname } = req.params;
+    console.log(communityname);
+    console.log("patch", req.body);
+  }
+);
+
+let contentcontrols = [
+  {
+    community_name: "reem",
+    providing_members_with_posting_guidlines: {
+      flag: true,
+      guidline_text: "",
+    },
+    require_words_in_post_title: {
+      flag: true,
+      add_required_words: [
+        "adaugeo",
+        "expedita",
+        "utilis",
+        "adfero",
+        "amaritudo",
+      ],
+    },
+    ban_words_from_post_title: {
+      flag: true,
+      add_banned_words: ["tero", "spiculum", "advenio", "decumbo", "eum"],
+    },
+    ban_words_from_post_body: {
+      flag: true,
+      add_banned_words: ["abutor", "clibanus", "atque", "arx", "ultra"],
+    },
+    require_or_ban_links_from_specific_domains: {
+      flag: false,
+      restriction_type: "Required domains",
+      require_or_block_link_posts_with_these_domains: ["reem"],
+    },
+    restrict_how_often_the_same_link_can_be_posted: {
+      flag: false,
+      number_of_days: 0,
+    },
+    _id: "661d40f3481ae66a900fb92d",
+    __v: 0,
+  },
+];
+app.get("/communities/get-content-controls/:communityname", (req, res) => {
+  //console.log("weslt");
+  const { communityname } = req.params;
+
+  const community = contentcontrols.find(
+    (community) => community.community_name === communityname
+  );
+  if (community) {
+    res.status(200).json(community);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+app.patch("/communities/change-content-controls/:communityname", (req, res) => {
+  const { communityname } = req.params;
+  console.log(communityname);
+  console.log("patch content", req.body);
 });

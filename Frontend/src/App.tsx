@@ -12,6 +12,7 @@ import User from './Pages/User/User.tsx';
 import CreatePost from './Pages/createPost/CreatePost.tsx';
 import GeneralSettings from './Pages/Community/GeneralSettings.tsx';
 import PostsCommentsSettings from './Pages/Community/PostsCommentsSettings.tsx';
+import ContentControls from './Pages/Community/ContentControls.tsx';
 
 function App() {
   const { status } = useSession();
@@ -56,6 +57,10 @@ function App() {
           <Route
             path='/postcommentsettings'
             element={<HandleRoutes element={<PostsCommentsSettings />} />}
+          />
+          <Route
+            path='/contentcontrol'
+            element={<HandleRoutes element={<ContentControls />} />}
           />
         </Routes>
       </Router>
