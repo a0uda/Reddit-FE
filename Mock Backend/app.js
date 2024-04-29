@@ -18,11 +18,24 @@ const getAuthUsername = (req) => {
   return username;
 };
 
-app.use(
-  cors({
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Add PATCH method here
-  })
-);
+const whitelist = ['http://localhost:5174', 'http://localhost:5173'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+};
+
+app.use(cors(corsOptions));
+
+// app.use(
+//   cors({
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Add PATCH method here
+//   })
+// );
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -1359,38 +1372,38 @@ let postsListings = [
       { "options": "Option 1", "votes": 10 },
       { "options": "Option 2", "votes": 5 },
     ],
-    "polls_voting_length": 7,
-    "polls_voting_is_expired_flag": false,
-    "post_in_community_flag": false,
-    "community_id": null,
-    "community_name": null,
-    "comments_count": 3,
-    "views_count": 15,
-    "shares_count": 2,
-    "upvotes_count": 7,
-    "downvotes_count": 1,
-    "oc_flag": true,
-    "spoiler_flag": false,
-    "nsfw_flag": false,
-    "locked_flag": false,
-    "allowreplies_flag": true,
-    "set_suggested_sort": "Top",
-    "scheduled_flag": false,
-    "moderator_details": {
-      "approved_flag": true,
-      "approved_by": 'john',
-      "approved_date": new Date(),
-      "removed_flag": false,
-      "removed_by": null,
-      "removed_date": null,
-      "removed_removal_reason": null,
-      "spammed_flag": false,
-      "spammed_by": null,
-      "spammed_type": null,
-      "spammed_removal_reason": null,
-      "reported_flag": false,
-      "reported_by": null,
-      "reported_type": null,
+    polls_voting_length: 7,
+    polls_voting_is_expired_flag: false,
+    post_in_community_flag: false,
+    community_id: null,
+    community_name: null,
+    comments_count: 3,
+    views_count: 15,
+    shares_count: 2,
+    upvotes_count: 7,
+    downvotes_count: 1,
+    oc_flag: true,
+    spoiler_flag: true,
+    nsfw_flag: true,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "Top",
+    scheduled_flag: false,
+    moderator_details: {
+      approved_flag: true,
+      approved_by: "john",
+      approved_date: new Date(),
+      removed_flag: false,
+      removed_by: null,
+      removed_date: null,
+      removed_removal_reason: null,
+      spammed_flag: false,
+      spammed_by: null,
+      spammed_type: null,
+      spammed_removal_reason: null,
+      reported_flag: false,
+      reported_by: null,
+      reported_type: null,
     },
     "user_details": {
       "total_views": 15,
