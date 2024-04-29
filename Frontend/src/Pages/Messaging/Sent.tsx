@@ -13,10 +13,10 @@ const Sent = () => {
 
   return (
     <LoadingProvider error={isError} isLoading={isLoading}>
-      <ContentContainer length={data?.data.length}>
+      <ContentContainer length={data?.data.messages.length}>
         <div className=''>
-          {!!data?.data &&
-            data?.data.map((mess) => (
+          {!!data?.data.messages &&
+            data?.data.messages.map((mess) => (
               <Message
                 unread={mess['unread_flag']}
                 type='sent'
