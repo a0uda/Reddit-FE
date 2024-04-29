@@ -60,12 +60,13 @@ axios.interceptors.response.use(
   }
 );
 
-const fetchRequest = async (endPoint: string) => {
+const fetchRequest = async (endPoint: string, params?: object) => {
   return await axios.get(baseUrl + endPoint, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: localStorage.getItem('token'),
     },
+    params: params,
     withCredentials: false,
   });
 };

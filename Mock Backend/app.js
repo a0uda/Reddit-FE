@@ -24,11 +24,24 @@ const getAuthUsername = (req) => {
   return username;
 };
 
-app.use(
-  cors({
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Add PATCH method here
-  })
-);
+const whitelist = ['http://localhost:5174', 'http://localhost:5173'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+};
+
+app.use(cors(corsOptions));
+
+// app.use(
+//   cors({
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Add PATCH method here
+//   })
+// );
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -1377,8 +1390,8 @@ let postsListings = [
     upvotes_count: 7,
     downvotes_count: 1,
     oc_flag: true,
-    spoiler_flag: false,
-    nsfw_flag: false,
+    spoiler_flag: true,
+    nsfw_flag: true,
     locked_flag: false,
     allowreplies_flag: true,
     set_suggested_sort: "Top",
