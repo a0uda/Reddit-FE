@@ -213,7 +213,7 @@ const PostOptions = ({ post }: { post: PostType }) => {
           <LockClosedIcon className='w-5 h-5' />
           <span>
             {!post.locked_flag ? 'Lock' : 'Unlock'}{' '}
-            {post.post_in_community_flag != undefined ? 'Replies' : 'Comments'}
+            {post.post_in_community_flag == undefined ? 'Replies' : 'Comments'}
           </span>
         </MenuItem>
         {post.post_in_community_flag != undefined && (
@@ -509,14 +509,13 @@ const PostFooter = ({ post }: { post: PostType }) => {
           !post.moderator_details.removed_removal_reason && (
             <RoundedButton>Add Removal Reason</RoundedButton>
           )}
-        {(post.moderator_details.removed_flag === true ||
-          post.moderator_details.reported_flag === true) && (
+        {!post.moderator_details.approved_flag && (
           <RoundedButton>
             <CheckIcon className='w-4' />
             Approve
           </RoundedButton>
         )}
-        {post.moderator_details.approved_flag === true && (
+        {!post.moderator_details.removed_flag && (
           <RoundedButton>
             <XMarkIcon className='w-4' />
             Remove
@@ -528,6 +527,8 @@ const PostFooter = ({ post }: { post: PostType }) => {
   );
 };
 const PostCard = ({ post }: { post: PostType }) => {
+  console.log(post.post_in_community_flag != undefined, 'isPost');
+
   return (
     <div className='border-[1px] border-gray-500 rounded-md py-2 px-3 flex'>
       <div className='flex gap-4 w-full'>
@@ -538,6 +539,7 @@ const PostCard = ({ post }: { post: PostType }) => {
         />
         <div className='flex-1'>
           <PostHeader
+            isPost={post.post_in_community_flag != undefined}
             avatar={post.avatar}
             communityNameWithPrefix={addPrefixToUsername(
               post.community_name || '',
