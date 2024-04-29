@@ -10,7 +10,7 @@ import Notifications from './Pages/Notifications.tsx';
 import Post from './Pages/Post.tsx';
 import User from './Pages/User/User.tsx';
 import CreatePost from './Pages/createPost/CreatePost.tsx';
-import Search from './Pages/Search.tsx';
+// import Search from './Pages/Search.tsx';
 
 function App() {
   const { status } = useSession();
