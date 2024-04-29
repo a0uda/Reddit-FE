@@ -8,48 +8,23 @@ import RoundedButton from '../../Components/RoundedButton';
 import { IoMdClose } from 'react-icons/io';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { useParams } from 'react-router-dom';
-import { useMutation } from 'react-query';
-import { postRequest } from '../../API/User';
-import useSession from '../../hooks/auth/useSession';
-
-interface LeaveFormProps {
+interface ApproveFormProps {
   handleOpen: () => void;
   open: boolean;
   username: string;
+  title?: string;
+  content?: string;
+  initialValues: object;
+  HandleOnSubmitFunction: (values: object) => void;
+  buttonText: string;
 }
-interface valueDataType {
-  community_name: string;
-}
-export default function LeaveMod(props: LeaveFormProps): JSX.Element {
-  const { community_name } = useParams();
-  const { user } = useSession();
 
-  const initialValues: valueDataType = {
-    community_name: '',
-  };
-
-  const mutation = useMutation(postRequest, {
-    onSuccess: () => {
-      console.log('successfully');
-    },
-    onError: () => {
-      console.log('Failed');
-    },
-  });
-
-  const handleOnSubmit = (values: valueDataType) => {
-    mutation.mutate({
-      endPoint: `communities/moderator-leave/${user}`,
-      data: values,
-    });
-  };
-
+export default function GeneralForm(props: ApproveFormProps): JSX.Element {
   return (
     <Dialog size='sm' open={props.open} handler={props.handleOpen}>
       <DialogHeader className='!block relative flex justify-between'>
         <div className='block relative border-b border-lines-color flex justify-between'>
-          <h2 className='text-left'>Leave as mod</h2>
+          <h2 className='text-left'>{props.title}</h2>
           <div className='cursor-pointer' onClick={props.handleOpen}>
             <IoMdClose />
           </div>
@@ -57,27 +32,20 @@ export default function LeaveMod(props: LeaveFormProps): JSX.Element {
       </DialogHeader>
       <div className='flex flex-col md:flex-row gap-2'>
         <Formik
-          initialValues={initialValues}
+          initialValues={props.initialValues}
           validationSchema={Yup.object({
             community_name: Yup.string(),
+            username: Yup.string().required('username is required'),
           })}
           onSubmit={(values, { setSubmitting }) => {
-            if (community_name) {
-              values.community_name = community_name;
-            }
-            console.log('Submitted values:', values);
-            handleOnSubmit(values);
+            props.HandleOnSubmitFunction(values);
             setSubmitting(false);
             props.handleOpen();
           }}
         >
           {(formik) => (
             <Form className='w-full' onSubmit={formik.handleSubmit}>
-              <DialogBody className='text-gray-700'>
-                Once you leave as a mod, you will lose mod permissions and will
-                be unable to access any mod tools for this community. Are you
-                sure you wish to leave as a mod of this community?
-              </DialogBody>
+              <DialogBody className='text-gray-700'>{props.content}</DialogBody>
               <DialogFooter className='bg-gray-200 rounded space-x-2 '>
                 <RoundedButton
                   type='button'
@@ -90,7 +58,7 @@ export default function LeaveMod(props: LeaveFormProps): JSX.Element {
                 <RoundedButton
                   type='submit'
                   buttonBorderColor='border-gray-200 font-bold'
-                  buttonText='Leave'
+                  buttonText={props.buttonText}
                   buttonTextColor='text-white'
                   buttonColor='bg-blue-light'
                 />

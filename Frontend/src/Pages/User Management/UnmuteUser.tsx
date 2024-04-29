@@ -3,38 +3,38 @@ import { useMutation } from 'react-query';
 import { postRequest } from '../../API/User';
 import GeneralForm from './CommonForm';
 
-interface ApproveFormProps {
+interface RuleFormProps {
   handleOpen: () => void;
   open: boolean;
   username: string;
 }
-interface valueDataType {
+interface DataType {
   community_name: string;
   username: string;
+  action: string;
 }
-export default function RemoveApprovedUser(
-  props: ApproveFormProps
-): JSX.Element {
-  const { community_name } = useParams();
 
-  const initialValues: valueDataType = {
-    community_name: community_name ? community_name : '',
-    username: props.username,
-  };
+export default function UnmuteUser(props: RuleFormProps): JSX.Element {
+  const { community_name } = useParams();
 
   const mutation = useMutation(postRequest, {
     onSuccess: () => {
-      console.log('User removed successfully');
+      console.log('Mute user successfully');
     },
     onError: () => {
-      console.log('Failed to Remove User');
+      console.log('Mute user failed');
     },
   });
 
+  const initialValues: DataType = {
+    community_name: community_name ? community_name : '',
+    username: props.username,
+    action: 'unmute',
+  };
   const handleOnSubmit = (values: object) => {
     console.log(values);
     mutation.mutate({
-      endPoint: 'communities/unapprove-user',
+      endPoint: 'communities/unmute-user',
       data: values,
     });
   };
@@ -43,13 +43,12 @@ export default function RemoveApprovedUser(
     <GeneralForm
       HandleOnSubmitFunction={handleOnSubmit}
       initialValues={initialValues}
-      content={`Are you sure you want to remove ${props.username} as an approved
-    user?`}
+      content={`Are you sure you want to unmute ${props.username}?`}
       title='Confirm'
       handleOpen={props.handleOpen}
       open={props.open}
       username={props.username}
-      buttonText='Remove'
+      buttonText='Unmute'
     />
   );
 }
