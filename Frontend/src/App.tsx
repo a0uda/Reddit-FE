@@ -11,6 +11,8 @@ import Post from './Pages/Post.tsx';
 import User from './Pages/User/User.tsx';
 import CreatePost from './Pages/createPost/CreatePost.tsx';
 import Main from './Pages/Mod Queues/Main.tsx';
+import Search from './Pages/Search.tsx';
+// import Search from './Pages/Search.tsx';
 
 function App() {
   const { status } = useSession();
@@ -25,8 +27,8 @@ function App() {
           <Route path={'/'} element={<Mainfeed />} />
           <Route path={'/:sortOption'} element={<Mainfeed />} />
           <Route
-            path={'/r/:communityName/comments/:id/:title/'}
-            element={<HandleRoutes element={<Post />} />}
+            path={'/:prefix/:communityNameOrUsername/comments/:id/:title/'}
+            element={<Post />}
           />
           <Route
             path='/settings/:page'
@@ -63,6 +65,10 @@ function App() {
           <Route
             path='/r/:communityName/about/spam'
             element={<Main page='removed' />}
+            />
+          <Route
+            path='/search/*'
+            element={<HandleRoutes element={<Search />} />}
           />
         </Routes>
       </Router>

@@ -74,3 +74,10 @@ export function addPrefixToUsername(
     return null;
   }
 }
+
+export function formatNumber(number: number) {
+  const units = ['', 'K', 'M', 'B', 'T'];
+  const unitIndex = Math.floor(Math.log10(Math.abs(number)) / 3);
+  const formattedNumber = (number / Math.pow(1000, unitIndex)).toFixed(1);
+  return formattedNumber + units[unitIndex];
+}

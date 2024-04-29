@@ -3,10 +3,28 @@ import ContentContainer from './Containers/ContentContainer';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
+import { useEffect } from 'react';
 
 const Sent = () => {
-  const { data, isError, isLoading, refetch } = useQuery('messages', () =>
-    fetchRequest('messages/read-all-messages')
+  let parentChildrenMap: [];
+  const { data, isError, isLoading, refetch } = useQuery(
+    'messages',
+    () => fetchRequest('messages/read-all-messages'),
+    {
+      onSuccess: (data) => {
+        parentChildrenMap = data?.data.messages.reduce((acc, message) => {
+          if (message.parentMessageId !== null) {
+            if (acc[message.parentMessageId]) {
+              acc[message.parentMessageId].push(message);
+            } else {
+              acc[message.parentMessageId] = [message];
+            }
+          }
+          return acc;
+        }, {});
+        console.log(parentChildrenMap, 'parentChildrenMap');
+      },
+    }
   );
   console.log(data?.data);
 
@@ -14,25 +32,12 @@ const Sent = () => {
   //   .filter((message) => message.parentMessageId === null)
   //   .map((message) => message._id);
 
-  const parentChildrenMap = data?.data.reduce((acc, message) => {
-    if (message.parentMessageId !== null) {
-      if (acc[message.parentMessageId]) {
-        acc[message.parentMessageId].push(message);
-      } else {
-        acc[message.parentMessageId] = [message];
-      }
-    }
-    return acc;
-  }, {});
-
-  console.log(parentChildrenMap, 'parentChildrenMap');
-
   return (
     <LoadingProvider error={isError} isLoading={isLoading}>
-      <ContentContainer length={data?.data.length}>
+      <ContentContainer length={data?.data.messages.length}>
         <div className=''>
           {!!data?.data &&
-            data?.data.map((mess) => {
+            data?.data.messages.map((mess) => {
               if (mess.parentMessageId == null) {
                 return (
                   <Message

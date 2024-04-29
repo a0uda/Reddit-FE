@@ -1,10 +1,10 @@
 import { fetchRequest } from '../../API/User';
-import { useMutation, useQuery } from 'react-query';
-import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
+import { useMutation } from 'react-query';
+import LoadingProvider from '../../Components/LoadingProvider';
 import { CommentType } from '../../types/types';
 import Comment from '../../Components/Posts/Comment';
 import useSession from '../../hooks/auth/useSession';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function Comments() {
   const { user } = useSession();
@@ -15,7 +15,7 @@ function Comments() {
 
   const [response, setResponse] = useState<[CommentType]>();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const fetchReq = useMutation(fetchRequest);
   useEffect(() => {
     if (user?.username) {
@@ -28,7 +28,7 @@ function Comments() {
         },
         onError: (err) => {
           setIsLoading(false); // Set loading state to false on error
-          setError(err); // Set error state
+          setError(true); // Set error state
         },
       });
     }
@@ -40,7 +40,7 @@ function Comments() {
         {response && (
           <>
             {response.map((comment: CommentType) => (
-              <Comment key={comment._id} comment={comment} />
+              <Comment key={comment._id} comment={comment} showButton={true} />
             ))}
           </>
         )}

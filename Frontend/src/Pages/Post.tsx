@@ -10,8 +10,8 @@ import { PostType } from '../types/types';
 
 const Post = () => {
   const { id: postId } = useParams();
+  const { prefix } = useParams();
 
-  console.log(postId);
   // const [community, setCommunity] = useState<PostType | undefined>();
   const [post, setPost] = useState<PostType | undefined>();
   const { isLoading, isError } = useQuery({
@@ -32,7 +32,7 @@ const Post = () => {
                 <PostDetails post={post} />
               </ContentLayout.Main>
               <ContentLayout.RightSideBar>
-                <CommunityRSB name={post.community_name} />
+                {prefix == 'r' && <CommunityRSB name={post.community_name} />}
               </ContentLayout.RightSideBar>
             </>
           )}

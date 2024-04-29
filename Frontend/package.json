@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "buildNoTsc": "vite build",
     "buildDev": "vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
@@ -21,7 +22,6 @@
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.2.1",
     "@tailwindcss/typography": "^0.5.12",
-    "@tanstack/react-query-devtools": "^5.29.2",
     "@tiptap/core": "^2.3.0",
     "@tiptap/extension-blockquote": "^2.3.0",
     "@tiptap/extension-bubble-menu": "^2.3.0",

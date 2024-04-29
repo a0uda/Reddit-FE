@@ -1,6 +1,6 @@
-import { useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import { fetchRequest } from '../../API/User';
-import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
+import LoadingProvider from '../../Components/LoadingProvider';
 import Comment from '../../Components/Posts/Comment';
 import PostPreview from '../../Components/Posts/PostPreview';
 import { Link } from 'react-router-dom';
@@ -12,23 +12,36 @@ import {
   PlusIcon,
 } from '@heroicons/react/24/outline';
 import useSession from '../../hooks/auth/useSession';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 function Overview() {
   const { user } = useSession();
-  const { data, error, isLoading } = useQuery(
-    ['userComments', 'comments', 'posts', 'listings'],
-    () => fetchRequest(`users/overview/${user?.username}`)
-  );
+  // const { data, error, isLoading } = useQuery(
+  //   ['userComments', 'comments', 'posts', 'listings'],
+  //   () => fetchRequest(`users/overview/${user?.username}`)
+  // );
 
-  console.log(
-    data?.data.posts
-      .concat(data?.data.comments)
-      .sort(
-        (a, b) =>
-          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-      )
-  );
+  const [response, setResponse] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const fetchReq = useMutation(fetchRequest);
+  useEffect(() => {
+    if (user?.username) {
+      setIsLoading(true);
+      fetchReq.mutate(`users/overview/${user?.username}`, {
+        onSuccess: (data) => {
+          setIsLoading(false);
+          console.log('reem', data.data);
+          setResponse(data.data);
+        },
+        onError: (err) => {
+          setIsLoading(false); // Set loading state to false on error
+          setError(true); // Set error state
+        },
+      });
+    }
+  }, [user?.username]);
+
   return (
     <>
       <LoadingProvider error={error} isLoading={isLoading}>
@@ -41,10 +54,10 @@ function Overview() {
             Create Post
           </div>
         </Link>
-        {data && (
+        {response && (
           <>
-            {data.data.posts
-              .concat(data.data.comments)
+            {response.posts
+              .concat(response.comments)
               .sort(
                 (a, b) =>
                   new Date(b.created_at).getTime() -
@@ -54,7 +67,11 @@ function Overview() {
                 <React.Fragment key={content._id}>
                   {content.is_post ? (
                     <div>
-                      <PostPreview page='profile' post={content} />
+                      <PostPreview
+                        page='profile'
+                        post={content}
+                        isMyPost={true}
+                      />
                       <div className='text-black m-2 text-sm'>
                         Lifetime Performance
                       </div>
@@ -113,7 +130,11 @@ function Overview() {
                     </div>
                   ) : (
                     //uncomment when deployed reem
-                    <Comment key={content.id} comment={content} />
+                    <Comment
+                      key={content.id}
+                      comment={content}
+                      showButton={true}
+                    />
 
                     //<PostPreview key={content.id} post={content} />
                   )}
