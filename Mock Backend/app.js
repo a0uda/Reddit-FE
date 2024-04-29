@@ -339,7 +339,7 @@ let credentials = [{ username: "username", password: "password" }];
 let users = [
   {
     _id: "661a2c3fab10a4b012e8f59a",
-    username: "m",
+    username: "Osama",
     created_at: "2024-04-13T06:53:20.537Z",
     email: "me22@gmail.com",
     verified_email_flag: false,
@@ -347,9 +347,10 @@ let users = [
     display_name: "m",
     about: "",
     social_links: [],
-    profile_picture: "",
+    profile_picture:
+      "https://conflictresolutionmn.org/wp-content/uploads/2020/01/flat-business-man-user-profile-avatar-icon-vector-4333097.jpg",
     banner_picture: "",
-    gender: "Female",
+    gender: "Male",
   },
   {
     _id: "661a2c3fab10a4b012e8f59b",
@@ -635,7 +636,7 @@ let communities = [
     welcome_message: "",
     type: "Private",
     nsfw_flag: false,
-    members_count: 5000,
+    members_count: 1500,
     profile_picture:
       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
     banner_picture:
@@ -644,7 +645,7 @@ let communities = [
     joined_flag: false,
   },
   {
-    name: "music",
+    name: "musicFLASE",
     description: "The musical community of reddit",
     welcome_message: "",
     type: "Private",
@@ -1522,7 +1523,7 @@ let postsListings = [
     polls_voting_is_expired_flag: false,
     post_in_community_flag: true,
     community_id: "8",
-    community_name: "Community B",
+    community_name: "sports",
     comments_count: 2,
     comments_ids: [16, 13],
     followers_ids: [],
@@ -2295,7 +2296,7 @@ function shuffleList(list) {
   return list;
 }
 
-let bestPosts = {
+let historyPosts = {
   success: true,
   status: 200,
   posts: [
@@ -2310,11 +2311,11 @@ let bestPosts = {
       type: "image_and_videos",
       link_url: "https://example.com",
       images: [
-        {
-          path: "image1.jpg",
-          caption: "Image 1",
-          link: "https://source.unsplash.com/random",
-        },
+        // {
+        //   path: "image1.jpg",
+        //   caption: "Image 1",
+        //   link: "https://source.unsplash.com/random",
+        // },
       ],
       videos: [
         {
@@ -2439,7 +2440,7 @@ let bestPosts = {
       is_post: true,
       _id: "3",
       user_id: "user3",
-      username: "username",
+      username: "Osama",
       avatar:
         "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
       title: "Third Post",
@@ -2695,6 +2696,14 @@ let bestPosts = {
   msg: "Posts retrieved successfully.",
 };
 
+app.get("/users/history-posts", (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: 200,
+    content: historyPosts.posts,
+  });
+});
+
 app.get("/listing/posts/random", (req, res) => {
   res.status(200).json({ success: true, status: 200, content: postsListings });
 });
@@ -2703,7 +2712,7 @@ app.get("/listing/posts/best", (req, res) => {
   res.status(200).json({
     success: true,
     status: 200,
-    content: bestPosts.posts,
+    content: postsListings.reverse(),
   });
 });
 

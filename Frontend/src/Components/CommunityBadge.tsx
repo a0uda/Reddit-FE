@@ -9,6 +9,7 @@ import CommunityPopup from './RightSideBar/CommunityPopup';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CommunityIcon } from '../assets/icons/Icons';
+import { addPrefixToUsername } from '../utils/helper_functions';
 
 type Community = {
   name: string;
@@ -18,6 +19,8 @@ type Community = {
   description?: string;
   members?: number;
   displayAvatar?: boolean;
+  username?: string;
+  page?: 'profile' | 'home' | 'community' | 'post';
 };
 
 type CommunityBadgeProps = Community;
@@ -30,6 +33,8 @@ const CommunityBadge = ({
   description,
   members,
   displayAvatar = true,
+  username,
+  page,
 }: CommunityBadgeProps) => {
   const [openPopover, setOpenPopover] = useState(false);
   // console.log(avatar);
@@ -38,6 +43,8 @@ const CommunityBadge = ({
     onMouseEnter: () => setOpenPopover(true),
     onMouseLeave: () => setOpenPopover(false),
   };
+
+  const communityNameWithPrefix = addPrefixToUsername(name, 'community');
 
   return (
     <>
@@ -51,21 +58,34 @@ const CommunityBadge = ({
                     variant='circular'
                     alt={name}
                     src={avatar}
-                    style={{ width: '25px', height: '25px' }}
+                    style={{ width: '35px', height: '35px' }}
                   />
                 ) : (
                   <CommunityIcon className='h-5 w-5' />
                 )}
               </>
             )}
-            <Typography
-              variant='small'
-              className='font-body -tracking-tight text-gray-600'
-            >
-              <Link to={`/r/${name}`} className='hover:underline'>
-                {name}
-              </Link>
-            </Typography>
+            <div>
+              <Typography
+                variant='small'
+                className='font-body -tracking-tight text-xs font-bold text-gray-600'
+              >
+                <Link
+                  to={`/${communityNameWithPrefix}`}
+                  className='hover:underline'
+                >
+                  {communityNameWithPrefix}
+                </Link>
+              </Typography>
+              {(page == 'profile' || page == 'post') && (
+                <Typography
+                  variant='small'
+                  className='font-body -tracking-tight text-xs text-gray-600'
+                >
+                  {username}
+                </Typography>
+              )}
+            </div>
           </div>
         </PopoverHandler>
         <PopoverContent

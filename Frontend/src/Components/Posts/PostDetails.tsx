@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@material-tailwind/react';
 import CommunityBadge from '../CommunityBadge';
+import UserBadge from '../UserBadge';
 import { dateDuration } from '../../utils/helper_functions';
 import PostOptions from './PostOptions';
 import InteractionButtons from './InteractionButtons';
@@ -82,7 +83,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 >
                   <ArrowLeftIcon className='h-6 w-6 fill-black' />
                 </IconButton>
-                {post.avatar ? (
+                {/* {post.avatar ? (
                   <Avatar
                     variant='circular'
                     alt={post.community_name}
@@ -91,26 +92,33 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                   />
                 ) : (
                   <CommunityIcon className='h-5 w-5' />
-                )}
+                )} */}
                 <div className='flex flex-col justify-between m-0'>
                   <div className='flex flex-row items-center justify-between gap-1 m-0'>
-                    <CommunityBadge
-                      name={post.community_name}
-                      joined={community?.joined_flag}
-                      avatar={community?.profile_picture}
-                      coverImage={community?.banner_picture}
-                      members={community?.members_count}
-                      description={community?.description}
-                    />
+                    {community && (
+                      <CommunityBadge
+                        name={post.community_name ?? ''}
+                        joined={community?.joined_flag}
+                        avatar={community?.profile_picture}
+                        coverImage={community?.banner_picture}
+                        description={community?.description}
+                        members={community?.members_count}
+                        // online={Community.communityOnline}
+                        username={post.username}
+                        // page={page}
+                        page='post'
+                      />
+                    )}
+                    {!community && <UserBadge username={post.username} />}
                     <span className='relative -top-0.5'>•</span>
                     <Typography variant='small' className='text-xs'>
                       {dateDuration(new Date(post.created_at))}
                     </Typography>
                   </div>
                   <div>
-                    <Typography variant='small' className='text-xs'>
+                    {/* <Typography variant='small' className='text-xs'>
                       {post.username}
-                    </Typography>
+                    </Typography> */}
                   </div>
                 </div>
               </div>

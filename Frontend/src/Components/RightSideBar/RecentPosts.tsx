@@ -10,7 +10,7 @@ export function RecentPosts() {
   const [isContentVisible, setContentVisible] = useState(true);
 
   const { data } = useQuery('recent posts data', () =>
-    fetchRequest('listing/posts/best')
+    fetchRequest('users/history-posts')
   );
   console.log(data);
 
@@ -53,6 +53,7 @@ export function RecentPosts() {
                   postMediaSrc={post.images?.[0]?.link ?? ''} // show the first image only
                   upvotes={post.upvotes_count}
                   comments={post.comments_count}
+                  username={post.username ?? ''}
                 />
                 {index !== postList.length - 1 && (
                   <div className='w-100 min-h-px mb-4 mt-1 bg-gray-300'></div>
