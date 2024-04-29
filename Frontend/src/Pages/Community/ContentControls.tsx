@@ -51,7 +51,7 @@ function ContentControls() {
   };
   const [isTypingRequired, setisTypingRequired] = useState(false);
   const [isTypingBan, setisTypingBan] = useState(false);
-  const currentBanPostTitle = selectedRequiredPostTitle.length;
+  const currentBanPostTitle = selectedBanPostTitle.length;
   /////
   const [inputBanPostBody, setinputBanPostBody] = useState('');
   const [selectedBanPostBody, setselectedBanPostBody] = useState([]);
@@ -64,7 +64,7 @@ function ContentControls() {
     setselectedBanPostBody(selectedBanPostBody.filter((w) => w !== word));
   };
   const [isTypingBanBody, setisTypingBanBody] = useState(false);
-  const currentBanPostBody = selectedRequiredPostTitle.length;
+  const currentBanPostBody = selectedBanPostBody.length;
   /////
 
   const [inputBanLink, setinputBanLink] = useState('');
