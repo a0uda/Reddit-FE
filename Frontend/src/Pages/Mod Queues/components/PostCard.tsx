@@ -269,7 +269,12 @@ const PostOptions = ({ post }: { post: PostType }) => {
   );
 };
 
-const Vote = (props: { vote: number; postId: string; voteCount: number }) => {
+const Vote = (props: {
+  vote: number;
+  postId: string;
+  voteCount: number;
+  isPost: boolean;
+}) => {
   const [vote, setVote] = React.useState(props.vote);
   //   const [lastVote, setLastVote] = React.useState(0);
   const [voteCount, setVoteCount] = React.useState(props.voteCount);
@@ -286,20 +291,21 @@ const Vote = (props: { vote: number; postId: string; voteCount: number }) => {
           //   setLastVote(vote);
           let newVote = vote;
           if (vote === 1) {
-            setVote(0);
+            // setVote(0);
             newVote = 0;
           } else {
-            setVote(1);
+            // setVote(1);
             newVote = 1;
           }
 
           postReq.mutate(
             {
               endPoint: 'posts-or-comments/vote',
-              data: { id: props.postId, is_post: false, vote: newVote },
+              data: { id: props.postId, is_post: props.isPost, vote: newVote },
             },
             {
               onSuccess: () => {
+                setVote(newVote);
                 setVoteCount(voteCount + newVote - props.vote);
               },
               onError: () => {
@@ -323,10 +329,10 @@ const Vote = (props: { vote: number; postId: string; voteCount: number }) => {
           let newVote = vote;
 
           if (vote === -1) {
-            setVote(0);
+            // setVote(0);
             newVote = 0;
           } else {
-            setVote(-1);
+            // setVote(-1);
             newVote = -1;
           }
           // const { id, isPost, rank } = req.body;
@@ -335,12 +341,12 @@ const Vote = (props: { vote: number; postId: string; voteCount: number }) => {
           postReq.mutate(
             {
               endPoint: 'posts-or-comments/vote',
-              data: { id: props.postId, is_post: false, vote: newVote },
+              data: { id: props.postId, is_post: props.isPost, vote: newVote },
             },
             {
               onSuccess: () => {
                 console.log(voteCount, newVote, props.vote, 'midooo');
-
+                setVote(newVote);
                 setVoteCount(voteCount + newVote - props.vote);
               },
               onError: () => {
@@ -535,6 +541,7 @@ const PostCard = ({ post }: { post: PostType }) => {
           postId={post._id}
           vote={post.vote}
           voteCount={post.upvotes_count - post.downvotes_count}
+          isPost={post.post_in_community_flag != undefined}
         />
         <div className='flex-1'>
           <PostHeader
