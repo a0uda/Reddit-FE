@@ -13,7 +13,7 @@ const Unmoderated = () => {
   const { communityName } = useParams();
   console.log(communityName);
 
-  const [response, setResponse] = useState<[PostType]>();
+  const [response, setResponse] = useState<[]>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   useEffect(() => {

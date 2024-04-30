@@ -19,7 +19,7 @@ const Removed = () => {
   //   fetchRequest(`communities/about/removed-or-spammed/Thiel___Wolff`)
   // );
 
-  const [response, setResponse] = useState<[PostType]>();
+  const [response, setResponse] = useState<[]>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   useEffect(() => {

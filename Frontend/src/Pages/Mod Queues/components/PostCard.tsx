@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, ReactNode } from 'react';
+import React, { MouseEventHandler, ReactNode, useState } from 'react';
 import { CommentType, PostType } from '../../../types/types';
 import {
   ArrowDownIcon,
