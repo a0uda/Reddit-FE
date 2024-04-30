@@ -4207,8 +4207,10 @@ app.post("/comments/reply", (req, res) => {
 });
 
 app.get('/communities/about/unmoderated/:communityName', (req, res) => {
+  console.log('hi');
   res.status(200).json([
     {
+      "vote": 1,
       "moderator_details": {
         "approved_flag": false,
         "approved_date": null,
@@ -4263,6 +4265,7 @@ app.get('/communities/about/unmoderated/:communityName', (req, res) => {
       "__v": 7
     },
     {
+      "vote": 1,
       "moderator_details": {
         "approved_date": null,
         "removed_date": null,
@@ -4315,6 +4318,8 @@ app.get('/communities/about/unmoderated/:communityName', (req, res) => {
       "set_suggested_sort": "None (Recommended)"
     },
     {
+      "vote": -1,
+
       "moderator_details": {
         "approved_date": null,
         "removed_date": null,

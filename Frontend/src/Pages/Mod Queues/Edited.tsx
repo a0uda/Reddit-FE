@@ -13,12 +13,13 @@ const Edited = () => {
   const { communityName } = useParams();
   console.log(communityName);
 
-  const [response, setResponse] = useState<[PostType]>();
+  const [response, setResponse] = useState<[]>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
+      setResponse([]);
       try {
         const res = await axios.get(
           `${process.env.VITE_BASE_URL}communities/about/removed-or-spammed/${communityName}`,

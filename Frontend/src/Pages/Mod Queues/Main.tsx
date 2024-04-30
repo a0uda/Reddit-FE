@@ -4,7 +4,7 @@ import Removed from './Removed';
 import Unmoderated from './Unmoderated';
 const Main = (props: { page: string }) => {
   return (
-    <div>
+    <div className='px-32 py-8'>
       <Navbar page={props.page} />
       {props.page == 'removed' ? (
         <Removed />

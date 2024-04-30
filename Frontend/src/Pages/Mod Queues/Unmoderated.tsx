@@ -19,6 +19,7 @@ const Unmoderated = () => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
+      setResponse([]);
       try {
         const res = await axios.get(
           `${process.env.VITE_BASE_URL}communities/about/unmoderated/${communityName}`,

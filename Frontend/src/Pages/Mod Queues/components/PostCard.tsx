@@ -71,7 +71,7 @@ function RoundedButton(props: {
   );
 }
 
-const PostOptions = ({ post }: { post: PostType }) => {
+const PostOptions = ({ post, isPost }: { post: PostType; isPost: boolean }) => {
   const postReq = useMutation(postRequest);
   const patchReq = useMutation(patchRequest);
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
@@ -190,20 +190,21 @@ const PostOptions = ({ post }: { post: PostType }) => {
         <Typography className='px-4 pt-2 flex gap-2 items-center focus-visible:outline-none'>
           Moderation
         </Typography>
-        {!post.moderator_details.reported_flag && (
-          <MenuItem
-            className='py-3 flex gap-2 items-center'
-            onClick={() => {
-              handleModOps(
-                'spam',
-                post.post_in_community_flag == undefined ? 'comment' : 'post'
-              );
-            }}
-          >
-            <XMarkIcon className='w-5 h-5' />
-            <span>Remove as Spam</span>
-          </MenuItem>
-        )}
+        {!post.moderator_details.reported_flag ||
+          (!post.moderator_details.spammed_flag && (
+            <MenuItem
+              className='py-3 flex gap-2 items-center'
+              onClick={() => {
+                handleModOps(
+                  'spam',
+                  post.post_in_community_flag == undefined ? 'comment' : 'post'
+                );
+              }}
+            >
+              <XMarkIcon className='w-5 h-5' />
+              <span>Remove as Spam</span>
+            </MenuItem>
+          ))}
         <MenuItem
           className='py-3 flex gap-2 items-center'
           onClick={() => {
@@ -213,10 +214,10 @@ const PostOptions = ({ post }: { post: PostType }) => {
           <LockClosedIcon className='w-5 h-5' />
           <span>
             {!post.locked_flag ? 'Lock' : 'Unlock'}{' '}
-            {post.post_in_community_flag == undefined ? 'Replies' : 'Comments'}
+            {post.post_in_community_flag == undefined ? 'Thread' : 'Comments'}
           </span>
         </MenuItem>
-        {post.post_in_community_flag != undefined && (
+        {isPost && (
           <MenuItem
             onClick={handleNSFWFlag}
             className='py-3 flex gap-2 items-center'
@@ -257,27 +258,29 @@ const PostOptions = ({ post }: { post: PostType }) => {
           <FlagIcon className='w-5 h-5' />
           <span>Report</span>
         </MenuItem>
-        <MenuItem
-          onClick={handleHideUnhidePost}
-          className='py-3 flex gap-2 items-center'
-        >
-          <EyeSlashIcon className='w-5 h-5' />
-          <span>Hide</span>
-        </MenuItem>
+        {isPost && (
+          <MenuItem
+            onClick={handleHideUnhidePost}
+            className='py-3 flex gap-2 items-center'
+          >
+            <EyeSlashIcon className='w-5 h-5' />
+            <span>Hide</span>
+          </MenuItem>
+        )}
       </MenuList>
     </Menu>
   );
 };
 
 const Vote = (props: {
-  vote: number;
+  post: PostType;
   postId: string;
-  voteCount: number;
+  // voteCount: number;
   isPost: boolean;
 }) => {
-  const [vote, setVote] = React.useState(props.vote);
+  // const [vote, setVote] = React.useState(props.post.vote);
   //   const [lastVote, setLastVote] = React.useState(0);
-  const [voteCount, setVoteCount] = React.useState(props.voteCount);
+  // const [voteCount, setVoteCount] = React.useState(props.voteCount);
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
   const postReq = useMutation(postRequest);
   //   console.log(props.vote, 'aaaa');
@@ -286,11 +289,11 @@ const Vote = (props: {
     <div className=' flex flex-col items-center'>
       <ArrowUpIcon
         strokeWidth={6.5}
-        className={`w-[25px] cursor-pointer ${vote === 1 ? 'text-orange' : 'text-[#888]'}`}
+        className={`w-[25px] cursor-pointer ${props.post.vote === 1 ? 'text-orange' : 'text-[#888]'}`}
         onClick={() => {
-          //   setLastVote(vote);
-          let newVote = vote;
-          if (vote === 1) {
+          const lastVote = props.post.vote;
+          let newVote = props.post.vote;
+          if (props.post.vote === 1) {
             // setVote(0);
             newVote = 0;
           } else {
@@ -305,11 +308,12 @@ const Vote = (props: {
             },
             {
               onSuccess: () => {
-                setVote(newVote);
-                setVoteCount(voteCount + newVote - props.vote);
+                props.post.upvotes_count =
+                  props.post.upvotes_count + newVote - props.post.vote;
+                props.post.vote = newVote;
               },
               onError: () => {
-                setVote(props.vote);
+                props.post.vote = lastVote;
               },
             }
           );
@@ -317,18 +321,19 @@ const Vote = (props: {
       />
       <Typography
         variant='paragraph'
-        className={`${vote === -1 ? 'text-violet' : vote === 1 ? 'text-orange' : 'text-black'}`}
+        className={`${props.post.vote === -1 ? 'text-violet' : props.post.vote === 1 ? 'text-orange' : 'text-black'}`}
       >
-        {voteCount}
+        {props.post.upvotes_count - props.post.downvotes_count}
       </Typography>
       <ArrowDownIcon
-        color={vote === -1 ? 'violet' : '#888'}
+        color={props.post.vote === -1 ? 'violet' : '#888'}
         strokeWidth={6.5}
-        className={`w-[25px] cursor-pointer ${vote === -1 ? 'text-violet' : 'text-[#888]'}`}
+        className={`w-[25px] cursor-pointer ${props.post.vote === -1 ? 'text-violet' : 'text-[#888]'}`}
         onClick={() => {
-          let newVote = vote;
+          let newVote = props.post.vote;
+          const lastVote = props.post.vote;
 
-          if (vote === -1) {
+          if (props.post.vote === -1) {
             // setVote(0);
             newVote = 0;
           } else {
@@ -345,12 +350,13 @@ const Vote = (props: {
             },
             {
               onSuccess: () => {
-                console.log(voteCount, newVote, props.vote, 'midooo');
-                setVote(newVote);
-                setVoteCount(voteCount + newVote - props.vote);
+                // console.log(voteCount, newVote, props.post.vote, 'midooo');
+                props.post.upvotes_count =
+                  props.post.upvotes_count + newVote - props.post.vote;
+                props.post.vote = newVote;
               },
               onError: () => {
-                setVote(props.vote);
+                props.post.vote = lastVote;
               },
             }
           );
@@ -471,18 +477,24 @@ const CommentBody = ({ comment }: { comment: CommentType }) => {
     </div>
   );
 };
-const PostFooter = ({ post }: { post: PostType }) => {
+const PostFooter = ({ post, isPost }: { post: PostType; isPost: boolean }) => {
   return (
     <div className='flex flex-col gap-2 mt-2'>
-      <Typography variant='small' className='text-gray-600 text-xs'>
-        {post.comments_count}
-        {' comments'}
-      </Typography>
+      {isPost && (
+        <Typography variant='small' className='text-gray-600 text-xs'>
+          {post.comments_count}
+          {' comments'}
+        </Typography>
+      )}
       {(post.moderator_details.removed_flag ||
-        post.moderator_details.spammed_flag) && (
-        <div className='bg-deep-orange-100 py-2 px-3 rounded-md'>
+        post.moderator_details.spammed_flag ||
+        post.moderator_details.approved_flag) && (
+        <div
+          className={`${post.moderator_details.approved_flag ? 'bg-green-100' : 'bg-deep-orange-100'} py-2 px-3 rounded-md`}
+        >
           <Typography variant='small' className='font-bold'>
-            Removed{post.moderator_details.spammed_flag && ' as spam'}
+            {post.moderator_details.approved_flag ? 'Approved' : 'Removed'}
+            {post.moderator_details.spammed_flag && ' as spam'}
           </Typography>
           <Typography variant='small'>
             <Link
@@ -527,7 +539,10 @@ const PostFooter = ({ post }: { post: PostType }) => {
             Remove
           </RoundedButton>
         )}
-        <PostOptions post={post} />
+        <PostOptions
+          post={post}
+          isPost={post.post_in_community_flag != undefined}
+        />
       </div>
     </div>
   );
@@ -540,7 +555,7 @@ const PostCard = ({ post }: { post: PostType }) => {
       <div className='flex gap-4 w-full'>
         <Vote
           postId={post._id}
-          vote={post.vote}
+          post={post}
           voteCount={post.upvotes_count - post.downvotes_count}
           isPost={post.post_in_community_flag != undefined}
         />
@@ -559,7 +574,10 @@ const PostCard = ({ post }: { post: PostType }) => {
             )}
           />
           <PostBody post={post} />
-          <PostFooter post={post} />
+          <PostFooter
+            post={post}
+            isPost={post.post_in_community_flag != undefined}
+          />
         </div>
       </div>
     </div>
