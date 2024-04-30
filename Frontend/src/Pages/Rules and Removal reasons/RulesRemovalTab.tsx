@@ -23,7 +23,7 @@ export default function RuleRemoval() {
     removal_reason_id: '',
     community_name: '',
     removal_reason_title: '',
-    reason_message: '',
+    removal_reason: '',
   };
   return (
     <>

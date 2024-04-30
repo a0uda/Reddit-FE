@@ -2,7 +2,6 @@ import {
   Accordion,
   AccordionBody,
   AccordionHeader,
-  Drawer,
   List,
   ListItem,
   ListItemPrefix,
@@ -20,7 +19,6 @@ import { useParams } from 'react-router-dom';
 
 const ModSideBar = ({ className }: { className?: string }) => {
   const { community_name } = useParams();
-  const [openNav, setOpenNav] = useState(false);
   const overviews = [
     {
       title: 'Queue',

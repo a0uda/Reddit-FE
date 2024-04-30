@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RoundedButton from '../../Components/RoundedButton';
 import AddRemovalReason from './AddRemovalReason';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 interface reasonDataType {
   removal_reason_title: string;
@@ -9,32 +11,45 @@ interface reasonDataType {
 }
 
 export default function ReasonList() {
-  const reason = [
-    {
-      removal_reason_title: 'Spam1',
-      removal_reason: 'This post is spam',
-      _id: '6618520b1135daf6066366ea',
-    },
-    {
-      removal_reason_title: 'Spam2',
-      removal_reason: 'This post is spam',
-      _id: '6618520b1135daf6066366ea',
-    },
-  ];
-
   const [openAddRule, setOpenAddRule] = useState(false);
-  const [reasonsList] = useState(reason);
+  const [reasonsList, setReasonsList] = useState<reasonDataType[]>([]);
+  const { community_name } = useParams();
   const [initialValues, setInitialValues] = useState({
     community_name: '',
     removal_reason_title: '',
     removal_reason: '',
     removal_reason_id: '',
   });
+  useEffect(() => {
+    const fetchData = async () => {
+      setReasonsList([]);
+      try {
+        const res = await axios.get(
+          `${process.env.VITE_BASE_URL}communities/get-removal-reasons/${community_name}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: localStorage.getItem('token'),
+            },
+            params: {
+              community_name: community_name,
+            },
+          }
+        );
+        setReasonsList(res.data);
+        console.log(res.data, 'resss');
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSelectRule = (reasonData: reasonDataType) => {
     const { removal_reason_title, removal_reason } = reasonData;
-    const community_name = 'ssss';
     const removal_reason_id = reasonData._id;
+    const community_name = '';
     setInitialValues({
       removal_reason_title,
       removal_reason,
