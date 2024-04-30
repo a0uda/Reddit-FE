@@ -14,7 +14,7 @@ interface ruleData {
 export default function RuleList() {
   const [openAddRule, setOpenAddRule] = useState(false);
   const { community_name } = useParams();
-  const [rulesList, setRulesList] = useState<RuleData[]>([]);
+  const [rulesList, setRulesList] = useState<ruleData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
