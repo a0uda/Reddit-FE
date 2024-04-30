@@ -12,7 +12,6 @@ import User from './Pages/User/User.tsx';
 import CreatePost from './Pages/createPost/CreatePost.tsx';
 import Main from './Pages/Mod Queues/Main.tsx';
 import Search from './Pages/Search.tsx';
-// import Search from './Pages/Search.tsx';
 
 function App() {
   const { status } = useSession();
@@ -65,11 +64,8 @@ function App() {
           <Route
             path='/r/:communityName/about/spam'
             element={<Main page='removed' />}
-            />
-          <Route
-            path='/search/*'
-            element={<HandleRoutes element={<Search />} />}
           />
+          <Route path='/search/*' element={<Search />} />
         </Routes>
       </Router>
     </div>
