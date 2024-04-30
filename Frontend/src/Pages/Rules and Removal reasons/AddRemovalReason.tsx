@@ -53,10 +53,6 @@ export default function AddRemovalReason(props: RuleFormProps): JSX.Element {
           removal_reason_id: values.removal_reason_id,
         },
       });
-      const kk = {
-        community_name: community_name,
-        removal_reason_id: values.removal_reason_id,
-      };
     } else if (buttonSelect == 2) {
       mutation.mutate({
         endPoint: 'communities/edit-removal-reason',
