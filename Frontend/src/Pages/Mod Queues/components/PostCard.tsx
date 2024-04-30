@@ -42,6 +42,7 @@ import {
 import { PollPostContainer } from '../../../Components/Posts/PostPreview';
 import useSession from '../../../hooks/auth/useSession';
 import eighteenPic from '../../../assets/18Pic.svg';
+import { ReportModal, ThankYouModal } from '../../Messaging/Containers/Message';
 
 function RoundedButton(props: {
   children: ReactNode;
@@ -75,6 +76,8 @@ const PostOptions = ({ post, isPost }: { post: PostType; isPost: boolean }) => {
   const postReq = useMutation(postRequest);
   const patchReq = useMutation(patchRequest);
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+  const [repModal, setRepModal] = useState(false);
+  const [thankModal, setThankModal] = useState(false);
 
   // const { user } = useSession();
   const handleModOps = (
@@ -190,8 +193,9 @@ const PostOptions = ({ post, isPost }: { post: PostType; isPost: boolean }) => {
         <Typography className='px-4 pt-2 flex gap-2 items-center focus-visible:outline-none'>
           Moderation
         </Typography>
-        {!post.moderator_details.reported_flag ||
-          (!post.moderator_details.spammed_flag && (
+        {!post.moderator_details.removed_flag &&
+          !post.moderator_details.reported_flag &&
+          !post.moderator_details.spammed_flag && (
             <MenuItem
               className='py-3 flex gap-2 items-center'
               onClick={() => {
@@ -204,7 +208,7 @@ const PostOptions = ({ post, isPost }: { post: PostType; isPost: boolean }) => {
               <XMarkIcon className='w-5 h-5' />
               <span>Remove as Spam</span>
             </MenuItem>
-          ))}
+          )}
         <MenuItem
           className='py-3 flex gap-2 items-center'
           onClick={() => {
@@ -249,12 +253,30 @@ const PostOptions = ({ post, isPost }: { post: PostType; isPost: boolean }) => {
         <MenuItem
           className='py-3 flex gap-2 items-center'
           onClick={() => {
-            handleModOps(
-              'report',
-              post.post_in_community_flag == undefined ? 'comment' : 'post'
-            );
+            setRepModal(true);
           }}
         >
+          <ReportModal
+            handleOpen={() => {
+              setRepModal(!repModal);
+            }}
+            handleThankyouModal={() => {
+              setThankModal(!thankModal);
+            }}
+            id={post._id}
+            open={repModal}
+            senderType='user'
+            type='post'
+            username={post.username}
+            isPost={isPost}
+          />
+          <ThankYouModal
+            handleOpen={() => {
+              setThankModal(!thankModal);
+            }}
+            open={thankModal}
+            senderUsername={post.username}
+          />
           <FlagIcon className='w-5 h-5' />
           <span>Report</span>
         </MenuItem>
@@ -533,12 +555,14 @@ const PostFooter = ({ post, isPost }: { post: PostType; isPost: boolean }) => {
             Approve
           </RoundedButton>
         )}
-        {!post.moderator_details.removed_flag && (
-          <RoundedButton>
-            <XMarkIcon className='w-4' />
-            Remove
-          </RoundedButton>
-        )}
+        {!post.moderator_details.removed_flag &&
+          !post.moderator_details.reported_flag &&
+          !post.moderator_details.spammed_flag && (
+            <RoundedButton>
+              <XMarkIcon className='w-4' />
+              Remove
+            </RoundedButton>
+          )}
         <PostOptions
           post={post}
           isPost={post.post_in_community_flag != undefined}

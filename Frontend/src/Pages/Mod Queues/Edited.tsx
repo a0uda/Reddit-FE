@@ -22,7 +22,7 @@ const Edited = () => {
       setResponse([]);
       try {
         const res = await axios.get(
-          `${process.env.VITE_BASE_URL}communities/about/removed-or-spammed/${communityName}`,
+          `${process.env.VITE_BASE_URL}communities/about/edited/${communityName}`,
           {
             headers: {
               'Content-Type': 'application/json',
