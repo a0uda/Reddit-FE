@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import { useParams } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import { postRequest } from '../../API/User';
+import { useState } from 'react';
 
 interface RuleFormProps {
   handleOpen: () => void;
@@ -13,15 +14,21 @@ interface RuleFormProps {
   initialValues: {
     community_name: string;
     removal_reason_title: string;
-    reason_message: string;
+    removal_reason: string;
     removal_reason_id: string;
   };
   removal_reason_id?: string;
+  isEdit?: boolean;
 }
-
-// communities/add-rule
+interface Datatype {
+  community_name: string;
+  removal_reason_title: string;
+  removal_reason: string;
+  removal_reason_id: string;
+}
 export default function AddRemovalReason(props: RuleFormProps): JSX.Element {
   const { community_name } = useParams();
+  const [buttonSelect, setButtonSelect] = useState(0);
 
   const mutation = useMutation(postRequest, {
     onSuccess: () => {
@@ -32,18 +39,39 @@ export default function AddRemovalReason(props: RuleFormProps): JSX.Element {
     },
   });
 
-  const handleOnSubmit = (values: object) => {
-    mutation.mutate({
-      endPoint: 'communities/add-removal-reason',
-      data: values,
-    });
+  const handleOnSubmit = (values: Datatype) => {
+    if (buttonSelect == 0) {
+      mutation.mutate({
+        endPoint: 'communities/add-removal-reaso',
+        data: values,
+      });
+    } else if (buttonSelect == 1) {
+      mutation.mutate({
+        endPoint: 'communities/delete-removal-reason',
+        data: {
+          community_name: community_name,
+          removal_reason_id: values.removal_reason_id,
+        },
+      });
+      const kk = {
+        community_name: community_name,
+        removal_reason_id: values.removal_reason_id,
+      };
+    } else if (buttonSelect == 2) {
+      mutation.mutate({
+        endPoint: 'communities/edit-removal-reason',
+        data: values,
+      });
+    }
   };
 
   return (
     <Dialog size='sm' open={props.open}>
       <DialogHeader className='!block relative flex justify-between'>
         <div className='block relative border-b border-lines-color flex justify-between'>
-          <h2 className='text-left'>Add new reason</h2>
+          <h2 className='text-left'>
+            {props.isEdit ? 'Edit removal reason' : 'Add new reason'}
+          </h2>
           <div className='cursor-pointer' onClick={props.handleOpen}>
             <IoMdClose />
           </div>
@@ -60,8 +88,10 @@ export default function AddRemovalReason(props: RuleFormProps): JSX.Element {
             removal_reason: Yup.string().required('Reason is required'),
           })}
           onSubmit={(values) => {
-            values.community_name = community_name;
-            console.log('Submitted values:', values);
+            if (community_name) {
+              values.community_name = community_name;
+            }
+
             handleOnSubmit(values);
             props.handleOpen();
           }}
@@ -88,19 +118,23 @@ export default function AddRemovalReason(props: RuleFormProps): JSX.Element {
               </div>
 
               <div className='mb-4 container'>
-                <label htmlFor='description' className='block text-gray-700'>
-                  Full description
+                <label
+                  htmlFor='description'
+                  className='block text-gray-700 text-sm'
+                >
+                  Reason message
+                  <div className='ms-1 text-xs'>Hi u/username,</div>
                 </label>
                 <Field
                   as='textarea'
-                  name='reason_message'
+                  name='removal_reason'
                   className='form-input mt-1 block w-full border p-2 pb-10 rounded text-black'
                   placeholder='Write a message that will communicate to the user why their post was removed.'
                 />
                 <div className='text-gray-400 text-xs mt-1'>
-                  {formik.values.reason_message.length > 1000
+                  {formik.values.removal_reason.length > 1000
                     ? `0 Characters remaining`
-                    : `${1000 - formik.values.reason_message.length} Characters remaining`}
+                    : `${1000 - formik.values.removal_reason.length} Characters remaining`}
                 </div>
                 <ErrorMessage
                   name='removal_reason'
@@ -109,21 +143,44 @@ export default function AddRemovalReason(props: RuleFormProps): JSX.Element {
                 />
               </div>
               <DialogFooter className='bg-gray-200 rounded space-x-2'>
+                {props.isEdit ? (
+                  <RoundedButton
+                    type='submit'
+                    buttonBorderColor='border-gray-200'
+                    buttonText='Delete'
+                    buttonTextColor='text-red-muted font-bold'
+                    buttonColor='bg-gray-200 '
+                    onClick={() => setButtonSelect(1)}
+                  />
+                ) : null}
+                <div className='flex-grow'></div>
                 <RoundedButton
                   type='button'
-                  buttonBorderColor='border-white'
-                  buttonText='cancel'
-                  buttonTextColor='text-blue-light'
+                  buttonBorderColor='border-blue-light'
+                  buttonText='Cancel'
+                  buttonTextColor='text-blue-light font-bold'
                   buttonColor='bg-gray-200 '
                   onClick={props.handleOpen}
                 />
-                <RoundedButton
-                  type='submit'
-                  buttonBorderColor='border-white'
-                  buttonText='Add new reason'
-                  buttonTextColor='text-blue-light'
-                  buttonColor='bg-gray-200 '
-                />
+                {props.isEdit ? (
+                  <RoundedButton
+                    type='submit'
+                    buttonBorderColor='border-white'
+                    buttonText='Save'
+                    buttonTextColor='text-white font-bold'
+                    buttonColor='bg-blue-light '
+                    onClick={() => setButtonSelect(2)}
+                  />
+                ) : (
+                  <RoundedButton
+                    type='submit'
+                    buttonBorderColor='border-white'
+                    buttonText='Add new reason'
+                    buttonTextColor='text-white font-bold'
+                    buttonColor='bg-blue-light'
+                    onClick={() => setButtonSelect(0)}
+                  />
+                )}
               </DialogFooter>
             </Form>
           )}

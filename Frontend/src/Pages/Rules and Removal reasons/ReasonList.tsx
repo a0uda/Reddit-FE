@@ -4,7 +4,7 @@ import AddRemovalReason from './AddRemovalReason';
 
 interface reasonDataType {
   removal_reason_title: string;
-  reason_message: string;
+  removal_reason: string;
   _id: string;
 }
 
@@ -12,32 +12,32 @@ export default function ReasonList() {
   const reason = [
     {
       removal_reason_title: 'Spam1',
-      reason_message: 'This post is spam',
+      removal_reason: 'This post is spam',
       _id: '6618520b1135daf6066366ea',
     },
     {
       removal_reason_title: 'Spam2',
-      reason_message: 'This post is spam',
+      removal_reason: 'This post is spam',
       _id: '6618520b1135daf6066366ea',
     },
   ];
 
   const [openAddRule, setOpenAddRule] = useState(false);
-  const [reasonsList, setReasonList] = useState(reason);
+  const [reasonsList] = useState(reason);
   const [initialValues, setInitialValues] = useState({
     community_name: '',
     removal_reason_title: '',
-    reason_message: '',
+    removal_reason: '',
     removal_reason_id: '',
   });
 
   const handleSelectRule = (reasonData: reasonDataType) => {
-    const { removal_reason_title, reason_message } = reasonData;
+    const { removal_reason_title, removal_reason } = reasonData;
     const community_name = 'ssss';
     const removal_reason_id = reasonData._id;
     setInitialValues({
       removal_reason_title,
-      reason_message,
+      removal_reason,
       community_name,
       removal_reason_id,
     });
@@ -89,6 +89,7 @@ export default function ReasonList() {
                   open={openAddRule}
                   handleOpen={() => setOpenAddRule(!openAddRule)}
                   initialValues={initialValues}
+                  isEdit={true}
                 />
               </div>
             </div>

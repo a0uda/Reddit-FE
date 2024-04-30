@@ -35,28 +35,28 @@ export default function AddRule(props: RuleFormProps): JSX.Element {
 
   const mutationAdd = useMutation(postRequest, {
     onSuccess: () => {
-      console.log('added reason successfully');
+      console.log('added rule successfully');
     },
     onError: () => {
-      console.log('added reason failed');
+      console.log('added rule failed');
     },
   });
 
   const mutationDelete = useMutation(postRequest, {
     onSuccess: () => {
-      console.log('added reason successfully');
+      console.log('added rule successfully');
     },
     onError: () => {
-      console.log('added reason failed');
+      console.log('added rule failed');
     },
   });
 
   const mutationEdit = useMutation(postRequest, {
     onSuccess: () => {
-      console.log('added reason successfully');
+      console.log('added rule successfully');
     },
     onError: () => {
-      console.log('added reason failed');
+      console.log('added rule failed');
     },
   });
 
