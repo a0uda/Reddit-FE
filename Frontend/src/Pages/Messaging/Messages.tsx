@@ -12,6 +12,8 @@ const Sent = () => {
     () => fetchRequest('messages/read-all-messages'),
     {
       onSuccess: (data) => {
+        console.log(data, 'felonsuccess');
+
         parentChildrenMap = data?.data.messages.reduce((acc, message) => {
           if (message.parentMessageId !== null) {
             if (acc[message.parentMessageId]) {
@@ -38,6 +40,8 @@ const Sent = () => {
         <div className=''>
           {!!data?.data &&
             data?.data.messages.map((mess) => {
+              console.log(mess);
+
               if (mess.parentMessageId == null) {
                 return (
                   <Message
