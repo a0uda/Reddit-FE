@@ -4206,6 +4206,15 @@ app.post("/comments/reply", (req, res) => {
   res.status(200).json({ message: "Comment added successfully." });
 });
 
+app.get('/communities/get-removal-reasons/:communityName', (req, res) => {
+  console.log('rem reasons');
+  res.status(200).json([{
+    "removal_reason_title": "Spam",
+    "reason_message": "This post is spam",
+    "_id": "6618520b1135daf6066366ea"
+  }])
+})
+
 app.get('/communities/about/unmoderated/:communityName', (req, res) => {
   console.log('hi');
   res.status(200).json([
@@ -4686,3 +4695,4 @@ app.get('/communities/about/unmoderated/:communityName', (req, res) => {
     }
   ])
 })
+

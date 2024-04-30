@@ -106,7 +106,9 @@ export const ReportModal = (props: {
             color='blue-gray'
             size='sm'
             variant='text'
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
+
               setChosenMsg('');
               props.handleOpen();
             }}
@@ -139,7 +141,9 @@ export const ReportModal = (props: {
               <Butt
                 key={rep + i}
                 buttonText={rep}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
+
                   setChosenMsg(rep);
                 }}
                 active={rep === chosenMsg}
@@ -162,7 +166,9 @@ export const ReportModal = (props: {
                 buttonText='NEXT'
                 buttonTextColor='text-white font-bold px-8'
                 disabled={!chosenMsg}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
+
                   if (props.type != 'postReply') {
                     postReq.mutate(
                       {

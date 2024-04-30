@@ -11,8 +11,8 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { useAlert } from '../../../Providers/AlertProvider';
-import { useMutation } from 'react-query';
-import { patchRequest, postRequest } from '../../../API/User';
+import { useMutation, useQuery } from 'react-query';
+import { fetchRequest, patchRequest, postRequest } from '../../../API/User';
 import {
   Avatar,
   Typography,
@@ -21,9 +21,17 @@ import {
   MenuItem,
   MenuList,
   Button,
+  Dialog,
+  DialogHeader,
+  IconButton,
+  DialogBody,
+  Input,
+  DialogFooter,
+  Select,
+  Option,
 } from '@material-tailwind/react';
 import { CommunityIcon } from '../../../assets/icons/Icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   addPrefixToUsername,
   getTimeDifferenceAsString,
@@ -43,16 +51,20 @@ import { PollPostContainer } from '../../../Components/Posts/PostPreview';
 import useSession from '../../../hooks/auth/useSession';
 import eighteenPic from '../../../assets/18Pic.svg';
 import { ReportModal, ThankYouModal } from '../../Messaging/Containers/Message';
+import RoundedButton from '../../../Components/RoundedButton';
 
-function RoundedButton(props: {
+function RoundedButt(props: {
   children: ReactNode;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
+  onClick: MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
 }) {
   return (
     <Button
-      onClick={props.onClick}
+      onClick={(e) => {
+        e.stopPropagation();
+        props.onClick();
+      }}
       style={{
         //backgroundColor: props.buttonColor,
         // color: props.buttonTextColor,
@@ -72,36 +84,174 @@ function RoundedButton(props: {
   );
 }
 
-const PostOptions = ({ post, isPost }: { post: PostType; isPost: boolean }) => {
+const AddRemovalModal = (props: { handleOpen: () => void; open: boolean }) => {
+  const [reason, setReason] = useState('');
+  const [reasonMessage, setReasonMessage] = useState<string>('');
+  const [modNote, setModNote] = useState<string>('');
+
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+  const { communityName } = useParams();
+  const removalReasonsRes = useQuery('getremovalreasons', () =>
+    fetchRequest(`communities/get-removal-reasons/${communityName}`)
+  );
+  console.log(reason, 'remmm');
+
+  const postReq = useMutation(postRequest, {
+    onSuccess: () => {
+      // setTrigger(!trigger);
+      // setIsError(false);
+      // setAlertMessage('User Settings Updated Successfully');
+    },
+    onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(errorObj.data);
+    },
+  });
+
+  return (
+    <>
+      <Dialog size='md' open={props.open} handler={props.handleOpen}>
+        <DialogHeader className='!block text-center border-b border-lines-color p-5'>
+          <h2 className='flex items-center'>Add a removal reason</h2>
+          <IconButton
+            color='blue-gray'
+            size='sm'
+            variant='text'
+            onClick={(e) => {
+              props.handleOpen();
+              e.stopPropagation();
+            }}
+            className='!absolute right-[10px] top-[10px]'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='currentColor'
+              strokeWidth={2}
+              className='h-5 w-5'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M6 18L18 6M6 6l12 12'
+              />
+            </svg>
+          </IconButton>
+        </DialogHeader>
+        <DialogBody className='flex gap-6 p-5 flex-col'>
+          {removalReasonsRes.isSuccess && (
+            <div className='w-full'>
+              <Select
+                value={reason}
+                name='remReasons'
+                label='REASON FOR REMOVAL'
+                className='font-semibold'
+              >
+                {removalReasonsRes.data?.data.map((reason, i) => (
+                  <Option
+                    className='font-semibold'
+                    value={reason.removal_reason_title}
+                    key={reason._id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+
+                      setReason(reason.removal_reason_title);
+                      setReasonMessage(reason.reason_message);
+                    }}
+                  >
+                    {i + 1 + '. ' + reason.removal_reason_title}
+                  </Option>
+                ))}
+                {/* <Option>hi</Option> */}
+              </Select>
+            </div>
+          )}
+          {reason && (
+            <textarea
+              className='w-full h-36 border-2 rounded-md px-3 py-2'
+              value={reasonMessage}
+            />
+          )}
+        </DialogBody>
+        <DialogFooter className='flex flex-col bg-gray-200'>
+          <div className='w-full'>
+            <Typography color='black' className='mb-2' variant='small'>
+              {'Mod note (Only mods will see this note)'}
+            </Typography>
+            <input
+              value={modNote}
+              onChange={(e) => {
+                setModNote(e.target.value);
+              }}
+              className='w-full border-2 rounded-md px-3 py-2'
+              placeholder='This is a short note for your mod team on why the content was removed.'
+            />
+          </div>
+          <div className=' flex justify-end p-5 gap-2 w-full'>
+            <RoundedButton
+              buttonBorderColor='border-blue-light'
+              buttonColor='bg-inherit'
+              buttonText='Cancel'
+              buttonTextColor='text-blue-light'
+              onClick={(e) => {
+                e.stopPropagation();
+
+                setModNote('');
+                setReason('');
+                setReasonMessage('');
+                props.handleOpen();
+              }}
+            />
+            <RoundedButton
+              buttonBorderColor='border-blue-light'
+              buttonColor='bg-blue-light'
+              buttonText='Submit'
+              buttonTextColor='text-white'
+              disabled={!reason}
+              onClick={(e) => {
+                // postReq.mutate({
+                //   endPoint: 'users/disconnect-google',
+                //   data: { password: pwd },
+                // }); not implemented
+                e.stopPropagation();
+
+                setModNote('');
+                setReason('');
+                setReasonMessage('');
+                props.handleOpen();
+              }}
+            />
+          </div>
+        </DialogFooter>
+      </Dialog>
+    </>
+  );
+};
+
+const PostOptions = ({
+  post,
+  isPost,
+  handleModOps,
+  setRepModal,
+}: {
+  post: PostType;
+  isPost: boolean;
+  handleModOps: (
+    option: 'approve' | 'remove' | 'spam' | 'report',
+    type: 'post' | 'comment'
+  ) => void;
+  setRepModal: (rep: boolean) => void;
+}) => {
   const postReq = useMutation(postRequest);
   const patchReq = useMutation(patchRequest);
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
-  const [repModal, setRepModal] = useState(false);
-  const [thankModal, setThankModal] = useState(false);
 
   // const { user } = useSession();
-  const handleModOps = (
-    option: 'approve' | 'remove' | 'spam' | 'report',
-    type: 'post' | 'comment'
-  ) => {
-    postReq.mutate(
-      {
-        endPoint: `communities/${option}-item/${post.community_name}`,
-        data: {
-          item_id: post._id,
-          item_type: type,
-        },
-      },
-      {
-        // onSuccess: () => {
-        //   post.moderator_details.approved_flag = true;
-        //   post.moderator_details.approved_by = user?.username;
-        //   post.moderator_details.approved_date = new Date();
-        //   post.moderator_details.removed_flag = false;
-        // },
-      }
-    );
-  };
+
   const handleSharePost = () => {
     navigator.clipboard.writeText(
       `${window.location.origin}/r/${post.community_name}/comments/${post._id}/${post.title}/`
@@ -175,122 +325,123 @@ const PostOptions = ({ post, isPost }: { post: PostType; isPost: boolean }) => {
   };
 
   return (
-    <Menu placement='bottom-end'>
-      <MenuHandler>
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-            e.nativeEvent.stopImmediatePropagation();
-            e.stopPropagation();
-          }}
-          variant='text'
-          className='p-2 z-10'
-        >
-          <HiEllipsisHorizontal size={20} />
-        </Button>
-      </MenuHandler>
-      <MenuList className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'>
-        <Typography className='px-4 pt-2 flex gap-2 items-center focus-visible:outline-none'>
-          Moderation
-        </Typography>
-        {!post.moderator_details.removed_flag &&
-          !post.moderator_details.reported_flag &&
-          !post.moderator_details.spammed_flag && (
+    <>
+      <Menu placement='bottom-end'>
+        <MenuHandler>
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              e.nativeEvent.stopImmediatePropagation();
+              e.stopPropagation();
+            }}
+            variant='text'
+            className='p-2 z-10'
+          >
+            <HiEllipsisHorizontal size={20} />
+          </Button>
+        </MenuHandler>
+        <MenuList className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'>
+          <Typography className='px-4 pt-2 flex gap-2 items-center focus-visible:outline-none'>
+            Moderation
+          </Typography>
+          {!post.moderator_details.removed_flag &&
+            !post.moderator_details.reported_flag &&
+            !post.moderator_details.spammed_flag && (
+              <MenuItem
+                className='py-3 flex gap-2 items-center'
+                onClick={(e) => {
+                  e.stopPropagation();
+
+                  handleModOps(
+                    'spam',
+                    post.post_in_community_flag == undefined
+                      ? 'comment'
+                      : 'post'
+                  );
+                }}
+              >
+                <XMarkIcon className='w-5 h-5' />
+                <span>Remove as Spam</span>
+              </MenuItem>
+            )}
+          <MenuItem
+            className='py-3 flex gap-2 items-center'
+            onClick={(e) => {
+              e.stopPropagation();
+
+              handleLockUnlockPost(post.post_in_community_flag != undefined);
+            }}
+          >
+            <LockClosedIcon className='w-5 h-5' />
+            <span>
+              {!post.locked_flag ? 'Lock' : 'Unlock'}{' '}
+              {post.post_in_community_flag == undefined ? 'Thread' : 'Comments'}
+            </span>
+          </MenuItem>
+          {isPost && (
             <MenuItem
-              className='py-3 flex gap-2 items-center'
-              onClick={() => {
-                handleModOps(
-                  'spam',
-                  post.post_in_community_flag == undefined ? 'comment' : 'post'
-                );
+              onClick={(e) => {
+                e.stopPropagation();
+
+                handleNSFWFlag;
               }}
+              className='py-3 flex gap-2 items-center'
             >
-              <XMarkIcon className='w-5 h-5' />
-              <span>Remove as Spam</span>
+              <img src={eighteenPic} className='w-5 h-5' />
+              <span>{!post.nsfw_flag ? 'Mark' : 'Unmark'} as NSFW</span>
             </MenuItem>
           )}
-        <MenuItem
-          className='py-3 flex gap-2 items-center'
-          onClick={() => {
-            handleLockUnlockPost(post.post_in_community_flag != undefined);
-          }}
-        >
-          <LockClosedIcon className='w-5 h-5' />
-          <span>
-            {!post.locked_flag ? 'Lock' : 'Unlock'}{' '}
-            {post.post_in_community_flag == undefined ? 'Thread' : 'Comments'}
-          </span>
-        </MenuItem>
-        {isPost && (
-          <MenuItem
-            onClick={handleNSFWFlag}
-            className='py-3 flex gap-2 items-center'
-          >
-            <img src={eighteenPic} className='w-5 h-5' />
-            <span>{!post.nsfw_flag ? 'Mark' : 'Unmark'} as NSFW</span>
-          </MenuItem>
-        )}
 
-        <MenuItem
-          onClick={() => {
-            handleSpoil(post.post_in_community_flag != undefined);
-          }}
-          className='py-3 flex gap-2 items-center border-b-[1px]'
-        >
-          <ExclamationTriangleIcon className='w-5 h-5' />
-          <span>{!post.nsfw_flag ? 'Mark' : 'Unmark'} as Spoiler</span>
-        </MenuItem>
-        <Typography className='px-4 pt-2 flex gap-2 items-center focus-visible:outline-none'>
-          Other
-        </Typography>
-        <MenuItem
-          className='py-3 flex gap-2 items-center'
-          onClick={handleSharePost}
-        >
-          <ShareIcon className='w-5 h-5' />
-          <span>Share</span>
-        </MenuItem>
-        <MenuItem
-          className='py-3 flex gap-2 items-center'
-          onClick={() => {
-            setRepModal(true);
-          }}
-        >
-          <ReportModal
-            handleOpen={() => {
-              setRepModal(!repModal);
-            }}
-            handleThankyouModal={() => {
-              setThankModal(!thankModal);
-            }}
-            id={post._id}
-            open={repModal}
-            senderType='user'
-            type='post'
-            username={post.username}
-            isPost={isPost}
-          />
-          <ThankYouModal
-            handleOpen={() => {
-              setThankModal(!thankModal);
-            }}
-            open={thankModal}
-            senderUsername={post.username}
-          />
-          <FlagIcon className='w-5 h-5' />
-          <span>Report</span>
-        </MenuItem>
-        {isPost && (
           <MenuItem
-            onClick={handleHideUnhidePost}
-            className='py-3 flex gap-2 items-center'
+            onClick={(e) => {
+              e.stopPropagation();
+
+              handleSpoil(post.post_in_community_flag != undefined);
+            }}
+            className='py-3 flex gap-2 items-center border-b-[1px]'
           >
-            <EyeSlashIcon className='w-5 h-5' />
-            <span>Hide</span>
+            <ExclamationTriangleIcon className='w-5 h-5' />
+            <span>{!post.nsfw_flag ? 'Mark' : 'Unmark'} as Spoiler</span>
           </MenuItem>
-        )}
-      </MenuList>
-    </Menu>
+          <Typography className='px-4 pt-2 flex gap-2 items-center focus-visible:outline-none'>
+            Other
+          </Typography>
+          <MenuItem
+            className='py-3 flex gap-2 items-center'
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSharePost();
+            }}
+          >
+            <ShareIcon className='w-5 h-5' />
+            <span>Share</span>
+          </MenuItem>
+          <MenuItem
+            className='py-3 flex gap-2 items-center'
+            onClick={(e) => {
+              e.stopPropagation();
+
+              setRepModal(true);
+            }}
+          >
+            <FlagIcon className='w-5 h-5' />
+            <span>Report</span>
+          </MenuItem>
+          {isPost && (
+            <MenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                handleHideUnhidePost();
+              }}
+              className='py-3 flex gap-2 items-center'
+            >
+              <EyeSlashIcon className='w-5 h-5' />
+              <span>Hide</span>
+            </MenuItem>
+          )}
+        </MenuList>
+      </Menu>
+    </>
   );
 };
 
@@ -312,7 +463,9 @@ const Vote = (props: {
       <ArrowUpIcon
         strokeWidth={6.5}
         className={`w-[25px] cursor-pointer ${props.post.vote === 1 ? 'text-orange' : 'text-[#888]'}`}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
+
           const lastVote = props.post.vote;
           let newVote = props.post.vote;
           if (props.post.vote === 1) {
@@ -351,7 +504,9 @@ const Vote = (props: {
         color={props.post.vote === -1 ? 'violet' : '#888'}
         strokeWidth={6.5}
         className={`w-[25px] cursor-pointer ${props.post.vote === -1 ? 'text-violet' : 'text-[#888]'}`}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
+
           let newVote = props.post.vote;
           const lastVote = props.post.vote;
 
@@ -468,11 +623,9 @@ const PostBody = ({ post }: { post: PostType }) => {
           <Typography className='text-black'>{post.description}</Typography>
         )}
         {post.type == 'url' && post.link_url && (
-          <Link to={post.link_url}>
-            <Typography className='text-purple-600 hover:underline'>
-              {post.link_url}
-            </Typography>
-          </Link>
+          <Typography className='text-purple-600 hover:underline'>
+            <Link to={post.link_url}>{post.link_url}</Link>
+          </Typography>
         )}
         {post.type == 'polls' && <PollPostContainer post={post} />}
       </div>
@@ -499,7 +652,67 @@ const CommentBody = ({ comment }: { comment: CommentType }) => {
     </div>
   );
 };
-const PostFooter = ({ post, isPost }: { post: PostType; isPost: boolean }) => {
+const PostFooter = ({
+  post,
+  isPost,
+  setRemModal,
+  setRepModal,
+}: {
+  post: PostType;
+  isPost: boolean;
+  setRemModal: (rem: boolean) => void;
+  setRepModal: (rep: boolean) => void;
+}) => {
+  const postReq = useMutation(postRequest);
+  const { user } = useSession();
+
+  const handleModOps = (
+    option: 'approve' | 'remove' | 'spam' | 'report',
+    type: 'post' | 'comment'
+  ) => {
+    postReq.mutate(
+      {
+        endPoint: `communities/${option}-item/${post.community_name}`,
+        data: {
+          item_id: post._id,
+          item_type: type,
+        },
+      },
+      {
+        onSuccess: () => {
+          if (option == 'approve') {
+            post.moderator_details.approved_flag = true;
+            post.moderator_details.approved_by = user?.username;
+            post.moderator_details.approved_date = new Date();
+            post.moderator_details.removed_flag = false;
+            post.moderator_details.spammed_flag = false;
+            post.moderator_details.reported_flag = false;
+          } else if (option == 'remove') {
+            post.moderator_details.removed_flag = true;
+            post.moderator_details.removed_by = user?.username;
+            post.moderator_details.removed_date = new Date();
+            post.moderator_details.approved_flag = false;
+            // post.moderator_details.spammed_flag = false;
+            // post.moderator_details.reported_flag = false;
+          } else if (option == 'report') {
+            post.moderator_details.reported_flag = true;
+            post.moderator_details.reported_by = user?.username;
+            // post.moderator_details.r = new Date();
+            post.moderator_details.removed_flag = true;
+            post.moderator_details.spammed_flag = false;
+            post.moderator_details.approved_flag = false;
+          } else {
+            post.moderator_details.spammed_flag = true;
+            post.moderator_details.spammed_by = user?.username;
+            // post.moderator_details.r = new Date();
+            post.moderator_details.removed_flag = true;
+            post.moderator_details.reported_flag = false;
+            post.moderator_details.approved_flag = false;
+          }
+        },
+      }
+    );
+  };
   return (
     <div className='flex flex-col gap-2 mt-2'>
       {isPost && (
@@ -547,64 +760,122 @@ const PostFooter = ({ post, isPost }: { post: PostType; isPost: boolean }) => {
       <div className='flex gap-3'>
         {post.moderator_details.removed_flag === true &&
           !post.moderator_details.removed_removal_reason && (
-            <RoundedButton>Add Removal Reason</RoundedButton>
+            <RoundedButt
+              onClick={(e) => {
+                e.stopPropagation();
+
+                setRemModal(true);
+              }}
+            >
+              Add Removal Reason
+            </RoundedButt>
           )}
         {!post.moderator_details.approved_flag && (
-          <RoundedButton>
+          <RoundedButt
+            onClick={() => {
+              handleModOps('approve', isPost ? 'post' : 'comment');
+            }}
+          >
             <CheckIcon className='w-4' />
             Approve
-          </RoundedButton>
+          </RoundedButt>
         )}
         {!post.moderator_details.removed_flag &&
           !post.moderator_details.reported_flag &&
           !post.moderator_details.spammed_flag && (
-            <RoundedButton>
+            <RoundedButt
+              onClick={() => {
+                handleModOps('remove', isPost ? 'post' : 'comment');
+              }}
+            >
               <XMarkIcon className='w-4' />
               Remove
-            </RoundedButton>
+            </RoundedButt>
           )}
         <PostOptions
           post={post}
           isPost={post.post_in_community_flag != undefined}
+          handleModOps={handleModOps}
+          setRepModal={setRepModal}
         />
       </div>
     </div>
   );
 };
 const PostCard = ({ post }: { post: PostType }) => {
+  const [remModal, setRemModal] = useState(false);
+  const [repModal, setRepModal] = useState(false);
+  const [thankModal, setThankModal] = useState(false);
   console.log(post.post_in_community_flag != undefined, 'isPost');
-
+  const navigate = useNavigate();
   return (
-    <div className='border-[1px] border-gray-500 rounded-md py-2 px-3 flex'>
-      <div className='flex gap-4 w-full'>
-        <Vote
-          postId={post._id}
-          post={post}
-          voteCount={post.upvotes_count - post.downvotes_count}
-          isPost={post.post_in_community_flag != undefined}
-        />
-        <div className='flex-1'>
-          <PostHeader
-            isPost={post.post_in_community_flag != undefined}
-            avatar={post.avatar}
-            communityNameWithPrefix={addPrefixToUsername(
-              post.community_name || '',
-              'community'
-            )}
-            createdAt={post.created_at}
-            usernameWithPrefix={addPrefixToUsername(
-              post.username || '',
-              'user'
-            )}
-          />
-          <PostBody post={post} />
-          <PostFooter
+    <>
+      <AddRemovalModal
+        open={remModal}
+        handleOpen={() => {
+          setRemModal(!remModal);
+        }}
+      />
+      <ReportModal
+        handleOpen={() => {
+          setRepModal(!repModal);
+        }}
+        handleThankyouModal={() => {
+          setThankModal(!thankModal);
+        }}
+        id={post._id}
+        open={repModal}
+        senderType='user'
+        type='post'
+        username={post.username}
+        isPost={post.post_in_community_flag != undefined}
+      />
+      <ThankYouModal
+        handleOpen={() => {
+          setThankModal(!thankModal);
+        }}
+        open={thankModal}
+        senderUsername={post.username}
+      />
+
+      <div
+        className='border-[1px] border-gray-500 rounded-md py-2 px-3 flex cursor-pointer hover:border-black'
+        onClick={() => {
+          navigate(`/r/${post.community_name}/${post._id}/${post.title}`);
+        }}
+      >
+        <div className='flex gap-4 w-full'>
+          <Vote
+            postId={post._id}
             post={post}
+            // voteCount={post.upvotes_count - post.downvotes_count}
             isPost={post.post_in_community_flag != undefined}
           />
+          <div className='flex-1'>
+            <PostHeader
+              isPost={post.post_in_community_flag != undefined}
+              avatar={post.avatar}
+              communityNameWithPrefix={addPrefixToUsername(
+                post.community_name || '',
+                'community'
+              )}
+              createdAt={post.created_at}
+              usernameWithPrefix={addPrefixToUsername(
+                post.username || '',
+                'user'
+              )}
+            />
+            <PostBody post={post} />
+            <PostFooter
+              post={post}
+              isPost={post.post_in_community_flag != undefined}
+              setRemModal={setRemModal}
+              setRepModal={setRepModal}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
