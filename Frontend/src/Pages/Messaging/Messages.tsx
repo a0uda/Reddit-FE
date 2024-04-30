@@ -15,7 +15,10 @@ const Sent = () => {
         console.log(data, 'felonsuccess');
 
         parentChildrenMap = data?.data.messages.reduce((acc, message) => {
-          if (message.parentMessageId !== null) {
+          if (
+            message.parentMessageId != null ||
+            message.parentMessageId != undefined
+          ) {
             if (acc[message.parentMessageId]) {
               acc[message.parentMessageId].push(message);
             } else {
@@ -61,7 +64,7 @@ const Sent = () => {
                     key={mess['_id']}
                     senderVia={mess['senderVia']}
                     refetch={refetch}
-                    parentMessageId={mess['parentMessageId']}
+                    parentMessageId={mess['parentMessageId'] || null}
                     query='messages'
                   />
                 );
