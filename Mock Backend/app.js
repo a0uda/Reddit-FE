@@ -18,11 +18,32 @@ const getAuthUsername = (req) => {
   return username;
 };
 
+<<<<<<< Updated upstream
 app.use(
   cors({
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Add PATCH method here
   })
 );
+=======
+const whitelist = ["http://localhost:5174", "http://localhost:5173"];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
+
+// app.use(
+//   cors({
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Add PATCH method here
+//   })
+// );
+>>>>>>> Stashed changes
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -1359,6 +1380,7 @@ let postsListings = [
       { "options": "Option 1", "votes": 10 },
       { "options": "Option 2", "votes": 5 },
     ],
+<<<<<<< Updated upstream
     "polls_voting_length": 7,
     "polls_voting_is_expired_flag": false,
     "post_in_community_flag": false,
@@ -1391,6 +1413,40 @@ let postsListings = [
       "reported_flag": false,
       "reported_by": null,
       "reported_type": null,
+=======
+    polls_voting_length: 7,
+    polls_voting_is_expired_flag: false,
+    post_in_community_flag: false,
+    community_id: null,
+    community_name: null,
+    comments_count: 3,
+    views_count: 15,
+    shares_count: 2,
+    upvotes_count: 7,
+    downvotes_count: 1,
+    oc_flag: true,
+    spoiler_flag: false,
+    nsfw_flag: false,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "Top",
+    scheduled_flag: false,
+    moderator_details: {
+      approved_flag: true,
+      approved_by: "john",
+      approved_date: new Date(),
+      removed_flag: false,
+      removed_by: null,
+      removed_date: null,
+      removed_removal_reason: null,
+      spammed_flag: false,
+      spammed_by: null,
+      spammed_type: null,
+      spammed_removal_reason: null,
+      reported_flag: false,
+      reported_by: null,
+      reported_type: null,
+>>>>>>> Stashed changes
     },
     "user_details": {
       "total_views": 15,
@@ -1697,7 +1753,11 @@ let postsListings = [
     "is_reposted_flag": false,
     "reposted": null,
   },
+<<<<<<< Updated upstream
 ]
+=======
+];
+>>>>>>> Stashed changes
 
 let comments = {
   message: "Comments Retrieved sucessfully",
@@ -1706,6 +1766,113 @@ let comments = {
       moderator_details: {
         approved_by: "",
         approved_date: "",
+<<<<<<< Updated upstream
+=======
+        removed_by: "",
+        removed_date: "",
+        spammed_by: "",
+        spammed_type: "",
+        removed_flag: false,
+        spammed_flag: false,
+      },
+      is_post: false,
+      votes_count: 0,
+      _id: "11",
+      post_id: "7",
+      user_id: "567",
+      username: "commenter567",
+      parent_id: "",
+      replies_comments_ids: [],
+      created_at: "2024-03-30T11:30:00",
+      edited_at: "",
+      deleted_at: "",
+      approved: false,
+      deleted: false,
+      description:
+        "I found this post thought-provoking. It made me reconsider my own perspective.",
+      upvotes_count: 14,
+      downvotes_count: 1,
+      allowreplies_flag: true,
+      spam_flag: false,
+      locked_flag: false,
+      show_comment_flag: true,
+      __v: 0,
+    },
+    {
+      moderator_details: {
+        approved_by: "",
+        approved_date: "",
+        removed_by: "",
+        removed_date: "",
+        spammed_by: "",
+        spammed_type: "",
+        removed_flag: false,
+        spammed_flag: false,
+      },
+      is_post: false,
+      votes_count: 0,
+      _id: "12",
+      post_id: "7",
+      user_id: "678",
+      username: "user678",
+      parent_id: "",
+      replies_comments_ids: [],
+      created_at: "2024-03-29T14:45:00",
+      edited_at: "",
+      deleted_at: "",
+      approved: false,
+      deleted: false,
+      description:
+        "I have a question regarding one of the points you raised. Can you elaborate?",
+      upvotes_count: 6,
+      downvotes_count: 3,
+      allowreplies_flag: true,
+      spam_flag: false,
+      locked_flag: false,
+      show_comment_flag: true,
+      __v: 0,
+    },
+    {
+      moderator_details: {
+        approved_by: "moderator123",
+        approved_date: "2024-03-28T12:40:00",
+        removed_by: "",
+        removed_date: "",
+        spammed_by: "",
+        spammed_type: "",
+        removed_flag: false,
+        spammed_flag: false,
+      },
+      is_post: false,
+      votes_count: 0,
+      _id: "13",
+      post_id: "8",
+      user_id: "789",
+      username: "user789",
+      parent_id: "",
+      replies_comments_ids: [],
+      created_at: "2024-03-28T10:20:00",
+      edited_at: "2024-03-28T12:35:00",
+      deleted_at: "",
+      approved: false,
+      deleted: false,
+      description:
+        "I enjoyed reading your post. It provided a fresh perspective on the topic.",
+      upvotes_count: 11,
+      downvotes_count: 0,
+      allowreplies_flag: true,
+      spam_flag: false,
+      locked_flag: false,
+      show_comment_flag: true,
+      __v: 0,
+    },
+    {
+      moderator_details: {
+        approved_flag: true,
+        approved_by: "ModeratorX",
+        approved_date: "2024-04-22T08:15:00Z",
+        removed_flag: false,
+>>>>>>> Stashed changes
         removed_by: "",
         removed_date: "",
         spammed_by: "",
@@ -3443,3 +3610,76 @@ app.post("/comments/new-comment", (req, res) => {
 
   res.status(200).json({ message: "Comment added successfully." });
 });
+<<<<<<< Updated upstream
+=======
+
+app.post("/comments/reply", (req, res) => {
+  const { id, description } = req.body;
+
+  const username = getAuthUsername(req);
+
+  if (!username) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  console.log("username", username);
+  const commentId = crypto.randomUUID();
+  const updatedComments = comments.content.map((comment) => {
+    if (comment._id === id) {
+      return {
+        ...comment,
+        replies_comments_ids: comment.replies_comments_ids.concat({
+          moderator_details: {
+            approved_flag: true,
+            approved_by: "ModeratorC",
+            approved_date: "2024-04-22T22:45:00Z",
+            removed_flag: false,
+            removed_by: "",
+            removed_date: "",
+            removed_removal_reason: "",
+            spammed_flag: false,
+            spammed_by: "",
+            spammed_type: "",
+            spammed_removal_reason: "",
+            reported_flag: false,
+            reported_by: "",
+            reported_type: "",
+          },
+          is_post: false,
+          is_reply: true,
+          parent_username: "UserE",
+          _id: commentId,
+          post_id: "id",
+          user_id: "user789",
+          username: username,
+          parent_id: id,
+          replies_comments_ids: [],
+          created_at: "2024-04-22T23:30:00Z",
+          edited_at: "",
+          deleted_at: "",
+          deleted: false,
+          saved: false,
+          description: description,
+          comment_in_community_flag: true,
+          community_id: "communityOPQ",
+          community_name: "CommunityOPQ",
+          upvotes_count: 7,
+          downvotes_count: 2,
+          spam_flag: false,
+          locked_flag: false,
+          spoiler_flag: false,
+          show_comment_flag: true,
+          __v: 0,
+        }),
+      };
+    }
+    return comment;
+  });
+
+  comments.content = updatedComments;
+
+  console.log(comments.content);
+
+  res.status(200).json({ message: "Comment added successfully." });
+});
+>>>>>>> Stashed changes
