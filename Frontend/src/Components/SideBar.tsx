@@ -95,7 +95,7 @@ const SideBar = ({ className }: { className?: string }) => {
     <>
       <div
         className={cn(
-          'h-[calc(100vh-var(--navbar-height))] overflow-x-auto w-full p-5 shadow-none border-r',
+          'h-[calc(100vh-var(--navbar-height))] overflow-x-auto w-full p-5 py-2 shadow-none border-r',
           className
         )}
         // style={{ scrollbarWidth: 'none' }} // Hide scrollbar

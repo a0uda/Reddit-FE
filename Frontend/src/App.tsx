@@ -11,7 +11,6 @@ import Post from './Pages/Post.tsx';
 import User from './Pages/User/User.tsx';
 import CreatePost from './Pages/createPost/CreatePost.tsx';
 import Search from './Pages/Search.tsx';
-// import Search from './Pages/Search.tsx';
 
 function App() {
   const { status } = useSession();
@@ -53,10 +52,7 @@ function App() {
             path='/message/*'
             element={<HandleRoutes element={<MessageRouter />} />}
           />
-          <Route
-            path='/search/*'
-            element={<HandleRoutes element={<Search />} />}
-          />
+          <Route path='/search/*' element={<Search />} />
         </Routes>
       </Router>
     </div>
