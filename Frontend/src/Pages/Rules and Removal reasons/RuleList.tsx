@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddRule from './AddRule';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 interface ruleData {
   _id: string;
   rule_title: string;
@@ -10,31 +12,36 @@ interface ruleData {
 }
 
 export default function RuleList() {
-  const rule = [
-    {
-      _id: '6618282ceafa8bfb1c5a6253',
-      rule_title: 'volutabrum',
-      applies_to: 'comments_only',
-      report_reason: 'incidunt',
-      full_description:
-        'Cresco supplanto attero tego. Confero apparatus solvo explicabo trucido. Optio consequuntur minus desparatus utrimque.',
-      __v: 0,
-    },
-    {
-      _id: '6618282ceafa8bfb1c5a11111',
-      rule_title: 'No photos',
-      applies_to: 'commentsonly',
-      report_reason: 'incidunt',
-      full_description:
-        'Cresco supplanto attero tego. Confero apparatus solvo explicabo trucido. Optio consequuntur minus desparatus utrimque.',
-      __v: 0,
-    },
-  ];
-
   const [openAddRule, setOpenAddRule] = useState(false);
-  const [rulesList, setRulesList] = useState(
-    rule.map((item) => ({ ...item, selected: false }))
-  );
+  const { community_name } = useParams();
+  const [rulesList, setRulesList] = useState<RuleData[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setRulesList([]);
+      try {
+        const res = await axios.get(
+          `${process.env.VITE_BASE_URL}communities/get-rules/${community_name}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: localStorage.getItem('token'),
+            },
+            params: {
+              community_name: community_name,
+            },
+          }
+        );
+        setRulesList(res.data.map((item) => ({ ...item, selected: false })));
+        console.log(res.data, 'resss');
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const [initialValues, setInitialValues] = useState({
     rule_title: '',
     applies_to: '',
@@ -61,10 +68,8 @@ export default function RuleList() {
     setOpenAddRule(true);
   };
   const handleSelectDetails = (index: number) => {
-    setRulesList((prevRulesList) => {
-      // Create a copy of the rules list
+    setRulesList((prevRulesList: any) => {
       const updatedRulesList = [...prevRulesList];
-      // Toggle the 'selected' property of the rule at the specified index
       updatedRulesList[index] = {
         ...updatedRulesList[index],
         selected: !updatedRulesList[index].selected,
