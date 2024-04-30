@@ -10,6 +10,7 @@ import Notifications from './Pages/Notifications.tsx';
 import Post from './Pages/Post.tsx';
 import User from './Pages/User/User.tsx';
 import CreatePost from './Pages/createPost/CreatePost.tsx';
+import Main from './Pages/Mod Queues/Main.tsx';
 import Search from './Pages/Search.tsx';
 
 function App() {
@@ -51,6 +52,18 @@ function App() {
           <Route
             path='/message/*'
             element={<HandleRoutes element={<MessageRouter />} />}
+          />
+          <Route
+            path='/r/:communityName/about/unmoderated'
+            element={<Main page='unmoderated' />}
+          />
+          <Route
+            path='/r/:communityName/about/edited'
+            element={<Main page='edited' />}
+          />
+          <Route
+            path='/r/:communityName/about/spam'
+            element={<Main page='removed' />}
           />
           <Route path='/search/*' element={<Search />} />
         </Routes>

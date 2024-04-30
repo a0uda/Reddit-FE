@@ -52,6 +52,7 @@ export const ReportModal = (props: {
   senderType: string;
   id: string;
   type: string;
+  isPost?: boolean;
 }) => {
   const reportMsgArr = [
     'Harassment',
@@ -105,7 +106,9 @@ export const ReportModal = (props: {
             color='blue-gray'
             size='sm'
             variant='text'
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
+
               setChosenMsg('');
               props.handleOpen();
             }}
@@ -138,7 +141,9 @@ export const ReportModal = (props: {
               <Butt
                 key={rep + i}
                 buttonText={rep}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
+
                   setChosenMsg(rep);
                 }}
                 active={rep === chosenMsg}
@@ -161,7 +166,9 @@ export const ReportModal = (props: {
                 buttonText='NEXT'
                 buttonTextColor='text-white font-bold px-8'
                 disabled={!chosenMsg}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
+
                   if (props.type != 'postReply') {
                     postReq.mutate(
                       {
@@ -187,7 +194,7 @@ export const ReportModal = (props: {
                         endPoint: 'posts-or-comments/report',
                         data: {
                           id: props.id,
-                          is_post: false,
+                          is_post: props.isPost || false,
                           reason: chosenMsg,
                         },
                       },
@@ -214,7 +221,7 @@ export const ThankYouModal = (props: {
   handleOpen: () => void;
   open: boolean;
   senderUsername: string;
-  query: string;
+  query?: string;
 }) => {
   const postReq = useMutation(postRequest);
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
@@ -314,7 +321,9 @@ export const ThankYouModal = (props: {
             buttonTextColor='text-white font-bold px-8'
             onClick={() => {
               props.handleOpen();
-              queryClient.invalidateQueries(props.query);
+              if (props.query) {
+                queryClient.invalidateQueries(props.query);
+              }
             }}
           />
         </DialogFooter>

@@ -60,7 +60,8 @@ const LinkPostContainer = (props: { post: PostType }) => {
   );
 };
 
-const PollPostContainer = (props: { post: PostType }) => {
+export const PollPostContainer = (props: { post: PostType }) => {
+
   const [chosenOptionId, setChosenOptionId] = useState<string>(
     props.post.poll_vote
   );
