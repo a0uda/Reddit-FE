@@ -10,8 +10,8 @@ import axios from 'axios';
 const Unmoderated = () => {
   const [sortList, setSortList] = useState<string>('Newest First');
   const [selList, setSelList] = useState<string>('posts');
-  const { communityName } = useParams();
-  console.log(communityName);
+  const { community_name } = useParams();
+  console.log(community_name);
 
   const [response, setResponse] = useState<[]>();
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +22,7 @@ const Unmoderated = () => {
       setResponse([]);
       try {
         const res = await axios.get(
-          `${process.env.VITE_BASE_URL}communities/about/unmoderated/${communityName}`,
+          `${process.env.VITE_BASE_URL}communities/about/unmoderated/${community_name}`,
           {
             headers: {
               'Content-Type': 'application/json',

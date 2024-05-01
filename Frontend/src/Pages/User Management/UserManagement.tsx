@@ -3,22 +3,39 @@ import Banned from './Banned';
 import Contributors from './Contributors';
 import Moderators from './Moderators';
 import Muted from './Muted';
+import ModSideBar from '../Rules and Removal reasons/ModSidebar';
+import { useParams } from 'react-router-dom';
 
 const UserManagement = (props: { page: string }) => {
+  const { communityName } = useParams();
   return (
-    <div className='px-32 py-8'>
-      <Navbar page={props.page} />
-      {props.page == 'approved' ? (
-        <Contributors />
-      ) : props.page == 'moderators' ? (
-        <Moderators />
-      ) : props.page == 'banned' ? (
-        <Banned />
-      ) : props.page == 'muted' ? (
-        <Muted />
-      ) : (
-        <></>
-      )}
+    <div className='Container'>
+      <div className='text-blue-light ps-4 ms-4 mt-4 font-bold border-b-2 pb-2 '>
+        <span className='border rounded-full bg-blue-light text-white ps-1 pe-1 me-2'>
+          r/
+        </span>{' '}
+        R/ {communityName}
+        <span className='text-black ms-2 uppercase'>{' / ' + props.page}</span>
+      </div>
+      <div className='grid grid-col-1 xl:grid-cols-layout'>
+        <div className='hidden xl:block'>
+          <ModSideBar />
+        </div>
+        <div className='p-5'>
+          <Navbar page={props.page} />
+          {props.page == 'approved' ? (
+            <Contributors />
+          ) : props.page == 'moderators' ? (
+            <Moderators />
+          ) : props.page == 'banned' ? (
+            <Banned />
+          ) : props.page == 'muted' ? (
+            <Muted />
+          ) : (
+            <></>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

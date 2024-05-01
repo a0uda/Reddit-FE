@@ -23,10 +23,10 @@ const ModSideBar = ({ className }: { className?: string }) => {
     {
       title: 'Queue',
       icon: <ShieldCheckIcon className='h-5 w-5' />,
-      link: `/r/${community_name}/queue`,
+      link: `/r/${community_name}/about/spam`,
     },
     {
-      title: 'ScheduledPosts',
+      title: 'Scheduled Posts',
       icon: (
         <svg
           xmlns='http://www.w3.org/2000/svg'

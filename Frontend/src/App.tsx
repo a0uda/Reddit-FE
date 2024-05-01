@@ -14,6 +14,7 @@ import Main from './Pages/Mod Queues/Main.tsx';
 import Search from './Pages/Search.tsx';
 import UserManagement from './Pages/User Management/UserManagement.tsx';
 import RuleRemoval from './Pages/Rules and Removal reasons/RulesRemovalTab.tsx';
+import ModSideBar from './Pages/Rules and Removal reasons/ModSidebar.tsx';
 
 function App() {
   const { status } = useSession();
@@ -55,32 +56,34 @@ function App() {
             path='/message/*'
             element={<HandleRoutes element={<MessageRouter />} />}
           />
+        </Routes>
+        <Routes>
           <Route
-            path='/r/:communityName/about/unmoderated'
+            path='/r/:community_name/about/unmoderated'
             element={<Main page='unmoderated' />}
           />
           <Route
-            path='/r/:communityName/about/edited'
+            path='/r/:community_name/about/edited'
             element={<Main page='edited' />}
           />
           <Route
-            path='/r/:communityName/about/spam'
+            path='/r/:community_name/about/spam'
             element={<Main page='removed' />}
           />
           <Route
-            path='/r/:communityName/about/contributors'
+            path='/r/:community_name/about/contributors'
             element={<UserManagement page='approved' />}
           />
           <Route
-            path='/r/:communityName/about/moderators'
+            path='/r/:community_name/about/moderators'
             element={<UserManagement page='moderators' />}
           />
           <Route
-            path='/r/:communityName/about/banned'
+            path='/r/:community_name/about/banned'
             element={<UserManagement page='banned' />}
           />
           <Route
-            path='/r/:communityName/about/muted'
+            path='/r/:community_name/about/muted'
             element={<UserManagement page='muted' />}
           />
           <Route path='/search/*' element={<Search />} />

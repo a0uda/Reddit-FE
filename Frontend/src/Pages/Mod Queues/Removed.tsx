@@ -11,8 +11,8 @@ import axios from 'axios';
 const Removed = () => {
   const [sortList, setSortList] = useState<string>('Newest First');
   const [selList, setSelList] = useState<string>('Posts and Comments');
-  const { communityName } = useParams();
-  console.log(communityName);
+  const { community_name } = useParams();
+  console.log(community_name);
 
   // const { user } = useSession();
   // const { data, error, isLoading } = useQuery(['modQueue', 'removed'], () =>
@@ -28,7 +28,7 @@ const Removed = () => {
       setResponse([]);
       try {
         const res = await axios.get(
-          `${process.env.VITE_BASE_URL}communities/about/removed-or-spammed/${communityName}`,
+          `${process.env.VITE_BASE_URL}communities/about/removed-or-spammed/${community_name}`,
           {
             headers: {
               'Content-Type': 'application/json',
