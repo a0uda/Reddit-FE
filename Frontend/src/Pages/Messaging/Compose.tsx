@@ -6,12 +6,16 @@ import { fetchRequest, postRequest } from '../../API/User';
 import { addPrefixToUsername } from '../../utils/helper_functions';
 import useSession from '../../hooks/auth/useSession';
 import { CommunityOverviewType } from '../../types/types';
+import queryString from 'query-string'; // Useful for parsing query strings
+import { useLocation } from 'react-router-dom';
 
 const Compose = () => {
   const { user } = useSession();
+  const location = useLocation();
+  const { to } = queryString.parse(location.search);
   const [from, setFrom] = React.useState(user?.username);
   const [fromFeedback, setFromFeedback] = React.useState('');
-  const [to, setTo] = React.useState('');
+  const [toString, setTo] = React.useState<string>(to == null ? '' : to);
   const [subject, setSubject] = React.useState('');
   const [message, setMessage] = React.useState('');
   const [fromBool, setfromBool] = React.useState(false);
@@ -48,7 +52,7 @@ const Compose = () => {
     setMessageBool(false);
     setfromBool(false);
 
-    if (!to) {
+    if (!toString) {
       setToFeedback('Please Enter a Username');
       setToBool(true);
       return;
@@ -68,7 +72,7 @@ const Compose = () => {
     const senderType = moderatedCommunityNames.includes(from)
       ? 'moderator'
       : 'user';
-    const recType = to.includes('r/') ? 'moderator' : 'user';
+    const recType = toString.includes('r/') ? 'moderator' : 'user';
     if (senderType == 'moderator' && recType == 'moderator') {
       setFromFeedback(
         "You can't send a message from a Subreddit to another Subreddit"
@@ -76,7 +80,7 @@ const Compose = () => {
       setfromBool(true);
       return;
     }
-    const splitted = to.split('/');
+    const splitted = toString.split('/');
     const recUsername = splitted[splitted.length - 1];
     postReq.mutate({
       endPoint: 'messages/compose/',
@@ -134,7 +138,7 @@ const Compose = () => {
             </span>
           </p>
           <input
-            value={to}
+            value={toString}
             onChange={(e) => {
               setTo(e.target.value);
             }}

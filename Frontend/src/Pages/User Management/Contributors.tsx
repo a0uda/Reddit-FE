@@ -3,9 +3,10 @@ import SearchBar from './components/SearchBar';
 import { getTimeDifferenceAsString } from '../../utils/helper_functions';
 import RoundedButton from '../../Components/RoundedButton';
 import useSession from '../../hooks/auth/useSession';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
+import { useState } from 'react';
 // import UsersList from './components/UsersList';
 
 type ApprovedUser = {
@@ -17,7 +18,12 @@ type ApprovedUser = {
 const UserRow = ({ user }: { user: ApprovedUser }) => {
   const session = useSession();
   const buttArr = [
-    { text: 'Send message', onClick: () => {} },
+    {
+      text: 'Send message',
+      onClick: () => {
+        window.open(`/message/compose/?to=${user.username}`, '_blank');
+      },
+    },
     {
       text: 'Remove',
       onClick: () => {},
@@ -123,14 +129,39 @@ const Contributors = () => {
     },
   ];
   const { communityName } = useParams();
-  const { data, isLoading, isError } = useQuery('getApprovedUsers', () =>
-    fetchRequest(`communities/about/approved/${communityName}`)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedData, setSelectedData] = useState<ApprovedUser[]>([]);
+  const { data, isLoading, isError } = useQuery(
+    'getApprovedUsers',
+    () => fetchRequest(`communities/about/approved/${communityName}`),
+    {
+      onSuccess: (data) => {
+        setSelectedData(data.data);
+      },
+    }
   );
+
+  const handleSearch = () => {
+    if (searchQuery.trim().length === 0) {
+      return setSelectedData(data?.data);
+    } else {
+      const queryLowerCase = searchQuery.toLowerCase();
+      setSelectedData(
+        data?.data.filter((item) =>
+          item.username.toLowerCase().includes(queryLowerCase)
+        )
+      );
+
+      if (selectedData.length <= 0) {
+        setSelectedData([]);
+      }
+    }
+  };
   return (
     <div>
       <ButtonList buttArr={buttArr} />
-      <SearchBar />
-      <UsersList userArr={data?.data} />
+      <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
+      <UsersList userArr={usersList} />
     </div>
   );
 };

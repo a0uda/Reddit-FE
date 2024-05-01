@@ -110,16 +110,51 @@ const Muted = () => {
   //       'https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/776.jpg',
   //     _id: '66186ace721cbd6382326184',
   //   },
+  //   {
+  //     username: 'ahmedToaima',
+  //     muted_by_username: 'Arely_Lockman20',
+  //     mute_date: '2024-04-11T19:40:34.973Z',
+  //     mute_reason: 'Claro neque tabesco tutis argumentum.',
+  //     profile_picture:
+  //       'https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/776.jpg',
+  //     _id: '66186ace721cbd6382326684',
+  //   },
   // ];
   const { communityName } = useParams();
-  const { data, isLoading, isError } = useQuery('getMutedUsers', () =>
-    fetchRequest(`communities/about/muted/${communityName}`)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedData, setSelectedData] = useState<MutedUser[]>([]);
+  const { data, isLoading, isError } = useQuery(
+    'getMutedUsers',
+    () => fetchRequest(`communities/about/muted/${communityName}`),
+    {
+      onSuccess: (data) => {
+        setSelectedData(data.data);
+      },
+    }
   );
+
+  const handleSearch = () => {
+    if (searchQuery.trim().length === 0) {
+      return setSelectedData(data?.data);
+    } else {
+      const queryLowerCase = searchQuery.toLowerCase();
+      setSelectedData(
+        data?.data.filter((item) =>
+          item.username.toLowerCase().includes(queryLowerCase)
+        )
+      );
+
+      if (selectedData.length <= 0) {
+        setSelectedData([]);
+      }
+    }
+  };
+
   return (
     <div>
       <ButtonList buttArr={buttArr} />
-      <SearchBar />
-      <UsersList userArr={data?.data} />
+      <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
+      <UsersList userArr={selectedData} />
     </div>
   );
 };

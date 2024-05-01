@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ButtonList from './components/ButtonList';
 import SearchBar from './components/SearchBar';
 import { getTimeDifferenceAsString } from '../../utils/helper_functions';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { useParams } from 'react-router-dom';
+import { fetchRequest } from '../../API/User';
+import { useQuery } from 'react-query';
 
 type ModeratorUser = {
   has_access: {
@@ -113,33 +116,72 @@ const Moderators = () => {
     { text: 'Leave as mod', onClick: () => {} },
     { text: 'Reorder', onClick: () => {} },
   ];
-  const editableList = [
+  // const editableList = [
+  //   {
+  //     has_access: {
+  //       everything: false,
+  //       manage_users: false,
+  //       manage_settings: false,
+  //       manage_posts_and_comments: true,
+  //     },
+  //     username: 'malak123sssssssss4567',
+  //     profile_picture: '',
+  //     moderator_since: '2024-04-12T17:22:19.116Z',
+  //     _id: '66196dcb6e7a889252659838',
+  //   },
+  // ];
+  const { communityName } = useParams();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedData, setSelectedData] = useState<ModeratorUser[]>([]);
+  const allModRes = useQuery(
+    'getModerators',
+    () => fetchRequest(`communities/about/moderators/${communityName}`),
     {
-      has_access: {
-        everything: false,
-        manage_users: false,
-        manage_settings: false,
-        manage_posts_and_comments: true,
+      onSuccess: (data) => {
+        setSelectedData(data.data);
       },
-      username: 'malak123sssssssss4567',
-      profile_picture: '',
-      moderator_since: '2024-04-12T17:22:19.116Z',
-      _id: '66196dcb6e7a889252659838',
-    },
-  ];
+    }
+  );
+  const editableListRes = useQuery('getEditableModerators', () =>
+    fetchRequest(`communities/about/editable-moderators/${communityName}`)
+  );
+  const invitedListRes = useQuery('getInvitedModerators', () =>
+    fetchRequest(`communities/about/invited/${communityName}`)
+  );
+
+  const handleSearch = () => {
+    if (searchQuery.trim().length === 0) {
+      return setSelectedData(allModRes.data?.data);
+    } else {
+      const queryLowerCase = searchQuery.toLowerCase();
+      setSelectedData(
+        allModRes.data?.data.filter((item) =>
+          item.username.toLowerCase().includes(queryLowerCase)
+        )
+      );
+
+      if (selectedData.length <= 0) {
+        setSelectedData([]);
+      }
+    }
+  };
   return (
     <div>
       <ButtonList buttArr={buttArr} />
-      <SearchBar />
-      <UsersList userArr={editableList} type='default' />
-      <div className='mt-10'>
-        <p className='mb-2'>You can edit these moderators</p>
-        <UsersList userArr={editableList} type='edit' />
-      </div>
-      <div className='my-10'>
-        <p className='mb-2'>Invited moderators</p>
-        <UsersList userArr={editableList} type='invite' />
-      </div>
+      <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
+      <UsersList userArr={selectedData} type='default' />
+      {editableListRes.isSuccess && editableListRes.data?.data.length > 0 && (
+        <div className='mt-10'>
+          <p className='mb-2'>You can edit these moderators</p>
+          <UsersList userArr={editableListRes.data?.data} type='edit' />
+        </div>
+      )}
+      {invitedListRes.isSuccess && invitedListRes.data?.data.length > 0 && (
+        <div className='my-10'>
+          <p className='mb-2'>Invited moderators</p>
+          <UsersList userArr={invitedListRes.data?.data} type='invite' />
+        </div>
+      )}
     </div>
   );
 };
