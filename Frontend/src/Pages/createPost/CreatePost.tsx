@@ -13,6 +13,10 @@ import OptionsPoll from './OptionsPoll';
 import { useMutation } from 'react-query';
 import { postRequest } from '../../API/User';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import OvalButton from './OvalButton';
+import SchedulePostComponent from './schedulePost';
+import * as yup from 'yup';
 
 // type FormSchema =
 //   | 'createPost'
@@ -32,12 +36,16 @@ const NewPost: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
   const [formType, setFormType] = useState<FormSchema>('text');
   const [HandleOpen, setHandleOpen] = useState(false);
+  const [HandleOpenSchedule, setHandleOpenSchedule] = useState(false);
   const [oc, setOC] = useState(false);
   const [NSFW, SetNSFW] = useState(false);
   const [Spoiler, setSpoiler] = useState(false);
   const [images, setImages] = useState<Image[]>([]);
   const [Imageindex, setImageIndex] = useState(0);
   const navigate = useNavigate();
+  const { community_name } = useParams();
+  const [setScheduledDate] = useState<string>('');
+  const [setScheduledTime] = useState<string>('');
 
   const [inputArr, setInputArr] = useState([
     {
@@ -55,18 +63,27 @@ const NewPost: React.FC = () => {
     description: '',
     community_name: '',
     link_url: '',
-    images: [],
     oc_flag: false,
     spoiler_flag: false,
     nsfw_flag: false,
-    post_in_community_flag: false,
+    post_in_community_flag: true,
   });
 
   useEffect(() => {
-    const schema = Validation(formType);
-    setValidateSchema(schema);
+    const baseSchema = Validation(formType);
+    const schemaWithCommunityName = baseSchema.shape({
+      community_name: yup
+        .string()
+        .when('post_in_community_flag', (postInCommunityFlag, schema) => {
+          return postInCommunityFlag[0]
+            ? schema.required('Community name is required')
+            : schema.notRequired();
+        }),
+    });
+
+    setValidateSchema(schemaWithCommunityName);
     console.log(formType);
-  }, [formType]);
+  }, [formType, initialValues.post_in_community_flag]);
 
   const handleDivClick = (index: number) => {
     console.log(index);
@@ -116,7 +133,9 @@ const NewPost: React.FC = () => {
     onSuccess: () => {
       navigate('/');
     },
-    onError: () => {},
+    onError: () => {
+      navigate('/submit');
+    },
   });
 
   const handleOnSubmit = (values: object) => {
@@ -211,7 +230,6 @@ const NewPost: React.FC = () => {
               <div className='space-x-2 mt-4'>
                 <RoundedButton
                   buttonBorderColor='white'
-                  id='oc_flag'
                   buttonIcon={<>{oc ? <IconCheck /> : <IconPlus />}</>}
                   buttonText='OC'
                   buttonTextColor={oc ? 'text-white' : 'text-gray-600'}
@@ -224,7 +242,6 @@ const NewPost: React.FC = () => {
 
                 <RoundedButton
                   buttonBorderColor='white'
-                  id='spoiler_flag'
                   buttonIcon={<>{Spoiler ? <IconCheck /> : <IconPlus />}</>}
                   buttonText='Spoiler'
                   buttonTextColor={Spoiler ? 'text-white' : 'text-gray-600'}
@@ -239,7 +256,6 @@ const NewPost: React.FC = () => {
                 />
                 <RoundedButton
                   buttonBorderColor='red'
-                  id='nsfw_flag'
                   buttonIcon={<>{NSFW ? <IconCheck /> : <IconPlus />}</>}
                   buttonText='NSFW'
                   buttonTextColor={NSFW ? 'text-white' : 'text-gray-600'}
@@ -250,7 +266,7 @@ const NewPost: React.FC = () => {
                   }}
                 />
               </div>
-              <div className='flex justify-end mt-4 pe-4 border-t-2 py-4 space-x-2'>
+              <div className='flex justify-end mt-4 pe-4 border-t-2 py-4 space-x-1'>
                 <RoundedButton
                   buttonBorderColor='red'
                   buttonText='Cancel'
@@ -260,24 +276,90 @@ const NewPost: React.FC = () => {
                     setHandleOpen(true);
                   }}
                 />
-                <RoundedButton
-                  buttonBorderColor='red'
-                  buttonText='Post'
-                  buttonTextColor='text-white'
-                  buttonColor={
-                    Object.keys(formik.errors).length > 0 ||
-                    Object.values(formik.values).every((value) => value !== '')
-                      ? 'bg-gray-500'
-                      : 'bg-blue'
-                  }
-                  onClick={() => {
-                    formik.setValues({
-                      ...formik.values,
-                    });
-                    formik.submitForm();
-                  }}
-                />
+
+                {community_name ? (
+                  <>
+                    <OvalButton
+                      buttonBorderColor='red'
+                      buttonText='Post'
+                      buttonTextColor='text-white'
+                      className='rounded-none rounded-l-full !normal-case  hover:opacity-50 active:brightness-150  hover:shadow-none focus:shadow-none shadow-none '
+                      buttonColor={
+                        Object.keys(formik.errors).length > 0 ||
+                        Object.values(formik.values).every(
+                          (value) => value !== ''
+                        )
+                          ? 'bg-gray-500'
+                          : 'bg-blue'
+                      }
+                      onClick={() => {
+                        formik.setValues({
+                          ...formik.values,
+                        });
+                        formik.submitForm();
+                      }}
+                    />
+                    <OvalButton
+                      buttonBorderColor='red'
+                      buttonText={
+                        <svg
+                          xmlns='http://www.w3.org/2000/svg'
+                          fill='none'
+                          viewBox='0 0 24 24'
+                          strokeWidth={1.5}
+                          stroke='currentColor'
+                          className='w-6 h-6'
+                        >
+                          <path
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                            d='M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z'
+                          />
+                        </svg>
+                      }
+                      buttonTextColor='text-white'
+                      className='rounded-none rounded-r-full !normal-case hover:opacity-50 active:brightness-150  hover:shadow-none focus:shadow-none shadow-none '
+                      buttonColor={
+                        Object.keys(formik.errors).length > 0 ||
+                        Object.values(formik.values).every(
+                          (value) => value !== ''
+                        )
+                          ? 'bg-gray-500'
+                          : 'bg-blue-light'
+                      }
+                      onClick={() => {
+                        setHandleOpenSchedule(true);
+                      }}
+                    />
+                  </>
+                ) : (
+                  <RoundedButton
+                    buttonBorderColor='red'
+                    buttonText='Post'
+                    buttonTextColor='text-white'
+                    buttonColor={
+                      Object.keys(formik.errors).length > 0 ||
+                      Object.values(formik.values).every(
+                        (value) => value !== ''
+                      )
+                        ? 'bg-gray-500'
+                        : 'bg-blue'
+                    }
+                    onClick={() => {
+                      formik.setValues({
+                        ...formik.values,
+                      });
+                      formik.submitForm();
+                    }}
+                  />
+                )}
               </div>
+              <SchedulePostComponent
+                handleOpen={() => setHandleOpenSchedule(!HandleOpenSchedule)}
+                open={HandleOpenSchedule}
+                setScheduledDate={() => setScheduledDate}
+                setScheduledTime={() => setScheduledTime}
+              />
 
               <DiscardPost
                 handleOpen={() => setHandleOpen(!HandleOpen)}

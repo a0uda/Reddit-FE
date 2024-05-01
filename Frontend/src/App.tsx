@@ -10,6 +10,9 @@ import Notifications from './Pages/Notifications.tsx';
 import Post from './Pages/Post.tsx';
 import User from './Pages/User/User.tsx';
 import CreatePost from './Pages/createPost/CreatePost.tsx';
+import Main from './Pages/Mod Queues/Main.tsx';
+import Search from './Pages/Search.tsx';
+import UserManagement from './Pages/User Management/UserManagement.tsx';
 import RuleRemoval from './Pages/Rules and Removal reasons/RulesRemovalTab.tsx';
 
 function App() {
@@ -25,8 +28,8 @@ function App() {
           <Route path={'/'} element={<Mainfeed />} />
           <Route path={'/:sortOption'} element={<Mainfeed />} />
           <Route
-            path={'/r/:communityName/comments/:id/:title/'}
-            element={<HandleRoutes element={<Post />} />}
+            path={'/:prefix/:communityNameOrUsername/comments/:id/:title/'}
+            element={<Post />}
           />
           <Route
             path='/settings/:page'
@@ -41,6 +44,10 @@ function App() {
             element={<HandleRoutes element={<CreatePost />} />}
           />
           <Route
+            path={'/r/:community_name/submit'}
+            element={<HandleRoutes element={<CreatePost />} />}
+          />
+          <Route
             path='/notifications'
             element={<HandleRoutes element={<Notifications />} />}
           />
@@ -48,6 +55,35 @@ function App() {
             path='/message/*'
             element={<HandleRoutes element={<MessageRouter />} />}
           />
+          <Route
+            path='/r/:communityName/about/unmoderated'
+            element={<Main page='unmoderated' />}
+          />
+          <Route
+            path='/r/:communityName/about/edited'
+            element={<Main page='edited' />}
+          />
+          <Route
+            path='/r/:communityName/about/spam'
+            element={<Main page='removed' />}
+          />
+          <Route
+            path='/r/:communityName/about/contributors'
+            element={<UserManagement page='approved' />}
+          />
+          <Route
+            path='/r/:communityName/about/moderators'
+            element={<UserManagement page='moderators' />}
+          />
+          <Route
+            path='/r/:communityName/about/banned'
+            element={<UserManagement page='banned' />}
+          />
+          <Route
+            path='/r/:communityName/about/muted'
+            element={<UserManagement page='muted' />}
+          />
+          <Route path='/search/*' element={<Search />} />
           <Route
             path='/r/:community_name/about/rules*'
             element={<HandleRoutes element={<RuleRemoval />} />}

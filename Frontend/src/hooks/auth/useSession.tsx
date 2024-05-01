@@ -3,19 +3,20 @@ import { AuthContext } from '../../Providers/AuthProvider';
 import { decodeToken, useJwt } from 'react-jwt';
 import { removeToken } from '../../utils/tokens_helper';
 
-type User = {
+export type User = {
   name: string;
   username: string;
   imageUrl?: string;
 };
 
-type Session = {
+export type Session = {
   status: 'loading' | 'authenticated' | 'unauthenticated';
   user: User | null;
   expiresAt?: number;
 };
 
 function useSession() {
+  console.log('useSession', AuthContext);
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useToken must be used within an AuthProvider');

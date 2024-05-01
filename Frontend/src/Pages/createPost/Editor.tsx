@@ -24,7 +24,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ setFieldValue }) => {
             theme='snow'
             value={editorHtml}
             onChange={handleEditorChange}
-            className='w-full h-40 sm:h-64 md:h-40 lg:h-144 xl:h-160'
+            className='w-full h-40 sm:h-20 md:h-40 lg:h-144 xl:h-160 mb-4'
             placeholder='Text (optional) '
           />
         </div>
