@@ -5,6 +5,8 @@ const baseUrl = process.env.VITE_BASE_URL;
 //const baseUrl = String(process.env.VITE_BASE_URL);
 console.log('baseUrl ', baseUrl);
 
+axios.defaults.baseURL = baseUrl;
+
 const config = {
   headers: {
     'Content-Type': 'application/json',
@@ -61,7 +63,7 @@ axios.interceptors.response.use(
 );
 
 const fetchRequest = async (endPoint: string) => {
-  return await axios.get(baseUrl + endPoint, {
+  return await axios.get(endPoint, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: localStorage.getItem('token'),
@@ -78,7 +80,7 @@ const patchRequest = async ({
   endPoint: string;
 }) => {
   try {
-    const response = await axios.patch(baseUrl + endPoint, newSettings, {
+    const response = await axios.patch(endPoint, newSettings, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: localStorage.getItem('token'),
@@ -107,7 +109,7 @@ const postRequest = async ({
   data: unknown;
 }) => {
   try {
-    const response = await axios.post(baseUrl + endPoint, data, {
+    const response = await axios.post(endPoint, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: localStorage.getItem('token'),

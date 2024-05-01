@@ -53,7 +53,7 @@ function App() {
             path='/message/*'
             element={<HandleRoutes element={<MessageRouter />} />}
           />
-          <Route
+          {/* <Route
             path='/r/:communityName/about/unmoderated'
             element={<Main page='unmoderated' />}
           />
@@ -64,7 +64,7 @@ function App() {
           <Route
             path='/r/:communityName/about/spam'
             element={<Main page='removed' />}
-          />
+          /> */}
           <Route path='/search/*' element={<Search />} />
         </Routes>
       </Router>

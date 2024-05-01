@@ -18,6 +18,16 @@ const ContentLayout = ({ children }: { children: ReactNode }) => {
   );
 };
 
+const Header = ({ children }: { children: ReactNode }) => {
+  return (
+    <>
+      <Card className='shadow-none w-full'>
+        <CardBody className='px-0 py-2'>{children}</CardBody>
+      </Card>
+    </>
+  );
+};
+
 const Main = ({ children }: { children: ReactNode }) => {
   return (
     <>
@@ -40,6 +50,7 @@ const RightSideBar = ({ children }: { children: ReactNode }) => {
   );
 };
 
+ContentLayout.Header = Header;
 ContentLayout.Main = Main;
 ContentLayout.RightSideBar = RightSideBar;
 
