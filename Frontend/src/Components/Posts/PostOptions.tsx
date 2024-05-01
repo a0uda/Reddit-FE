@@ -24,7 +24,8 @@ type PostOptionsProps = {
   spoiler: boolean;
   myPost: boolean;
   page: 'profile' | 'home' | 'community';
-  handleEditPost: (editedText: string) => void;
+  canEdit: boolean;
+  handleEditPost: () => void;
   handleSavePost: () => void;
   handleHidePost: () => void;
   handleReportPost: () => void;
@@ -39,6 +40,7 @@ const PostOptions = ({
   spoiler,
   myPost,
   page,
+  canEdit,
   handleEditPost,
   handleSavePost,
   handleHidePost,
@@ -63,8 +65,11 @@ const PostOptions = ({
         </Button>
       </MenuHandler>
       <MenuList className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'>
-        {myPost && page === 'profile' && (
-          <MenuItem className='py-3 flex gap-2 items-center'>
+        {myPost && page === 'profile' && canEdit && (
+          <MenuItem
+            onClick={handleEditPost}
+            className='py-3 flex gap-2 items-center'
+          >
             <PencilIcon className='w-5 h-5' />
             <span>Edit post</span>
           </MenuItem>
