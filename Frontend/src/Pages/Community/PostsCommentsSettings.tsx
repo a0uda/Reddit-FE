@@ -8,6 +8,7 @@ import SwitchButton from '../../Components/SwitchButton';
 import DropDownButton from '../UserSettings/Containers/DropDownButton';
 import { useEffect, useState } from 'react';
 import LoadingProvider from '../../Components/LoadingProvider';
+import { useParams } from 'react-router-dom';
 
 function PostsCommentsSettings() {
   const [crossPost, setCrossPost] = useState(false);
@@ -28,9 +29,10 @@ function PostsCommentsSettings() {
   const [collapse, setCollpase] = useState(false);
   const [commentScores, setCommentScores] = useState(0);
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+  const { community_name } = useParams();
   const { data, isError, isLoading, refetch } = useQuery(
     'posts comments settings',
-    () => fetchRequest('communities/get-posts-and-comments/reem')
+    () => fetchRequest(`communities/get-posts-and-comments/${community_name}`)
   );
   useEffect(() => {
     if (data) {
@@ -70,7 +72,7 @@ function PostsCommentsSettings() {
   });
   const handleSaveChanges = () => {
     patchReq.mutate({
-      endPoint: 'communities/change-posts-and-comments/reem',
+      endPoint: `communities/change-posts-and-comments/${community_name}`,
       newSettings: {
         posts: {
           spam_filter_strength: {
