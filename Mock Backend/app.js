@@ -664,7 +664,7 @@ app.get("/communities/get-history-posts/", (req, res) => {
 app.get("/communities/get-community-view/:communityname", (req, res) => {
   const { communityname } = req.params;
 
-  const community = communities.find(
+  const community = communitiesPost.find(
     (community) => community.name === communityname
   );
   if (community) {
@@ -2322,6 +2322,92 @@ let comments = {
       show_comment_flag: true,
       __v: 0,
     },
+    {
+      moderator_details: {
+        approved_flag: true,
+        approved_by: "ModeratorC",
+        approved_date: "2024-04-22T22:45:00Z",
+        removed_flag: false,
+        removed_by: "",
+        removed_date: "",
+        removed_removal_reason: "",
+        spammed_flag: false,
+        spammed_by: "",
+        spammed_type: "",
+        spammed_removal_reason: "",
+        reported_flag: false,
+        reported_by: "",
+        reported_type: "",
+      },
+      is_post: false,
+      is_reply: true,
+      parent_username: "UserE",
+      _id: "17",
+      post_id: "7",
+      user_id: "user789",
+      username: "UserC",
+      saved: false,
+      parent_id: "parentOPQ",
+      replies_comments_ids: [],
+      created_at: "2024-04-22T23:30:00Z",
+      edited_at: "",
+      deleted_at: "",
+      deleted: false,
+      description: "I agree with your assessment. Gedan.",
+      comment_in_community_flag: true,
+      community_id: "communityOPQ",
+      community_name: "CommunityOPQ",
+      upvotes_count: 10,
+      downvotes_count: 2,
+      spam_flag: false,
+      locked_flag: false,
+      spoiler_flag: false,
+      show_comment_flag: true,
+      __v: 0,
+    },
+    {
+      moderator_details: {
+        approved_flag: true,
+        approved_by: "ModeratorC",
+        approved_date: "2024-04-22T22:45:00Z",
+        removed_flag: false,
+        removed_by: "",
+        removed_date: "",
+        removed_removal_reason: "",
+        spammed_flag: false,
+        spammed_by: "",
+        spammed_type: "",
+        spammed_removal_reason: "",
+        reported_flag: false,
+        reported_by: "",
+        reported_type: "",
+      },
+      is_post: false,
+      is_reply: false,
+      parent_username: "UserE",
+      _id: "17",
+      post_id: "7",
+      user_id: "user789",
+      username: "UserC",
+      saved: false,
+      parent_id: "parentOPQ",
+      replies_comments_ids: [],
+      created_at: "2024-04-22T23:30:00Z",
+      edited_at: "",
+      deleted_at: "",
+      deleted: false,
+      description: "I agree with your assessment.",
+      comment_in_community_flag: true,
+      community_id: "communityOPQ",
+      community_name: "CommunityOPQ",
+      upvotes_count: 7,
+      downvotes_count: 2,
+      spam_flag: false,
+      locked_flag: false,
+      spoiler_flag: false,
+      show_comment_flag: true,
+      __v: 0,
+    },
   ],
 };
 // {
@@ -3363,8 +3449,8 @@ app.get("/posts/get-post", (req, res) => {
   res.status(200).json(post);
 });
 
-app.get("/posts/get-comments/:id", (req, res) => {
-  const { id } = req.params;
+app.get("/posts/get-comments", (req, res) => {
+  const { id } = req.query;
   const postComments = comments.content.filter(
     (comment) => comment.post_id === id
   );
@@ -4079,7 +4165,7 @@ app.post("/comments/new-comment", (req, res) => {
   const { id, description } = req.body;
 
   const username = getAuthUsername(req);
-  console.log("username", username);
+  // console.log("username", username);
   if (!username) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -4205,13 +4291,13 @@ app.post("/comments/reply", (req, res) => {
 
   comments.content = updatedComments;
 
-  console.log(comments.content);
+  // console.log(comments.content);
 
   res.status(200).json({ message: "Comment added successfully." });
 });
 
 app.get("/communities/get-removal-reasons/:communityName", (req, res) => {
-  console.log("rem reasons");
+  // console.log("rem reasons");
   res.status(200).json([
     {
       removal_reason_title: "Spam",
@@ -4222,7 +4308,7 @@ app.get("/communities/get-removal-reasons/:communityName", (req, res) => {
 });
 
 app.get("/communities/about/unmoderated/:communityName", (req, res) => {
-  console.log("hi");
+  // console.log("hi");
   res.status(200).json([
     {
       vote: 1,

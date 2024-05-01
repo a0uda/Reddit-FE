@@ -43,6 +43,7 @@ import Signup from '../Pages/credential/Signup';
 import useSession from '../hooks/auth/useSession';
 import SearchBar from './Search/SearchBar';
 import MobileSearchBar from './Search/MobileSearchBar';
+import Credentials from '../Pages/credential/Credentials';
 
 export function NavigationBar() {
   const [openNav, setOpenNav] = useState(false);
@@ -148,65 +149,11 @@ export function NavigationBar() {
 
 const CampainLoggedOut = () => {
   const [loginMod, setLoginMod] = useState(false);
-  const [recoverMod, setRecoverMod] = useState(false);
-  const [resetPwdMod, setResetPwdMod] = useState(false);
-  const [signupMod, setSignupMod] = useState(false);
-  console.log(loginMod);
 
   return (
     <>
       <div className='flex items-center gap-x-1'>
-        <Login
-          open={loginMod}
-          handleOpen={() => {
-            setLoginMod(!loginMod);
-          }}
-          openPassword={() => {
-            setResetPwdMod(true);
-          }}
-          openSignup={() => {
-            setSignupMod(true);
-          }}
-          openUsername={() => {
-            setRecoverMod(true);
-          }}
-        />
-        <RecoverUsername
-          open={recoverMod}
-          handleOpen={() => {
-            setRecoverMod(!recoverMod);
-          }}
-          handlePrevious={() => {
-            setLoginMod(true);
-          }}
-          openSignup={() => {
-            setSignupMod(true);
-          }}
-        />
-        <ResetPassword
-          open={resetPwdMod}
-          handleOpen={() => {
-            setResetPwdMod(!resetPwdMod);
-          }}
-          handlePrevious={() => {
-            setLoginMod(true);
-          }}
-          openSignup={() => {
-            setSignupMod(true);
-          }}
-          openUsername={() => {
-            setRecoverMod(true);
-          }}
-        />
-        <Signup
-          open={signupMod}
-          handleOpen={() => {
-            setSignupMod(!signupMod);
-          }}
-          openLogin={() => {
-            setLoginMod(true);
-          }}
-        />
+        <Credentials loginMod={loginMod} setLoginMod={setLoginMod} />
         <IconButton variant='text'>
           <HiMagnifyingGlass size={20} className='fill-black' />
         </IconButton>

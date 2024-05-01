@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Card,
   CardBody,
   CardFooter,
@@ -18,7 +17,6 @@ import { CommentType, CommunityType, PostType } from '../../types/types';
 import { useEffect, useState } from 'react';
 import LoadingProvider from '../LoadingProvider';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
-import { CommunityIcon } from '../../assets/icons/Icons';
 import Comment from './Comment';
 import AddComment from './AddComment';
 import { useParams } from 'react-router-dom';
@@ -95,14 +93,6 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 )} */}
                 <div className='flex flex-col justify-between m-0'>
                   <div className='flex flex-row items-center justify-between gap-1 m-0'>
-                    {/* <CommunityBadge
-                      name={post.community_name}
-                      joined={community?.joined_flag}
-                      avatar={community?.profile_picture}
-                      coverImage={community?.banner_picture}
-                      members={community?.members_count}
-                      description={community?.description}
-                    /> */}
                     {community && (
                       <CommunityBadge
                         name={post.community_name ?? ''}
@@ -122,11 +112,6 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                     <Typography variant='small' className='text-xs'>
                       {dateDuration(new Date(post.created_at))}
                     </Typography>
-                  </div>
-                  <div>
-                    {/* <Typography variant='small' className='text-xs'>
-                      {post.username}
-                    </Typography> */}
                   </div>
                 </div>
               </div>
