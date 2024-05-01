@@ -827,7 +827,7 @@ const Message = (props: {
             </div>
           </div>
         )}
-        {props.repliesArr && (
+        {props.repliesArr?.length > 0 && (
           <div className='flex flex-col gap-2 mt-3'>
             {props.repliesArr.map((rep, i) => (
               <ReplyBody

@@ -12,6 +12,7 @@ import User from './Pages/User/User.tsx';
 import CreatePost from './Pages/createPost/CreatePost.tsx';
 import Main from './Pages/Mod Queues/Main.tsx';
 import Search from './Pages/Search.tsx';
+import UserManagement from './Pages/User Management/UserManagement.tsx';
 
 function App() {
   const { status } = useSession();
@@ -64,6 +65,22 @@ function App() {
           <Route
             path='/r/:communityName/about/spam'
             element={<Main page='removed' />}
+          />
+          <Route
+            path='/r/:communityName/about/contributors'
+            element={<UserManagement page='approved' />}
+          />
+          <Route
+            path='/r/:communityName/about/moderators'
+            element={<UserManagement page='moderators' />}
+          />
+          <Route
+            path='/r/:communityName/about/banned'
+            element={<UserManagement page='banned' />}
+          />
+          <Route
+            path='/r/:communityName/about/muted'
+            element={<UserManagement page='muted' />}
           />
           <Route path='/search/*' element={<Search />} />
         </Routes>

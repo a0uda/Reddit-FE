@@ -41,9 +41,9 @@ const Sent = () => {
     <LoadingProvider error={isError} isLoading={isLoading}>
       <ContentContainer length={data?.data.messages.length}>
         <div className=''>
-          {!!data?.data &&
+          {!!data?.data.messages &&
             data?.data.messages.map((mess) => {
-              console.log(mess);
+              console.log(parentChildrenMap, 'messs');
 
               if (mess.parentMessageId == null) {
                 return (
@@ -59,7 +59,11 @@ const Sent = () => {
                     sendingDate={new Date(mess['created_at'])}
                     subject={mess['subject']}
                     isReply={mess['isReply']}
-                    repliesArr={parentChildrenMap[mess['_id']] || null}
+                    repliesArr={
+                      parentChildrenMap != undefined
+                        ? parentChildrenMap[mess['_id']]
+                        : []
+                    }
                     messageId={mess['_id']}
                     key={mess['_id']}
                     senderVia={mess['senderVia']}
