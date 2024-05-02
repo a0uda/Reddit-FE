@@ -2777,11 +2777,12 @@ let historyPosts = {
 };
 
 app.get("/posts/:communityName", (req, res) => {
+  const { communityName } = req.params;
   res.status(200).json({
     success: true,
     status: 200,
     content: historyPosts.posts.filter(
-      (post) => post.community_name === "sports"
+      (post) => post.community_name === communityName
     ),
   });
 });
