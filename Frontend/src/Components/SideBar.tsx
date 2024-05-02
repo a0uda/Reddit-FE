@@ -2,6 +2,7 @@ import {
   Accordion,
   AccordionBody,
   AccordionHeader,
+  Avatar,
   List,
   ListItem,
   ListItemPrefix,
@@ -20,7 +21,7 @@ import { ReactNode, useState } from 'react';
 import { CommunityIcon } from '../assets/icons/Icons';
 import { cn } from '../utils/helper_functions';
 import { useQuery } from 'react-query';
-import { CommunityType } from '../types/types';
+import { CommunityOverviewType, CommunityType } from '../types/types';
 import { fetchRequest } from '../API/User';
 
 const SideBar = ({ className }: { className?: string }) => {
@@ -74,9 +75,20 @@ const SideBar = ({ className }: { className?: string }) => {
     queryFn: () => fetchRequest(`users/communities/`),
     onSuccess: (data) => {
       const formattedCommunities = data.data?.map(
-        (community: CommunityType) => ({
-          icon: community.profile_picture || (
-            <CommunityIcon className='h-5 w-5' />
+        (community: CommunityOverviewType) => ({
+          icon: (
+            <>
+              {community.profile_picture ? (
+                <Avatar
+                  variant='circular'
+                  alt={community.name}
+                  src={community.profile_picture}
+                  className='h-6 w-6'
+                />
+              ) : (
+                <CommunityIcon className='h-6 w-6' />
+              )}
+            </>
           ),
           title: 'r/' + community.name,
           link: `/r/${community.name}`,

@@ -17,7 +17,6 @@ const NavbarButton = (props: {
 };
 const Navbar = (props: { page: string }) => {
   const { communityName } = useParams();
-  console.log(communityName);
 
   return (
     <div>
