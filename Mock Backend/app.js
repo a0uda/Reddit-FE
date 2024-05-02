@@ -691,7 +691,7 @@ app.get("/communities/get-community-view/:communityname", (req, res) => {
 
 app.post("/users/mute-unmute-community", (req, res) => {
   const { community_name } = req.body;
-  console.log(community_name);
+  // console.log(community_name);
   communities = communities.map((community) => {
     if (community.name === community_name) {
       community.muted_flag = !community.muted_flag;
@@ -704,12 +704,38 @@ app.post("/users/mute-unmute-community", (req, res) => {
 
 app.patch("/users/favorite-unfavorite-community", (req, res) => {
   const { community_name } = req.body;
-  console.log(community_name);
+  // console.log(community_name);
   communities = communities.map((community) => {
     if (community.name === community_name) {
       community.favorite_flag = !community.favorite_flag;
     }
     console.log(community);
+    return community;
+  });
+  res.sendStatus(200);
+});
+
+app.post("/communities/delete-profile-picture", (req, res) => {
+  const { community_name } = req.body;
+  // console.log(community_name);
+  communities = communities.map((community) => {
+    if (community.name === community_name) {
+      community.profile_picture = null;
+    }
+    // console.log(community);
+    return community;
+  });
+  res.sendStatus(200);
+});
+
+app.post("/communities/delete-banner-picture", (req, res) => {
+  const { community_name } = req.body;
+  // console.log(community_name);
+  communities = communities.map((community) => {
+    if (community.name === community_name) {
+      community.banner_picture = null;
+    }
+    // console.log(community);
     return community;
   });
   res.sendStatus(200);

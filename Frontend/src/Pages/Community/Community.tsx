@@ -11,6 +11,7 @@ import { TfiClose } from 'react-icons/tfi';
 import { MdDeleteOutline } from 'react-icons/md';
 import { IoIosArrowDown } from 'react-icons/io';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { IoCloudUploadOutline } from 'react-icons/io5';
 import PostPreview from '../../Components/Posts/PostPreview';
 import { Link } from 'react-router-dom';
 import { PlusIcon } from '@heroicons/react/24/solid';
@@ -164,6 +165,22 @@ const Community = () => {
     event.preventDefault();
   };
 
+  const deleteProfilePictureMutation = useMutation(
+    (communityName: string) =>
+      postRequest({
+        endPoint: 'communities/delete-profile-picture',
+        data: { community_name: communityName },
+      }),
+    {
+      onSuccess: () => {
+        setProfilePicture(undefined);
+      },
+      onError: () => {
+        console.log('Error');
+      },
+    }
+  );
+
   //================================================ Banner picture ======================================================//
   const [bannerPicture, setBannerPicture] = useState<string | undefined>(
     community?.banner_picture
@@ -192,6 +209,22 @@ const Community = () => {
   const bannerPictureHandleDragOver = (event) => {
     event.preventDefault();
   };
+
+  const deleteBannerPictureMutation = useMutation(
+    (communityName: string) =>
+      postRequest({
+        endPoint: 'communities/delete-banner-picture',
+        data: { community_name: communityName },
+      }),
+    {
+      onSuccess: () => {
+        setBannerPicture(undefined);
+      },
+      onError: () => {
+        console.log('Error');
+      },
+    }
+  );
 
   //================================================ Community Posts ======================================================//
 
@@ -412,9 +445,10 @@ const Community = () => {
                   className=' w-32 h-32'
                 />
                 <button
-                  className='absolute w-10 h-10 bg-opacity-70 hover:bg-opacity-90 bg-gray-900 rounded-full text-white right-6 bottom-24'
-                  // onClick={() => {
-                  // }}
+                  className='absolute w-10 h-10 bg-opacity-70 hover:bg-opacity-90 bg-gray-900 rounded-full text-white right-6 bottom-6'
+                  onClick={() => {
+                    deleteProfilePictureMutation.mutate(communityName ?? '');
+                  }}
                   data-testid='avatar-delete-button'
                 >
                   <MdDeleteOutline className='w-full' />
@@ -431,31 +465,36 @@ const Community = () => {
                 />
                 <label
                   htmlFor='upload-button'
-                  className=' w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
+                  className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
                   onDrop={profilePictureHandleDrop}
                   onDragOver={profilePictureHandleDragOver}
-                ></label>
+                >
+                  <IoCloudUploadOutline className='m-50' size={30} />
+                  <Typography className='text-gray-700 font-bold text-sm'>
+                    Drag and drop or browse your device
+                  </Typography>
+                </label>
+                <div className='w-100 min-h-px my-5 bg-gray-400'></div>
+                <div className='flex justify-between'>
+                  <Button
+                    variant='text'
+                    className='h-10 px-14 font-bold flex items-center gap-1.5 bg-gray-200 text-black'
+                    onClick={() => {
+                      setCommunityAppearance('no');
+                      setCommunityAppearanceType('Community appearance');
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant='text'
+                    className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
+                  >
+                    Save
+                  </Button>
+                </div>
               </>
             )}
-            <div className='w-100 min-h-px my-5 bg-gray-400'></div>
-            <div className='flex justify-between'>
-              <Button
-                variant='text'
-                className='h-10 px-14 font-bold flex items-center gap-1.5 bg-gray-200 text-black'
-                onClick={() => {
-                  setCommunityAppearance('no');
-                  setCommunityAppearanceType('Community appearance');
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant='text'
-                className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
-              >
-                Save
-              </Button>
-            </div>
           </Card>
         )}
         {/* Bannerrrrrrrrrrrrrrrrrrrrrr Apearance */}
@@ -514,9 +553,10 @@ const Community = () => {
                   className=' w-60 h-32'
                 />
                 <button
-                  className='absolute w-10 h-10 bg-opacity-70 hover:bg-opacity-90 bg-gray-900 rounded-full text-white right-6 bottom-24'
-                  // onClick={() => {
-                  // }}
+                  className='absolute w-10 h-10 bg-opacity-70 hover:bg-opacity-90 bg-gray-900 rounded-full text-white right-6 bottom-6'
+                  onClick={() => {
+                    deleteBannerPictureMutation.mutate(communityName ?? '');
+                  }}
                   data-testid='banner-delete-button'
                 >
                   <MdDeleteOutline className='w-full' />
@@ -533,31 +573,36 @@ const Community = () => {
                 />
                 <label
                   htmlFor='upload-button'
-                  className=' w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
+                  className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
                   onDrop={bannerPictureHandleDrop}
                   onDragOver={bannerPictureHandleDragOver}
-                ></label>
+                >
+                  <IoCloudUploadOutline className='m-50' size={30} />
+                  <Typography className='text-gray-700 font-bold text-sm'>
+                    Drag and drop or browse your device
+                  </Typography>
+                </label>
+                <div className='w-100 min-h-px my-5 bg-gray-400'></div>
+                <div className='flex justify-between'>
+                  <Button
+                    variant='text'
+                    className='h-10 px-14 font-bold flex items-center gap-1.5 bg-gray-200 text-black'
+                    onClick={() => {
+                      setCommunityAppearance('no');
+                      setCommunityAppearanceType('Community appearance');
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant='text'
+                    className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
+                  >
+                    Save
+                  </Button>
+                </div>
               </>
             )}
-            <div className='w-100 min-h-px my-5 bg-gray-400'></div>
-            <div className='flex justify-between'>
-              <Button
-                variant='text'
-                className='h-10 px-14 font-bold flex items-center gap-1.5 bg-gray-200 text-black'
-                onClick={() => {
-                  setCommunityAppearance('no');
-                  setCommunityAppearanceType('Community appearance');
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant='text'
-                className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
-              >
-                Save
-              </Button>
-            </div>
           </Card>
         )}
       </>
@@ -572,15 +617,24 @@ const Community = () => {
             <>
               <ContentLayout.Main>
                 <div className='relative'>
-                  <Avatar
-                    src={
-                      community.banner_picture ||
-                      'https://htmlcolorcodes.com/assets/images/colors/light-gray-color-solid-background-1920x1080.png'
-                    }
-                    alt='banner image'
-                    variant='rounded'
-                    className='w-full h-32'
-                  />
+                  {bannerPicture && (
+                    <Avatar
+                      src={community.banner_picture}
+                      alt='banner image'
+                      variant='rounded'
+                      className='w-full h-32'
+                    />
+                  )}
+                  {!bannerPicture && (
+                    <Avatar
+                      src={
+                        'https://htmlcolorcodes.com/assets/images/colors/light-gray-color-solid-background-1920x1080.png'
+                      }
+                      alt='banner image'
+                      variant='rounded'
+                      className='w-full h-32'
+                    />
+                  )}
                   {isModerator && (
                     <button
                       className='absolute z-10 w-10 h-10 top-10 right-3 bg-opacity-30 hover:bg-opacity-90 bg-gray-900 rounded-full text-white'
@@ -593,15 +647,24 @@ const Community = () => {
                       <FaPen className='w-full' />
                     </button>
                   )}
-                  <Avatar
-                    src={
-                      community.profile_picture ||
-                      'https://htmlcolorcodes.com/assets/images/colors/light-gray-color-solid-background-1920x1080.png'
-                    }
-                    alt='profile picture'
-                    variant='circular'
-                    className='absolute hover:z-0 z-10 w-24 h-24 top-20 left-3 border-4 border-white'
-                  />
+                  {profilePicture && (
+                    <Avatar
+                      src={community.profile_picture}
+                      alt='profile picture'
+                      variant='circular'
+                      className='absolute hover:z-0 z-10 w-24 h-24 top-20 left-3 border-4 border-white'
+                    />
+                  )}
+                  {!profilePicture && (
+                    <Avatar
+                      src={
+                        'https://htmlcolorcodes.com/assets/images/colors/light-gray-color-solid-background-1920x1080.png'
+                      }
+                      alt='profile picture'
+                      variant='circular'
+                      className='absolute hover:z-0 z-10 w-24 h-24 top-20 left-3 border-4 border-white'
+                    />
+                  )}
                   {isModerator && (
                     <button
                       className='absolute z-0 hover:z-10 w-24 h-24 top-20 left-3 bg-opacity-50 bg-gray-900 rounded-full text-white'
