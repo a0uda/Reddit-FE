@@ -104,38 +104,66 @@ const Search = () => {
               <div className='px-6'>
                 {posts &&
                   type === 'link' &&
-                  posts.length > 0 &&
-                  posts.map((post) => (
-                    <div key={post._id}>
-                      <PostOverview post={post} />
-                      <hr className='border-gray-300' />
+                  (posts.length > 0 ? (
+                    posts.map((post) => (
+                      <div key={post._id}>
+                        <PostOverview post={post} />
+                        <hr className='border-gray-300' />
+                      </div>
+                    ))
+                  ) : (
+                    <div className='flex justify-center items-center h-96'>
+                      <Typography variant='h5' className='text-gray-500'>
+                        No results found
+                      </Typography>
                     </div>
                   ))}
                 {communities &&
                   type === 'sr' &&
-                  communities.length > 0 &&
-                  communities.map((community) => (
-                    <div key={community.id}>
-                      <CommunityOverview community={community} />
-                      <hr className='border-gray-300' />
+                  (communities.length > 0 ? (
+                    communities.map((community) => (
+                      <div key={community.id}>
+                        <CommunityOverview community={community} />
+                        <hr className='border-gray-300' />
+                      </div>
+                    ))
+                  ) : (
+                    <div className='flex justify-center items-center h-96'>
+                      <Typography variant='h5' className='text-gray-500'>
+                        No results found
+                      </Typography>
                     </div>
                   ))}
                 {comments &&
                   type === 'comment' &&
-                  comments.length > 0 &&
-                  comments.map((comment) => (
-                    <div key={comment._id}>
-                      <CommentOverview comment={comment} />
-                      <hr className='border-gray-300' />
+                  (comments.length > 0 ? (
+                    comments.map((comment) => (
+                      <div key={comment._id}>
+                        <CommentOverview comment={comment} />
+                        <hr className='border-gray-300' />
+                      </div>
+                    ))
+                  ) : (
+                    <div className='flex justify-center items-center h-96'>
+                      <Typography variant='h5' className='text-gray-500'>
+                        No results found
+                      </Typography>
                     </div>
                   ))}
                 {users &&
                   type === 'user' &&
-                  users.length > 0 &&
-                  users.map((user) => (
-                    <div key={user._id}>
-                      <UserOverview user={user} variant='small' />
-                      <hr className='border-gray-300' />
+                  (users.length > 0 ? (
+                    users.map((user) => (
+                      <div key={user._id}>
+                        <UserOverview user={user} variant='small' />
+                        <hr className='border-gray-300' />
+                      </div>
+                    ))
+                  ) : (
+                    <div className='flex justify-center items-center h-96'>
+                      <Typography variant='h5' className='text-gray-500'>
+                        No results found
+                      </Typography>
                     </div>
                   ))}
               </div>
