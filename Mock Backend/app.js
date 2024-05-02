@@ -2966,14 +2966,15 @@ app.post("/posts-or-comments/delete", (req, res) => {
   res.sendStatus(200);
 });
 
-app.get("/search", (req, res) => {
-  const { q, type, sort, page, pageSize } = req.query;
+app.get("/search/:type", (req, res) => {
+  const { type } = req.params;
+  const { q, sort, page, pageSize } = req.query;
   console.log(q, type, sort);
 
   let pageIndex = page ?? 0;
   let page_size = pageSize ?? 10;
 
-  if (type === "link") {
+  if (type === "posts") {
     // posts
     res.status(200).json({
       success: true,
@@ -2987,7 +2988,7 @@ app.get("/search", (req, res) => {
         users: users.slice(0, 5),
       },
     });
-  } else if (type === "sr") {
+  } else if (type === "communities") {
     // communities
     res.status(200).json({
       success: true,
@@ -2997,7 +2998,7 @@ app.get("/search", (req, res) => {
         pageIndex * page_size + page_size
       ),
     });
-  } else if (type === "comment") {
+  } else if (type === "comments") {
     // comments
     res.status(200).json({
       success: true,
@@ -3007,7 +3008,7 @@ app.get("/search", (req, res) => {
         pageIndex * page_size + page_size
       ),
     });
-  } else if (type === "user") {
+  } else if (type === "people") {
     // users
     res.status(200).json({
       success: true,

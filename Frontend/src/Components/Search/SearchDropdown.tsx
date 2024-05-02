@@ -47,7 +47,7 @@ const SearchDropdown = ({
           recent.map((item, index) => (
             <ListItem ripple={false} key={index}>
               <button
-                className='flex'
+                className='flex w-full h-full'
                 onClick={() => {
                   setSearch(item.title);
                 }}
