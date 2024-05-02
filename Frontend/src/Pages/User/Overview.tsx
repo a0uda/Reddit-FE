@@ -35,7 +35,8 @@ function Overview() {
       fetchReq.mutate(`users/overview/${user?.username}`, {
         onSuccess: (data) => {
           setIsLoading(false);
-          console.log('reem', data.data);
+
+          //console.log('upvote', data.data.posts.upvote_rate,data.data.posts.up);
           setResponse(data.data);
         },
         onError: (err) => {

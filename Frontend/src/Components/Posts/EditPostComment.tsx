@@ -15,7 +15,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { AiOutlineOrderedList } from 'react-icons/ai';
 import { useMutation, useQueryClient } from 'react-query';
-import { postRequest } from '../../API/User';
+import { patchRequest, postRequest } from '../../API/User';
 import { tiptapConfig } from '../../utils/tiptap_config';
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
@@ -169,30 +169,37 @@ const MenuFooter = ({
   setError: Dispatch<SetStateAction<string>>;
   handleEdit: () => void;
 }) => {
+  const patchReq = useMutation(patchRequest);
   const queryClient = useQueryClient();
-  const addCommentMuation = useMutation(
-    (content: string) =>
-      postRequest({
-        endPoint: 'posts-or-comments/edit-text',
-        data: { is_post: isPost, id: Id, edited_text: content },
-      }),
-    {
-      // onSuccess: () => {
-      //   // Invalidate or refetch a query on success
-      //   queryClient.invalidateQueries('comments');
-      //   queryClient.invalidateQueries(['downvoted']);
-      //   queryClient.invalidateQueries(['upvoted']);
-      //   queryClient.invalidateQueries(['hidden']);
-      //   queryClient.invalidateQueries(['saved']);
-      //   queryClient.invalidateQueries(['post']);
-      //   queryClient.invalidateQueries(['posts']);
-      // },
-      onError: () => {
-        // Perform any actions on error, like showing an error message
-        console.log('Error');
-      },
-    }
-  );
+  // const addCommentMuation = useMutation(
+  //   (content: string) =>
+  //     patchRequest({
+  //       endPoint: 'posts-or-comments/edit-text',
+  //       newSettings: { is_post: isPost, id: Id, edited_text: content },
+  //     }),
+  //   {
+  //     onSuccess: () => {
+  //       // Invalidate or refetch a query on success
+  //       queryClient.invalidateQueries('comments');
+  //       queryClient.invalidateQueries(['downvoted']);
+  //       queryClient.invalidateQueries(['upvoted']);
+  //       queryClient.invalidateQueries(['hidden']);
+  //       queryClient.invalidateQueries(['saved']);
+  //       queryClient.invalidateQueries(['post']);
+  //       queryClient.invalidateQueries(['posts']);
+  //     },
+  //     onError: () => {
+  //       // Perform any actions on error, like showing an error message
+  //       console.log('Error');
+  //     },
+  //   }
+  // );
+  const handleEditPC = (content: string) => {
+    patchReq.mutate({
+      endPoint: 'posts-or-comments/edit-text',
+      newSettings: { is_post: isPost, id: Id, edited_text: content },
+    });
+  };
 
   if (!editor) {
     return null;
@@ -238,7 +245,7 @@ const MenuFooter = ({
                 return;
               }
               const html = editor.getHTML();
-              addCommentMuation.mutate(html);
+              handleEditPC(html);
               handleEdit();
             }}
           >

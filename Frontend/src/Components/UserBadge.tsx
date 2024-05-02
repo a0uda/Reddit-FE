@@ -17,7 +17,7 @@ const UserBadge = ({ username }: UserBadgeProps) => {
   const [aboutData, setAboutData] = useState<AboutType | undefined>();
   useQuery({
     queryKey: 'about data',
-    queryFn: () => fetchRequest(`users/${username}/about`),
+    queryFn: () => fetchRequest(`users/about/${username}`),
     onSuccess: (data) => {
       setAboutData(data.data);
     },

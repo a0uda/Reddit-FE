@@ -109,17 +109,14 @@ const Comment = ({
     });
   };
   const handleEditComment = () => {
-    // patchReq.mutate({
-    //   endPoint: 'posts-or-comments/edit-text',
-    //   newSettings: {
-    //     is_post: false,
-    //     id: comment._id,
-    //     edited_text: editedText,
-    //   },
-    // });
     setShowEditComment(!showEditComment);
   };
-  const handleDeleteComment = () => {};
+  const handleDeleteComment = () => {
+    postRequest({
+      endPoint: 'comments/delete',
+      data: { id: comment._id },
+    });
+  };
   return (
     <>
       <Card className='w-full py-2' shadow={false}>
