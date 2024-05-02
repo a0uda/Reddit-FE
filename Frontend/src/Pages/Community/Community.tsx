@@ -415,7 +415,7 @@ const Community = () => {
                   className='absolute w-10 h-10 bg-opacity-70 hover:bg-opacity-90 bg-gray-900 rounded-full text-white right-6 bottom-24'
                   // onClick={() => {
                   // }}
-                  data-testid='delete-button'
+                  data-testid='avatar-delete-button'
                 >
                   <MdDeleteOutline className='w-full' />
                 </button>
@@ -510,14 +510,14 @@ const Community = () => {
                 <Avatar
                   src={bannerPicture}
                   alt='banner picture'
-                  variant='circular'
-                  className=' w-32 h-32'
+                  variant='rounded'
+                  className=' w-60 h-32'
                 />
                 <button
                   className='absolute w-10 h-10 bg-opacity-70 hover:bg-opacity-90 bg-gray-900 rounded-full text-white right-6 bottom-24'
                   // onClick={() => {
                   // }}
-                  data-testid='delete-button'
+                  data-testid='banner-delete-button'
                 >
                   <MdDeleteOutline className='w-full' />
                 </button>
