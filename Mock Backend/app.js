@@ -2975,7 +2975,6 @@ app.get("/search/:type", (req, res) => {
   let page_size = pageSize ?? 10;
 
   if (type === "posts") {
-  if (type === "posts") {
     // posts
     res.status(200).json({
       success: true,
