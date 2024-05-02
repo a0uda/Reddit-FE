@@ -10,9 +10,17 @@ interface reasonDataType {
   _id: string;
 }
 
-export default function ReasonList() {
+export default function ReasonList({
+  fetchDataReasons,
+  setReasonsList,
+  reasonsList,
+}: {
+  fetchDataReasons: () => void;
+  setReasonsList: (x: reasonDataType[]) => void;
+  reasonsList: reasonDataType[];
+}) {
   const [openAddRule, setOpenAddRule] = useState(false);
-  const [reasonsList, setReasonsList] = useState<reasonDataType[]>([]);
+  // const [reasonsList, setReasonsList] = useState<reasonDataType[]>([]);
   const { community_name } = useParams();
   const [initialValues, setInitialValues] = useState({
     community_name: '',
@@ -20,30 +28,29 @@ export default function ReasonList() {
     removal_reason: '',
     removal_reason_id: '',
   });
+  // const fetchData = async () => {
+  //   setReasonsList([]);
+  //   try {
+  //     const res = await axios.get(
+  //       `${process.env.VITE_BASE_URL}communities/get-removal-reasons/${community_name}`,
+  //       {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           Authorization: localStorage.getItem('token'),
+  //         },
+  //         params: {
+  //           community_name: community_name,
+  //         },
+  //       }
+  //     );
+  //     setReasonsList(res.data);
+  //     console.log(res.data, 'resss');
+  //   } catch (err) {
+  //     console.error('Error fetching data:', err);
+  //   }
+  // };
   useEffect(() => {
-    const fetchData = async () => {
-      setReasonsList([]);
-      try {
-        const res = await axios.get(
-          `${process.env.VITE_BASE_URL}communities/get-removal-reasons/${community_name}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: localStorage.getItem('token'),
-            },
-            params: {
-              community_name: community_name,
-            },
-          }
-        );
-        setReasonsList(res.data);
-        console.log(res.data, 'resss');
-      } catch (err) {
-        console.error('Error fetching data:', err);
-      }
-    };
-
-    fetchData();
+    fetchDataReasons();
   }, []);
 
   const handleSelectRule = (reasonData: reasonDataType) => {
@@ -105,6 +112,7 @@ export default function ReasonList() {
                   handleOpen={() => setOpenAddRule(!openAddRule)}
                   initialValues={initialValues}
                   isEdit={true}
+                  fetchData={fetchDataReasons}
                 />
               </div>
             </div>

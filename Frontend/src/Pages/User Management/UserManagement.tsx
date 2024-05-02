@@ -7,14 +7,14 @@ import ModSideBar from '../Rules and Removal reasons/ModSidebar';
 import { useParams } from 'react-router-dom';
 
 const UserManagement = (props: { page: string }) => {
-  const { communityName } = useParams();
+  const { community_name } = useParams();
   return (
     <div className='Container'>
       <div className='text-blue-light ps-4 ms-4 mt-4 font-bold border-b-2 pb-2 '>
         <span className='border rounded-full bg-blue-light text-white ps-1 pe-1 me-2'>
           r/
         </span>{' '}
-        R/ {communityName}
+        R/ {community_name}
         <span className='text-black ms-2 uppercase'>{' / ' + props.page}</span>
       </div>
       <div className='grid grid-col-1 xl:grid-cols-layout'>

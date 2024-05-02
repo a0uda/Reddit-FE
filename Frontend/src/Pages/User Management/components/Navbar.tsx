@@ -16,8 +16,8 @@ const NavbarButton = (props: {
   );
 };
 const Navbar = (props: { page: string }) => {
-  const { communityName } = useParams();
-  console.log(communityName);
+  const { community_name } = useParams();
+  console.log(community_name);
 
   return (
     <div>
@@ -26,7 +26,7 @@ const Navbar = (props: { page: string }) => {
         {['banned', 'muted', 'approved', 'moderators'].map((li) => (
           <Link
             key={li}
-            to={`/r/${communityName}/about/${li == 'approved' ? 'contributors' : li}`}
+            to={`/r/${community_name}/about/${li == 'approved' ? 'contributors' : li}`}
           >
             <NavbarButton active={li == props.page}>{li}</NavbarButton>
           </Link>

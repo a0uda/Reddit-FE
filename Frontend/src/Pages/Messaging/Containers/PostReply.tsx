@@ -87,6 +87,7 @@ const PostReply = (props: {
                 setVote(1);
                 newVote = 1;
               }
+              console.log(props.replyId, 'repliid');
 
               postReq.mutate(
                 {

@@ -6,11 +6,28 @@ import AddRemovalReason from './AddRemovalReason';
 import ModSideBar from './ModSidebar';
 import RuleList from './RuleList';
 import ReasonList from './ReasonList';
-
+import axios from 'axios';
+interface reasonDataType {
+  removal_reason_title: string;
+  removal_reason: string;
+  _id: string;
+}
+interface ruleData {
+  _id: string;
+  rule_title: string;
+  applies_to: string;
+  report_reason: string;
+  full_description: string;
+  __v: number;
+}
 export default function RuleRemoval() {
   const [buttonSelect, setButtonSelect] = useState(0);
   const { community_name } = useParams();
   const [openAddRule, setOpenAddRule] = useState(false);
+
+  const [rulesList, setRulesList] = useState<ruleData[]>([]);
+  const [reasonsList, setReasonsList] = useState<reasonDataType[]>([]);
+
   const initialValues = {
     community_name: '',
     rule_title: '',
@@ -24,6 +41,48 @@ export default function RuleRemoval() {
     community_name: '',
     removal_reason_title: '',
     removal_reason: '',
+  };
+  const fetchDataRules = async () => {
+    setRulesList([]);
+    try {
+      const res = await axios.get(
+        `${process.env.VITE_BASE_URL}communities/get-rules/${community_name}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('token'),
+          },
+          params: {
+            community_name: community_name,
+          },
+        }
+      );
+      setRulesList(res.data.map((item) => ({ ...item, selected: false })));
+      console.log(res.data, 'resss');
+    } catch (err) {
+      console.error('Error fetching data:', err);
+    }
+  };
+  const fetchDataReasons = async () => {
+    setReasonsList([]);
+    try {
+      const res = await axios.get(
+        `${process.env.VITE_BASE_URL}communities/get-removal-reasons/${community_name}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('token'),
+          },
+          params: {
+            community_name: community_name,
+          },
+        }
+      );
+      setReasonsList(res.data);
+      console.log(res.data, 'resss');
+    } catch (err) {
+      console.error('Error fetching data:', err);
+    }
   };
   return (
     <>
@@ -73,6 +132,7 @@ export default function RuleRemoval() {
                     open={openAddRule}
                     handleOpen={() => setOpenAddRule(!openAddRule)}
                     initialValues={initialValues}
+                    fetchData={fetchDataRules}
                   />
                 </>
               ) : (
@@ -88,13 +148,26 @@ export default function RuleRemoval() {
                     open={openAddRule}
                     handleOpen={() => setOpenAddRule(!openAddRule)}
                     initialValues={initialVal}
+                    fetchData={fetchDataReasons}
                   />
                 </>
               )}
             </div>
 
             <div className='mt-10'>
-              {buttonSelect == 0 ? <RuleList /> : <ReasonList />}
+              {buttonSelect == 0 ? (
+                <RuleList
+                  fetchDataRules={fetchDataRules}
+                  setRulesList={setRulesList}
+                  rulesList={rulesList}
+                />
+              ) : (
+                <ReasonList
+                  fetchDataReasons={fetchDataReasons}
+                  reasonsList={reasonsList}
+                  setReasonsList={setReasonsList}
+                />
+              )}
             </div>
           </div>
         </div>

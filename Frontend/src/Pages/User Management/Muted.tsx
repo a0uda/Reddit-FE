@@ -7,6 +7,8 @@ import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
+import MuteUser from './MuteUser';
+import UnmuteUser from './UnmuteUser';
 
 type MutedUser = {
   username: string;
@@ -18,8 +20,14 @@ type MutedUser = {
 };
 const UserRow = ({ user }: { user: MutedUser }) => {
   const [showDetails, setShowDetails] = useState(false);
+  const [unMuteMod, setUnMuteMod] = useState(false);
   const buttArr = [
-    { text: 'Unmute', onClick: () => {} },
+    {
+      text: 'Unmute',
+      onClick: () => {
+        setUnMuteMod(true);
+      },
+    },
     {
       text: 'More Details',
       onClick: () => {
@@ -29,6 +37,13 @@ const UserRow = ({ user }: { user: MutedUser }) => {
   ];
   return (
     <>
+      <UnmuteUser
+        handleOpen={() => {
+          setUnMuteMod(!unMuteMod);
+        }}
+        open={unMuteMod}
+        username={user.username}
+      />
       <li className='border-[1px] border-gray-200 p-5' key={user._id}>
         <div className='flex justify-between items-center'>
           <div className='flex justify-between items-center w-[600px]'>
@@ -98,8 +113,15 @@ const UsersList = ({ userArr }: { userArr: MutedUser[] }) => {
 };
 
 const Muted = () => {
-  const buttArr = [{ text: 'Mute user', onClick: () => {} }];
-
+  const buttArr = [
+    {
+      text: 'Mute user',
+      onClick: () => {
+        setMuteMod(true);
+      },
+    },
+  ];
+  const [muteMod, setMuteMod] = useState(false);
   // const mutedList: MutedUser[] = [
   //   {
   //     username: 'Rick.Rempel-Hermiston',
@@ -120,12 +142,12 @@ const Muted = () => {
   //     _id: '66186ace721cbd6382326684',
   //   },
   // ];
-  const { communityName } = useParams();
+  const { community_name } = useParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedData, setSelectedData] = useState<MutedUser[]>([]);
   const { data, isLoading, isError } = useQuery(
     'getMutedUsers',
-    () => fetchRequest(`communities/about/muted/${communityName}`),
+    () => fetchRequest(`communities/about/muted/${community_name}`),
     {
       onSuccess: (data) => {
         setSelectedData(data.data);
@@ -152,6 +174,12 @@ const Muted = () => {
 
   return (
     <div>
+      <MuteUser
+        handleOpen={() => {
+          setMuteMod(!muteMod);
+        }}
+        open={muteMod}
+      />
       <ButtonList buttArr={buttArr} />
       <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
       <UsersList userArr={selectedData} />

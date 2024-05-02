@@ -17,7 +17,7 @@ interface BanUserFormProps {
     reason_for_ban: string;
     mod_note: string;
     community_name: string;
-    permanent_flag: string;
+    permanent_flag: boolean;
     note_for_ban_message: string;
     banned_until: string;
   };
@@ -29,7 +29,7 @@ interface Datatype {
   reason_for_ban: string;
   mod_note: string;
   community_name: string;
-  permanent_flag: string;
+  permanent_flag: boolean;
   note_for_ban_message: string;
   banned_until: string;
 }
@@ -79,10 +79,10 @@ export default function BanUser(props: BanUserFormProps): JSX.Element {
   };
 
   const [isPermanent, setIsPermanent] = useState(
-    props.initialValues.permanent_flag == 'true' ? true : false
+    props.initialValues.permanent_flag
   );
   const [days, setDays] = useState<string>(
-    props.initialValues.permanent_flag == 'true'
+    props.initialValues.permanent_flag == true
       ? ''
       : props.initialValues.banned_until
   );
@@ -95,7 +95,7 @@ export default function BanUser(props: BanUserFormProps): JSX.Element {
   };
 
   return (
-    <Dialog size='sm' open={props.open}>
+    <Dialog size='sm' open={props.open} handler={props.handleOpen}>
       <DialogHeader className='!block relative flex justify-between'>
         <div className='block relative border-b border-lines-color flex justify-between'>
           <h2 className='text-left'>Ban a user</h2>
@@ -113,15 +113,15 @@ export default function BanUser(props: BanUserFormProps): JSX.Element {
             mod_note: Yup.string(),
             note_for_ban_message: Yup.string(),
             banned_until: Yup.string(),
-            permanent_flag: Yup.string(),
+            permanent_flag: Yup.boolean(),
             community_name: Yup.string(),
             action: Yup.string(),
           })}
           onSubmit={(values) => {
             if (isPermanent) {
-              values.permanent_flag = 'true';
+              values.permanent_flag = true;
             } else {
-              values.permanent_flag = 'false';
+              values.permanent_flag = false;
             }
             if (community_name) {
               values.community_name = community_name;

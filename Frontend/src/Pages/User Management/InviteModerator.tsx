@@ -20,10 +20,10 @@ interface InviteModProps {
     community_name: string;
     username: string;
     has_access: {
-      everything: string;
-      manage_users: string;
-      manage_settings: string;
-      manage_posts_and_comments: string;
+      everything: boolean;
+      manage_users: boolean;
+      manage_settings: boolean;
+      manage_posts_and_comments: boolean;
     };
   };
 }
@@ -32,29 +32,28 @@ interface FormData {
   community_name: string;
   username: string;
   has_access: {
-    everything: string;
-    manage_users: string;
-    manage_settings: string;
-    manage_posts_and_comments: string;
+    everything: boolean;
+    manage_users: boolean;
+    manage_settings: boolean;
+    manage_posts_and_comments: boolean;
   };
 }
 
 export default function InviteMod(props: InviteModProps): JSX.Element {
   const { community_name } = useParams();
   const [everything, setEverything] = useState(
-    props.initialValues.has_access.everything == 'true' ? true : false
+    props.initialValues.has_access.everything
   );
   const [manage_users, setManage_users] = useState(
-    props.initialValues.has_access.manage_users == 'true' ? true : false
+    props.initialValues.has_access.manage_users
   );
   const [manage_settings, setManage_settings] = useState(
-    props.initialValues.has_access.manage_settings == 'true' ? true : false
+    props.initialValues.has_access.manage_settings
   );
   const [managePost, setManagePost] = useState(
-    props.initialValues.has_access.manage_posts_and_comments == 'true'
-      ? true
-      : false
+    props.initialValues.has_access.manage_posts_and_comments
   );
+  console.log(everything, 'everything');
 
   const CheckBox = [
     {
@@ -131,17 +130,17 @@ export default function InviteMod(props: InviteModProps): JSX.Element {
               values.community_name = community_name;
             }
             if (everything) {
-              values.has_access.everything = 'true';
-            } else values.has_access.everything = 'false';
+              values.has_access.everything = true;
+            } else values.has_access.everything = false;
             if (manage_users) {
-              values.has_access.manage_users = 'true';
-            } else values.has_access.manage_users = 'false';
+              values.has_access.manage_users = true;
+            } else values.has_access.manage_users = false;
             if (manage_settings) {
-              values.has_access.manage_settings = 'true';
-            } else values.has_access.manage_settings = 'false';
+              values.has_access.manage_settings = true;
+            } else values.has_access.manage_settings = false;
             if (managePost) {
-              values.has_access.manage_posts_and_comments = 'true';
-            } else values.has_access.manage_posts_and_comments = 'false';
+              values.has_access.manage_posts_and_comments = true;
+            } else values.has_access.manage_posts_and_comments = false;
             handleSubmit(values);
             setSubmitting(false);
           }}

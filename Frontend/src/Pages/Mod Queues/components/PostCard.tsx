@@ -382,8 +382,9 @@ const PostOptions = ({
             <MenuItem
               onClick={(e) => {
                 e.stopPropagation();
+                console.log('nsfw');
 
-                handleNSFWFlag;
+                handleNSFWFlag();
               }}
               className='py-3 flex gap-2 items-center'
             >

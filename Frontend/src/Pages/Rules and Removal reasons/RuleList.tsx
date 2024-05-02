@@ -11,35 +11,41 @@ interface ruleData {
   __v: number;
 }
 
-export default function RuleList() {
+export default function RuleList({
+  fetchDataRules,
+  setRulesList,
+  rulesList,
+}: {
+  fetchDataRules: () => void;
+  setRulesList: (x: ruleData[]) => void;
+  rulesList: ruleData[];
+}) {
   const [openAddRule, setOpenAddRule] = useState(false);
   const { community_name } = useParams();
-  const [rulesList, setRulesList] = useState<ruleData[]>([]);
-
+  // const [rulesList, setRulesList] = useState<ruleData[]>([]);
+  // const fetchData = async () => {
+  //   setRulesList([]);
+  //   try {
+  //     const res = await axios.get(
+  //       `${process.env.VITE_BASE_URL}communities/get-rules/${community_name}`,
+  //       {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           Authorization: localStorage.getItem('token'),
+  //         },
+  //         params: {
+  //           community_name: community_name,
+  //         },
+  //       }
+  //     );
+  //     setRulesList(res.data.map((item) => ({ ...item, selected: false })));
+  //     console.log(res.data, 'resss');
+  //   } catch (err) {
+  //     console.error('Error fetching data:', err);
+  //   }
+  // };
   useEffect(() => {
-    const fetchData = async () => {
-      setRulesList([]);
-      try {
-        const res = await axios.get(
-          `${process.env.VITE_BASE_URL}communities/get-rules/${community_name}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: localStorage.getItem('token'),
-            },
-            params: {
-              community_name: community_name,
-            },
-          }
-        );
-        setRulesList(res.data.map((item) => ({ ...item, selected: false })));
-        console.log(res.data, 'resss');
-      } catch (err) {
-        console.error('Error fetching data:', err);
-      }
-    };
-
-    fetchData();
+    fetchDataRules();
   }, []);
 
   const [initialValues, setInitialValues] = useState({
@@ -148,6 +154,7 @@ export default function RuleList() {
                   handleOpen={() => setOpenAddRule(!openAddRule)}
                   initialValues={initialValues}
                   isEdit={true}
+                  fetchData={fetchDataRules}
                 />
               </div>
 

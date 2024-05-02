@@ -7,6 +7,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import { useParams } from 'react-router-dom';
+import BanUser from './BanUser';
 
 type BannedUser = {
   username: string;
@@ -21,8 +22,15 @@ type BannedUser = {
 };
 const UserRow = ({ user }: { user: BannedUser }) => {
   const [showDetails, setShowDetails] = useState(false);
+  const [showMod, setShowMod] = useState(false);
+  const { community_name } = useParams();
   const buttArr = [
-    { text: 'Edit', onClick: () => {} },
+    {
+      text: 'Edit',
+      onClick: () => {
+        setShowMod(!showMod);
+      },
+    },
     {
       text: 'More Details',
       onClick: () => {
@@ -32,6 +40,23 @@ const UserRow = ({ user }: { user: BannedUser }) => {
   ];
   return (
     <>
+      <BanUser
+        handleOpen={() => {
+          setShowMod(!showMod);
+        }}
+        open={showMod}
+        isEdit={true}
+        initialValues={{
+          action: 'ban',
+          banned_until: user.banned_until || '',
+          community_name: community_name || '',
+          mod_note: user.mod_note,
+          note_for_ban_message: user.note_for_ban_message,
+          permanent_flag: user.permanent_flag,
+          reason_for_ban: user.reason_for_ban,
+          username: user.username,
+        }}
+      />
       <li className='border-[1px] border-gray-200 p-5' key={user._id}>
         <div className='flex justify-between items-center'>
           <div className='flex justify-between items-center w-[600px]'>
@@ -114,7 +139,15 @@ const UsersList = ({ userArr }: { userArr: BannedUser[] }) => {
   );
 };
 const Banned = () => {
-  const buttArr = [{ text: 'Ban user', onClick: () => {} }];
+  const buttArr = [
+    {
+      text: 'Ban user',
+      onClick: () => {
+        setShowMod(!showMod);
+      },
+    },
+  ];
+  const [showMod, setShowMod] = useState(false);
   // const userList: BannedUser[] = [
   //   {
   //     username: 'Emanuel.Gusikowski',
@@ -190,12 +223,12 @@ const Banned = () => {
   //     _id: '66186ace721cbd638232618f',
   //   },
   // ];
-  const { communityName } = useParams();
+  const { community_name } = useParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedData, setSelectedData] = useState<BannedUser[]>([]);
   const { data, isLoading, isError } = useQuery(
     'getBannedUsers',
-    () => fetchRequest(`communities/about/banned/${communityName}`),
+    () => fetchRequest(`communities/about/banned/${community_name}`),
     {
       onSuccess: (data) => {
         setSelectedData(data.data);
@@ -221,6 +254,23 @@ const Banned = () => {
   };
   return (
     <div>
+      <BanUser
+        handleOpen={() => {
+          setShowMod(!showMod);
+        }}
+        open={showMod}
+        isEdit={false}
+        initialValues={{
+          action: 'ban',
+          banned_until: '',
+          community_name: community_name || '',
+          mod_note: '',
+          note_for_ban_message: '',
+          permanent_flag: true,
+          reason_for_ban: '',
+          username: '',
+        }}
+      />
       <ButtonList buttArr={buttArr} />
       <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
       <UsersList userArr={data?.data} />

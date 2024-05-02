@@ -34,8 +34,8 @@ export default function UnmuteUser(props: RuleFormProps): JSX.Element {
   const handleOnSubmit = (values: object) => {
     console.log(values);
     mutation.mutate({
-      endPoint: 'communities/unmute-user',
-      data: values,
+      endPoint: 'communities/mute-user',
+      data: { ...values, action: 'unmute' },
     });
   };
 

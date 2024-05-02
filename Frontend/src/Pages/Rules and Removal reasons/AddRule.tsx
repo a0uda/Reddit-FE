@@ -20,6 +20,7 @@ interface RuleFormProps {
     rule_id: string;
   };
   isEdit?: boolean;
+  fetchData: () => void;
 }
 interface valueDataType {
   community_name: string;
@@ -62,23 +63,46 @@ export default function AddRule(props: RuleFormProps): JSX.Element {
 
   const handleOnSubmit = (values: valueDataType) => {
     if (buttonSelect == 0) {
-      mutationAdd.mutate({
-        endPoint: 'communities/add-rule',
-        data: values,
-      });
-    } else if (buttonSelect == 1) {
-      mutationDelete.mutate({
-        endPoint: 'communities/delete-rule',
-        data: {
-          community_name: values.community_name,
-          rule_id: values.rule_id,
+      mutationAdd.mutate(
+        {
+          endPoint: 'communities/add-rule',
+          data: values,
         },
-      });
+        {
+          onSuccess: () => {
+            console.log('rule added');
+
+            props.fetchData();
+          },
+        }
+      );
+    } else if (buttonSelect == 1) {
+      mutationDelete.mutate(
+        {
+          endPoint: 'communities/delete-rule',
+          data: {
+            community_name: values.community_name,
+            rule_id: values.rule_id,
+          },
+        },
+        {
+          onSuccess: () => {
+            props.fetchData();
+          },
+        }
+      );
     } else if (buttonSelect == 2) {
-      mutationEdit.mutate({
-        endPoint: 'communities/edit-rule',
-        data: values,
-      });
+      mutationEdit.mutate(
+        {
+          endPoint: 'communities/edit-rule',
+          data: values,
+        },
+        {
+          onSuccess: () => {
+            props.fetchData();
+          },
+        }
+      );
     }
   };
 
@@ -138,7 +162,7 @@ export default function AddRule(props: RuleFormProps): JSX.Element {
                 <p className='text-gray-700'>Applies to</p>
                 <RadioInput
                   name='applies_to'
-                  valueName='Posts & comments'
+                  valueName='posts_and_comments'
                   label='Posts & comments'
                 />
                 <RadioInput

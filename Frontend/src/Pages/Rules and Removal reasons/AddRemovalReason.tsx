@@ -19,6 +19,7 @@ interface RuleFormProps {
   };
   removal_reason_id?: string;
   isEdit?: boolean;
+  fetchData: () => void;
 }
 interface Datatype {
   community_name: string;
@@ -41,23 +42,44 @@ export default function AddRemovalReason(props: RuleFormProps): JSX.Element {
 
   const handleOnSubmit = (values: Datatype) => {
     if (buttonSelect == 0) {
-      mutation.mutate({
-        endPoint: 'communities/add-removal-reaso',
-        data: values,
-      });
-    } else if (buttonSelect == 1) {
-      mutation.mutate({
-        endPoint: 'communities/delete-removal-reason',
-        data: {
-          community_name: community_name,
-          removal_reason_id: values.removal_reason_id,
+      mutation.mutate(
+        {
+          endPoint: 'communities/add-removal-reason',
+          data: values,
         },
-      });
+        {
+          onSuccess: () => {
+            props.fetchData();
+          },
+        }
+      );
+    } else if (buttonSelect == 1) {
+      mutation.mutate(
+        {
+          endPoint: 'communities/delete-removal-reason',
+          data: {
+            community_name: community_name,
+            removal_reason_id: values.removal_reason_id,
+          },
+        },
+        {
+          onSuccess: () => {
+            props.fetchData();
+          },
+        }
+      );
     } else if (buttonSelect == 2) {
-      mutation.mutate({
-        endPoint: 'communities/edit-removal-reason',
-        data: values,
-      });
+      mutation.mutate(
+        {
+          endPoint: 'communities/edit-removal-reason',
+          data: values,
+        },
+        {
+          onSuccess: () => {
+            props.fetchData();
+          },
+        }
+      );
     }
   };
 

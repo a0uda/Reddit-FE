@@ -51,10 +51,10 @@ const Sent = () => {
                     postCreatorType={mess['postCreatorType']}
                     postSubject={mess['postSubject']}
                     replyContent={mess['replyContent']}
-                    replyId={mess['id']}
+                    replyId={mess['_id']}
                     unread={mess['unread']}
                     commentsCount={mess['commentsCount']}
-                    key={mess['id']}
+                    key={mess['_id']}
                     vote={mess['vote']}
                     query='inbox'
                     refetch={refetch}

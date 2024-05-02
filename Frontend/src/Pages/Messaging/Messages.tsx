@@ -5,14 +5,14 @@ import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useEffect } from 'react';
 
-const Sent = () => {
+const Messages = () => {
   let parentChildrenMap: [];
-  const { data, isError, isLoading, refetch } = useQuery(
-    'messages',
+  const response = useQuery(
+    'getAllMessages',
     () => fetchRequest('messages/read-all-messages'),
     {
       onSuccess: (data) => {
-        console.log(data, 'felonsuccess');
+        console.log(data.data.messages, 'felonsuccess');
 
         parentChildrenMap = data?.data.messages.reduce((acc, message) => {
           if (
@@ -31,18 +31,19 @@ const Sent = () => {
       },
     }
   );
-  console.log(data?.data);
+  console.log(response.data?.data, 'middd');
 
   // const parentIds = data?.data
   //   .filter((message) => message.parentMessageId === null)
   //   .map((message) => message._id);
+  // console.log(, 'loading');
 
   return (
-    <LoadingProvider error={isError} isLoading={isLoading}>
-      <ContentContainer length={data?.data.messages.length}>
+    <LoadingProvider error={response.isError} isLoading={response.isLoading}>
+      <ContentContainer length={response.data?.data.messages.length}>
         <div className=''>
-          {!!data?.data.messages &&
-            data?.data.messages.map((mess) => {
+          {!!response.data?.data.messages &&
+            response.data?.data.messages.map((mess) => {
               console.log(parentChildrenMap, 'messs');
 
               if (mess.parentMessageId == null) {
@@ -67,7 +68,7 @@ const Sent = () => {
                     messageId={mess['_id']}
                     key={mess['_id']}
                     senderVia={mess['senderVia']}
-                    refetch={refetch}
+                    refetch={response.refetch}
                     parentMessageId={mess['parentMessageId'] || null}
                     query='messages'
                   />
@@ -82,4 +83,4 @@ const Sent = () => {
   );
 };
 
-export default Sent;
+export default Messages;
