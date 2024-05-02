@@ -6,23 +6,18 @@ import {
 } from '@material-tailwind/react';
 import CommunityBadge from '../CommunityBadge';
 import { dateDuration, formatNumber } from '../../utils/helper_functions';
-import { CommentType, PostType } from '../../types/types';
+import { SearchCommentType } from '../../types/types';
 import { Link } from 'react-router-dom';
 
-const CommentOverview = ({
-  post,
-  comment,
-}: {
-  post: PostType;
-  comment: CommentType;
-}) => {
+const CommentOverview = ({ comment }: { comment: SearchCommentType }) => {
+  const post = comment.post_id;
   return (
     <>
       <Link
         to={`/user/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
       >
         <Card
-          className='relative w-full px-4 hover:bg-neutral-200 flex justify-between gap-2 m-0 p-0 py-2'
+          className='relative w-full p-4 hover:bg-neutral-200 flex justify-between gap-2 m-0'
           shadow={false}
         >
           <div>
@@ -67,10 +62,10 @@ const CommentOverview = ({
   );
 };
 
-const Comment = ({ comment }: { comment: CommentType }) => {
+const Comment = ({ comment }: { comment: SearchCommentType }) => {
   return (
     <Card
-      className='relative w-full px-4 hover:bg-neutral-200 flex justify-between gap-2 m-0 p-0 py-2'
+      className='relative w-full p-4 bg-gray-50 hover:bg-neutral-200 flex justify-between gap-2 m-0'
       shadow={false}
     >
       <div>

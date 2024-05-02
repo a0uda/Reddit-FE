@@ -4,9 +4,9 @@ import LoadingProvider from '../Components/LoadingProvider';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import {
-  CommentType,
   CommunityOverviewType,
   PostType,
+  SearchCommentType,
   UserType,
 } from '../types/types';
 import PostOverview from '../Components/Search/PostOverview';
@@ -50,12 +50,8 @@ const Search = () => {
   const [communities, setCommunities] = useState<
     CommunityOverviewType[] | undefined
   >();
-  const [comments, setComments] = useState<CommentType[] | undefined>();
+  const [comments, setComments] = useState<SearchCommentType[] | undefined>();
   const [users, setUsers] = useState<UserType[] | undefined>();
-
-  console.log(
-    `/search/${type === 'link' ? 'posts' : type === 'sr' ? 'communities' : type === 'comment' ? 'comments' : 'people'}?query=${q}`
-  );
 
   const { isLoading, isError } = useQuery({
     queryKey: ['search results', q, type, sortOption],
@@ -69,6 +65,7 @@ const Search = () => {
         setCommunities(data.data.communities);
         setUsers(data.data.users);
       }
+      console.log('data', data.data);
       if (type === 'sr') setCommunities(data.data);
       if (type === 'comment') setComments(data.data);
       if (type === 'user') setUsers(data.data);
@@ -124,11 +121,11 @@ const Search = () => {
                     </div>
                   ))}
                 {comments &&
-                  type === 'user' &&
+                  type === 'comment' &&
                   comments.length > 0 &&
                   comments.map((comment) => (
                     <div key={comment._id}>
-                      <CommentOverview post={post} comment={comment} />
+                      <CommentOverview comment={comment} />
                       <hr className='border-gray-300' />
                     </div>
                   ))}
