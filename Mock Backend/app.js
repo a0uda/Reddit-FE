@@ -2966,56 +2966,66 @@ app.post("/posts-or-comments/delete", (req, res) => {
   res.sendStatus(200);
 });
 
-app.get("/search", (req, res) => {
-  const { q, type, sort, page, pageSize } = req.query;
-  console.log(q, type, sort);
+app.get("/search/:type", (req, res) => {
+  const { type } = req.params;
+  const { query, sort, page, pageSize } = req.query;
+  console.log(query, type, sort);
 
   let pageIndex = page ?? 0;
   let page_size = pageSize ?? 10;
 
-  if (type === "link") {
+  if (type === "posts") {
     // posts
     res.status(200).json({
       success: true,
       status: 200,
       content: {
-        posts: postsListings.slice(
-          pageIndex * page_size,
-          pageIndex * page_size + page_size
-        ),
+        posts: postsListings
+          .filter((post) =>
+            post.title.toLowerCase().includes(query.toLowerCase())
+          )
+          .concat(
+            postsListings.filter((post) =>
+              post.description.toLowerCase().includes(query.toLowerCase())
+            )
+          )
+          .slice(pageIndex * page_size, pageIndex * page_size + page_size),
         communities: communitiesPost.slice(0, 5),
         users: users.slice(0, 5),
       },
     });
-  } else if (type === "sr") {
+  } else if (type === "communities") {
     // communities
     res.status(200).json({
       success: true,
       status: 200,
-      content: communitiesPost.slice(
-        pageIndex * page_size,
-        pageIndex * page_size + page_size
-      ),
+      content: communitiesPost
+        .filter((comm) => comm.name.toLowerCase().includes(query.toLowerCase()))
+        .slice(pageIndex * page_size, pageIndex * page_size + page_size),
     });
-  } else if (type === "comment") {
+  } else if (type === "comments") {
     // comments
+    const comms = comments.content.filter((comment) =>
+      comment.description.includes(query)
+    );
     res.status(200).json({
       success: true,
       status: 200,
-      content: comments.content.slice(
+      content: comms.slice(
         pageIndex * page_size,
         pageIndex * page_size + page_size
       ),
     });
-  } else if (type === "user") {
+  } else if (type === "people") {
     // users
     res.status(200).json({
       success: true,
       status: 200,
-      content: users.slice(
-        pageIndex * page_size,
-        pageIndex * page_size + page_size
-      ),
+      content: users
+        .filter((user) =>
+          user.username.toLowerCase().includes(query.toLowerCase())
+        )
+        .slice(pageIndex * page_size, pageIndex * page_size + page_size),
     });
   }
 });

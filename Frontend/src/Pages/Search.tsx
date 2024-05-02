@@ -53,9 +53,16 @@ const Search = () => {
   const [comments, setComments] = useState<CommentType[] | undefined>();
   const [users, setUsers] = useState<UserType[] | undefined>();
 
+  console.log(
+    `/search/${type === 'link' ? 'posts' : type === 'sr' ? 'communities' : type === 'comment' ? 'comments' : 'people'}?query=${q}`
+  );
+
   const { isLoading, isError } = useQuery({
     queryKey: ['search results', q, type, sortOption],
-    queryFn: () => axios.get(`/search/?q=${q}&type=${type}`, {}),
+    queryFn: () =>
+      axios.get(
+        `/search/${type === 'link' ? 'posts' : type === 'sr' ? 'communities' : type === 'comment' ? 'comments' : 'people'}?query=${q}`
+      ),
     onSuccess: (data) => {
       if (type === 'link') {
         setPosts(data.data.posts);

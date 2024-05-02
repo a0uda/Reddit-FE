@@ -13,10 +13,10 @@ const SearchBar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { data: communities } = useSearch(
-    `/search/?q=${search}&type=sr&pageSize=5`
+    `/search/communities?query=${search}&pageSize=5`
   );
   const { data: users } = useSearch(
-    `/search/?q=${search}&type=user&pageSize=5`
+    `/search/people?query=${search}&pageSize=5`
   );
 
   return (
