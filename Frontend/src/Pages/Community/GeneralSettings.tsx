@@ -10,9 +10,10 @@ import { Radio, Typography } from '@material-tailwind/react';
 import { UserIcon, EyeIcon, LockClosedIcon } from '@heroicons/react/24/solid';
 import DropDownButton from '../UserSettings/Containers/DropDownButton';
 import LoadingProvider from '../../Components/LoadingProvider';
+import { useParams } from 'react-router-dom';
 
 function GeneralSettings() {
-  const [communityName, setCommunityName] = useState('reem');
+  const { community_name } = useParams();
   const [communityTitle, setCommunityTitle] = useState('');
   const [communityDescription, setCommunityDescription] = useState('');
   const [sendWelcomeMessage, setSendWelcomeMessage] = useState(false);
@@ -42,7 +43,7 @@ function GeneralSettings() {
 
   const { data, isError, isLoading, refetch } = useQuery(
     'general settings',
-    () => fetchRequest('communities/get-general-settings/reem')
+    () => fetchRequest(`communities/get-general-settings/${community_name}`)
   );
   useEffect(() => {
     if (data?.data) {
@@ -81,7 +82,7 @@ function GeneralSettings() {
   });
   const handleSaveChanges = () => {
     patchReq.mutate({
-      endPoint: 'communities/change-general-settings/reem',
+      endPoint: `communities/change-general-settings/${community_name}`,
       newSettings: {
         title: communityTitle,
         welcome_message: {

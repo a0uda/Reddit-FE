@@ -1,5 +1,4 @@
-
-
+import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import RoundedButton from '../../Components/RoundedButton';
 import { fetchRequest, patchRequest } from '../../API/User';
@@ -82,9 +81,11 @@ function ContentControls() {
   /////
   const maxLength = 400;
   const remainingCharacters = maxLength - guidelineText.length;
+  ////
+  const { community_name } = useParams();
   const { data, isError, isLoading, refetch } = useQuery(
     'general settings',
-    () => fetchRequest('communities/get-content-controls/reem')
+    () => fetchRequest(`communities/get-content-controls/${community_name}`)
   );
   useEffect(() => {
     if (data) {
@@ -140,7 +141,7 @@ function ContentControls() {
   const handleSaveChanges = () => {
     console.log('list', selectedRequiredPostTitle);
     patchReq.mutate({
-      endPoint: 'communities/change-content-controls/reem',
+      endPoint: `communities/change-content-controls/${community_name}`,
       newSettings: {
         providing_members_with_posting_guidlines: {
           flag: postGuidelines,
