@@ -150,9 +150,7 @@ const CampainLoggedOut = () => {
     <>
       <div className='flex items-center gap-x-1'>
         <Credentials loginMod={loginMod} setLoginMod={setLoginMod} />
-        <IconButton variant='text'>
-          <HiMagnifyingGlass size={20} className='fill-black' />
-        </IconButton>
+        <MobileSearchBar />
         <Button
           className='bg-orange-muted'
           onClick={() => {
