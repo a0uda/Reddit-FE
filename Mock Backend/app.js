@@ -2975,6 +2975,7 @@ app.get("/search/:type", (req, res) => {
   let page_size = pageSize ?? 10;
 
   if (type === "posts") {
+  if (type === "posts") {
     // posts
     res.status(200).json({
       success: true,
@@ -2995,6 +2996,7 @@ app.get("/search/:type", (req, res) => {
       },
     });
   } else if (type === "communities") {
+  } else if (type === "communities") {
     // communities
     res.status(200).json({
       success: true,
@@ -3003,6 +3005,7 @@ app.get("/search/:type", (req, res) => {
         .filter((comm) => comm.name.toLowerCase().includes(query.toLowerCase()))
         .slice(pageIndex * page_size, pageIndex * page_size + page_size),
     });
+  } else if (type === "comments") {
   } else if (type === "comments") {
     // comments
     const comms = comments.content.filter((comment) =>
@@ -3016,6 +3019,7 @@ app.get("/search/:type", (req, res) => {
         pageIndex * page_size + page_size
       ),
     });
+  } else if (type === "people") {
   } else if (type === "people") {
     // users
     res.status(200).json({
