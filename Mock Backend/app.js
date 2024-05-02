@@ -299,20 +299,20 @@ app.post("/users/block-unblock-user", (req, res) => {
   res.sendStatus(200);
 });
 
-app.post("/users/mute-unmute-community", (req, res) => {
-  if (!req.body.mute) {
-    safetySettings.content.muted_communities =
-      safetySettings.content.muted_communities.filter(
-        (user) => user["community-title"] !== req.body["community-title"]
-      );
-  } else {
-    safetySettings.content.muted_communities.push({
-      "community-title": req.body["community-title"],
-      muted_date: new Date(),
-    });
-  }
-  res.sendStatus(200);
-});
+// app.post("/users/mute-unmute-community", (req, res) => {
+//   if (!req.body.mute) {
+//     safetySettings.content.muted_communities =
+//       safetySettings.content.muted_communities.filter(
+//         (user) => user["community-title"] !== req.body["community-title"]
+//       );
+//   } else {
+//     safetySettings.content.muted_communities.push({
+//       "community-title": req.body["community-title"],
+//       muted_date: new Date(),
+//     });
+//   }
+//   res.sendStatus(200);
+// });
 
 let chatSettings = {
   msg: "asdad",
@@ -625,9 +625,12 @@ let communities = [
     profile_picture:
       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
     banner_picture:
-      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+      "https://wpimg.pixelied.com/blog/wp-content/uploads/2021/08/03132815/relevant-elements-reddit-banner-size.jpg",
     created_at: "2024-04-16T15:06:52.270Z",
     joined_flag: true,
+    moderator_flag: true,
+    muted_flag: true,
+    favorite_flag: true,
   },
   {
     name: "programming",
@@ -640,9 +643,12 @@ let communities = [
     profile_picture:
       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
     banner_picture:
-      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+      "https://wpimg.pixelied.com/blog/wp-content/uploads/2021/08/03132815/relevant-elements-reddit-banner-size.jpg",
     created_at: "2024-04-16T15:06:52.270Z",
     joined_flag: false,
+    moderator_flag: false,
+    muted_flag: false,
+    favorite_flag: false,
   },
   {
     name: "musicFLASE",
@@ -657,6 +663,9 @@ let communities = [
       "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
     created_at: "2024-04-16T15:06:52.270Z",
     joined_flag: false,
+    moderator_flag: true,
+    muted_flag: false,
+    favorite_flag: false,
   },
 ];
 
@@ -673,10 +682,37 @@ app.get("/communities/get-community-view/:communityname", (req, res) => {
     (community) => community.name === communityname
   );
   if (community) {
+    // console.log(community);
     res.status(200).json(community);
   } else {
     res.status(404).json({ error: "Community not found" });
   }
+});
+
+app.post("/users/mute-unmute-community", (req, res) => {
+  const { community_name } = req.body;
+  console.log(community_name);
+  communities = communities.map((community) => {
+    if (community.name === community_name) {
+      community.muted_flag = !community.muted_flag;
+    }
+    // console.log(community);
+    return community;
+  });
+  res.sendStatus(200);
+});
+
+app.patch("/users/favorite-unfavorite-community", (req, res) => {
+  const { community_name } = req.body;
+  console.log(community_name);
+  communities = communities.map((community) => {
+    if (community.name === community_name) {
+      community.favorite_flag = !community.favorite_flag;
+    }
+    console.log(community);
+    return community;
+  });
+  res.sendStatus(200);
 });
 
 let recentPostsList = [
@@ -719,15 +755,15 @@ let recentPostsList = [
     community_name: "sports",
     comments_count: 9,
     // added //
-    communityAvatarSrc:
-      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
-    communityCoverSrc:
-      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
-    joined: true,
-    communityDescription:
-      "Sports news and discussion about sports culture and sports history",
-    communityMembers: 356,
-    communityOnline: 12,
+    // communityAvatarSrc:
+    //   "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    // communityCoverSrc:
+    //   "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    // joined: true,
+    // communityDescription:
+    //   "Sports news and discussion about sports culture and sports history",
+    // communityMembers: 356,
+    // communityOnline: 12,
     //
     views_count: 100,
     shares_count: 20,
@@ -791,17 +827,17 @@ let recentPostsList = [
     community_id: "community123",
     community_name: "programming",
     comments_count: 20,
-    // added //
-    communityAvatarSrc:
-      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
-    communityCoverSrc:
-      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
-    joined: false,
-    communityDescription:
-      "programming news and discussion about programming culture and programming history",
-    communityMembers: 2114,
-    communityOnline: 63,
-    //
+    // // added //
+    // communityAvatarSrc:
+    //   "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    // communityCoverSrc:
+    //   "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    // joined: false,
+    // communityDescription:
+    //   "programming news and discussion about programming culture and programming history",
+    // communityMembers: 2114,
+    // communityOnline: 63,
+    // //
     views_count: 100,
     shares_count: 20,
     upvotes_count: 57,
@@ -830,25 +866,43 @@ let recentPostsList = [
 
 app.post("/users/join-community", (req, res) => {
   const { communityName } = req.body;
-  recentPostsList = recentPostsList.map((post) => {
-    if (post.community_name === communityName) {
-      post.joined = true;
-      console.log(post);
+  // recentPostsList = recentPostsList.map((post) => {
+  //   if (post.community_name === communityName) {
+  //     post.joined = true;
+  //     console.log(post);
+  //   }
+  //   return post;
+  // });
+  communities = communities.map((community) => {
+    if (community.name === communityName) {
+      community.joined_flag = true;
+      console.log(community);
     }
-    return post;
+    return community;
   });
   res.sendStatus(200);
 });
 
 app.post("/users/leave-community", (req, res) => {
   const { communityName } = req.body;
-  recentPostsList = recentPostsList.map((post) => {
-    if (post.community_name === communityName) {
-      post.joined = false;
-      console.log(post);
+  // recentPostsList = recentPostsList.map((post) => {
+  //   if (post.community_name === communityName) {
+  //     post.joined_flag = false;
+  //     post.moderator_flag = false;
+  //     console.log(post);
+  //   }
+  // return post;
+  // });
+
+  communities = communities.map((community) => {
+    if (community.name === communityName) {
+      community.joined_flag = false;
+      community.moderator_flag = false;
+      console.log(community);
     }
-    return post;
+    return community;
   });
+
   res.sendStatus(200);
 });
 
@@ -2302,7 +2356,7 @@ let historyPosts = {
   posts: [
     {
       _id: "15",
-      title: "First Post",
+      title: "First Post in sports community",
       description: "This is the first post",
       created_at: "2024-03-29",
       edited_at: "2024-03-29",
@@ -2498,7 +2552,7 @@ let historyPosts = {
     },
     {
       _id: "15",
-      title: "First Post",
+      title: "second Post in sports community",
       description: "This is the first post",
       created_at: "2024-03-29",
       edited_at: "2024-03-29",
@@ -2695,6 +2749,16 @@ let historyPosts = {
   ],
   msg: "Posts retrieved successfully.",
 };
+
+app.get("/posts/:communityName", (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: 200,
+    content: historyPosts.posts.filter(
+      (post) => post.community_name === "sports"
+    ),
+  });
+});
 
 app.get("/users/history-posts", (req, res) => {
   res.status(200).json({

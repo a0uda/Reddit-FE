@@ -13,6 +13,7 @@ import CreatePost from './Pages/createPost/CreatePost.tsx';
 import GeneralSettings from './Pages/Community/GeneralSettings.tsx';
 import PostsCommentsSettings from './Pages/Community/PostsCommentsSettings.tsx';
 import ContentControls from './Pages/Community/ContentControls.tsx';
+import Community from './Pages/Community/Community.tsx';
 
 function App() {
   const { status } = useSession();
@@ -39,7 +40,7 @@ function App() {
             element={<HandleRoutes element={<User />} />}
           />
           <Route
-            path={'/submit'}
+            path={'/:prefix?/:communityName?/submit'}
             element={<HandleRoutes element={<CreatePost />} />}
           />
           <Route
@@ -61,6 +62,10 @@ function App() {
           <Route
             path='/contentcontrol'
             element={<HandleRoutes element={<ContentControls />} />}
+          />
+          <Route
+            path='/r/:communityName'
+            element={<HandleRoutes element={<Community />} />}
           />
         </Routes>
       </Router>
