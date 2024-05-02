@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import ContentLayout from '../Components/ContentLayout';
 import LoadingProvider from '../Components/LoadingProvider';
 import { useQuery } from 'react-query';
@@ -11,17 +11,40 @@ import {
 } from '../types/types';
 import PostOverview from '../Components/Search/PostOverview';
 import SearchTypes from '../Components/Search/SearchTypes';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CommunityOverview from '../Components/Search/CommunityOverview';
 import SearchRSB from '../Components/Search/SearchRSB';
 import UserOverview from '../Components/Search/UserOverview';
+import CommentOverview from '../Components/Search/CommentOverview';
+import SortOptions from '../Components/SortOptions';
+import { capitalizeString } from '../utils/helper_functions';
+import { Typography } from '@material-tailwind/react';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
   const q = searchParams.get('q');
   const type = searchParams.get('type');
+  const sort = searchParams.get('sort');
 
-  const controller = new AbortController();
+  const sortOptions = ['Relevance', 'Hot', 'Top', 'New', 'Most Comments'];
+  const navigate = useNavigate();
+  const [sortOption, setSortOption] = useState(
+    capitalizeString(sort || '') || sortOptions[0]
+  );
+
+  if (!sortOptions.includes(sortOption)) {
+    setSortOption(sortOptions[0]);
+  }
+
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    navigate(`/search/?q=${q}&type=${type}&sort=${sortOption.toLowerCase()}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortOption]);
 
   const [posts, setPosts] = useState<PostType[] | undefined>();
   const [communities, setCommunities] = useState<
@@ -29,14 +52,11 @@ const Search = () => {
   >();
   const [comments, setComments] = useState<CommentType[] | undefined>();
   const [users, setUsers] = useState<UserType[] | undefined>();
+
   const { isLoading, isError } = useQuery({
-    queryKey: ['search results', q, type],
-    queryFn: () =>
-      axios.get(`/search/?q=${q}&type=${type}`, {
-        signal: controller.signal,
-      }),
+    queryKey: ['search results', q, type, sortOption],
+    queryFn: () => axios.get(`/search/?q=${q}&type=${type}`, {}),
     onSuccess: (data) => {
-      console.log('search: ', data.data);
       if (type === 'link') {
         setPosts(data.data.posts);
         setCommunities(data.data.communities);
@@ -45,7 +65,6 @@ const Search = () => {
       if (type === 'sr') setCommunities(data.data);
       if (type === 'comment') setComments(data.data);
       if (type === 'user') setUsers(data.data);
-      // return data;
     },
   });
 
@@ -55,12 +74,29 @@ const Search = () => {
 
   return (
     <>
-      <ContentLayout>
+      <ContentLayout
+        header={
+          <ContentLayout.Header>
+            <SearchTypes />
+            {/* Sorting */}
+            <div className='flex items-center gap-2 my-2'>
+              <Typography variant='small' className=' text-xs shrink-0'>
+                Sort By:
+              </Typography>
+              <SortOptions
+                sortOptions={sortOptions}
+                sortOption={sortOption}
+                setSortOption={setSortOption}
+              />
+              {/* Separator */}
+              <div className='border-t-2 border-neutral-muted h-0.5 w-full'></div>
+            </div>
+          </ContentLayout.Header>
+        }
+      >
         <LoadingProvider error={isError} isLoading={isLoading}>
           <>
             <ContentLayout.Main>
-              <SearchTypes />
-              {/* Sorting */}
               <div className='px-6'>
                 {posts &&
                   type === 'link' &&
@@ -80,11 +116,20 @@ const Search = () => {
                       <hr className='border-gray-300' />
                     </div>
                   ))}
+                {comments &&
+                  type === 'user' &&
+                  comments.length > 0 &&
+                  comments.map((comment) => (
+                    <div key={comment._id}>
+                      <CommentOverview post={post} comment={comment} />
+                      <hr className='border-gray-300' />
+                    </div>
+                  ))}
                 {users &&
                   type === 'user' &&
                   users.length > 0 &&
                   users.map((user) => (
-                    <div key={user.id}>
+                    <div key={user._id}>
                       <UserOverview user={user} variant='small' />
                       <hr className='border-gray-300' />
                     </div>

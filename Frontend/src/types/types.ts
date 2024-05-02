@@ -227,11 +227,11 @@ export type PostType = {
 // };
 
 export type UserType = {
-  id: string;
+  _id: string;
   created_at: string;
   username: string;
   email: string;
-  verified_email_flag: string;
+  verified_email_flag: boolean;
   gmail: string;
   facebook_email: string;
   display_name: string;

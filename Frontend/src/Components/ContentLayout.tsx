@@ -2,7 +2,13 @@ import { Card, CardBody } from '@material-tailwind/react';
 import { ReactNode } from 'react';
 import SideBar from './SideBar';
 
-const ContentLayout = ({ children }: { children: ReactNode }) => {
+const ContentLayout = ({
+  children,
+  header,
+}: {
+  children: ReactNode;
+  header?: ReactNode;
+}) => {
   return (
     <>
       <div className='grid grid-col-1 xl:grid-cols-layout'>
@@ -10,8 +16,9 @@ const ContentLayout = ({ children }: { children: ReactNode }) => {
           <SideBar className='sticky top-[var(--navbar-height)] ' />
         </div>
 
-        <div className='flex justify-center mx-auto w-full md:w-[1120px] md:max-w-[calc(100vw-272px)] gap-2'>
-          {children}
+        <div className='mx-auto w-full md:w-[1120px] md:max-w-[calc(100vw-272px)]'>
+          {header && header}
+          <div className='flex justify-center gap-2'>{children}</div>
         </div>
       </div>
     </>

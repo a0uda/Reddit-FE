@@ -58,7 +58,7 @@ const SearchRSB = ({
             {users &&
               users.length > 0 &&
               users.map((user) => (
-                <div key={user.id}>
+                <div key={user._id}>
                   <UserOverview user={user} variant='small' />
                 </div>
               ))}

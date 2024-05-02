@@ -398,23 +398,6 @@ let users = [
     banner_picture: "",
     gender: "Female",
   },
-  {
-    id: "user-1",
-    created_at: "2024-01-01",
-    username: "JohnDoe",
-    email: "john.doe@example.com",
-    verified_email_flag: "true",
-    gmail: "john.doe@gmail.com",
-    facebook_email: null,
-    display_name: "John Doe",
-    about: "I love creating content!",
-    social_links: [],
-    profile_picture: "profile.jpg",
-    banner_picture: null,
-    country: "US",
-    gender: "male",
-    connected_google: true,
-  },
 ];
 
 app.post("/users/signup", (req, res) => {
@@ -486,7 +469,7 @@ const communitiesPost = [
     members_count: 924,
   },
   {
-    id: "1",
+    id: "661732b95ef02bd2dddfde1f",
     name: "announcements",
     profile_picture:
       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
@@ -494,7 +477,7 @@ const communitiesPost = [
     members_count: 50,
   },
   {
-    id: "2",
+    id: "661732b95ef02bd2dddfde2e",
     name: "annou",
     profile_picture:
       "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
@@ -502,7 +485,7 @@ const communitiesPost = [
     members_count: 60,
   },
   {
-    id: "3",
+    id: "661732b95ef02bd2dddfde3e",
     name: "football",
     profile_picture:
       "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
@@ -510,7 +493,7 @@ const communitiesPost = [
     members_count: 20,
   },
   {
-    id: "4",
+    id: "661732b95ef02bd2dddfde4e",
     name: "redditGroup",
     profile_picture:
       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
@@ -518,7 +501,7 @@ const communitiesPost = [
     members_count: 40,
   },
   {
-    id: "5",
+    id: "661732b95ef02bd2dddfde5e",
     name: "testcommunity",
     profile_picture:
       "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
@@ -2984,8 +2967,11 @@ app.post("/posts-or-comments/delete", (req, res) => {
 });
 
 app.get("/search", (req, res) => {
-  const { q, type, sort } = req.query;
+  const { q, type, sort, page, pageSize } = req.query;
   console.log(q, type, sort);
+
+  let pageIndex = page ?? 0;
+  let page_size = pageSize ?? 10;
 
   if (type === "link") {
     // posts
@@ -2993,7 +2979,10 @@ app.get("/search", (req, res) => {
       success: true,
       status: 200,
       content: {
-        posts: postsListings,
+        posts: postsListings.slice(
+          pageIndex * page_size,
+          pageIndex * page_size + page_size
+        ),
         communities: communitiesPost.slice(0, 5),
         users: users.slice(0, 5),
       },
@@ -3003,21 +2992,30 @@ app.get("/search", (req, res) => {
     res.status(200).json({
       success: true,
       status: 200,
-      content: communitiesPost,
+      content: communitiesPost.slice(
+        pageIndex * page_size,
+        pageIndex * page_size + page_size
+      ),
     });
   } else if (type === "comment") {
     // comments
     res.status(200).json({
       success: true,
       status: 200,
-      content: comments.content,
+      content: comments.content.slice(
+        pageIndex * page_size,
+        pageIndex * page_size + page_size
+      ),
     });
   } else if (type === "user") {
     // users
     res.status(200).json({
       success: true,
       status: 200,
-      content: users,
+      content: users.slice(
+        pageIndex * page_size,
+        pageIndex * page_size + page_size
+      ),
     });
   }
 });
