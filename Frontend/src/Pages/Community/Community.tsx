@@ -151,6 +151,8 @@ const Community = () => {
   const profilePictureHandleFileUpload = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    // event.preventDefault();
+    console.log('eventtttt', event);
     const file = event.target.files?.[0];
     if (file) {
       setUploadedProfile(URL.createObjectURL(file));
@@ -165,6 +167,26 @@ const Community = () => {
       setUploadedProfile(URL.createObjectURL(file));
     }
   };
+
+  //TODO: post the uploaded profile picture after firebase integration
+  const addProfilePictureMutation = useMutation(
+    (communityName: string) =>
+      postRequest({
+        endPoint: 'communities/add-profile-picture',
+        data: {
+          community_name: communityName,
+          profile_picture: uploadedProfile,
+        },
+      }),
+    {
+      onSuccess: () => {
+        setProfilePicture(uploadedProfile);
+      },
+      onError: () => {
+        console.log('Error');
+      },
+    }
+  );
 
   const deleteProfilePictureMutation = useMutation(
     (communityName: string) =>
@@ -181,8 +203,6 @@ const Community = () => {
       },
     }
   );
-
-  //TODO: post the uploaded profile picture after firebase integration
 
   //================================================ Banner picture ======================================================//
   const [bannerPicture, setBannerPicture] = useState<string | undefined>(
@@ -212,6 +232,26 @@ const Community = () => {
     }
   };
 
+  //TODO: change the uploaded banner picture after firebase integration
+  const addBannerPictureMutation = useMutation(
+    (communityName: string) =>
+      postRequest({
+        endPoint: 'communities/add-profile-picture',
+        data: {
+          community_name: communityName,
+          banner_picture: uploadedBanner,
+        },
+      }),
+    {
+      onSuccess: () => {
+        setBannerPicture(uploadedBanner);
+      },
+      onError: () => {
+        console.log('Error');
+      },
+    }
+  );
+
   const deleteBannerPictureMutation = useMutation(
     (communityName: string) =>
       postRequest({
@@ -227,8 +267,6 @@ const Community = () => {
       },
     }
   );
-
-  //TODO: post the uploaded banner picture after firebase integration
 
   //================================================ Community Posts ======================================================//
 
@@ -467,10 +505,10 @@ const Community = () => {
                       accept='image/*'
                       onChange={profilePictureHandleFileUpload}
                       className='hidden'
-                      id='upload-button'
+                      id='upload-button-profile'
                     />
                     <label
-                      htmlFor='upload-button'
+                      htmlFor='upload-button-profile'
                       className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
                       onDrop={profilePictureHandleDrop}
                       onDragOver={(e) => {
@@ -499,8 +537,8 @@ const Community = () => {
                         variant='text'
                         className='h-10 px-14 font-bold flex items-center gap-1.5 bg-gray-200 text-black'
                         onClick={() => {
-                          setCommunityAppearance('no');
-                          setCommunityAppearanceType('Community appearance');
+                          // setCommunityAppearance('no');
+                          // setCommunityAppearanceType('Community appearance');
                           setUploadedProfile(undefined);
                         }}
                       >
@@ -509,7 +547,9 @@ const Community = () => {
                       <Button
                         variant='text'
                         className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
-                        //TODO: onClick={}
+                        onClick={() => {
+                          addProfilePictureMutation.mutate(communityName ?? '');
+                        }}
                       >
                         Save
                       </Button>
@@ -594,10 +634,10 @@ const Community = () => {
                       accept='image/*'
                       onChange={bannerPictureHandleFileUpload}
                       className='hidden'
-                      id='upload-button'
+                      id='upload-button-banner'
                     />
                     <label
-                      htmlFor='upload-button'
+                      htmlFor='upload-button-banner'
                       className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
                       onDrop={bannerPictureHandleDrop}
                       onDragOver={(e) => {
@@ -626,8 +666,8 @@ const Community = () => {
                         variant='text'
                         className='h-10 px-14 font-bold flex items-center gap-1.5 bg-gray-200 text-black'
                         onClick={() => {
-                          setCommunityAppearance('no');
-                          setCommunityAppearanceType('Community appearance');
+                          // setCommunityAppearance('no');
+                          // setCommunityAppearanceType('Community appearance');
                           setUploadedBanner(undefined);
                         }}
                       >
@@ -636,7 +676,9 @@ const Community = () => {
                       <Button
                         variant='text'
                         className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
-                        //TODO: onClick={}
+                        onClick={() => {
+                          addBannerPictureMutation.mutate(communityName ?? '');
+                        }}
                       >
                         Save
                       </Button>
@@ -764,7 +806,7 @@ const Community = () => {
                         </Button>
                       )}
                       {isModerator && (
-                        <Link to={`/${communityNameWithPrefix}/about/modqueue`}>
+                        <Link to={`/${communityNameWithPrefix}/about/removed`}>
                           <Button
                             variant='text'
                             className='h-10 font-bold flex items-center gap-1.5 border border-black bg-light-blue-900 text-white hover:bg-black'

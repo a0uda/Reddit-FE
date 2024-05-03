@@ -645,7 +645,7 @@ let communities = [
     banner_picture:
       "https://wpimg.pixelied.com/blog/wp-content/uploads/2021/08/03132815/relevant-elements-reddit-banner-size.jpg",
     created_at: "2024-04-16T15:06:52.270Z",
-    joined_flag: false,
+    joined_flag: true,
     moderator_flag: false,
     muted_flag: false,
     favorite_flag: false,
@@ -662,8 +662,8 @@ let communities = [
     banner_picture:
       "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
     created_at: "2024-04-16T15:06:52.270Z",
-    joined_flag: false,
-    moderator_flag: true,
+    joined_flag: true,
+    moderator_flag: false,
     muted_flag: false,
     favorite_flag: false,
   },
@@ -715,12 +715,48 @@ app.patch("/users/favorite-unfavorite-community", (req, res) => {
   res.sendStatus(200);
 });
 
+app.post("/communities/add-profile-picture", (req, res) => {
+  const { community_name, profile_picture } = req.body;
+  console.log(
+    "community_name",
+    community_name,
+    "profile_picture",
+    profile_picture
+  );
+  communities = communities.map((community) => {
+    if (community.name === community_name) {
+      community.profile_picture = profile_picture;
+    }
+    // console.log(community);
+    return community;
+  });
+  res.sendStatus(200);
+});
+
 app.post("/communities/delete-profile-picture", (req, res) => {
   const { community_name } = req.body;
   // console.log(community_name);
   communities = communities.map((community) => {
     if (community.name === community_name) {
       community.profile_picture = null;
+    }
+    // console.log(community);
+    return community;
+  });
+  res.sendStatus(200);
+});
+
+app.post("/communities/add-banner-picture", (req, res) => {
+  const { community_name, banner_picture } = req.body;
+  console.log(
+    "community_name",
+    community_name,
+    "banner_picture",
+    banner_picture
+  );
+  communities = communities.map((community) => {
+    if (community.name === community_name) {
+      community.banner_picture = banner_picture;
     }
     // console.log(community);
     return community;
