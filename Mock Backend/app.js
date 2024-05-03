@@ -2381,7 +2381,7 @@ let historyPosts = {
   status: 200,
   posts: [
     {
-      _id: "15",
+      _id: "1",
       title: "First Post in sports community",
       description: "This is the first post",
       created_at: "2024-03-29",
@@ -2654,7 +2654,7 @@ let historyPosts = {
     },
     {
       is_post: true,
-      id: "18",
+      id: "19",
       avatar:
         "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
       user_id: "user2",
@@ -2714,7 +2714,7 @@ let historyPosts = {
     },
     {
       is_post: true,
-      _id: "3",
+      _id: "5",
       user_id: "user3",
       username: "username",
       avatar:

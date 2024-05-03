@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import ContentLayout from '../../Components/ContentLayout';
 import { CommunityRSB } from '../../Components/RightSideBar/CommunityRSB';
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useQuery, useMutation } from 'react-query';
 import { fetchRequest, postRequest, patchRequest } from '../../API/User';
@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { HiEllipsisHorizontal } from 'react-icons/hi2';
 import { addPrefixToUsername } from '../../utils/helper_functions';
+// import Input from '../../Components/Input';
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
@@ -31,6 +32,7 @@ import {
   AccordionHeader,
   ListItem,
   Typography,
+  Input,
 } from '@material-tailwind/react';
 
 const Community = () => {
@@ -141,13 +143,17 @@ const Community = () => {
     community?.profile_picture
   );
 
+  const [uploadedProfile, setUploadedProfile] = useState<string | undefined>(
+    undefined
+  );
+
   // Function to handle file upload
   const profilePictureHandleFileUpload = (
-    event: ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (file) {
-      setProfilePicture(URL.createObjectURL(file));
+      setUploadedProfile(URL.createObjectURL(file));
     }
   };
 
@@ -156,13 +162,8 @@ const Community = () => {
     event.preventDefault();
     const file = event.dataTransfer.files?.[0];
     if (file) {
-      setProfilePicture(URL.createObjectURL(file));
+      setUploadedProfile(URL.createObjectURL(file));
     }
-  };
-
-  // Function to prevent default behavior of drag and drop
-  const profilePictureHandleDragOver = (event) => {
-    event.preventDefault();
   };
 
   const deleteProfilePictureMutation = useMutation(
@@ -181,18 +182,24 @@ const Community = () => {
     }
   );
 
+  //TODO: post the uploaded profile picture after firebase integration
+
   //================================================ Banner picture ======================================================//
   const [bannerPicture, setBannerPicture] = useState<string | undefined>(
     community?.banner_picture
   );
 
+  const [uploadedBanner, setUploadedBanner] = useState<string | undefined>(
+    undefined
+  );
+
   // Function to handle file upload
   const bannerPictureHandleFileUpload = (
-    event: ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (file) {
-      setBannerPicture(URL.createObjectURL(file));
+      setUploadedBanner(URL.createObjectURL(file));
     }
   };
 
@@ -201,13 +208,8 @@ const Community = () => {
     event.preventDefault();
     const file = event.dataTransfer.files?.[0];
     if (file) {
-      setBannerPicture(URL.createObjectURL(file));
+      setUploadedBanner(URL.createObjectURL(file));
     }
-  };
-
-  // Function to prevent default behavior of drag and drop
-  const bannerPictureHandleDragOver = (event) => {
-    event.preventDefault();
   };
 
   const deleteBannerPictureMutation = useMutation(
@@ -225,6 +227,8 @@ const Community = () => {
       },
     }
   );
+
+  //TODO: post the uploaded banner picture after firebase integration
 
   //================================================ Community Posts ======================================================//
 
@@ -456,43 +460,62 @@ const Community = () => {
               </div>
             ) : (
               <>
-                <input
-                  type='file'
-                  accept='image/*'
-                  onChange={profilePictureHandleFileUpload}
-                  className='hidden'
-                  id='upload-button'
-                />
-                <label
-                  htmlFor='upload-button'
-                  className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
-                  onDrop={profilePictureHandleDrop}
-                  onDragOver={profilePictureHandleDragOver}
-                >
-                  <IoCloudUploadOutline className='m-50' size={30} />
-                  <Typography className='text-gray-700 font-bold text-sm'>
-                    Drag and drop or browse your device
-                  </Typography>
-                </label>
-                <div className='w-100 min-h-px my-5 bg-gray-400'></div>
-                <div className='flex justify-between'>
-                  <Button
-                    variant='text'
-                    className='h-10 px-14 font-bold flex items-center gap-1.5 bg-gray-200 text-black'
-                    onClick={() => {
-                      setCommunityAppearance('no');
-                      setCommunityAppearanceType('Community appearance');
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant='text'
-                    className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
-                  >
-                    Save
-                  </Button>
-                </div>
+                {!uploadedProfile && (
+                  <div>
+                    <input
+                      type='file'
+                      accept='image/*'
+                      onChange={profilePictureHandleFileUpload}
+                      className='hidden'
+                      id='upload-button'
+                    />
+                    <label
+                      htmlFor='upload-button'
+                      className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
+                      onDrop={profilePictureHandleDrop}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                      }}
+                    >
+                      <IoCloudUploadOutline className='m-50' size={30} />
+                      <Typography className='text-gray-700 font-bold text-sm'>
+                        Drag and drop or browse your device
+                      </Typography>
+                    </label>
+                  </div>
+                )}
+                {uploadedProfile && (
+                  <div>
+                    <Avatar
+                      src={uploadedProfile}
+                      alt='profile image'
+                      variant='circular'
+                      className='w-32 h-32 ml-28'
+                    />
+
+                    <div className='w-100 min-h-px my-5 bg-gray-400'></div>
+                    <div className='flex justify-between'>
+                      <Button
+                        variant='text'
+                        className='h-10 px-14 font-bold flex items-center gap-1.5 bg-gray-200 text-black'
+                        onClick={() => {
+                          setCommunityAppearance('no');
+                          setCommunityAppearanceType('Community appearance');
+                          setUploadedProfile(undefined);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant='text'
+                        className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
+                        //TODO: onClick={}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </Card>
@@ -564,43 +587,62 @@ const Community = () => {
               </div>
             ) : (
               <>
-                <input
-                  type='file'
-                  accept='image/*'
-                  onChange={bannerPictureHandleFileUpload}
-                  className='hidden'
-                  id='upload-button'
-                />
-                <label
-                  htmlFor='upload-button'
-                  className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
-                  onDrop={bannerPictureHandleDrop}
-                  onDragOver={bannerPictureHandleDragOver}
-                >
-                  <IoCloudUploadOutline className='m-50' size={30} />
-                  <Typography className='text-gray-700 font-bold text-sm'>
-                    Drag and drop or browse your device
-                  </Typography>
-                </label>
-                <div className='w-100 min-h-px my-5 bg-gray-400'></div>
-                <div className='flex justify-between'>
-                  <Button
-                    variant='text'
-                    className='h-10 px-14 font-bold flex items-center gap-1.5 bg-gray-200 text-black'
-                    onClick={() => {
-                      setCommunityAppearance('no');
-                      setCommunityAppearanceType('Community appearance');
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant='text'
-                    className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
-                  >
-                    Save
-                  </Button>
-                </div>
+                {!uploadedBanner && (
+                  <div>
+                    <input
+                      type='file'
+                      accept='image/*'
+                      onChange={bannerPictureHandleFileUpload}
+                      className='hidden'
+                      id='upload-button'
+                    />
+                    <label
+                      htmlFor='upload-button'
+                      className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
+                      onDrop={bannerPictureHandleDrop}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                      }}
+                    >
+                      <IoCloudUploadOutline className='m-50' size={30} />
+                      <Typography className='text-gray-700 font-bold text-sm'>
+                        Drag and drop or browse your device
+                      </Typography>
+                    </label>
+                  </div>
+                )}
+                {uploadedBanner && (
+                  <div>
+                    <Avatar
+                      src={uploadedBanner}
+                      alt='banner image'
+                      variant='rounded'
+                      className='w-full h-32'
+                    />
+
+                    <div className='w-100 min-h-px my-5 bg-gray-400'></div>
+                    <div className='flex justify-between'>
+                      <Button
+                        variant='text'
+                        className='h-10 px-14 font-bold flex items-center gap-1.5 bg-gray-200 text-black'
+                        onClick={() => {
+                          setCommunityAppearance('no');
+                          setCommunityAppearanceType('Community appearance');
+                          setUploadedBanner(undefined);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant='text'
+                        className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
+                        //TODO: onClick={}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </Card>
