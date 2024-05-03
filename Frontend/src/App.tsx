@@ -92,7 +92,7 @@ function App() {
               element={<HandleRoutes element={<UserSettings />} />}
             />
             <Route
-              path={`/user/:username/:page`}
+              path={`/u/:username/:page`}
               element={<HandleRoutes element={<User />} />}
             />
             <Route

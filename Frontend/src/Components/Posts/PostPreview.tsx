@@ -219,7 +219,7 @@ const SharedPostContainer = (props: {
   sharedPostId: string;
   post: PostType;
 }) => {
-  const [sharedPost, setSharedPost] = useState();
+  const [sharedPost, setSharedPost] = useState<PostType>();
   const [sharedPostSpoiler, setSharedPostSpoiler] = useState<boolean>();
   const [sharedViewNSFW, setSharedViewNSFW] = useState<boolean>();
 
@@ -481,7 +481,7 @@ const PostPreview = ({
   // TODO Fetch Community
   const [community, setCommunity] = useState<CommunityType | undefined>();
   const [link, setLink] = useState<string>(
-    `/user/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+    `/u/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
   );
   const [viewSpoiler, setViewSpoiler] = useState<boolean>(
     post.spoiler_flag ||

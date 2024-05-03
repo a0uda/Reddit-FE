@@ -438,7 +438,7 @@ const Message = (props: {
               {' '}
               from{' '}
               <Link
-                to={`/${props.sendType === 'user' ? 'user/' + props.sendUsername : addPrefixToUsername(props.sendUsername, props.sendType)}`}
+                to={`/${props.sendType === 'user' ? 'u/' + props.sendUsername : addPrefixToUsername(props.sendUsername, props.sendType)}`}
                 className='text-[#80bce9] hover:underline'
               >
                 {addPrefixToUsername(props.sendUsername, props.sendType)}
@@ -450,7 +450,7 @@ const Message = (props: {
               {' '}
               to{' '}
               <Link
-                to={`/${props.recType === 'user' ? 'user/' + props.recUsername : addPrefixToUsername(props.recUsername, props.recType)}`}
+                to={`/${props.recType === 'user' ? 'u/' + props.recUsername : addPrefixToUsername(props.recUsername, props.recType)}`}
                 className='text-[#80bce9] hover:underline'
               >
                 {addPrefixToUsername(props.recUsername, props.recType)}
@@ -506,7 +506,7 @@ const Message = (props: {
           <div className='flex gap-3'>
             <div className='border-2 border-blue-light rounded-[10px] px-3 font-bold text-blue-light'>
               <Link
-                to={`/${props.senderType === 'user' ? 'user/' + props.senderUsername : addPrefixToUsername(props.senderUsername, props.senderType)}`}
+                to={`/${props.senderType === 'user' ? 'u/' + props.senderUsername : addPrefixToUsername(props.senderUsername, props.senderType)}`}
               >
                 {addPrefixToUsername(props.senderUsername, props.senderType)}
               </Link>
@@ -559,7 +559,7 @@ const Message = (props: {
               {' '}
               from{' '}
               <Link
-                to={`/${props.senderType === 'user' ? 'user/' + props.senderUsername : addPrefixToUsername(props.senderUsername, props.senderType)}`}
+                to={`/${props.senderType === 'user' ? 'u/' + props.senderUsername : addPrefixToUsername(props.senderUsername, props.senderType)}`}
                 className='text-[#80bce9] hover:underline'
               >
                 {addPrefixToUsername(props.senderUsername, props.senderType)}
@@ -571,7 +571,7 @@ const Message = (props: {
               {' '}
               to{' '}
               <Link
-                to={`/${props.receiverType === 'user' ? 'user/' + props.receiverUsername : addPrefixToUsername(props.receiverUsername, props.receiverType)}`}
+                to={`/${props.receiverType === 'user' ? 'u/' + props.receiverUsername : addPrefixToUsername(props.receiverUsername, props.receiverType)}`}
                 className='text-[#80bce9] hover:underline'
               >
                 {addPrefixToUsername(

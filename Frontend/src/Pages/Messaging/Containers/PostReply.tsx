@@ -155,7 +155,7 @@ const PostReply = (props: {
               {' '}
               from{' '}
               <Link
-                to={`/user/${props.senderUsername}`}
+                to={`/u/${props.senderUsername}`}
                 className='text-[#80bce9] hover:underline'
               >
                 {addPrefixToUsername(props.senderUsername, 'user')}
@@ -167,7 +167,7 @@ const PostReply = (props: {
               via{' '}
               <Link
                 className='text-[#228822] hover:underline'
-                to={`/${props.postCreatorType === 'user' ? 'user/' + props.postCreator : addPrefixToUsername(props.postCreator, props.postCreatorType)}`}
+                to={`/${props.postCreatorType === 'user' ? 'u/' + props.postCreator : addPrefixToUsername(props.postCreator, props.postCreatorType)}`}
               >
                 {addPrefixToUsername(
                   props.postCreator || '',
