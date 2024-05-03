@@ -11,48 +11,62 @@ import {
   PlusCircleIcon,
   PlusIcon,
   ShieldCheckIcon,
+  MinusCircleIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
 } from '@heroicons/react/24/outline';
 import SidebarSection from './Containers/SidebarSection';
 import CommunityItem from '../../Components/RightSideBar/CommunityItem';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import facebookIcon from '../../assets/facebookIcon.svg';
 import instagramIcon from '../../assets/instagramIcon.svg';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import { fetchRequest, postRequest } from '../../API/User';
 import { AboutType, ModeratedCommunity, SocialLink } from '../../types/types';
 import useSession from '../../hooks/auth/useSession';
+import UserOptions from './Containers/UserOptions';
 
 function UserRightSideBar() {
   const { user } = useSession();
   const [aboutData, setAboutData] = useState<AboutType | undefined>();
   const { username } = useParams();
   const [myData, setMyData] = useState(false);
+  const [moderatedCommunities, setModeratedCommunities] = useState<
+    ModeratedCommunity[]
+  >([]);
   const fetchReq = useMutation(fetchRequest);
+  const [followState, setFollowState] = useState(false);
   useEffect(() => {
+    console.log('reemtasneem', user?.username);
     if (user?.username) {
       fetchReq.mutate(`users/about/${username}`, {
         onSuccess: (data) => {
-          console.log('reem', data.data);
+          console.log('reemn', data.data);
           setAboutData(data.data);
-          if (username == user?.username) {
+          setModeratedCommunities(data.data.moderatedCommunities);
+          if (user?.username == username) {
             setMyData(true);
+          }
+          if (user?.username != username) {
+            fetchReq.mutate(`users/following`, {
+              onSuccess: (data) => {
+                const userList = data.data;
+                for (const user of userList) {
+                  console.log(user.username, 'tasneem');
+
+                  if (user.username === username) {
+                    setFollowState(true);
+
+                    break;
+                  }
+                }
+              },
+            });
           }
         },
       });
     }
   }, [user?.username]);
 
-  const [moderatedCommunities, setModeratedCommunities] = useState<
-    ModeratedCommunity[]
-  >([]);
-  useQuery({
-    queryKey: 'moderated communities',
-    queryFn: () => fetchRequest('users/moderated-communities'),
-    onSuccess: (data) => {
-      console.log('moderated communities', data.data);
-      setModeratedCommunities(data.data);
-    },
-  });
   const joinMutation = useMutation(
     (communityName: string) =>
       postRequest({
@@ -78,7 +92,14 @@ function UserRightSideBar() {
     //   },
     // }
   );
+  const handleFollow = () => {
+    postRequest({
+      endPoint: 'users/follow-unfollow-user',
+      data: { other_username: username },
+    });
 
+    setFollowState(!followState);
+  };
   const social_links = aboutData?.social_links ?? [];
   const display_name = aboutData?.display_name ?? '';
   const profile_picture = aboutData?.profile_picture ?? '';
@@ -114,6 +135,22 @@ function UserRightSideBar() {
 
     leaveMutation.mutate(moderatedCommunities[index].name);
   };
+  const handleBlock = () => {
+    postRequest({
+      endPoint: 'users/block-unblock-user',
+      data: { blocked_username: username },
+    });
+  };
+  const handleReport = () => {
+    postRequest({
+      endPoint: 'users/report-user',
+      data: { reported_username: username },
+    });
+  };
+  const navigate = useNavigate();
+  const handleSendMessage = () => {
+    navigate(`/compose?to=${username}`);
+  };
   return (
     <>
       <Card className=' shadow-none  mt-2 mx-1 bg-neutral-200 overflow-auto '>
@@ -143,8 +180,56 @@ function UserRightSideBar() {
           shadow={false}
           className='w-full max-w-[20rem]  '
         >
-          <div className='text-black font-semibold px-4 pt-2'>
+          <div className='text-black font-semibold px-4 pt-2 flex justify-between'>
             {display_name}
+            {!myData ? (
+              <UserOptions
+                handleBlock={handleBlock}
+                handleReport={handleReport}
+                handleSendMessage={handleSendMessage}
+              />
+            ) : (
+              <></>
+            )}
+          </div>
+          <div className='m-4 '>
+            {!myData && (
+              <div className='flex gap-4'>
+                {followState ? (
+                  <RoundedButton
+                    buttonBorderColor='none'
+                    buttonColor='bg-neutral-500'
+                    buttonText='unfollow'
+                    buttonTextColor='text-black'
+                    onClick={() => handleFollow()}
+                  >
+                    <MinusCircleIcon strokeWidth={1.5} className='h-5 w-5' />
+                  </RoundedButton>
+                ) : (
+                  <RoundedButton
+                    buttonBorderColor='none'
+                    buttonColor='bg-indigo-900'
+                    buttonText='follow'
+                    buttonTextColor='text-white'
+                    onClick={() => handleFollow()}
+                  >
+                    <PlusCircleIcon strokeWidth={1.5} className='h-5 w-5' />
+                  </RoundedButton>
+                )}
+                <RoundedButton
+                  buttonBorderColor='none'
+                  buttonColor='bg-neutral-500'
+                  buttonText='Chat'
+                  buttonTextColor='text-black'
+                  onClick={() => handleFollow()}
+                >
+                  <ChatBubbleOvalLeftEllipsisIcon
+                    strokeWidth={1.5}
+                    className='h-5 w-5'
+                  />
+                </RoundedButton>
+              </div>
+            )}
           </div>
           <CardBody className='flex flex-col gap-2'>
             <div className='text-black text-sm'>{formattedDate}</div>
@@ -244,7 +329,7 @@ function UserRightSideBar() {
           )}
           <SidebarSection sectionTitle='Links'>
             <div className='flex flex-start gap-2 flex-wrap'>
-              {social_links &&
+              {/* {social_links &&
                 social_links.map((link: SocialLink, i: number) => {
                   return (
                     <Link
@@ -277,7 +362,7 @@ function UserRightSideBar() {
                       </RoundedButton>
                     </Link>
                   );
-                })}
+                })} */}
               {myData ? (
                 <Link
                   to={`/settings/profile`}

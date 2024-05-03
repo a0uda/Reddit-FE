@@ -46,6 +46,7 @@ const SubNavBar = (props: {
     'hidden',
     'upvoted',
     'downvoted',
+    'history',
   ];
   return (
     <div className='flex mb-2'>
@@ -135,6 +136,7 @@ function User() {
                         'Hidden',
                         'Upvoted',
                         'Downvoted',
+                        'History',
                       ]}
                       active={page}
                       username={username}
@@ -159,6 +161,11 @@ function User() {
                     <UserContent
                       endpoint='users/upvoted-posts'
                       queryName='upvoted'
+                    />
+                  ) : page == 'history' ? (
+                    <UserContent
+                      endpoint='users/history-posts'
+                      queryName='history'
                     />
                   ) : (
                     <UserContent
