@@ -61,7 +61,6 @@ const LinkPostContainer = (props: { post: PostType }) => {
 };
 
 export const PollPostContainer = (props: { post: PostType }) => {
-
   const [chosenOptionId, setChosenOptionId] = useState<string>(
     props.post.poll_vote
   );
@@ -453,7 +452,7 @@ const SharedPostContainer = (props: {
                     >
                       <div className='flex w-32 justify-end items-center gap-1'>
                         <img
-                          src={sharedPost?.images?.[0].link}
+                          src={sharedPost?.images?.[0].path}
                           alt='post'
                           className='object-cover rounded-md w-32 h-24'
                         />
@@ -891,7 +890,7 @@ const PostPreview = ({
                     >
                       <div className='flex items-center gap-1'>
                         <img
-                          src={post.images?.[0].link}
+                          src={post.images?.[0].path}
                           alt='post'
                           className='object-cover rounded-md w-32 h-24'
                         />

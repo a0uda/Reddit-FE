@@ -7,6 +7,7 @@ interface Image {
   path: string;
   caption: string;
   link: string;
+  file: File;
 }
 type ImageUploadProps = {
   setFieldValue: (
@@ -50,6 +51,7 @@ export default function ImageUpload({
           path: imageUrl,
           caption: '',
           link: '',
+          file: file,
         });
         setIndex((prevIndex) => prevIndex + 1);
       });
