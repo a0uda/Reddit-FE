@@ -130,7 +130,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
               </Typography>
               {post.images?.[0] && (
                 <img
-                  src={post.images?.[0].link}
+                  src={post.images?.[0].path}
                   alt='post'
                   className='object-contain rounded-md w-full max-h-[100vw]'
                 />
