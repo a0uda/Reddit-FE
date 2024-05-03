@@ -6,9 +6,9 @@ import LoadingProvider from '../../Components/LoadingProvider';
 
 const Sent = () => {
   const { data, isError, isLoading, refetch } = useQuery('postReplies', () =>
-    fetchRequest('messages/get-post-replies')
+    fetchRequest('messages/get-user-post-replies')
   );
-  console.log(data, 'messages/get-post-replies');
+  console.log(data, 'messages/get-user-post-replies');
   // createDate: Date;
   // senderUsername: string;
   // postCreator: string;
@@ -19,10 +19,10 @@ const Sent = () => {
 
   return (
     <LoadingProvider error={isError} isLoading={isLoading}>
-      <ContentContainer length={data?.data.length}>
+      <ContentContainer length={data?.data.replies.length}>
         <div className=''>
-          {!!data?.data &&
-            data?.data.map((reply, i) => (
+          {!!data?.data.replies &&
+            data?.data.replies.map((reply, i) => (
               <PostReply
                 createDate={reply['created_at']}
                 senderUsername={reply['senderUsername']}
@@ -30,10 +30,10 @@ const Sent = () => {
                 postCreatorType={reply['postCreatorType']}
                 postSubject={reply['postSubject']}
                 replyContent={reply['replyContent']}
-                replyId={reply['id']}
+                replyId={reply['_id']}
                 unread={reply['unread']}
                 commentsCount={reply['commentsCount']}
-                key={reply['id']}
+                key={reply['_id']}
                 vote={reply['rank']}
                 query='postReplies'
                 refetch={refetch}

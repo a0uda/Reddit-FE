@@ -7,6 +7,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import { useState } from 'react';
+import AddApprovedUser from './AddApprovedUser';
+import RemoveApprovedUser from './RemoveApprovedUser';
+import LoadingProvider from '../../Components/LoadingProvider';
 // import UsersList from './components/UsersList';
 
 type ApprovedUser = {
@@ -15,8 +18,15 @@ type ApprovedUser = {
   profile_picture: string;
   _id: string;
 };
-const UserRow = ({ user }: { user: ApprovedUser }) => {
+const UserRow = ({
+  user,
+  refetch,
+}: {
+  user: ApprovedUser;
+  refetch: () => void;
+}) => {
   const session = useSession();
+  const [remUser, setRemUser] = useState(false);
   const buttArr = [
     {
       text: 'Send message',
@@ -26,11 +36,21 @@ const UserRow = ({ user }: { user: ApprovedUser }) => {
     },
     {
       text: 'Remove',
-      onClick: () => {},
+      onClick: () => {
+        setRemUser(true);
+      },
     },
   ];
   return (
     <>
+      <RemoveApprovedUser
+        handleOpen={() => {
+          setRemUser(!remUser);
+        }}
+        open={remUser}
+        username={user.username}
+        refetch={refetch}
+      />
       <li className='border-[1px] border-gray-200 p-5' key={user._id}>
         <div className='flex justify-between items-center'>
           <div className='flex justify-between items-center w-[600px]'>
@@ -78,62 +98,79 @@ const UserRow = ({ user }: { user: ApprovedUser }) => {
     </>
   );
 };
-const UsersList = ({ userArr }: { userArr: ApprovedUser[] }) => {
+const UsersList = ({
+  userArr,
+  refetch,
+}: {
+  userArr: ApprovedUser[];
+  refetch: () => void;
+}) => {
   return (
     <ul className='last:rounded-b-md'>
-      {userArr && userArr.map((user) => <UserRow key={user._id} user={user} />)}
+      {userArr &&
+        userArr.map((user) => (
+          <UserRow key={user._id} user={user} refetch={refetch} />
+        ))}
     </ul>
   );
 };
 
 const Contributors = () => {
-  const buttArr = [{ text: 'Approve user', onClick: () => {} }];
-  const usersList: ApprovedUser[] = [
+  const buttArr = [
     {
-      username: 'maldaxk12sss34d56dx7',
-      approved_at: '2024-04-11T03:00:53.297Z',
-      profile_picture: 'https://avatars.githubusercontent.com/u/51964442',
-      _id: '6618844ad57c873637b5cf43',
-    },
-    {
-      username: 'malaxk1234d567',
-      approved_at: '2024-04-11T07:51:09.795Z',
-      profile_picture: 'https://avatars.githubusercontent.com/u/48748592',
-      _id: '6618844ad57c873637b5cf44',
-    },
-    {
-      username: 'Sadie20',
-      approved_at: '2024-04-11T07:17:28.324Z',
-      profile_picture: 'https://avatars.githubusercontent.com/u/40232825',
-      _id: '6618844ad57c873637b5cf45',
-    },
-    {
-      username: 'maldaxk1234d56dx7',
-      approved_at: '2024-04-11T08:18:25.843Z',
-      profile_picture:
-        'https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/239.jpg',
-      _id: '6618844ad57c873637b5cf46',
-    },
-    {
-      username: 'maldaxk1234d56dx7',
-      approved_at: '2024-04-11T02:50:14.667Z',
-      profile_picture:
-        'https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/70.jpg',
-      _id: '6618844ad57c873637b5cf47',
-    },
-    {
-      username: 'malaxk1234567',
-      approved_at: '2024-04-11T05:52:45.133Z',
-      profile_picture: 'https://avatars.githubusercontent.com/u/8218146',
-      _id: '6618844ad57c873637b5cf48',
+      text: 'Approve user',
+      onClick: () => {
+        setAppMod(true);
+      },
     },
   ];
-  const { communityName } = useParams();
+  const [appMod, setAppMod] = useState(false);
+  // const usersList: ApprovedUser[] = [
+  //   {
+  //     username: 'maldaxk12sss34d56dx7',
+  //     approved_at: '2024-04-11T03:00:53.297Z',
+  //     profile_picture: 'https://avatars.githubusercontent.com/u/51964442',
+  //     _id: '6618844ad57c873637b5cf43',
+  //   },
+  //   {
+  //     username: 'malaxk1234d567',
+  //     approved_at: '2024-04-11T07:51:09.795Z',
+  //     profile_picture: 'https://avatars.githubusercontent.com/u/48748592',
+  //     _id: '6618844ad57c873637b5cf44',
+  //   },
+  //   {
+  //     username: 'Sadie20',
+  //     approved_at: '2024-04-11T07:17:28.324Z',
+  //     profile_picture: 'https://avatars.githubusercontent.com/u/40232825',
+  //     _id: '6618844ad57c873637b5cf45',
+  //   },
+  //   {
+  //     username: 'maldaxk1234d56dx7',
+  //     approved_at: '2024-04-11T08:18:25.843Z',
+  //     profile_picture:
+  //       'https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/239.jpg',
+  //     _id: '6618844ad57c873637b5cf46',
+  //   },
+  //   {
+  //     username: 'maldaxk1234d56dx7',
+  //     approved_at: '2024-04-11T02:50:14.667Z',
+  //     profile_picture:
+  //       'https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/70.jpg',
+  //     _id: '6618844ad57c873637b5cf47',
+  //   },
+  //   {
+  //     username: 'malaxk1234567',
+  //     approved_at: '2024-04-11T05:52:45.133Z',
+  //     profile_picture: 'https://avatars.githubusercontent.com/u/8218146',
+  //     _id: '6618844ad57c873637b5cf48',
+  //   },
+  // ];
+  const { community_name } = useParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedData, setSelectedData] = useState<ApprovedUser[]>([]);
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError, refetch } = useQuery(
     'getApprovedUsers',
-    () => fetchRequest(`communities/about/approved/${communityName}`),
+    () => fetchRequest(`communities/about/approved/${community_name}`),
     {
       onSuccess: (data) => {
         setSelectedData(data.data);
@@ -159,9 +196,18 @@ const Contributors = () => {
   };
   return (
     <div>
+      <AddApprovedUser
+        handleOpen={() => {
+          setAppMod(!appMod);
+        }}
+        open={appMod}
+        refetch={refetch}
+      />
       <ButtonList buttArr={buttArr} />
       <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
-      <UsersList userArr={usersList} />
+      <LoadingProvider error={isError} isLoading={isLoading}>
+        <UsersList userArr={selectedData} refetch={refetch} />
+      </LoadingProvider>
     </div>
   );
 };

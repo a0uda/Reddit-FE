@@ -7,12 +7,13 @@ import { PostType } from '../../types/types';
 import { fetchRequest } from '../../API/User';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import LoadingProvider from '../../Components/LoadingProvider';
 
-const Removed = () => {
+const Removed = ({ page }: { page: string }) => {
   const [sortList, setSortList] = useState<string>('Newest First');
   const [selList, setSelList] = useState<string>('Posts and Comments');
-  const { communityName } = useParams();
-  console.log(communityName);
+  const { community_name } = useParams();
+  console.log(community_name);
 
   // const { user } = useSession();
   // const { data, error, isLoading } = useQuery(['modQueue', 'removed'], () =>
@@ -28,7 +29,7 @@ const Removed = () => {
       setResponse([]);
       try {
         const res = await axios.get(
-          `${process.env.VITE_BASE_URL}communities/about/removed-or-spammed/${communityName}`,
+          `${process.env.VITE_BASE_URL}communities/about/removed-or-spammed/${community_name}`,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -72,10 +73,17 @@ const Removed = () => {
           }}
         />
       </div>
-      <div className='flex flex-col gap-4'>
-        {response &&
-          response.map((post) => <PostCard key={post._id} post={post} />)}
-      </div>
+      <LoadingProvider error={error} isLoading={isLoading}>
+        <div className='flex flex-col gap-4'>
+          {response && response.length > 0 ? (
+            response.map((post) => <PostCard key={post._id} post={post} />)
+          ) : (
+            <div className='border-[1px] rounded-md flex items-center justify-center font-semibold text-xl text-gray-600 p-10'>
+              {page + ' '} queue is empty
+            </div>
+          )}
+        </div>
+      </LoadingProvider>
     </div>
   );
 };

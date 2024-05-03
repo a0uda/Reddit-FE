@@ -5,13 +5,6 @@ const baseUrl = process.env.VITE_BASE_URL;
 //const baseUrl = String(process.env.VITE_BASE_URL);
 console.log('baseUrl ', baseUrl);
 
-const config = {
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: false,
-};
-
 axios.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -19,7 +12,7 @@ axios.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.log('Error', error);
+    console.log('Error interceptor', error);
     return Promise.reject(error);
   }
 );
@@ -61,13 +54,31 @@ axios.interceptors.response.use(
 );
 
 const fetchRequest = async (endPoint: string) => {
-  return await axios.get(baseUrl + endPoint, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: localStorage.getItem('token'),
-    },
-    withCredentials: false,
-  });
+  try {
+    const response = await axios.get(baseUrl + endPoint, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('token'),
+      },
+      withCredentials: false,
+    });
+    console.log(response);
+
+    return response;
+  } catch (error) {
+    // console.log(error, 'patchhh');
+    // const errorMessage =
+    //   typeof error.response === 'object'
+    //     ? JSON.stringify(error.response)
+    //     : error.response;
+    const errorMessage =
+      error.response?.data?.err?.message ||
+      error.response?.data?.error?.message ||
+      'Unknown error';
+    return Promise.reject(errorMessage);
+
+    // throw new Error(errorMessage);
+  }
 };
 
 const patchRequest = async ({
@@ -89,13 +100,18 @@ const patchRequest = async ({
 
     return response.data;
   } catch (error) {
-    // console.log(error.response);
+    // console.log(error, 'patchhh');
+    // const errorMessage =
+    //   typeof error.response === 'object'
+    //     ? JSON.stringify(error.response)
+    //     : error.response;
     const errorMessage =
-      typeof error.response === 'object'
-        ? JSON.stringify(error.response)
-        : error.response;
+      error.response?.data?.err?.message ||
+      error.response?.data?.error?.message ||
+      'Unknown error';
+    return Promise.reject(errorMessage);
 
-    throw new Error(errorMessage);
+    // throw new Error(errorMessage);
   }
 };
 
@@ -121,13 +137,19 @@ const postRequest = async ({
       token: response.headers['authorization'],
     };
   } catch (error) {
-    // console.log(error.response);
+    // console.log(error, 'posttt');
+    // const errorMessage =
+    //   typeof error.response === 'object'
+    //     ? JSON.stringify(error.response)
+    //     : error.response;
     const errorMessage =
-      typeof error.response === 'object'
-        ? JSON.stringify(error.response)
-        : error.response;
+      error.response?.data?.err?.message ||
+      error.response?.data?.error?.message ||
+      'Unknown error';
+    return Promise.reject(errorMessage);
+    // return Promise.reject(error.response.data.err.message);
 
-    throw new Error(errorMessage);
+    // throw new Error(errorMessage);
   }
 };
 

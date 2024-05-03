@@ -24,9 +24,13 @@ function Overview() {
   const [response, setResponse] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
-  const fetchReq = useMutation(fetchRequest);
+  const fetchReq = useMutation({
+    mutationKey: 'getOverview',
+    mutationFn: fetchRequest,
+  });
   useEffect(() => {
-    if (user?.username) {
+    if (user?.username && !response) {
+      console.log('gowa eluseeffect', user?.username, response);
       setIsLoading(true);
       fetchReq.mutate(`users/overview/${user?.username}`, {
         onSuccess: (data) => {

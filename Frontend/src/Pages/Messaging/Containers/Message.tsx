@@ -596,6 +596,22 @@ const Message = (props: {
         {isExpandedMain && (
           <>
             <p>{props.messageContent}</p>
+            {props.is_invitation != undefined && (
+              <div className='flex gap-2 justify-center'>
+                <RoundedButton
+                  buttonBorderColor='border-blue-light'
+                  buttonColor='bg-blue-light'
+                  buttonText='Accept'
+                  buttonTextColor='text-white'
+                />
+                <RoundedButton
+                  buttonBorderColor='border-blue-light'
+                  buttonColor='bg-white'
+                  buttonText='Discard'
+                  buttonTextColor='text-blue-light'
+                />
+              </div>
+            )}
             <ul className='flex gap-3 mt-3 text-xs text-[#888] font-bold'>
               {!props.isSent &&
                 (!deleteBool ? (

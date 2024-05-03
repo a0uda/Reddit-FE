@@ -90,9 +90,9 @@ const AddRemovalModal = (props: { handleOpen: () => void; open: boolean }) => {
   const [modNote, setModNote] = useState<string>('');
 
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
-  const { communityName } = useParams();
+  const { community_name } = useParams();
   const removalReasonsRes = useQuery('getremovalreasons', () =>
-    fetchRequest(`communities/get-removal-reasons/${communityName}`)
+    fetchRequest(`communities/get-removal-reasons/${community_name}`)
   );
   console.log(reason, 'remmm');
 
@@ -382,8 +382,9 @@ const PostOptions = ({
             <MenuItem
               onClick={(e) => {
                 e.stopPropagation();
+                console.log('nsfw');
 
-                handleNSFWFlag;
+                handleNSFWFlag();
               }}
               className='py-3 flex gap-2 items-center'
             >

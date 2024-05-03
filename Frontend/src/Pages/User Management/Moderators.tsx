@@ -6,6 +6,10 @@ import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useParams } from 'react-router-dom';
 import { fetchRequest } from '../../API/User';
 import { useQuery } from 'react-query';
+import LeaveMod from './LeaveMod';
+import useSession from '../../hooks/auth/useSession';
+import InviteMod from './InviteModerator';
+import LoadingProvider from '../../Components/LoadingProvider';
 
 type ModeratorUser = {
   has_access: {
@@ -41,8 +45,27 @@ const UserRow = ({
       perm: user.has_access.manage_posts_and_comments,
     },
   ];
+  const [invMod, setInvMod] = useState(false);
+  const { community_name } = useParams();
   return (
     <>
+      <InviteMod
+        handleOpen={() => {
+          setInvMod(!invMod);
+        }}
+        open={invMod}
+        initialValues={{
+          community_name: community_name || '',
+          has_access: {
+            everything: user.has_access.everything,
+            manage_posts_and_comments:
+              user.has_access.manage_posts_and_comments,
+            manage_settings: user.has_access.manage_settings,
+            manage_users: user.has_access.manage_users,
+          },
+          username: user.username,
+        }}
+      />
       <li className='border-[1px] border-gray-200 p-5' key={user._id}>
         <div className='flex justify-between items-center'>
           <div className='flex justify-between items-center w-[600px]'>
@@ -83,10 +106,12 @@ const UserRow = ({
               }
             })}
             {type == 'edit' && (
-              <PencilIcon className='cursor-pointer w-4 h-4 text-gray-500' />
-            )}
-            {type == 'invite' && (
-              <TrashIcon className='cursor-pointer w-4 h-4 text-gray-500' />
+              <PencilIcon
+                onClick={() => {
+                  setInvMod(true);
+                }}
+                className='cursor-pointer w-4 h-4 text-gray-500'
+              />
             )}
           </div>
         </div>
@@ -112,9 +137,19 @@ const UsersList = ({
 };
 const Moderators = () => {
   const buttArr = [
-    { text: 'Invite user as mod', onClick: () => {} },
-    { text: 'Leave as mod', onClick: () => {} },
-    { text: 'Reorder', onClick: () => {} },
+    {
+      text: 'Invite user as mod',
+      onClick: () => {
+        setInvMod(true);
+      },
+    },
+    {
+      text: 'Leave as mod',
+      onClick: () => {
+        setLeaveMod(true);
+      },
+    },
+    // { text: 'Reorder', onClick: () => {} },
   ];
   // const editableList = [
   //   {
@@ -130,12 +165,15 @@ const Moderators = () => {
   //     _id: '66196dcb6e7a889252659838',
   //   },
   // ];
-  const { communityName } = useParams();
+  const { user } = useSession();
+  const [leaveMod, setLeaveMod] = useState(false);
+  const [invMod, setInvMod] = useState(false);
+  const { community_name } = useParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedData, setSelectedData] = useState<ModeratorUser[]>([]);
   const allModRes = useQuery(
     'getModerators',
-    () => fetchRequest(`communities/about/moderators/${communityName}`),
+    () => fetchRequest(`communities/about/moderators/${community_name}`),
     {
       onSuccess: (data) => {
         setSelectedData(data.data);
@@ -143,10 +181,10 @@ const Moderators = () => {
     }
   );
   const editableListRes = useQuery('getEditableModerators', () =>
-    fetchRequest(`communities/about/editable-moderators/${communityName}`)
+    fetchRequest(`communities/about/editable-moderators/${community_name}`)
   );
   const invitedListRes = useQuery('getInvitedModerators', () =>
-    fetchRequest(`communities/about/invited/${communityName}`)
+    fetchRequest(`communities/about/invited/${community_name}`)
   );
 
   const handleSearch = () => {
@@ -165,23 +203,63 @@ const Moderators = () => {
       }
     }
   };
+  console.log(editableListRes, 'editable');
   return (
     <div>
+      <InviteMod
+        handleOpen={() => {
+          setInvMod(!invMod);
+        }}
+        open={invMod}
+        initialValues={{
+          community_name: community_name || '',
+          has_access: {
+            everything: false,
+            manage_posts_and_comments: false,
+            manage_settings: false,
+            manage_users: false,
+          },
+          username: '',
+        }}
+        refetch={invitedListRes.refetch}
+      />
+      <LeaveMod
+        handleOpen={() => {
+          setLeaveMod(!leaveMod);
+        }}
+        open={leaveMod}
+        username={user?.username || ''}
+      />
       <ButtonList buttArr={buttArr} />
       <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
-      <UsersList userArr={selectedData} type='default' />
-      {editableListRes.isSuccess && editableListRes.data?.data.length > 0 && (
-        <div className='mt-10'>
-          <p className='mb-2'>You can edit these moderators</p>
-          <UsersList userArr={editableListRes.data?.data} type='edit' />
-        </div>
-      )}
-      {invitedListRes.isSuccess && invitedListRes.data?.data.length > 0 && (
+      <LoadingProvider
+        isLoading={allModRes.isLoading}
+        error={allModRes.isError}
+      >
+        <UsersList userArr={selectedData} type='default' />
+      </LoadingProvider>
+      <LoadingProvider
+        error={editableListRes.isError}
+        isLoading={editableListRes.isLoading}
+      >
+        {editableListRes.isSuccess && editableListRes.data?.data.length > 0 && (
+          <div className='mt-10'>
+            <p className='mb-2'>You can edit these moderators</p>
+            <UsersList userArr={editableListRes.data?.data} type='edit' />
+          </div>
+        )}
+      </LoadingProvider>
+      <LoadingProvider
+        error={invitedListRes.isError}
+        isLoading={invitedListRes.isLoading}
+      >
+        {/* {invitedListRes.isSuccess && invitedListRes.data?.data.length > 0 && ( */}
         <div className='my-10'>
           <p className='mb-2'>Invited moderators</p>
           <UsersList userArr={invitedListRes.data?.data} type='invite' />
         </div>
-      )}
+        {/* )} */}
+      </LoadingProvider>
     </div>
   );
 };

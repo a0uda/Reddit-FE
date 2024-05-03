@@ -62,11 +62,11 @@ function UserRightSideBar() {
         endPoint: 'users/join-community',
         data: { communityName: communityName },
       }),
-    {
-      onError: () => {
-        console.log('Error');
-      },
-    }
+    // {
+    //   onError: () => {
+    //     console.log('Error');
+    //   },
+    // }
   );
 
   const leaveMutation = useMutation(
@@ -75,11 +75,11 @@ function UserRightSideBar() {
         endPoint: 'users/leave-community',
         data: { communityName: communityName },
       }),
-    {
-      onError: () => {
-        console.log('Error');
-      },
-    }
+    // {
+    //   onError: () => {
+    //     console.log('Error');
+    //   },
+    // }
   );
 
   const social_links = aboutData?.social_links ?? [];
