@@ -156,7 +156,6 @@ const NewPost: React.FC = () => {
         const imageUrl = await uploadImageFirebase(imgBlob);
         image.path = imageUrl;
         values.images[i].path = imageUrl;
-        console.log('alooooooooooooooooooooooooooooooooo', values.images);
       } catch (error) {
         console.error('Error uploading image:', error);
       }
@@ -176,7 +175,7 @@ const NewPost: React.FC = () => {
           }
           handleOnSubmit(values);
           setTimeout(() => {
-            alert(JSON.stringify(values));
+            // alert(JSON.stringify(values));
             setSubmitting(true);
             resetForm();
             setOC(false);
