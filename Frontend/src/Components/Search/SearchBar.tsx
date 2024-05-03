@@ -4,12 +4,20 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '../../utils/helper_functions';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import SearchDropdown from './SearchDropdown';
+import useSearch from '../../hooks/useSearch';
 
 const SearchBar = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { data: communities } = useSearch(
+    `/search/communities?query=${search}&pageSize=5`
+  );
+  const { data: users } = useSearch(
+    `/search/people?query=${search}&pageSize=5`
+  );
 
   return (
     <>
@@ -58,12 +66,17 @@ const SearchBar = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               ref={inputRef}
-              // onFocus={() => inputRef.current?.focus()}
               onBlur={() => inputRef.current?.focus()}
             />
           </div>
           <div className='hidden z-50 max-w-[550px] w-full rounded-none rounded-b-xl lg:block'>
-            <SearchDropdown />
+            <SearchDropdown
+              setIsFocused={setIsFocused}
+              searchQuery={search}
+              setSearch={setSearch}
+              communities={communities || []}
+              users={users || []}
+            />
           </div>
         </MenuList>
       </Menu>

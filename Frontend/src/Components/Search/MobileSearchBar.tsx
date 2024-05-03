@@ -9,11 +9,19 @@ import { useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { useNavigate } from 'react-router-dom';
 import SearchDropdown from './SearchDropdown';
+import useSearch from '../../hooks/useSearch';
 
 const MobileSearchBar = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
+
+  const { data: communities } = useSearch(
+    `/search/communities?query=${search}&pageSize=5`
+  );
+  const { data: users } = useSearch(
+    `/search/people?query=${search}&pageSize=5`
+  );
 
   return (
     <div className='lg:hidden'>
@@ -45,7 +53,13 @@ const MobileSearchBar = () => {
           </div>
         </DialogHeader>
         <DialogBody className='p-0'>
-          <SearchDropdown />
+          <SearchDropdown
+            setIsFocused={setOpen}
+            searchQuery={search}
+            setSearch={setSearch}
+            communities={communities || []}
+            users={users || []}
+          />
         </DialogBody>
       </Dialog>
     </div>

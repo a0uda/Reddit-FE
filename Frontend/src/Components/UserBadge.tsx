@@ -29,10 +29,13 @@ const UserBadge = ({ username }: UserBadgeProps) => {
     <>
       <div className='flex justify-start items-center gap-2 pt-0'>
         <Avatar
+          src={
+            aboutData?.profile_picture ||
+            'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+          }
+          alt={username + "'s Profile"}
           variant='circular'
-          alt={username}
-          src={aboutData?.profile_picture ?? ''}
-          style={{ width: '35px', height: '35px' }}
+          size='sm'
         />
         <div>
           <Typography

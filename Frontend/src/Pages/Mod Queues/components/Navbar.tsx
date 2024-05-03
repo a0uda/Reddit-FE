@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Typography } from '@material-tailwind/react';
 import { Link, useParams } from 'react-router-dom';
 

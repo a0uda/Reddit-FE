@@ -14,10 +14,10 @@ import Main from './Pages/Mod Queues/Main.tsx';
 import Search from './Pages/Search.tsx';
 import UserManagement from './Pages/User Management/UserManagement.tsx';
 import RuleRemoval from './Pages/Rules and Removal reasons/RulesRemovalTab.tsx';
-import { useQueryClient } from '@tanstack/react-query';
+// import { useQueryClient } from '@tanstack/react-query';
 import {
-  MutationCache,
-  QueryCache,
+  // MutationCache,
+  // QueryCache,
   QueryClient,
   QueryClientProvider,
 } from 'react-query';
@@ -143,6 +143,7 @@ function App() {
               path='/r/:community_name/about/rules*'
               element={<HandleRoutes element={<RuleRemoval />} />}
             />
+            <Route path='/search/*' element={<Search />} />
           </Routes>
         </Router>
       </div>

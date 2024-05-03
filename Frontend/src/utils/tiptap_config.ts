@@ -74,28 +74,30 @@ export const tiptapConfig = {
         'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none',
     },
   },
-  content: `
-        <h1>
-          Devs Just Want to Have Fun by Cyndi Lauper
-        </h1>
-        <p>
-          I come home in the morning light<br>
-          My mother says, “When you gonna live your life right?”<br>
-          Oh mother dear we're not the fortunate ones<br>
-          And devs, they wanna have fun<br>
-          Oh devs just want to have fun</p>
-        <p>
-
-        <ul>
-          <li>A list item</li>
-          <li>And another one</li>
-        </ul>
-        <br />
-        <ol>
-        <li>A list item</li>
-        <li>And another one</li>
-        </ol>
-        <br />
-        <blockquote><p>asdasdsa</p><p>asdsad</p></blockquote>
-      `,
+  content: ``,
 };
+
+// `
+//   <h1>
+//   Devs Just Want to Have Fun by Cyndi Lauper
+//   </h1>
+//   <p>
+//   I come home in the morning light<br>
+//   My mother says, “When you gonna live your life right?”<br>
+//   Oh mother dear we're not the fortunate ones<br>
+//   And devs, they wanna have fun<br>
+//   Oh devs just want to have fun</p>
+//   <p>
+
+//   <ul>
+//   <li>A list item</li>
+//   <li>And another one</li>
+//   </ul>
+//   <br />
+//   <ol>
+//   <li>A list item</li>
+//   <li>And another one</li>
+//   </ol>
+//   <br />
+//   <blockquote><p>asdasdsa</p><p>asdsad</p></blockquote>
+// `
