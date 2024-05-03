@@ -13,6 +13,7 @@ import {
   ArrowUpTrayIcon,
   ChatBubbleLeftIcon,
   LinkIcon,
+  ArrowPathRoundedSquareIcon,
 } from '@heroicons/react/24/outline';
 import { postRequest } from '../../API/User';
 import { useMutation, useQueryClient } from 'react-query';
@@ -20,6 +21,7 @@ import { useState } from 'react';
 import { cn } from '../../utils/helper_functions';
 import { Link } from 'react-router-dom';
 import { PostType } from '../../types/types';
+import SharePostModal from './SharePostModal';
 
 const InteractionButtons = ({
   id,
@@ -42,8 +44,8 @@ const InteractionButtons = ({
 }) => {
   const [vote, setVote] = useState<number>(myVote || 0);
   const [totalVotes, setTotalVotes] = useState(upvotes - downvotes);
-  const queryClient = useQueryClient();
-
+  const [openSPModal, setOpenSPModal] = useState(false);
+  const handleOpenSPModal = () => setOpenSPModal(!openSPModal);
   const mutate = useMutation(
     ({ id, rank }: { id: string; rank: number }) =>
       postRequest({
@@ -225,7 +227,14 @@ const InteractionButtons = ({
             </MenuItem>
 
             {isPost ? (
-              <MenuItem className='py-3 flex gap-2 items-center'>
+              <MenuItem
+                onClick={handleOpenSPModal}
+                className='py-3 flex gap-2 items-center'
+              >
+                <ArrowPathRoundedSquareIcon
+                  strokeWidth={1.5}
+                  className='h-4 w-4'
+                />
                 <span>Cross Post</span>
               </MenuItem>
             ) : (
@@ -233,6 +242,11 @@ const InteractionButtons = ({
             )}
           </MenuList>
         </Menu>
+        <SharePostModal
+          handleOpen={handleOpenSPModal}
+          open={openSPModal}
+          postId={id}
+        />
       </div>
     </>
   );

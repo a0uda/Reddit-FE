@@ -31,6 +31,8 @@ import {
 import AddReply from './AddReply';
 import useSession from '../../hooks/auth/useSession';
 
+import EditPostComment from './EditPostComment';
+
 const Comment = ({
   comment,
   showButton,
@@ -44,12 +46,19 @@ const Comment = ({
   const [downvote, setDownvote] = useState(false);
   const queryClient = useQueryClient();
   const [showAddReply, setShowAddReply] = useState(false);
+  const [showEditComment, setShowEditComment] = useState(false);
   const { user } = useSession();
   const isMyComment = comment.username == user?.username;
   const handleButtonClick = () => {
     setShowAddReply((prevState) => !prevState);
   };
+  const [isSaved, setIsSaved] = useState(comment.saved);
 
+  const handleSave = () => {
+    setIsSaved(!isSaved);
+    console.log('saved trigger', isSaved);
+    handleSaveUnsaveComment();
+  };
   const mutate = useMutation(
     ({ comment, rank }: { comment: CommentType; rank: number }) =>
       postRequest({
@@ -99,17 +108,15 @@ const Comment = ({
       },
     });
   };
-  const handleEditComment = (editedText: string) => {
-    patchReq.mutate({
-      endPoint: 'posts-or-comments/edit-text',
-      newSettings: {
-        is_post: false,
-        id: comment._id,
-        edited_text: editedText,
-      },
+  const handleEditComment = () => {
+    setShowEditComment(!showEditComment);
+  };
+  const handleDeleteComment = () => {
+    postRequest({
+      endPoint: 'comments/delete',
+      data: { id: comment._id },
     });
   };
-  const handleDeleteComment = () => {};
   return (
     <>
       <Card className='w-full py-2' shadow={false}>
@@ -151,7 +158,16 @@ const Comment = ({
             )} */}
           </div>
           <div>
-            <EditorContent editor={editor} />
+            {!showEditComment ? (
+              <EditorContent editor={editor} />
+            ) : (
+              <EditPostComment
+                Id={comment._id}
+                currentText={comment.description}
+                isPost={false}
+                handleEdit={handleEditComment}
+              />
+            )}
             <div className='flex items-center px-0'>
               <div
                 className='flex flex-row items-center  text-black z-10'
@@ -266,16 +282,6 @@ const Comment = ({
             </div>
             {comment.replies_comments_ids.length > 0 && (
               <div className='flex flex-col gap-2 w-full col-span-2'>
-                {/* <div
-                  aria-hidden='true'
-                  className='col-span-2 flex justify-end align-start relative bg-neutral-background'
-                >
-                  <div
-                    data-testid='branch-line'
-                    className='box-border h-4 border-0 border-neutral-muted border-solid border-b-[1px] cursor-pointer w-[calc(50%+0.5px)] border-l-[1px] rounded-bl-[12px]'
-                  ></div>
-                  <div className='box-border h-4 border-0 border-neutral-muted border-solid border-b-[1px] cursor-pointer w-xs absolute right-[-8px]'></div>
-                </div> */}
                 {comment.replies_comments_ids.map((reply) => (
                   <Reply key={reply._id} reply={reply} />
                 ))}

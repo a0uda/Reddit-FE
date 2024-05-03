@@ -5,6 +5,7 @@ import { CommentType } from '../../types/types';
 import Comment from '../../Components/Posts/Comment';
 import useSession from '../../hooks/auth/useSession';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 function Comments() {
   const { user } = useSession();
@@ -12,6 +13,7 @@ function Comments() {
   //   ['userComments', 'comments'],
   //   () => fetchRequest(`users/comments/${user?.username}`)
   // );
+  const { username } = useParams();
 
   const [response, setResponse] = useState<[CommentType]>();
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +22,7 @@ function Comments() {
   useEffect(() => {
     if (user?.username) {
       setIsLoading(true);
-      fetchReq.mutate(`users/comments/${user?.username}`, {
+      fetchReq.mutate(`users/comments/${username}`, {
         onSuccess: (data) => {
           setIsLoading(false);
           console.log('reem', data.data);
