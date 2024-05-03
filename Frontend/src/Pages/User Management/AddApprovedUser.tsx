@@ -11,6 +11,7 @@ import Input from '../../Components/Input';
 interface RuleFormProps {
   handleOpen: () => void;
   open: boolean;
+  refetch: () => void;
 }
 interface valueDataType {
   community_name: string;
@@ -26,11 +27,12 @@ export default function AddApprovedUser(props: RuleFormProps): JSX.Element {
 
   const mutation = useMutation(postRequest, {
     onSuccess: () => {
+      props.refetch();
       console.log('Added Approved user successfully');
     },
-    onError: () => {
-      console.log('Added Approved user failed');
-    },
+    // onError: (error) => {
+    //   console.log(error, 'Added Approved user failed');
+    // },
   });
 
   const handleOnSubmit = (values: valueDataType) => {

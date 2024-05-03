@@ -7,6 +7,7 @@ interface ApproveFormProps {
   handleOpen: () => void;
   open: boolean;
   username: string;
+  refetch: () => void;
 }
 interface valueDataType {
   community_name: string;
@@ -24,11 +25,12 @@ export default function RemoveApprovedUser(
 
   const mutation = useMutation(postRequest, {
     onSuccess: () => {
+      props.refetch();
       console.log('User removed successfully');
     },
-    onError: () => {
-      console.log('Failed to Remove User');
-    },
+    // onError: () => {
+    //   console.log('Failed to Remove User');
+    // },
   });
 
   const handleOnSubmit = (values: object) => {

@@ -22,6 +22,7 @@ interface BanUserFormProps {
     banned_until: string;
   };
   isEdit?: boolean;
+  refetch: () => void;
 }
 interface Datatype {
   username: string;
@@ -38,11 +39,12 @@ export default function BanUser(props: BanUserFormProps): JSX.Element {
   const { community_name } = useParams();
   const mutation = useMutation(postRequest, {
     onSuccess: () => {
+      props.refetch();
       console.log('User banned successfully');
     },
-    onError: () => {
-      console.log('Banning user failed');
-    },
+    // onError: () => {
+    //   console.log('Banning user failed');
+    // },
   });
 
   const handleOnSubmit = (values: Datatype) => {
@@ -141,6 +143,7 @@ export default function BanUser(props: BanUserFormProps): JSX.Element {
                   ENTER USERNAME
                 </div>
                 <Field
+                  disabled={props.isEdit}
                   type='input'
                   name='username'
                   placeholder='u/username'

@@ -7,8 +7,9 @@ import { PostType } from '../../types/types';
 import { fetchRequest } from '../../API/User';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import LoadingProvider from '../../Components/LoadingProvider';
 
-const Removed = () => {
+const Removed = ({ page }: { page: string }) => {
   const [sortList, setSortList] = useState<string>('Newest First');
   const [selList, setSelList] = useState<string>('Posts and Comments');
   const { community_name } = useParams();
@@ -72,10 +73,17 @@ const Removed = () => {
           }}
         />
       </div>
-      <div className='flex flex-col gap-4'>
-        {response &&
-          response.map((post) => <PostCard key={post._id} post={post} />)}
-      </div>
+      <LoadingProvider error={error} isLoading={isLoading}>
+        <div className='flex flex-col gap-4'>
+          {response && response.length > 0 ? (
+            response.map((post) => <PostCard key={post._id} post={post} />)
+          ) : (
+            <div className='border-[1px] rounded-md flex items-center justify-center font-semibold text-xl text-gray-600 p-10'>
+              {page + ' '} queue is empty
+            </div>
+          )}
+        </div>
+      </LoadingProvider>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import { useParams } from 'react-router-dom';
 import BanUser from './BanUser';
+import LoadingProvider from '../../Components/LoadingProvider';
 
 type BannedUser = {
   username: string;
@@ -20,7 +21,13 @@ type BannedUser = {
   profile_picture: string;
   _id: string;
 };
-const UserRow = ({ user }: { user: BannedUser }) => {
+const UserRow = ({
+  user,
+  refetch,
+}: {
+  user: BannedUser;
+  refetch: () => void;
+}) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showMod, setShowMod] = useState(false);
   const { community_name } = useParams();
@@ -56,6 +63,7 @@ const UserRow = ({ user }: { user: BannedUser }) => {
           reason_for_ban: user.reason_for_ban,
           username: user.username,
         }}
+        refetch={refetch}
       />
       <li className='border-[1px] border-gray-200 p-5' key={user._id}>
         <div className='flex justify-between items-center'>
@@ -131,10 +139,19 @@ const UserRow = ({ user }: { user: BannedUser }) => {
     </>
   );
 };
-const UsersList = ({ userArr }: { userArr: BannedUser[] }) => {
+const UsersList = ({
+  userArr,
+  refetch,
+}: {
+  userArr: BannedUser[];
+  refetch: () => void;
+}) => {
   return (
     <ul className='last:rounded-b-md'>
-      {userArr && userArr.map((user) => <UserRow key={user._id} user={user} />)}
+      {userArr &&
+        userArr.map((user) => (
+          <UserRow key={user._id} user={user} refetch={refetch} />
+        ))}
     </ul>
   );
 };
@@ -226,7 +243,7 @@ const Banned = () => {
   const { community_name } = useParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedData, setSelectedData] = useState<BannedUser[]>([]);
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError, refetch } = useQuery(
     'getBannedUsers',
     () => fetchRequest(`communities/about/banned/${community_name}`),
     {
@@ -270,10 +287,13 @@ const Banned = () => {
           reason_for_ban: '',
           username: '',
         }}
+        refetch={refetch}
       />
       <ButtonList buttArr={buttArr} />
       <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
-      <UsersList userArr={data?.data} />
+      <LoadingProvider isLoading={isLoading} error={isError}>
+        <UsersList userArr={selectedData} refetch={refetch} />
+      </LoadingProvider>
     </div>
   );
 };

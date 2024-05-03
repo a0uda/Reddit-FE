@@ -22,11 +22,11 @@ const Main = (props: { page: string }) => {
         <div className='px-32 py-8'>
           <Navbar page={props.page} />
           {props.page == 'removed' ? (
-            <Removed />
+            <Removed page='removed' />
           ) : props.page == 'unmoderated' ? (
-            <Unmoderated />
+            <Unmoderated page='unmoderated' />
           ) : props.page == 'edited' ? (
-            <Edited />
+            <Edited page='edited' />
           ) : (
             <></>
           )}

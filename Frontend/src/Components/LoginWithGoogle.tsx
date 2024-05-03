@@ -21,9 +21,9 @@ function LoginWithGoogle(props: { handleOpen: () => void }) {
         console.log('errorrr');
       }
     },
-    onError: () => {
-      console.error('Google login failed');
-    },
+    // onError: () => {
+    //   console.error('Google login failed');
+    // },
     flow: 'auth-code',
   });
 

@@ -15,7 +15,12 @@ import Search from './Pages/Search.tsx';
 import UserManagement from './Pages/User Management/UserManagement.tsx';
 import RuleRemoval from './Pages/Rules and Removal reasons/RulesRemovalTab.tsx';
 import { useQueryClient } from '@tanstack/react-query';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from 'react-query';
 import { useAlert } from './Providers/AlertProvider.tsx';
 
 function App() {
@@ -25,21 +30,45 @@ function App() {
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
 
   const queryClient = new QueryClient({
+    // mutationCache: new MutationCache({
+    //   onError: (error) => {
+    //     setAlertMessage(error);
+    //     setIsError(true);
+    //     setTrigger(!trigger);
+    //   },
+    // }),
+    // queryCache: new QueryCache({
+    //   onError: (error) => {
+    //     setAlertMessage(error);
+    //     setIsError(true);
+    //     setTrigger(!trigger);
+    //   },
+    // }),
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: false,
         refetchOnMount: false,
-        onError: (error) => {
-          const errorObj = JSON.parse(error);
-          console.log(errorObj.Error.data, 'hiiiii');
-          // console.log(error.json(), 'hiiii');
-        },
+        // onError: (error) => {
+        //   // const errorObj = JSON.parse(error);
+        //   // console.log(errorObj.Error.data, 'hiiiii');
+        //   console.log('hiiii query');
+
+        //   setAlertMessage(error);
+        //   setIsError(true);
+        //   setTrigger(!trigger);
+        //   console.log(error);
+        // },
       },
       mutations: {
         onError: (error) => {
-          const errorObj = JSON.parse(error);
-          console.log(errorObj.Error.data.err, 'midoo');
-          // console.log(error.json(), 'hiiii');
+          // const errorObj = JSON.parse(error);
+          // console.log(errorObj.Error.data.err, 'midoo');
+          // console.log(error.data.err.message, 'hiiii mutate');
+          console.log('hiiii mutation');
+
+          setAlertMessage(error);
+          setIsError(true);
+          setTrigger(!trigger);
         },
       },
     },
@@ -81,8 +110,6 @@ function App() {
               path='/message/*'
               element={<HandleRoutes element={<MessageRouter />} />}
             />
-          </Routes>
-          <Routes>
             <Route
               path='/r/:community_name/about/unmoderated'
               element={<Main page='unmoderated' />}

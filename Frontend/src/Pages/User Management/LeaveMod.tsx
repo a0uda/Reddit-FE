@@ -8,7 +8,7 @@ import RoundedButton from '../../Components/RoundedButton';
 import { IoMdClose } from 'react-icons/io';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import { postRequest } from '../../API/User';
 import useSession from '../../hooks/auth/useSession';
@@ -24,18 +24,19 @@ interface valueDataType {
 export default function LeaveMod(props: LeaveFormProps): JSX.Element {
   const { community_name } = useParams();
   const { user } = useSession();
-
+  const navigate = useNavigate();
   const initialValues: valueDataType = {
     community_name: '',
   };
 
   const mutation = useMutation(postRequest, {
     onSuccess: () => {
+      navigate('/best');
       console.log('successfully');
     },
-    onError: () => {
-      console.log('Failed');
-    },
+    // onError: () => {
+    //   console.log('Failed');
+    // },
   });
 
   const handleOnSubmit = (values: valueDataType) => {

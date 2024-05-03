@@ -38,27 +38,27 @@ export default function AddRule(props: RuleFormProps): JSX.Element {
     onSuccess: () => {
       console.log('added rule successfully');
     },
-    onError: () => {
-      console.log('added rule failed');
-    },
+    // onError: () => {
+    //   console.log('added rule failed');
+    // },
   });
 
   const mutationDelete = useMutation(postRequest, {
     onSuccess: () => {
       console.log('added rule successfully');
     },
-    onError: () => {
-      console.log('added rule failed');
-    },
+    // onError: () => {
+    //   console.log('added rule failed');
+    // },
   });
 
   const mutationEdit = useMutation(postRequest, {
     onSuccess: () => {
       console.log('added rule successfully');
     },
-    onError: () => {
-      console.log('added rule failed');
-    },
+    // onError: () => {
+    //   console.log('added rule failed');
+    // },
   });
 
   const handleOnSubmit = (values: valueDataType) => {

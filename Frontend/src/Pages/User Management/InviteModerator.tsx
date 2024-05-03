@@ -26,6 +26,7 @@ interface InviteModProps {
       manage_posts_and_comments: boolean;
     };
   };
+  refetch: () => void;
 }
 
 interface FormData {
@@ -92,11 +93,12 @@ export default function InviteMod(props: InviteModProps): JSX.Element {
 
   const mutation = useMutation(postRequest, {
     onSuccess: () => {
+      props.refetch();
       console.log('Invitation sent successfully');
     },
-    onError: () => {
-      console.log('Failed to send invitation');
-    },
+    // onError: () => {
+    //   console.log('Failed to send invitation');
+    // },
   });
 
   const validationSchema = Yup.object().shape({

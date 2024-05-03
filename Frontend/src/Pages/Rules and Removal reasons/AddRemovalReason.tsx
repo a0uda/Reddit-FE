@@ -35,9 +35,9 @@ export default function AddRemovalReason(props: RuleFormProps): JSX.Element {
     onSuccess: () => {
       console.log('added reason successfully');
     },
-    onError: () => {
-      console.log('added reason failed');
-    },
+    // onError: () => {
+    //   console.log('added reason failed');
+    // },
   });
 
   const handleOnSubmit = (values: Datatype) => {

@@ -9,6 +9,7 @@ import { useQuery } from 'react-query';
 import LeaveMod from './LeaveMod';
 import useSession from '../../hooks/auth/useSession';
 import InviteMod from './InviteModerator';
+import LoadingProvider from '../../Components/LoadingProvider';
 
 type ModeratorUser = {
   has_access: {
@@ -202,6 +203,7 @@ const Moderators = () => {
       }
     }
   };
+  console.log(editableListRes, 'editable');
   return (
     <div>
       <InviteMod
@@ -219,6 +221,7 @@ const Moderators = () => {
           },
           username: '',
         }}
+        refetch={invitedListRes.refetch}
       />
       <LeaveMod
         handleOpen={() => {
@@ -229,19 +232,34 @@ const Moderators = () => {
       />
       <ButtonList buttArr={buttArr} />
       <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
-      <UsersList userArr={selectedData} type='default' />
-      {editableListRes.isSuccess && editableListRes.data?.data.length > 0 && (
-        <div className='mt-10'>
-          <p className='mb-2'>You can edit these moderators</p>
-          <UsersList userArr={editableListRes.data?.data} type='edit' />
-        </div>
-      )}
-      {invitedListRes.isSuccess && invitedListRes.data?.data.length > 0 && (
+      <LoadingProvider
+        isLoading={allModRes.isLoading}
+        error={allModRes.isError}
+      >
+        <UsersList userArr={selectedData} type='default' />
+      </LoadingProvider>
+      <LoadingProvider
+        error={editableListRes.isError}
+        isLoading={editableListRes.isLoading}
+      >
+        {editableListRes.isSuccess && editableListRes.data?.data.length > 0 && (
+          <div className='mt-10'>
+            <p className='mb-2'>You can edit these moderators</p>
+            <UsersList userArr={editableListRes.data?.data} type='edit' />
+          </div>
+        )}
+      </LoadingProvider>
+      <LoadingProvider
+        error={invitedListRes.isError}
+        isLoading={invitedListRes.isLoading}
+      >
+        {/* {invitedListRes.isSuccess && invitedListRes.data?.data.length > 0 && ( */}
         <div className='my-10'>
           <p className='mb-2'>Invited moderators</p>
           <UsersList userArr={invitedListRes.data?.data} type='invite' />
         </div>
-      )}
+        {/* )} */}
+      </LoadingProvider>
     </div>
   );
 };

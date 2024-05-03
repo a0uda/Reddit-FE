@@ -9,6 +9,7 @@ import { fetchRequest } from '../../API/User';
 import { useState } from 'react';
 import AddApprovedUser from './AddApprovedUser';
 import RemoveApprovedUser from './RemoveApprovedUser';
+import LoadingProvider from '../../Components/LoadingProvider';
 // import UsersList from './components/UsersList';
 
 type ApprovedUser = {
@@ -17,7 +18,13 @@ type ApprovedUser = {
   profile_picture: string;
   _id: string;
 };
-const UserRow = ({ user }: { user: ApprovedUser }) => {
+const UserRow = ({
+  user,
+  refetch,
+}: {
+  user: ApprovedUser;
+  refetch: () => void;
+}) => {
   const session = useSession();
   const [remUser, setRemUser] = useState(false);
   const buttArr = [
@@ -42,6 +49,7 @@ const UserRow = ({ user }: { user: ApprovedUser }) => {
         }}
         open={remUser}
         username={user.username}
+        refetch={refetch}
       />
       <li className='border-[1px] border-gray-200 p-5' key={user._id}>
         <div className='flex justify-between items-center'>
@@ -90,10 +98,19 @@ const UserRow = ({ user }: { user: ApprovedUser }) => {
     </>
   );
 };
-const UsersList = ({ userArr }: { userArr: ApprovedUser[] }) => {
+const UsersList = ({
+  userArr,
+  refetch,
+}: {
+  userArr: ApprovedUser[];
+  refetch: () => void;
+}) => {
   return (
     <ul className='last:rounded-b-md'>
-      {userArr && userArr.map((user) => <UserRow key={user._id} user={user} />)}
+      {userArr &&
+        userArr.map((user) => (
+          <UserRow key={user._id} user={user} refetch={refetch} />
+        ))}
     </ul>
   );
 };
@@ -151,7 +168,7 @@ const Contributors = () => {
   const { community_name } = useParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedData, setSelectedData] = useState<ApprovedUser[]>([]);
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError, refetch } = useQuery(
     'getApprovedUsers',
     () => fetchRequest(`communities/about/approved/${community_name}`),
     {
@@ -184,10 +201,13 @@ const Contributors = () => {
           setAppMod(!appMod);
         }}
         open={appMod}
+        refetch={refetch}
       />
       <ButtonList buttArr={buttArr} />
       <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
-      <UsersList userArr={selectedData} />
+      <LoadingProvider error={isError} isLoading={isLoading}>
+        <UsersList userArr={selectedData} refetch={refetch} />
+      </LoadingProvider>
     </div>
   );
 };

@@ -11,6 +11,7 @@ import Input from '../../Components/Input';
 interface RuleFormProps {
   handleOpen: () => void;
   open: boolean;
+  refetch: () => void;
 }
 interface DataType {
   community_name: string;
@@ -25,10 +26,11 @@ export default function MuteUser(props: RuleFormProps): JSX.Element {
   const mutation = useMutation(postRequest, {
     onSuccess: () => {
       console.log('Mute user successfully');
+      props.refetch();
     },
-    onError: () => {
-      console.log('Mute user failed');
-    },
+    // onError: () => {
+    //   console.log('Mute user failed');
+    // },
   });
 
   const initialValues: DataType = {
