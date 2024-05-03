@@ -17,6 +17,7 @@ import { useParams } from 'react-router-dom';
 import OvalButton from './OvalButton';
 import SchedulePostComponent from './schedulePost';
 import * as yup from 'yup';
+import { uploadImageFirebase } from '../../utils/helper_functions';
 
 // type FormSchema =
 //   | 'createPost'
@@ -67,6 +68,7 @@ const NewPost: React.FC = () => {
     spoiler_flag: false,
     nsfw_flag: false,
     post_in_community_flag: true,
+    images: [],
   });
 
   useEffect(() => {
@@ -144,24 +146,48 @@ const NewPost: React.FC = () => {
       data: values,
     });
   };
+
+  const handleImages = async (values: object) => {
+    for (let i = 0; i < images.length; i++) {
+      const image = images[i];
+      try {
+        const response = await fetch(image.path);
+        const imgBlob = await response.blob();
+        const imageUrl = await uploadImageFirebase(imgBlob);
+        image.path = imageUrl;
+        values.images[i].path = imageUrl;
+        console.log('alooooooooooooooooooooooooooooooooo', values.images);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
+    }
+  };
+
   return (
     <Formik
       validationSchema={validateSchema}
       initialValues={{
         ...initialValues,
       }}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
-        handleOnSubmit(values);
-        setTimeout(() => {
-          // alert(JSON.stringify(values));
-          setSubmitting(true);
-          resetForm();
-          setOC(false);
-          setSpoiler(false);
-          SetNSFW(false);
-          setImages([]);
-          setImageIndex(0);
-        }, 400);
+      onSubmit={async (values, { setSubmitting, resetForm }) => {
+        try {
+          if (values.type == 'image_and_videos') {
+            await handleImages(values);
+          }
+          handleOnSubmit(values);
+          setTimeout(() => {
+            alert(JSON.stringify(values));
+            setSubmitting(true);
+            resetForm();
+            setOC(false);
+            setSpoiler(false);
+            SetNSFW(false);
+            setImages([]);
+            setImageIndex(0);
+          }, 400);
+        } catch (error) {
+          console.error('Error handling images:', error);
+        }
       }}
     >
       {(formik) => {
