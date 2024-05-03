@@ -12,6 +12,7 @@ import User from './Pages/User/User.tsx';
 import CreatePost from './Pages/createPost/CreatePost.tsx';
 import Main from './Pages/Mod Queues/Main.tsx';
 import Search from './Pages/Search.tsx';
+import Chat from './Pages/Chatting/chat.tsx';
 
 function App() {
   const { status } = useSession();
@@ -53,6 +54,8 @@ function App() {
             path='/message/*'
             element={<HandleRoutes element={<MessageRouter />} />}
           />
+          <Route path='/chat' element={<HandleRoutes element={<Chat />} />} />
+
           {/* <Route
             path='/r/:communityName/about/unmoderated'
             element={<Main page='unmoderated' />}
