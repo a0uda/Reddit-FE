@@ -22,6 +22,7 @@ import { cn } from '../utils/helper_functions';
 import { useQuery } from 'react-query';
 import { CommunityType } from '../types/types';
 import { fetchRequest } from '../API/User';
+import CreateCommunity from '../Pages/Community/CreateCommunity';
 
 const SideBar = ({ className }: { className?: string }) => {
   const moderation = [
@@ -91,6 +92,9 @@ const SideBar = ({ className }: { className?: string }) => {
     },
   });
 
+  const [isCreateCommunityModal, setCreateCommunityModal] =
+    useState<boolean>(false);
+
   return (
     <>
       <div
@@ -115,12 +119,26 @@ const SideBar = ({ className }: { className?: string }) => {
           {communities && communities?.length > 0 && (
             <>
               <AccordionDropDown title='Communities' list={communities!}>
-                <ListItemComponent
-                  icon={<PlusIcon className='h-5 w-5' />}
-                  title='Create Community'
-                />
+                <button
+                  onClick={() => {
+                    setCreateCommunityModal(true);
+                  }}
+                >
+                  <ListItemComponent
+                    icon={<PlusIcon className='h-5 w-5' />}
+                    title='Create Community'
+                  />
+                </button>
               </AccordionDropDown>
             </>
+          )}
+          {isCreateCommunityModal && (
+            <CreateCommunity
+              open={isCreateCommunityModal}
+              handleOpen={() => {
+                setCreateCommunityModal(!isCreateCommunityModal);
+              }}
+            />
           )}
           <hr className='my-2 border-blue-gray-50' />
           <AccordionDropDown title='Create Post' list={createPost} />
