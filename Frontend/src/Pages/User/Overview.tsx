@@ -131,7 +131,7 @@ function Overview() {
 
                             <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
                               <div className='text-black text-xl font-bold '>
-                                {content.user_details.total_views}
+                                {content.user_details.total_shares}
                               </div>
                               <div className='text-xs  gap-2 flex '>
                                 <ArrowUturnRightIcon

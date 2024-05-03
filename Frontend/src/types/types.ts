@@ -395,9 +395,10 @@ export type AboutType = {
 };
 
 export type SocialLink = {
-  icon: string;
+  type: string;
   username: string;
-  displayName?: string; // Optional property
+  display_text?: string; // Optional property
+  custom_url: string;
 };
 
 export type ModeratedCommunity = {
