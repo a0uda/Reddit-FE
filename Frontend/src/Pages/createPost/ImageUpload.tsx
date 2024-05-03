@@ -33,13 +33,18 @@ export default function ImageUpload({
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
+    console.log(selectedFiles, 'selectedfiles');
+
     if (selectedFiles) {
       const newFiles: File[] = Array.from(selectedFiles);
       setFiles([...files, ...newFiles]);
+      console.log(files, 'files');
 
       const newImages: Image[] = [];
       newFiles.forEach((file) => {
         const imageUrl = URL.createObjectURL(file);
+        console.log(imageUrl, 'url');
+
         newImages.push({
           id: index,
           path: imageUrl,
@@ -59,7 +64,7 @@ export default function ImageUpload({
         })),
       ]);
     }
-    console.log(images);
+    console.log(images, 'imagesss');
     if (images.length > 0) {
       setSelectedImage(images[0].id);
     }

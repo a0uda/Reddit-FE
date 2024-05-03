@@ -32,10 +32,10 @@ const Sent = () => {
                 postCreatorType={reply['postCreatorType']}
                 postSubject={reply['postSubject']}
                 replyContent={reply['replyContent']}
-                replyId={reply['id']}
+                replyId={reply['_id']}
                 unread={reply['unread']}
                 commentsCount={reply['commentsCount']}
-                key={reply['id']}
+                key={reply['_id']}
                 vote={reply['rank']}
                 query='usernameMentions'
                 refetch={refetch}

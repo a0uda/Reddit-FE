@@ -242,9 +242,9 @@ const SharedPostContainer = (props: {
 
       return !sharedPost;
     },
-    onError: (error) => {
-      console.error(error, 'Error fetching shared post');
-    },
+    // onError: (error) => {
+    //   console.error(error, 'Error fetching shared post');
+    // },
 
     // refetchOnMount: false,
   });

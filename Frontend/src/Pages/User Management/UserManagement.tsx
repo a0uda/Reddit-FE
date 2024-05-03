@@ -1,10 +1,12 @@
-import { useParams } from 'react-router-dom';
-import ModSideBar from '../Rules and Removal reasons/ModSidebar';
 import Navbar from './components/Navbar';
-import Edited from './Edited';
-import Removed from './Removed';
-import Unmoderated from './Unmoderated';
-const Main = (props: { page: string }) => {
+import Banned from './Banned';
+import Contributors from './Contributors';
+import Moderators from './Moderators';
+import Muted from './Muted';
+import ModSideBar from '../Rules and Removal reasons/ModSidebar';
+import { useParams } from 'react-router-dom';
+
+const UserManagement = (props: { page: string }) => {
   const { community_name } = useParams();
   return (
     <div className='Container'>
@@ -19,14 +21,16 @@ const Main = (props: { page: string }) => {
         <div className='hidden xl:block'>
           <ModSideBar />
         </div>
-        <div className='px-32 py-8'>
+        <div className='p-5'>
           <Navbar page={props.page} />
-          {props.page == 'removed' ? (
-            <Removed page='removed' />
-          ) : props.page == 'unmoderated' ? (
-            <Unmoderated page='unmoderated' />
-          ) : props.page == 'edited' ? (
-            <Edited page='edited' />
+          {props.page == 'approved' ? (
+            <Contributors />
+          ) : props.page == 'moderators' ? (
+            <Moderators />
+          ) : props.page == 'banned' ? (
+            <Banned />
+          ) : props.page == 'muted' ? (
+            <Muted />
           ) : (
             <></>
           )}
@@ -36,4 +40,4 @@ const Main = (props: { page: string }) => {
   );
 };
 
-export default Main;
+export default UserManagement;

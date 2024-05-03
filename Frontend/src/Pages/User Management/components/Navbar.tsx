@@ -21,12 +21,12 @@ const Navbar = (props: { page: string }) => {
 
   return (
     <div>
-      <Typography variant='h5'>Queues</Typography>
+      <Typography variant='h5'>User Management</Typography>
       <ul className='flex gap-3 capitalize my-3'>
-        {['removed', 'edited', 'unmoderated'].map((li) => (
+        {['banned', 'muted', 'approved', 'moderators'].map((li) => (
           <Link
             key={li}
-            to={`/r/${community_name}/about/${li == 'removed' ? 'spam' : li}`}
+            to={`/r/${community_name}/about/${li == 'approved' ? 'contributors' : li}`}
           >
             <NavbarButton active={li == props.page}>{li}</NavbarButton>
           </Link>

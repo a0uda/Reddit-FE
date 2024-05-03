@@ -5,7 +5,7 @@ import Card from './Containers/Card';
 import DropDownButton from './Containers/DropDownButton';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { useMutation, useQuery } from 'react-query';
-import { fetchRequest, patchRequest } from '../../API/User';
+import { fetchRequest, patchRequest, postRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
 import {
   DeleteAccountModal,
@@ -44,7 +44,7 @@ function Account() {
     fetchRequest('users/account-settings')
   );
   console.log(data, 'accountsettings');
-
+  const getReq = useMutation(fetchRequest);
   const patchReq = useMutation(patchRequest, {
     onSuccess: (data) => {
       refetch();
@@ -175,6 +175,13 @@ function Account() {
               buttonColor='bg-white'
               buttonText='Connect to Google'
               buttonTextColor='text-black'
+              onClick={() => {
+                getReq.mutate('users/signup-google', {
+                  onSuccess: () => {
+                    console.log('connected successfully');
+                  },
+                });
+              }}
             >
               <img
                 src='https://docs.material-tailwind.com/icons/google.svg'

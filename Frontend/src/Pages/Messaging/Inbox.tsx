@@ -13,10 +13,10 @@ const Sent = () => {
 
   return (
     <LoadingProvider error={isError} isLoading={isLoading}>
-      <ContentContainer length={data?.data.length}>
+      <ContentContainer length={data?.data.messages.length}>
         <div className=''>
-          {!!data?.data &&
-            data?.data.map((mess) => {
+          {!!data?.data.messages &&
+            data?.data.messages.map((mess) => {
               console.log(mess.postCreator, 'mess.postCreator');
 
               if (mess.postCreator == undefined) {
@@ -51,10 +51,10 @@ const Sent = () => {
                     postCreatorType={mess['postCreatorType']}
                     postSubject={mess['postSubject']}
                     replyContent={mess['replyContent']}
-                    replyId={mess['id']}
+                    replyId={mess['_id']}
                     unread={mess['unread']}
                     commentsCount={mess['commentsCount']}
-                    key={mess['id']}
+                    key={mess['_id']}
                     vote={mess['vote']}
                     query='inbox'
                     refetch={refetch}

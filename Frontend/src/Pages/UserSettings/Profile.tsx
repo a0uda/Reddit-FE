@@ -7,7 +7,6 @@ import SwitchButton from '../../Components/SwitchButton';
 import { PlusIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest, postRequest } from '../../API/User';
-import { Spinner } from '@material-tailwind/react';
 import facebookIcon from '../../assets/facebookIcon.svg';
 import instagramIcon from '../../assets/instagramIcon.svg';
 import SocialLinksModal, {
@@ -15,22 +14,56 @@ import SocialLinksModal, {
 } from './Containers/SocialLinksModal';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
+import { uploadImageFirebase } from '../../utils/helper_functions';
 
 function ImageInput(props: {
   id: string;
   children: React.ReactNode;
   width: string;
   image?: string;
+  type: 'banner' | 'profile';
 }) {
   const [selectedImage, setSelectedImage] = React.useState(props.image);
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
+  const postReq = useMutation(postRequest);
+  const handleImageChange = async (event, type: 'profile' | 'banner') => {
+    const file = event.target.files[0]; // Get the selected file
+
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const imageBlob = file; // This is already the Blob, which you can upload
+
+        // Upload the image and get the download URL
+        const imageUrl = await uploadImageFirebase(imageBlob);
+        if (type == 'profile') {
+          postReq.mutate(
+            {
+              endPoint: 'users/add-profile-picture',
+              data: { profile_picture: imageUrl },
+            },
+            {
+              onSuccess: () => {
+                setSelectedImage(imageUrl);
+              },
+            }
+          );
+        } else {
+          postReq.mutate(
+            {
+              endPoint: 'users/add-banner-picture',
+              data: { banner_picture: imageUrl },
+            },
+            {
+              onSuccess: () => {
+                setSelectedImage(imageUrl);
+              },
+            }
+          );
+        }
+        console.log('Image URL:', imageUrl); // Optional: log the image URL
+        // You can use this URL to set the image preview or other logic
+      } catch (error) {
+        console.error('Error uploading image:', error); // Handle error
+      }
     }
   };
 
@@ -73,7 +106,9 @@ function ImageInput(props: {
           type='file'
           accept='image/jpeg, image/png'
           className='hidden'
-          onChange={handleImageChange}
+          onChange={(e) => {
+            handleImageChange(e, props.type);
+          }}
         />
         {/* </> */}
       </div>
@@ -358,10 +393,20 @@ function Profile() {
         />
         <Card>
           <div className='flex flex-start w-full gap-2'>
-            <ImageInput id='avatar' width='w-[30%]' image={profile_picture}>
+            <ImageInput
+              id='avatar'
+              width='w-[30%]'
+              image={profile_picture}
+              type='profile'
+            >
               Upload Image
             </ImageInput>
-            <ImageInput id='banner' width='w-[50%]' image={banner_picture}>
+            <ImageInput
+              id='banner'
+              width='w-[50%]'
+              image={banner_picture}
+              type='banner'
+            >
               Upload <strong>Banner</strong> Image
             </ImageInput>
           </div>

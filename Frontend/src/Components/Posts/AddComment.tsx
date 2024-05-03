@@ -179,10 +179,10 @@ const MenuFooter = ({
         // Invalidate or refetch a query on success
         queryClient.invalidateQueries('comments');
       },
-      onError: () => {
-        // Perform any actions on error, like showing an error message
-        console.log('Error');
-      },
+      // onError: () => {
+      //   // Perform any actions on error, like showing an error message
+      //   console.log('Error');
+      // },
     }
   );
 
