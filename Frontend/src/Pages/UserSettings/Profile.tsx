@@ -15,6 +15,7 @@ import SocialLinksModal, {
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
 import { uploadImageFirebase } from '../../utils/helper_functions';
+import { SocialLink } from '../../types/types';
 
 function ImageInput(props: {
   id: string;
@@ -252,14 +253,14 @@ function Profile() {
         {/* <Card> */}
         <div className='flex flex-start gap-2 flex-wrap'>
           {social_links &&
-            social_links.map((link, i: number) => {
+            social_links.map((link: SocialLink, i: number) => {
               return (
                 <Link
                   key={link + i}
                   to={
-                    link.icon != 'Facebook'
+                    link.type != 'facebook'
                       ? 'https://www.' +
-                        link.icon.toLowerCase() +
+                        link.type.toLowerCase() +
                         '.com/' +
                         link.username +
                         '/'
@@ -270,7 +271,7 @@ function Profile() {
                   <RoundedButton
                     buttonBorderColor='none'
                     buttonColor='bg-[#EDEFF1]'
-                    buttonText={link.displayName || link.username}
+                    buttonText={link.display_text || link.username}
                     buttonTextColor='text-black'
                     imgRight={
                       <XCircleIcon
@@ -288,7 +289,7 @@ function Profile() {
                   >
                     <img
                       src={
-                        link.icon == 'Facebook' ? facebookIcon : instagramIcon
+                        link.type == 'facebook' ? facebookIcon : instagramIcon
                       }
                       className='h-3.5 w-3.5'
                     />
@@ -310,17 +311,18 @@ function Profile() {
               handleEnterLinkDetails();
             }}
             saveDisabled={
-              (!usernameInput && socialLinkType != 'Facebook') ||
-              ((!usernameInput || !nameInput) && socialLinkType == 'Facebook')
+              (!usernameInput && socialLinkType != 'facebook') ||
+              ((!usernameInput || !nameInput) && socialLinkType == 'facebook')
             }
             handleSaveButton={() => {
               console.log(nameInput, usernameInput);
               postReq.mutate({
                 endPoint: 'users/add-social-link',
                 data: {
-                  icon: socialLinkType,
+                  type: socialLinkType.toLowerCase(),
                   username: usernameInput,
-                  displayName: nameInput,
+                  display_text: nameInput,
+                  custom_url: usernameInput,
                 },
               });
               handleEnterLinkDetails();
@@ -334,12 +336,12 @@ function Profile() {
             >
               <img
                 src={
-                  socialLinkType == 'Facebook' ? facebookIcon : instagramIcon
+                  socialLinkType == 'facebook' ? facebookIcon : instagramIcon
                 }
                 className='h-3.5 w-3.5'
               />
             </RoundedButton>
-            {socialLinkType != 'Facebook' ? (
+            {socialLinkType != 'facebook' ? (
               <input
                 value={usernameInput}
                 onChange={(e) => {
