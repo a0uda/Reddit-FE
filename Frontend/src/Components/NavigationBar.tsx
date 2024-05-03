@@ -261,7 +261,7 @@ const CampainLoggedIn = ({
     <>
       <div className='flex items-center gap-x-1'>
         <MobileSearchBar />
-        <Link to='/chat'>
+        <Link to='/chat/create'>
           <IconButton variant='text'>
             <ChatBubbleOvalLeftEllipsisIcon className='w-6 h-6' />
           </IconButton>

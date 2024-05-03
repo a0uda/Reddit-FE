@@ -22,6 +22,7 @@ import {
   QueryClientProvider,
 } from 'react-query';
 import { useAlert } from './Providers/AlertProvider.tsx';
+import ChatMain from './Pages/Chatting/ChatMain.tsx';
 
 function App() {
   const { status } = useSession();
@@ -138,12 +139,16 @@ function App() {
               path='/r/:community_name/about/muted'
               element={<UserManagement page='muted' />}
             />
-            <Route path='/search/*' element={<Search />} />
             <Route
               path='/r/:community_name/about/rules*'
               element={<HandleRoutes element={<RuleRemoval />} />}
             />
             <Route path='/search/*' element={<Search />} />
+            <Route
+              path='/chat/u/:username'
+              element={<ChatMain page='chat' />}
+            />
+            <Route path='/chat/create' element={<ChatMain page='create' />} />
           </Routes>
         </Router>
       </div>
