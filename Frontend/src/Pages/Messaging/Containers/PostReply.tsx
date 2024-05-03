@@ -55,7 +55,17 @@ const PostReply = (props: {
   return (
     <div
       onClick={() => {
+        // postReq.mutate(
+        //   {
+        //     endPoint: 'messages/mark-as-read',
+        //     data: { _id: props.replyId },
+        //   },
+        //   {
+        //     onSuccess: () => {
         setMsgUnead(false);
+        //     },
+        //   }
+        // );
       }}
       className='w-full odd:bg-[#f6f7f8] px-4 py-3'
     >
@@ -195,10 +205,9 @@ const PostReply = (props: {
                     onClick={() => {
                       postReq.mutate(
                         {
-                          endPoint: 'posts-or-comments/report',
+                          endPoint: 'comments/report',
                           data: {
                             id: props.replyId,
-                            is_post: false,
                             reason: 'spam',
                           },
                         },

@@ -19,7 +19,10 @@ const Sent = () => {
             data?.data.messages.map((mess) => {
               console.log(mess.postCreator, 'mess.postCreator');
 
-              if (mess.postCreator == undefined) {
+              if (
+                mess.postCreator == undefined &&
+                mess.postSubject == undefined
+              ) {
                 return (
                   <Message
                     unread={mess['unread_flag']}
@@ -38,7 +41,7 @@ const Sent = () => {
                     key={mess['_id']}
                     senderVia={mess['senderVia']}
                     refetch={refetch}
-                    parentMessageId={mess['parentMessageId']}
+                    parent_message_id={mess['parent_message_id']}
                     query='inbox'
                   />
                 );

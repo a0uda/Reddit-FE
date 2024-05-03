@@ -85,16 +85,18 @@ const Compose = () => {
     postReq.mutate({
       endPoint: 'messages/compose/',
       data: {
-        sender_username: from,
-        sender_type: senderType,
-        receiver_username: recUsername,
-        receiver_type: recType,
-        subject: subject,
-        message: message,
-        created_at: new Date(),
-        deleted_at: null,
-        unread_flag: false,
-        senderVia: from,
+        data: {
+          sender_username: from,
+          sender_type: senderType,
+          receiver_username: recUsername,
+          receiver_type: recType,
+          subject: subject,
+          message: message,
+          created_at: new Date(),
+          deleted_at: null,
+          unread_flag: false,
+          senderVia: from,
+        },
       },
     });
   };

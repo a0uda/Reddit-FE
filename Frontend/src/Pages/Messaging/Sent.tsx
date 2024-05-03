@@ -34,7 +34,7 @@ const Sent = () => {
                 key={mess['_id']}
                 senderVia={mess['senderVia']}
                 refetch={refetch}
-                parentMessageId={mess['parentMessageId']}
+                parent_message_id={mess['parent_message_id']}
               />
             ))}
           {/* <Message type='message' />

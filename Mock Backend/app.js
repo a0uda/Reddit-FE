@@ -2858,7 +2858,7 @@ let sentMessages = [
     unread_flag: false,
     isSent: true,
     isReply: true,
-    parentMessageId: "5da454f4307b0a8b30838830",
+    parent_message_id: "5da454f4307b0a8b30838830",
     subject: "header 2",
   },
   {
@@ -2875,7 +2875,7 @@ let sentMessages = [
     unread_flag: false,
     isSent: true,
     isReply: false,
-    parentMessageId: null,
+    parent_message_id: null,
   },
   {
     _id: "5da454f4307b0a8b30838831",
@@ -2891,7 +2891,7 @@ let sentMessages = [
     unread_flag: false,
     isSent: true,
     isReply: false,
-    parentMessageId: null,
+    parent_message_id: null,
   },
   {
     _id: "5da456f4307b0a8b30838831",
@@ -2906,7 +2906,7 @@ let sentMessages = [
     unread_flag: false,
     isSent: true,
     isReply: true,
-    parentMessageId: "5da454f4307b0a8b30838831",
+    parent_message_id: "5da454f4307b0a8b30838831",
     subject: "header 3", //subject of parent message
   },
   {
@@ -2922,7 +2922,7 @@ let sentMessages = [
     unread_flag: false,
     isSent: true,
     isReply: true,
-    parentMessageId: "5da454f430712430a8b308938830",
+    parent_message_id: "5da454f430712430a8b308938830",
     subject: "header 5",
   },
 ];
@@ -2941,7 +2941,7 @@ let recievedMessages = [
     unread_flag: false,
     isSent: false,
     isReply: true,
-    parentMessageId: "5da454f4307b0a8b30838830",
+    parent_message_id: "5da454f4307b0a8b30838830",
   },
   {
     _id: "5da454f430712430a8b308938830",
@@ -2957,7 +2957,7 @@ let recievedMessages = [
     unread_flag: false,
     isSent: false,
     isReply: false,
-    parentMessageId: null,
+    parent_message_id: null,
   },
   {
     _id: "5da454f4323407b0a8b3760838831",
@@ -2973,7 +2973,7 @@ let recievedMessages = [
     unread_flag: true,
     isSent: false,
     isReply: false,
-    parentMessageId: null,
+    parent_message_id: null,
   },
   {
     _id: "5da456f4307b0a8b308384k53831",
@@ -2988,7 +2988,7 @@ let recievedMessages = [
     unread_flag: false,
     isSent: false,
     isReply: true,
-    parentMessageId: "5da454f4307b0a8b30838831",
+    parent_message_id: "5da454f4307b0a8b30838831",
     subject: "header 3",
   },
   {
@@ -3004,7 +3004,7 @@ let recievedMessages = [
     unread_flag: true,
     isSent: false,
     isReply: true,
-    parentMessageId: "5da454f4307b0a8b30838831",
+    parent_message_id: "5da454f4307b0a8b30838831",
     subject: "header 3",
   },
 ];
@@ -3136,7 +3136,7 @@ app.post("/messages/compose/", (req, res) => {
       ...req.body,
       isSent: true,
       isReply: false,
-      parentMessageId: null,
+      parent_message_id: null,
       _id: c,
       // "subject": "header 5",
     });
@@ -3168,10 +3168,10 @@ app.post("/messages/del-msg", (req, res) => {
   recievedMessages = recievedMessages.filter(
     (message) =>
       message._id !== req.body["_id"] &&
-      message.parentMessageId !== req.body["_id"]
+      message.parent_message_id !== req.body["_id"]
   );
   sentMessages = sentMessages.filter(
-    (message) => message.parentMessageId !== req.body["_id"]
+    (message) => message.parent_message_id !== req.body["_id"]
   );
 
   res.sendStatus(200);
@@ -3181,10 +3181,10 @@ app.post("/messages/report-msg", (req, res) => {
   recievedMessages = recievedMessages.filter(
     (message) =>
       message._id !== req.body["_id"] &&
-      message.parentMessageId !== req.body["_id"]
+      message.parent_message_id !== req.body["_id"]
   );
   sentMessages = sentMessages.filter(
-    (message) => message.parentMessageId !== req.body["_id"]
+    (message) => message.parent_message_id !== req.body["_id"]
   );
 
   res.sendStatus(200);
