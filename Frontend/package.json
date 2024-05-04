@@ -48,6 +48,7 @@
     "query-string": "^9.0.0",
     "react-datepicker": "^6.9.0",
     "react-icons": "^5.0.1",
+    "react-intersection-observer": "^9.10.2",
     "react-jwt": "^1.2.1",
     "react-query": "^3.39.3",
     "react-quill": "^2.0.0",

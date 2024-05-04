@@ -1,13 +1,14 @@
 import { useQuery } from 'react-query';
 import SortOptions from '../SortOptions';
 import { fetchRequest } from '../../API/User';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CommunityOverviewType, PostType } from '../../types/types';
 import { useNavigate, useParams } from 'react-router-dom';
 import { capitalizeString } from '../../utils/helper_functions';
 import LoadingProvider from '../LoadingProvider';
 import useSession from '../../hooks/auth/useSession';
 import PostComponent from './PostComponent';
+import { useInView } from 'react-intersection-observer';
 
 const PostsListings = () => {
   const { sortOption: initialSortOption } = useParams();
@@ -35,7 +36,7 @@ const PostsListings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption]);
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const pageSize = 10;
   const [posts, setPosts] = useState<PostType[]>([]);
   const [noMorePosts, setNoMorePosts] = useState(false);
@@ -55,6 +56,14 @@ const PostsListings = () => {
     },
   });
 
+  const { ref: lastPostElementRef, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && !noMorePosts) {
+      setPage((prevPageNumber) => prevPageNumber + 1);
+    }
+  }, [inView, noMorePosts]);
+
   let moderatedCommunityNames: string[] = [];
   useQuery({
     queryKey: ['getModeratedCommunities'],
@@ -65,22 +74,6 @@ const PostsListings = () => {
       );
     },
   });
-
-  const observer = useRef<IntersectionObserver | null>(null);
-  const lastPostElementRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (response.isLoading || noMorePosts) return;
-      // Disconnect the previous observer after each
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          setPage((prevPageNumber) => prevPageNumber + 1);
-        }
-      });
-      if (node) observer.current.observe(node);
-    },
-    [response.isLoading, noMorePosts]
-  );
 
   return (
     <>

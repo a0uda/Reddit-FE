@@ -5,7 +5,7 @@ import { User } from '../../hooks/auth/useSession';
 
 interface PostComponentProps {
   posts: PostType[];
-  lastPostElementRef: (node: HTMLDivElement | null) => void;
+  lastPostElementRef: (node?: Element | null | undefined) => void;
   user: User | null;
   moderatedCommunityNames: string[];
 }

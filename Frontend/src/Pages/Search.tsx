@@ -19,6 +19,7 @@ import CommentOverview from '../Components/Search/CommentOverview';
 import SortOptions from '../Components/SortOptions';
 import { capitalizeString } from '../utils/helper_functions';
 import { Typography } from '@material-tailwind/react';
+import { useInView } from 'react-intersection-observer';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -46,26 +47,40 @@ const Search = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption]);
 
-  const [posts, setPosts] = useState<PostType[] | undefined>();
-  const [communities, setCommunities] = useState<
-    CommunityOverviewType[] | undefined
-  >();
-  const [comments, setComments] = useState<SearchCommentType[] | undefined>();
-  const [users, setUsers] = useState<UserType[] | undefined>();
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [communities, setCommunities] = useState<CommunityOverviewType[]>([]);
+  const [comments, setComments] = useState<SearchCommentType[]>([]);
+  const [users, setUsers] = useState<UserType[]>([]);
 
+  const [page, setPage] = useState(0);
+  const pageSize = 10;
+  const [noMoreData, setNoMoreData] = useState(false);
   const { isLoading, isError } = useQuery({
-    queryKey: ['search results', q, type, sortOption],
-    queryFn: () =>
-      axios.get(
-        `/search/${type === 'link' ? 'posts' : type === 'sr' ? 'communities' : type === 'comment' ? 'comments' : 'people'}?query=${q}`
-      ),
-    onSuccess: (data) => {
-      if (type === 'link') setPosts(data.data);
-      if (type === 'sr') setCommunities(data.data);
-      if (type === 'comment') setComments(data.data);
-      if (type === 'user') setUsers(data.data);
+    queryKey: ['search results', q, type, sortOption, page, pageSize],
+    queryFn: async () => {
+      const res = await axios.get(
+        `/search/${type === 'link' ? 'posts' : type === 'sr' ? 'communities' : type === 'comment' ? 'comments' : 'people'}?query=${q}&page=${page}&pageSize=${pageSize}`
+      );
+      if (res.data.length === 0) {
+        setNoMoreData(true);
+        return;
+      }
+      console.log('res.data', res.data);
+
+      if (type === 'link') setPosts((prev) => [...prev, ...res.data]);
+      if (type === 'sr') setCommunities((prev) => [...prev, ...res.data]);
+      if (type === 'comment') setComments((prev) => [...prev, ...res.data]);
+      if (type === 'user') setUsers((prev) => [...prev, ...res.data]);
     },
   });
+
+  const { ref: lastPostElementRef, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && !noMoreData) {
+      setPage((prevPageNumber) => prevPageNumber + 1);
+    }
+  }, [inView, noMoreData]);
 
   useQuery({
     queryKey: ['communities search results', q, type, sortOption],
@@ -113,12 +128,14 @@ const Search = () => {
                 {posts &&
                   type === 'link' &&
                   (posts.length > 0 ? (
-                    posts.map((post) => (
-                      <div key={post._id}>
-                        <PostOverview post={post} />
-                        <hr className='border-gray-300' />
-                      </div>
-                    ))
+                    <>
+                      {posts.map((post) => (
+                        <div ref={lastPostElementRef} key={post._id}>
+                          <PostOverview post={post} />
+                          <hr className='border-gray-300' />
+                        </div>
+                      ))}
+                    </>
                   ) : (
                     <div className='flex justify-center items-center h-96'>
                       <Typography variant='h5' className='text-gray-500'>
@@ -130,7 +147,7 @@ const Search = () => {
                   type === 'sr' &&
                   (communities.length > 0 ? (
                     communities.map((community) => (
-                      <div key={community.id}>
+                      <div ref={lastPostElementRef} key={community.id}>
                         <CommunityOverview community={community} />
                         <hr className='border-gray-300' />
                       </div>
@@ -146,7 +163,7 @@ const Search = () => {
                   type === 'comment' &&
                   (comments.length > 0 ? (
                     comments.map((comment) => (
-                      <div key={comment._id}>
+                      <div ref={lastPostElementRef} key={comment._id}>
                         <CommentOverview comment={comment} />
                         <hr className='border-gray-300' />
                       </div>
@@ -162,7 +179,7 @@ const Search = () => {
                   type === 'user' &&
                   (users.length > 0 ? (
                     users.map((user) => (
-                      <div key={user._id}>
+                      <div ref={lastPostElementRef} key={user._id}>
                         <UserOverview user={user} variant='small' />
                         <hr className='border-gray-300' />
                       </div>

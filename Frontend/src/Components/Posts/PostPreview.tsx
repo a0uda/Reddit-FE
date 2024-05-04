@@ -414,9 +414,9 @@ const SharedPostContainer = (props: {
                   </div>
 
                   <div className='w-full'>
-                    {data?.data?.moderator_details.removed_flag ||
-                    data?.data?.moderator_details.reported_flag ||
-                    data?.data?.moderator_details.spammed_flag ? (
+                    {data?.data?.moderator_details?.removed_flag ||
+                    data?.data?.moderator_details?.reported_flag ||
+                    data?.data?.moderator_details?.spammed_flag ? (
                       '[removed]'
                     ) : data?.data?.type == 'text' ? (
                       <div className='flex justify-between gap-7'>
@@ -441,9 +441,9 @@ const SharedPostContainer = (props: {
                   </div>
                 </div>
                 {!(
-                  data?.data?.moderator_details.removed_flag ||
-                  data?.data?.moderator_details.reported_flag ||
-                  data?.data?.moderator_details.spammed_flag
+                  data?.data?.moderator_details?.removed_flag ||
+                  data?.data?.moderator_details?.reported_flag ||
+                  data?.data?.moderator_details?.spammed_flag
                 ) &&
                   data?.data?.images?.[0] && (
                     <Tooltip
