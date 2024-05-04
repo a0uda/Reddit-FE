@@ -149,7 +149,7 @@ function UserRightSideBar() {
   };
   const navigate = useNavigate();
   const handleSendMessage = () => {
-    navigate(`/compose?to=${username}`);
+    navigate(`/message/compose?to=${username}`);
   };
   return (
     <>
