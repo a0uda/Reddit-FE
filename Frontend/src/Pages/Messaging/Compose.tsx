@@ -1,7 +1,12 @@
 import React from 'react';
 import ContentContainer from './Containers/ContentContainer';
 import { Button } from '@material-tailwind/react';
-import { useMutation, useQuery } from 'react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import { fetchRequest, postRequest } from '../../API/User';
 import { addPrefixToUsername } from '../../utils/helper_functions';
 import useSession from '../../hooks/auth/useSession';
@@ -23,6 +28,7 @@ const Compose = () => {
   const [subjectBool, setSubjectBool] = React.useState(false);
   const [messageBool, setMessageBool] = React.useState(false);
   const [toFeedback, setToFeedback] = React.useState('');
+  const queryClient = useQueryClient();
   React.useEffect(() => {
     setFrom(user?.username);
   }, [user]);
@@ -33,16 +39,12 @@ const Compose = () => {
   console.log(getCommResponse.data, 'getCommResponse.data');
 
   const postReq = useMutation(postRequest, {
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries('sentMessages');
+    },
     onError: (error) => {
-      const errorObj = JSON.parse(error.message);
-      console.log(errorObj);
-
-      if (errorObj.status == 400) {
-        setToFeedback(errorObj.data);
-        setToBool(true);
-      }
-      // Handle the error here
+      setToFeedback(error);
+      setToBool(true);
     },
   });
 

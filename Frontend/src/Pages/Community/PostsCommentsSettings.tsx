@@ -60,7 +60,6 @@ function PostsCommentsSettings() {
   }, [data]);
   const postReq = useMutation(postRequest, {
     onSuccess: () => {
-      refetch();
       setTrigger(!trigger);
       setIsError(false);
       setAlertMessage('General Settings Updated Successfully');
@@ -195,7 +194,7 @@ function PostsCommentsSettings() {
                 ></Card>
                 <Card className='pl-10' title='Posts' description=''>
                   <DropDownButton
-                    buttonList={['High (Default)', 'Low', 'All']}
+                    buttonList={['High (default)', 'Low', 'All']}
                     buttonText={postSpam}
                     selected={postSpam}
                     handleSelectionChange={(value) => setPostSpam(value)}
@@ -203,7 +202,7 @@ function PostsCommentsSettings() {
                 </Card>
                 <Card className='pl-10' title='Links' description=''>
                   <DropDownButton
-                    buttonList={['High (Default)', 'Low', 'All']}
+                    buttonList={['High (default)', 'Low', 'All']}
                     buttonText={linkSpam}
                     selected={linkSpam}
                     handleSelectionChange={(value) => setLinkSpam(value)}
@@ -211,7 +210,7 @@ function PostsCommentsSettings() {
                 </Card>
                 <Card className='pl-10' title='Comments' description=''>
                   <DropDownButton
-                    buttonList={['High', 'Low (Default)', 'All']}
+                    buttonList={['High', 'Low (default)', 'All']}
                     buttonText={commentSpam}
                     selected={commentSpam}
                     handleSelectionChange={(value) => setCommentSpam(value)}

@@ -224,8 +224,8 @@ const SharedPostContainer = (props: {
   const [sharedViewNSFW, setSharedViewNSFW] = useState<boolean>();
 
   const [name, setName] = useState<string>();
-  useQuery({
-    queryKey: ['post', 'listings', props.sharedPostId],
+  const { data } = useQuery({
+    queryKey: ['post', props.sharedPostId],
     queryFn: () => fetchRequest(`posts/get-post?id=${props.sharedPostId}`),
     onSuccess: (data) => {
       console.log(data.data, 'sharedPost');
@@ -237,11 +237,11 @@ const SharedPostContainer = (props: {
       );
       setSharedPostSpoiler(data.data.spoiler_flag);
     },
-    retry(failureCount, error) {
-      console.log(failureCount, 'failureCount');
+    // retry(failureCount, error) {
+    //   console.log(failureCount, 'failureCount');
 
-      return !sharedPost;
-    },
+    //   return !sharedPost;
+    // },
     // onError: (error) => {
     //   console.error(error, 'Error fetching shared post');
     // },
@@ -297,9 +297,9 @@ const SharedPostContainer = (props: {
             </div>
           ))}
       </div>
-      {sharedPost && (
+      {data?.data && (
         <div className='bg-white rounded-lg flex flex-col p-2 border-2 border-lines-color mb-1'>
-          {sharedPost?.spoiler_flag && sharedPostSpoiler && (
+          {data?.data?.spoiler_flag && sharedPostSpoiler && (
             <div className='flex flex-col justify-start pt-0'>
               <div className='flex gap-2'>
                 <Typography
@@ -312,38 +312,38 @@ const SharedPostContainer = (props: {
                 </Typography>
                 <span className='relative -top-0.5'>•</span>
                 <Typography variant='small' className=''>
-                  {dateDuration(new Date(sharedPost?.created_at))}
+                  {dateDuration(new Date(data?.data?.created_at))}
                 </Typography>
               </div>
               <Typography variant='h5' className='text-blue'>
-                {sharedPost?.title}
+                {data?.data?.title}
               </Typography>
             </div>
           )}
           <div>
-            {sharedPost?.spoiler_flag &&
+            {data?.data?.spoiler_flag &&
             sharedPostSpoiler &&
-            (sharedPost?.description ||
-              sharedPost?.images?.length != 0 ||
-              sharedPost.polls?.length != 0 ||
-              sharedPost.link_url) ? (
+            (data?.data?.description ||
+              data?.data?.images?.length != 0 ||
+              data?.data.polls?.length != 0 ||
+              data?.data.link_url) ? (
               <SpoilerContainer
                 handleViewSpoiler={() => {
                   // console.log(viewSpoiler, 'spoilerrrr');
 
                   setSharedPostSpoiler(false);
                 }}
-                spoilerPost={sharedPost}
+                spoilerPost={data?.data}
                 sharedPost={true}
                 text='View Spoiler'
                 title={props.post.title}
               />
-            ) : sharedPost?.nsfw_flag &&
+            ) : data?.data?.nsfw_flag &&
               sharedViewNSFW &&
-              (sharedPost?.description ||
-                sharedPost?.images?.length != 0 ||
-                sharedPost.polls?.length != 0 ||
-                sharedPost.link_url) ? (
+              (data?.data?.description ||
+                data?.data?.images?.length != 0 ||
+                data?.data.polls?.length != 0 ||
+                data?.data.link_url) ? (
               <SpoilerContainer
                 handleViewSpoiler={() => {
                   // console.log(viewSpoiler, 'spoilerrrr');
@@ -371,16 +371,16 @@ const SharedPostContainer = (props: {
                         </Typography>
                         <span className='relative -top-0.5'>•</span>
                         <Typography variant='small' className=''>
-                          {dateDuration(new Date(sharedPost?.created_at || ''))}
+                          {dateDuration(new Date(data?.data?.created_at || ''))}
                         </Typography>
                       </div>
                     </div>
                     <Typography variant='h5' className='mb-2 text-blue'>
-                      {sharedPost?.title}
+                      {data?.data?.title}
                     </Typography>
-                    {(sharedPost?.spoiler_flag || sharedPost?.nsfw_flag) && (
+                    {(data?.data?.spoiler_flag || data?.data?.nsfw_flag) && (
                       <div className='flex gap-2 mb-2'>
-                        {sharedPost?.spoiler_flag && (
+                        {data?.data?.spoiler_flag && (
                           <div className='flex gap-1 items-center'>
                             <ExclamationTriangleIcon
                               strokeWidth={3}
@@ -394,7 +394,7 @@ const SharedPostContainer = (props: {
                             </Typography>
                           </div>
                         )}
-                        {sharedPost?.nsfw_flag && (
+                        {data?.data?.nsfw_flag && (
                           <div className='flex gap-1 items-center'>
                             <img
                               src={eighteenPic}
@@ -414,17 +414,18 @@ const SharedPostContainer = (props: {
                   </div>
 
                   <div className='w-full'>
-                    {sharedPost?.moderator_details.removed_flag ||
-                    sharedPost?.moderator_details.spammed_flag ? (
+                    {data?.data?.moderator_details.removed_flag ||
+                    data?.data?.moderator_details.reported_flag ||
+                    data?.data?.moderator_details.spammed_flag ? (
                       '[removed]'
-                    ) : sharedPost?.type == 'text' ? (
+                    ) : data?.data?.type == 'text' ? (
                       <div className='flex justify-between gap-7'>
                         <div className='flex items-center'>
                           <Typography
                             variant='paragraph'
                             className='mb-2 font-normal text-[#2A3C42]'
                             dangerouslySetInnerHTML={{
-                              __html: sharedPost.description || '',
+                              __html: data?.data.description || '',
                             }}
                           >
                             {/* <></> */}
@@ -432,28 +433,29 @@ const SharedPostContainer = (props: {
                           </Typography>
                         </div>
                       </div>
-                    ) : sharedPost?.type == 'polls' ? (
-                      <PollPostContainer post={sharedPost} />
-                    ) : sharedPost?.type == 'url' ? (
-                      <LinkPostContainer post={sharedPost} />
+                    ) : data?.data?.type == 'polls' ? (
+                      <PollPostContainer post={data?.data} />
+                    ) : data?.data?.type == 'url' ? (
+                      <LinkPostContainer post={data?.data} />
                     ) : null}
                   </div>
                 </div>
                 {!(
-                  sharedPost?.moderator_details.removed_flag ||
-                  sharedPost?.moderator_details.spammed_flag
+                  data?.data?.moderator_details.removed_flag ||
+                  data?.data?.moderator_details.reported_flag ||
+                  data?.data?.moderator_details.spammed_flag
                 ) &&
-                  sharedPost?.images?.[0] && (
+                  data?.data?.images?.[0] && (
                     <Tooltip
                       content={
-                        sharedPost?.images?.length > 1
-                          ? `Click to show ${sharedPost?.images?.length} images`
+                        data?.data?.images?.length > 1
+                          ? `Click to show ${data?.data?.images?.length} images`
                           : 'Click to show image'
                       }
                     >
                       <div className='flex w-32 justify-end items-center gap-1'>
                         <img
-                          src={sharedPost?.images?.[0].path}
+                          src={data?.data?.images?.[0].path}
                           alt='post'
                           className='object-cover rounded-md w-32 h-24'
                         />
@@ -497,7 +499,7 @@ const PostPreview = ({
         post.polls?.length != 0 &&
         (post.link_url?.length || 0) > 0)
   );
-  const { user } = useSession();
+  const { user, status } = useSession();
   const navigate = useNavigate();
   const [canEdit, setCanEdit] = useState(false);
 
@@ -859,6 +861,7 @@ const PostPreview = ({
 
                       <div className='w-full'>
                         {post.moderator_details.removed_flag ||
+                        post.moderator_details.reported_flag ||
                         post.moderator_details.spammed_flag ? (
                           '[removed]'
                         ) : post.type == 'text' ? (
@@ -885,6 +888,7 @@ const PostPreview = ({
                     </div>
                     {!(
                       post.moderator_details.removed_flag ||
+                      post.moderator_details.spammed_flag ||
                       post.moderator_details.spammed_flag
                     ) &&
                       post.images?.[0] && (
@@ -906,172 +910,195 @@ const PostPreview = ({
                       )}
                   </div>
                 )}
+                {status == 'authenticated' && (
+                  <div className='flex justify-between'>
+                    <InteractionButtons
+                      id={post._id}
+                      upvotes={post.upvotes_count}
+                      downvotes={post.downvotes_count}
+                      comments_replies={post.comments_count}
+                      refLink={link}
+                      myVote={post.vote}
+                      isReposted={post.is_reposted_flag}
+                    />
+                    {page != 'home' && isMyPost && (
+                      <div className=' flex justify-end items-center gap-4'>
+                        {post.moderator_details.approved_flag == false &&
+                          post.moderator_details.spammed_flag == false &&
+                          post.moderator_details.reported_flag == false &&
+                          post.moderator_details.removed_flag == false && (
+                            <div
+                              className='flex gap-2 items-center'
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                            >
+                              <Tooltip content='Approve'>
+                                <IconButton
+                                  className='bg-[#EAEDEF] text-black'
+                                  onClick={() => {
+                                    handleApproveDisapprovePost(true);
+                                  }}
+                                >
+                                  <CheckIcon className='w-5' />
+                                </IconButton>
+                              </Tooltip>
 
-                <div className='flex justify-between'>
-                  <InteractionButtons
-                    id={post._id}
-                    upvotes={post.upvotes_count}
-                    downvotes={post.downvotes_count}
-                    comments_replies={post.comments_count}
-                    refLink={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
-                    myVote={post.vote}
-                  />
-                  {isMyPost && (
-                    <div className=' flex justify-end gap-4'>
-                      {post.moderator_details.approved_flag == false &&
-                        post.moderator_details.removed_flag == false && (
-                          <div
-                            className='flex gap-2 items-center'
+                              <Tooltip content='Remove'>
+                                <IconButton
+                                  className='bg-[#EAEDEF] text-black'
+                                  onClick={() => {
+                                    handleApproveDisapprovePost(false);
+                                  }}
+                                >
+                                  <XMarkIcon className='w-5' />
+                                </IconButton>
+                              </Tooltip>
+                            </div>
+                          )}
+                        {post.moderator_details.approved_flag === true && (
+                          <div className='flex gap-2 items-center'>
+                            <Tooltip
+                              content={`At ${post.moderator_details.approved_date}`}
+                            >
+                              <div className='flex items-center gap-2'>
+                                <div className='text-sm'>
+                                  Approved{' '}
+                                  {getTimeDifferenceAsString(
+                                    new Date(
+                                      post.moderator_details.approved_date || ''
+                                    )
+                                  )}
+                                </div>
+                              </div>
+                            </Tooltip>
+                          </div>
+                        )}
+                        {post.moderator_details.reported_flag == true ? (
+                          <div className='flex gap-2 items-center'>
+                            <Tooltip
+                              content={addPrefixToUsername(
+                                post.moderator_details.reported_by || '',
+                                'user'
+                              )}
+                            >
+                              <div className='text-sm'>Removed</div>
+                            </Tooltip>
+                          </div>
+                        ) : post.moderator_details.spammed_flag === true ? (
+                          <div className='flex gap-2 items-center'>
+                            <Tooltip
+                              content={addPrefixToUsername(
+                                post.moderator_details.spammed_by || '',
+                                'user'
+                              )}
+                            >
+                              <div className='text-sm'>Removed</div>
+                            </Tooltip>
+                          </div>
+                        ) : post.moderator_details.removed_flag === true ? (
+                          <div className='flex gap-2 items-center'>
+                            <Tooltip
+                              content={
+                                'At ' + post.moderator_details.removed_date
+                              }
+                            >
+                              <div className='text-sm'>
+                                Removed{' '}
+                                {getTimeDifferenceAsString(
+                                  new Date(
+                                    post.moderator_details.removed_date || ''
+                                  )
+                                )}
+                              </div>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+
+                        <Menu placement='bottom-end'>
+                          <MenuHandler
                             onClick={(e) => {
                               e.stopPropagation();
                             }}
                           >
-                            <Tooltip content='Approve'>
-                              <IconButton
-                                className='bg-[#EAEDEF] text-black'
-                                onClick={() => {
-                                  handleApproveDisapprovePost(true);
-                                }}
-                              >
-                                <CheckIcon className='w-5' />
-                              </IconButton>
-                            </Tooltip>
-
-                            <Tooltip content='Remove'>
-                              <IconButton
-                                className='bg-[#EAEDEF] text-black'
-                                onClick={() => {
-                                  handleApproveDisapprovePost(false);
-                                }}
-                              >
-                                <XMarkIcon className='w-5' />
-                              </IconButton>
-                            </Tooltip>
-                          </div>
-                        )}
-                      {post.moderator_details.approved_flag === true && (
-                        <div className='flex gap-2 items-center'>
-                          <Tooltip
-                            content={`At ${post.moderator_details.approved_date}`}
+                            <IconButton className='bg-[#EAEDEF] text-black'>
+                              <img src={shieldPic} />
+                            </IconButton>
+                          </MenuHandler>
+                          <MenuList
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                            className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'
                           >
-                            <div className='flex items-center gap-2'>
-                              <div className='text-sm'>
-                                Approved{' '}
-                                {getTimeDifferenceAsString(
-                                  new Date(
-                                    post.moderator_details.approved_date || ''
-                                  )
-                                )}
-                              </div>
-                            </div>
-                          </Tooltip>
-                        </div>
-                      )}
-                      {post.moderator_details.removed_flag === true && (
-                        <div className='flex gap-2 items-center'>
-                          <Tooltip
-                            content={`At ${post.moderator_details.removed_date}`}
-                          >
-                            <div className='text-sm'>
-                              Removed{' '}
-                              {getTimeDifferenceAsString(
-                                new Date(
-                                  post.moderator_details.removed_date || ''
-                                )
+                            <MenuItem
+                              onClick={() => {
+                                handleApproveDisapprovePost(
+                                  !post.moderator_details.approved_flag
+                                );
+                              }}
+                              className='p-3 flex gap-2 items-center'
+                            >
+                              {post.moderator_details.approved_flag === true ? (
+                                <>
+                                  <XMarkIcon className='w-5 h-5' />
+                                  <span>Remove</span>
+                                </>
+                              ) : (
+                                <>
+                                  <CheckIcon className='w-5 h-5' />
+                                  <span>Approve</span>
+                                </>
                               )}
-                            </div>
-                          </Tooltip>
-                        </div>
-                      )}
-                      {post.moderator_details.spammed_flag === true && (
-                        <div className='flex gap-2 items-center'>
-                          <Tooltip
-                            content={`${addPrefixToUsername(post.moderator_details.spammed_by || '', 'user')}`}
-                          >
-                            <div className='text-sm'>Removed</div>
-                          </Tooltip>
-                        </div>
-                      )}
-
-                      <Menu placement='bottom-end'>
-                        <MenuHandler
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                        >
-                          <IconButton className='bg-[#EAEDEF] text-black'>
-                            <img src={shieldPic} />
-                          </IconButton>
-                        </MenuHandler>
-                        <MenuList
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'
-                        >
-                          <MenuItem
-                            onClick={() => {
-                              handleApproveDisapprovePost(
-                                !post.moderator_details.approved_flag
-                              );
-                            }}
-                            className='p-3 flex gap-2 items-center'
-                          >
-                            {post.moderator_details.approved_flag === true ? (
-                              <>
-                                <XMarkIcon className='w-5 h-5' />
-                                <span>Remove</span>
-                              </>
-                            ) : (
-                              <>
-                                <CheckIcon className='w-5 h-5' />
-                                <span>Approve</span>
-                              </>
-                            )}
-                          </MenuItem>
-                          <MenuItem
-                            onClick={() => {
-                              handleLockUnlockPost();
-                            }}
-                            className='p-3 flex gap-2 items-center'
-                          >
-                            {post.locked_flag ? (
-                              <>
-                                <LockClosedIcon className='w-5 h-5' />
-                                <span>Unlock comments</span>
-                              </>
-                            ) : (
-                              <>
-                                <LockOpenIcon className='w-5 h-5' />
-                                <span>Lock comments</span>
-                              </>
-                            )}
-                          </MenuItem>
-                          <MenuItem
-                            onClick={() => {
-                              handleNSFWFlag();
-                            }}
-                            className='p-3 flex gap-2 items-center'
-                          >
-                            <img src={eighteenPic} className='w-5 h-5' />
-                            {post.nsfw_flag ? 'Unmark as NSFW' : 'Mark as NSFW'}
-                          </MenuItem>
-                          <MenuItem
-                            onClick={() => {
-                              handleSpoilPost();
-                            }}
-                            className='p-3 flex gap-2 items-center'
-                          >
-                            <ExclamationTriangleIcon className='w-5 h-5' />
-                            {post.spoiler_flag
-                              ? 'Unmark as spoiler'
-                              : 'Mark as spoiler'}
-                          </MenuItem>
-                        </MenuList>
-                      </Menu>
-                    </div>
-                  )}
-                </div>
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                handleLockUnlockPost();
+                              }}
+                              className='p-3 flex gap-2 items-center'
+                            >
+                              {post.locked_flag ? (
+                                <>
+                                  <LockClosedIcon className='w-5 h-5' />
+                                  <span>Unlock comments</span>
+                                </>
+                              ) : (
+                                <>
+                                  <LockOpenIcon className='w-5 h-5' />
+                                  <span>Lock comments</span>
+                                </>
+                              )}
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                handleNSFWFlag();
+                              }}
+                              className='p-3 flex gap-2 items-center'
+                            >
+                              <img src={eighteenPic} className='w-5 h-5' />
+                              {post.nsfw_flag
+                                ? 'Unmark as NSFW'
+                                : 'Mark as NSFW'}
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                handleSpoilPost();
+                              }}
+                              className='p-3 flex gap-2 items-center'
+                            >
+                              <ExclamationTriangleIcon className='w-5 h-5' />
+                              {post.spoiler_flag
+                                ? 'Unmark as spoiler'
+                                : 'Mark as spoiler'}
+                            </MenuItem>
+                          </MenuList>
+                        </Menu>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </CardBody>
           </Card>
@@ -1112,34 +1139,35 @@ const PostPreview = ({
                 {dateDuration(new Date(post.created_at))}
               </Typography>
             </div>
-            <div
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <PostOptions
-                saved={post.saved}
-                NSFW={post.nsfw_flag}
-                spoiler={post.spoiler_flag}
-                myPost={isMyPost || false}
-                canEdit={canEdit}
-                page={page}
-                handleEditPost={handleEditPost}
-                handleSavePost={handleSaveUnsavePost}
-                handleHidePost={handleHideUnhidePost}
-                handleReportPost={handleReportPost}
-                handleDeletePost={handleDeletePost}
-                handleSpoiler={handleSpoilPost}
-                handleNSFW={handleNSFWFlag}
-              />
-            </div>
+            {status == 'authenticated' && (
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <PostOptions
+                  saved={post.saved}
+                  NSFW={post.nsfw_flag}
+                  spoiler={post.spoiler_flag}
+                  myPost={isMyPost || false}
+                  canEdit={canEdit}
+                  page={page}
+                  handleEditPost={handleEditPost}
+                  handleSavePost={handleSaveUnsavePost}
+                  handleHidePost={handleHideUnhidePost}
+                  handleReportPost={handleReportPost}
+                  handleDeletePost={handleDeletePost}
+                  handleSpoiler={handleSpoilPost}
+                  handleNSFW={handleNSFWFlag}
+                />
+              </div>
+            )}
           </div>
           <Typography variant='h5' className='mb-2 font-normal text-black'>
             {post.title}
           </Typography>
           <EditPostComment
-            Id={post._id}
-            currentText={post.description}
+            post={post}
             isPost={true}
             handleEdit={handleEditPost}
           />
@@ -1148,8 +1176,9 @@ const PostPreview = ({
             upvotes={post.upvotes_count}
             downvotes={post.downvotes_count}
             comments_replies={post.comments_count}
-            refLink={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
+            refLink={link}
             myVote={post.vote}
+            isReposted={post.is_reposted_flag}
           />
         </>
       )}

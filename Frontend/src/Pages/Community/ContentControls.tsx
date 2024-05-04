@@ -128,7 +128,6 @@ function ContentControls() {
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
   const postReq = useMutation(postRequest, {
     onSuccess: () => {
-      refetch();
       setTrigger(!trigger);
       setIsError(false);
       setAlertMessage('General Settings Updated Successfully');

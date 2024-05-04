@@ -17,6 +17,7 @@ import { AiOutlineOrderedList } from 'react-icons/ai';
 import { useMutation, useQueryClient } from 'react-query';
 import { patchRequest, postRequest } from '../../API/User';
 import { tiptapConfig } from '../../utils/tiptap_config';
+import { PostType } from '../../types/types';
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   const setLink = useCallback(() => {
@@ -159,6 +160,7 @@ const MenuFooter = ({
   //setFocused,
   handleEdit,
   setError,
+  post,
 }: {
   Id: string;
   editor: Editor | null;
@@ -168,6 +170,7 @@ const MenuFooter = ({
   //setFocused: Dispatch<SetStateAction<boolean>>;
   setError: Dispatch<SetStateAction<string>>;
   handleEdit: () => void;
+  post: PostType;
 }) => {
   const patchReq = useMutation(patchRequest);
   const queryClient = useQueryClient();
@@ -195,10 +198,18 @@ const MenuFooter = ({
   //   }
   // );
   const handleEditPC = (content: string) => {
-    patchReq.mutate({
-      endPoint: 'posts-or-comments/edit-text',
-      newSettings: { is_post: isPost, id: Id, edited_text: content },
-    });
+    patchReq.mutate(
+      {
+        endPoint: 'posts-or-comments/edit-text',
+        newSettings: { is_post: isPost, id: Id, edited_text: content },
+      },
+      {
+        onSuccess: () => {
+          post.description = content;
+          handleEdit();
+        },
+      }
+    );
   };
 
   if (!editor) {
@@ -246,7 +257,7 @@ const MenuFooter = ({
               }
               const html = editor.getHTML();
               handleEditPC(html);
-              handleEdit();
+              // handleEdit();
             }}
           >
             Continue
@@ -257,17 +268,15 @@ const MenuFooter = ({
   );
 };
 export default function EditPostComment({
-  Id,
-  currentText,
+  post,
   isPost,
   handleEdit,
 }: {
-  Id: string;
-  currentText: string | undefined;
+  post: PostType;
   isPost: boolean;
   handleEdit: () => void;
 }) {
-  const [content, setContent] = useState(currentText);
+  const [content, setContent] = useState(post.description);
   const editor = useEditor({
     ...tiptapConfig,
     content,
@@ -293,7 +302,7 @@ export default function EditPostComment({
         </div>
         <div>
           <MenuFooter
-            Id={Id}
+            Id={post._id}
             isPost={isPost}
             editor={editor}
             openMenuBar
@@ -301,6 +310,7 @@ export default function EditPostComment({
             //setFocused={setFocused}
             setError={setError}
             handleEdit={handleEdit}
+            post={post}
           />
         </div>
       </div>

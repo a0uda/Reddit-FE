@@ -172,12 +172,9 @@ export const ReportModal = (props: {
                   if (props.type != 'postReply') {
                     postReq.mutate(
                       {
-                        endPoint: 'messages/report-msg',
+                        endPoint: 'messages/del-msg',
                         data: {
-                          report: chosenMsg,
-                          sender_username: props.username,
-                          sender_type: props.senderType,
-                          id: props.id,
+                          _id: props.id,
                         },
                       },
                       {
@@ -332,12 +329,121 @@ export const ThankYouModal = (props: {
   );
 };
 
+const ReplyBody = (props: {
+  recUsername: string;
+  reply: string;
+  createDate: Date;
+  recType: 'user' | 'moderator' | 'community';
+  sendUsername: string;
+  sendType: 'user' | 'moderator' | 'community';
+  sendVia: string;
+  isSent: boolean;
+  repId: string;
+  deleteDate: Date;
+  isExpandedAll: boolean;
+  msgUnread: boolean;
+}) => {
+  const [isExpandedRep, setIsExpandedRep] = React.useState(true);
+  const togglesIsExpandedRep = () => {
+    setIsExpandedRep(!isExpandedRep);
+  };
+  React.useEffect(() => {
+    console.log(props.isExpandedAll, 'repbool');
+    setIsExpandedRep(props.isExpandedAll);
+  }, [props.isExpandedAll]);
+
+  return (
+    <div>
+      <p
+        className={`text-xs ${props.msgUnread ? 'text-danger-red font-bold' : ''}`}
+      >
+        <span
+          onClick={togglesIsExpandedRep}
+          className='text-blue-light hover:underline cursor-pointer'
+        >
+          {`[${isExpandedRep ? '-' : '+'}]`}
+        </span>
+        {/* <span>
+          {' '}
+          to{' '}
+          <Link to='/' className='text-[#80bce9] hover:underline'>
+            {props.recUsername}
+          </Link>{' '}
+        </span>
+        <span>
+          {' '}
+          from{' '}
+          <Link to='/' className='text-[#80bce9] hover:underline'>
+            {props.recUsername}
+          </Link>{' '}
+        </span>
+        <span>
+          {' '}
+          via{' '}
+          <Link to='/' className='text-[#80bce9] hover:underline'>
+            {props.recUsername}
+          </Link>{' '}
+        </span>
+        <span>sent {getTimeDifferenceAsString(props.createDate)}</span> */}
+
+        {!props.isSent && (
+          <span>
+            {' '}
+            from{' '}
+            <Link
+              to={`/${props.sendType === 'user' ? 'u/' + props.sendUsername : addPrefixToUsername(props.sendUsername, props.sendType)}`}
+              className='text-[#80bce9] hover:underline'
+            >
+              {addPrefixToUsername(props.sendUsername, props.sendType)}
+            </Link>{' '}
+          </span>
+        )}
+        {props.isSent && (
+          <span>
+            {' '}
+            to{' '}
+            <Link
+              to={`/${props.recType === 'user' ? 'u/' + props.recUsername : addPrefixToUsername(props.recUsername, props.recType)}`}
+              className='text-[#80bce9] hover:underline'
+            >
+              {addPrefixToUsername(props.recUsername, props.recType)}
+            </Link>{' '}
+          </span>
+        )}
+        {props.isSent && props.sendType === 'moderator' && (
+          <span>
+            {' '}
+            via{' '}
+            <Link
+              className='text-[#228822] hover:underline'
+              to={`/${addPrefixToUsername(props.sendVia || '', 'moderator')}`}
+            >
+              {addPrefixToUsername(props.sendVia || '', 'moderator')}
+            </Link>
+            {' ['}
+            <Link
+              to={`/${addPrefixToUsername(props.sendVia || '', 'moderator')}/about/moderators`}
+              className='text-[#80bce9] hover:underline'
+            >
+              M
+            </Link>
+            {'] '}
+          </span>
+        )}
+        <span>sent {getTimeDifferenceAsString(props.createDate)}</span>
+      </p>
+
+      {isExpandedRep && <p>{props.reply}</p>}
+    </div>
+  );
+};
+
 const Message = (props: {
   unread: boolean;
   type: string;
   isReply?: boolean;
   sendingDate: Date;
-  repliesArr?: [object];
+  repliesArr?: object[];
   senderUsername: string;
   receiverUsername: string;
   senderType: string;
@@ -347,7 +453,7 @@ const Message = (props: {
   senderVia?: string;
   messageContent: string;
   messageId: string;
-  parent_message_id: string;
+  parentMessageId: string;
   refetch: () => void;
   query?: string;
 }) => {
@@ -364,7 +470,7 @@ const Message = (props: {
 
   const postReq = useMutation(postRequest);
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
-
+  console.log('repliesarr', props.repliesArr);
   const handleThankyouModal = () => {
     setThankyouModal(!thankyouModal);
   };
@@ -380,110 +486,6 @@ const Message = (props: {
   //   { recieverUsername: 'mido', reply: 'this is a reply' },
   // ];
 
-  const ReplyBody = (props: {
-    recUsername: string;
-    reply: string;
-    createDate: Date;
-    recType: string;
-    sendUsername: string;
-    sendType: string;
-    sendVia: string;
-    isSent: boolean;
-    repId: string;
-    deleteDate: Date;
-  }) => {
-    const [isExpandedRep, setIsExpandedRep] = React.useState(true);
-    const togglesIsExpandedRep = () => {
-      setIsExpandedRep(!isExpandedRep);
-    };
-    React.useEffect(() => {
-      setIsExpandedRep(isExpandedAll);
-    }, [isExpandedAll]);
-    return (
-      <div>
-        <p
-          className={`text-xs ${msgUnread ? 'text-danger-red font-bold' : ''}`}
-        >
-          <span
-            onClick={togglesIsExpandedRep}
-            className='text-blue-light hover:underline cursor-pointer'
-          >
-            {`[${isExpandedRep ? '-' : '+'}]`}
-          </span>
-          {/* <span>
-            {' '}
-            to{' '}
-            <Link to='/' className='text-[#80bce9] hover:underline'>
-              {props.recUsername}
-            </Link>{' '}
-          </span>
-          <span>
-            {' '}
-            from{' '}
-            <Link to='/' className='text-[#80bce9] hover:underline'>
-              {props.recUsername}
-            </Link>{' '}
-          </span>
-          <span>
-            {' '}
-            via{' '}
-            <Link to='/' className='text-[#80bce9] hover:underline'>
-              {props.recUsername}
-            </Link>{' '}
-          </span>
-          <span>sent {getTimeDifferenceAsString(props.createDate)}</span> */}
-
-          {!props.isSent && (
-            <span>
-              {' '}
-              from{' '}
-              <Link
-                to={`/${props.sendType === 'user' ? 'u/' + props.sendUsername : addPrefixToUsername(props.sendUsername, props.sendType)}`}
-                className='text-[#80bce9] hover:underline'
-              >
-                {addPrefixToUsername(props.sendUsername, props.sendType)}
-              </Link>{' '}
-            </span>
-          )}
-          {props.isSent && (
-            <span>
-              {' '}
-              to{' '}
-              <Link
-                to={`/${props.recType === 'user' ? 'u/' + props.recUsername : addPrefixToUsername(props.recUsername, props.recType)}`}
-                className='text-[#80bce9] hover:underline'
-              >
-                {addPrefixToUsername(props.recUsername, props.recType)}
-              </Link>{' '}
-            </span>
-          )}
-          {props.isSent && props.sendType === 'moderator' && (
-            <span>
-              {' '}
-              via{' '}
-              <Link
-                className='text-[#228822] hover:underline'
-                to={`/${addPrefixToUsername(props.sendVia || '', 'moderator')}`}
-              >
-                {addPrefixToUsername(props.sendVia || '', 'moderator')}
-              </Link>
-              {' ['}
-              <Link
-                to={`/${addPrefixToUsername(props.sendVia || '', 'moderator')}/about/moderators`}
-                className='text-[#80bce9] hover:underline'
-              >
-                M
-              </Link>
-              {'] '}
-            </span>
-          )}
-          <span>sent {getTimeDifferenceAsString(props.createDate)}</span>
-        </p>
-
-        {isExpandedRep && <p>{props.reply}</p>}
-      </div>
-    );
-  };
   return (
     <div
       onClick={() => {
@@ -516,7 +518,8 @@ const Message = (props: {
           <div className='flex gap-3 text-xs font-semibold text-blue-light mt-1 ml-1'>
             <span
               className='cursor-pointer'
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setIsExpandedAll(true);
               }}
             >
@@ -524,7 +527,9 @@ const Message = (props: {
             </span>
             <span
               className='cursor-pointer'
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
+
                 setIsExpandedAll(false);
               }}
             >
@@ -643,11 +648,11 @@ const Message = (props: {
                             endPoint: 'messages/del-msg',
                             data: {
                               _id: props.messageId,
-                              deleted_at: new Date(),
                             },
                           },
                           {
                             onSuccess: () => {
+                              setDeleteBool(false);
                               props.refetch();
                             },
                           }
@@ -806,38 +811,36 @@ const Message = (props: {
                     recUsername = props.senderUsername;
                     recType = props.senderType;
                   }
-                  console.log(props.parent_message_id || props.messageId);
+                  console.log(
+                    props.parentMessageId || props.messageId,
+                    'hiiiiii'
+                  );
 
-                  postReq.mutate(
-                    {
-                      endPoint: 'messages/reply',
+                  postReq.mutate({
+                    endPoint: 'messages/reply',
+                    data: {
                       data: {
-                        data: {
-                          sender_username: senderUsername,
-                          sender_type: senderType,
-                          senderVia: senderVia,
-                          receiver_username: recUsername,
-                          receiver_type: recType,
-                          message: reply,
-                          created_at: new Date(),
-                          deleted_at: null,
-                          unread_flag: false,
-                          isSent: true,
-                          isReply: true,
-                          parent_message_id:
-                            props.parent_message_id || props.messageId,
-                          subject: props.subject,
-                        },
+                        sender_username: senderUsername,
+                        sender_type: senderType,
+                        senderVia: senderVia,
+                        receiver_username: recUsername,
+                        receiver_type: recType,
+                        message: reply,
+                        created_at: new Date(),
+                        deleted_at: null,
+                        unread_flag: false,
+                        isSent: true,
+                        isReply: true,
+                        parent_message_id:
+                          props.parentMessageId || props.messageId,
+                        subject: props.subject,
                       },
                     },
-                    {
-                      onSuccess: () => {
-                        setReplyBool(false);
-                        setReply('');
-                        props.refetch();
-                      },
-                    }
-                  );
+                  });
+
+                  setReplyBool(false);
+                  setReply('');
+                  props.refetch();
                 }}
                 className='rounded-sm bg-blue-light text-[1rem] px-4 py-1 uppercase'
               >
@@ -870,6 +873,8 @@ const Message = (props: {
                 isSent={rep['isSent']}
                 repId={rep['_id']}
                 deleteDate={rep['deleted_at']}
+                isExpandedAll={isExpandedAll}
+                msgUnread={msgUnread}
               />
             ))}
           </div>

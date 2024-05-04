@@ -41,7 +41,7 @@ const Sent = () => {
                     key={mess['_id']}
                     senderVia={mess['senderVia']}
                     refetch={refetch}
-                    parent_message_id={mess['parent_message_id']}
+                    parentMessageId={mess['parentMessageId']}
                     query='inbox'
                   />
                 );
@@ -59,6 +59,7 @@ const Sent = () => {
                     commentsCount={mess['commentsCount']}
                     key={mess['_id']}
                     vote={mess['vote']}
+                    is_username_mention={mess.is_username_mention}
                     query='inbox'
                     refetch={refetch}
                   />
