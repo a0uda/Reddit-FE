@@ -60,21 +60,29 @@ const Search = () => {
         `/search/${type === 'link' ? 'posts' : type === 'sr' ? 'communities' : type === 'comment' ? 'comments' : 'people'}?query=${q}`
       ),
     onSuccess: (data) => {
-      if (type === 'link') {
-        setPosts(data.data.posts);
-        setCommunities(data.data.communities);
-        setUsers(data.data.users);
-      }
-      console.log('data', data.data);
+      if (type === 'link') setPosts(data.data);
       if (type === 'sr') setCommunities(data.data);
       if (type === 'comment') setComments(data.data);
       if (type === 'user') setUsers(data.data);
     },
   });
 
-  // community name
-  // username
-  // page: home, post, community, profile
+  useQuery({
+    queryKey: ['communities search results', q, type, sortOption],
+    queryFn: () => axios.get(`/search/communities?query=${q}&pageSize=5`),
+    onSuccess: (data) => {
+      setCommunities(data.data);
+    },
+    enabled: type === 'link', // only run the query if type is 'link'
+  });
+  useQuery({
+    queryKey: ['people search results', q, type, sortOption],
+    queryFn: () => axios.get(`/search/people?query=${q}&pageSize=5`),
+    onSuccess: (data) => {
+      setUsers(data.data);
+    },
+    enabled: type === 'link', // only run the query if type is 'link'
+  });
 
   return (
     <>

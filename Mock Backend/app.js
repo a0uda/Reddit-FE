@@ -2774,11 +2774,12 @@ app.post("/posts-or-comments/delete", (req, res) => {
   res.sendStatus(200);
 });
 
+let i = 0;
 app.get("/search/:type", (req, res) => {
   const { type } = req.params;
   const { query, sort, page, pageSize } = req.query;
-  console.log(query, type, sort);
-
+  console.log(query, type, sort, pageSize, i);
+  i++;
   let pageIndex = page ?? 0;
   let page_size = pageSize ?? 10;
 
@@ -2787,20 +2788,20 @@ app.get("/search/:type", (req, res) => {
     res.status(200).json({
       success: true,
       status: 200,
-      content: {
-        posts: postsListings
-          .filter((post) =>
-            post.title.toLowerCase().includes(query.toLowerCase())
-          )
-          .concat(
-            postsListings.filter((post) =>
-              post.description.toLowerCase().includes(query.toLowerCase())
+      content: [
+        ...new Set(
+          postsListings
+            .filter((post) =>
+              post.title.toLowerCase().includes(query.toLowerCase())
             )
-          )
-          .slice(pageIndex * page_size, pageIndex * page_size + page_size),
-        communities: communitiesPost.slice(0, 5),
-        users: users.slice(0, 5),
-      },
+            .concat(
+              postsListings.filter((post) =>
+                post.description.toLowerCase().includes(query.toLowerCase())
+              )
+            )
+            .slice(pageIndex * page_size, pageIndex * page_size + page_size)
+        ),
+      ],
     });
   } else if (type === "communities") {
     // communities

@@ -140,7 +140,7 @@ function App() {
             />
             <Route path='/search/*' element={<Search />} />
             <Route
-              path='/r/:community_name/about/rules*'
+              path='/r/:community_name/about/rules/*'
               element={<HandleRoutes element={<RuleRemoval />} />}
             />
             <Route path='/search/*' element={<Search />} />

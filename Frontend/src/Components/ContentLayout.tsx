@@ -17,7 +17,7 @@ const ContentLayout = ({
         </div>
 
         <div className='mx-auto w-full md:w-[1120px] md:max-w-[calc(100vw-272px)]'>
-          {header && header}
+          <div>{header && header}</div>
           <div className='flex justify-center gap-2'>{children}</div>
         </div>
       </div>
@@ -28,8 +28,8 @@ const ContentLayout = ({
 const Header = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      <Card className='shadow-none w-full'>
-        <CardBody className='px-0 py-2'>{children}</CardBody>
+      <Card className='shadow-none w-full px-6'>
+        <CardBody className='px-0 py-2 overflow-x-auto'>{children}</CardBody>
       </Card>
     </>
   );

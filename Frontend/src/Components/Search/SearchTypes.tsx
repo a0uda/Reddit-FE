@@ -30,20 +30,22 @@ const SearchTypes = () => {
       <div className='flex items-center gap-1 my-2 font-semibold'>
         <Typography
           variant='small'
-          className='font-semibold text-xs uppercase mr-4'
+          className='font-semibold text-xs uppercase mr-4 shrink-0'
         >
           Search Results
         </Typography>
-        {searchTypes.map((searchType) => (
-          <Link
-            key={searchType.buttonName}
-            to={`/search/?q=${q}&type=${searchType.buttonLink}`}
-            reloadDocument
-            className={`${searchType.buttonLink === type ? 'bg-neutral-500' : ''}  text-black rounded-full p-3 px-5 mx-[5px]  hover:underline`}
-          >
-            <div className='text-black text-sm'>{searchType.buttonName}</div>
-          </Link>
-        ))}
+        <div className='flex items-center gap-1 overflow-auto w-full'>
+          {searchTypes.map((searchType) => (
+            <Link
+              key={searchType.buttonName}
+              to={`/search/?q=${q}&type=${searchType.buttonLink}`}
+              reloadDocument
+              className={`${searchType.buttonLink === type ? 'bg-neutral-500' : ''}  text-black rounded-full p-3 px-5 mx-[5px]  hover:underline`}
+            >
+              <div className='text-black text-sm'>{searchType.buttonName}</div>
+            </Link>
+          ))}
+        </div>
       </div>
     </>
   );
