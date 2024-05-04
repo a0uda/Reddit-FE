@@ -42,7 +42,7 @@ const UserOverview = ({
                 u/{user.username}
               </Typography>
               <Typography variant='small' className={'text-gray-600'}>
-                {user.about || 'No bio provided'}
+                {user.display_name}
               </Typography>
             </div>
           </CardBody>
