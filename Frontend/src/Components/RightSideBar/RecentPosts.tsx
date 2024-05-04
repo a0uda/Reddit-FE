@@ -1,21 +1,36 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, Typography } from '@material-tailwind/react';
 import PostItem from './PostItem';
 // import postList from './PostList.ts';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import { PostType } from '../../types/types';
 import useSession from '../../hooks/auth/useSession';
 
 export function RecentPosts() {
   const [isContentVisible, setContentVisible] = useState(true);
+  const [response, setResponse] = useState<PostType[]>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const fetchReq = useMutation(fetchRequest);
   const { user } = useSession();
-  const { data } = useQuery('recent posts data', () =>
-    fetchRequest(`users/posts/${user?.username}`)
-  );
-  console.log(data);
+  useEffect(() => {
+    if (user?.username) {
+      setIsLoading(true);
+      fetchReq.mutate(`users/posts/${user?.username}`, {
+        onSuccess: (data) => {
+          setIsLoading(false);
+          console.log('reem', data.data);
+          setResponse(data.data.slice(0, 5) ?? []);
+        },
+        onError: (err) => {
+          setIsLoading(false); // Set loading state to false on error
+          setError(true); // Set error state
+        },
+      });
+    }
+  }, [user?.username]);
 
-  const postList: PostType[] = data?.data.slice(0, 5) ?? [];
 
   return (
     <>
@@ -44,7 +59,7 @@ export function RecentPosts() {
               </button>
             </div>
             {/* <LoadingProvider error={isError} isLoading={isLoading}> */}
-            {postList.map((post, index) => (
+            {response?.map((post, index) => (
               <div key={index}>
                 <PostItem
                   communityName={post.community_name ?? ''}
@@ -56,7 +71,7 @@ export function RecentPosts() {
                   comments={post.comments_count}
                   username={post.username ?? ''}
                 />
-                {index !== postList.length - 1 && (
+                {index !== response.length - 1 && (
                   <div className='w-100 min-h-px mb-4 mt-1 bg-gray-300'></div>
                 )}
               </div>
