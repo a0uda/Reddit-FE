@@ -1,23 +1,43 @@
-import LoadingProvider from '../UserSettings/Containers/LoadingProvider';
+import LoadingProvider from '../../Components/LoadingProvider';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
-import { PostType } from '../../types/types';
+import { CommunityOverviewType, PostType } from '../../types/types';
 
 import PostPreview from '../../Components/Posts/PostPreview';
+import useSession from '../../hooks/auth/useSession';
 
 function UserContent(props: { endpoint: string; queryName: string }) {
-  const { data, error, isLoading } = useQuery(
+  const { user } = useSession();
+  const { data, isError, isLoading } = useQuery(
     [props.queryName, 'listings'],
     () => fetchRequest(props.endpoint)
   );
-  console.log(data);
+  let moderatedCommunityNames: string[] = [];
+  useQuery({
+    queryKey: ['getModeratedCommunities'],
+    queryFn: async () => await fetchRequest('users/moderated-communities'),
+    onSuccess: (data) => {
+      moderatedCommunityNames = data?.data.map(
+        (com: CommunityOverviewType) => com.name
+      );
+    },
+  });
+  console.log(user?.username, 'test');
   return (
     <>
-      <LoadingProvider error={error} isLoading={isLoading}>
+      <LoadingProvider error={isError} isLoading={isLoading}>
         {data && (
           <>
             {data.data.map((post: PostType) => (
-              <PostPreview key={post._id} post={post} />
+              <PostPreview
+                page='profile'
+                key={post._id}
+                post={post}
+                isMyPost={
+                  post.username == user?.username ||
+                  moderatedCommunityNames?.includes(post.community_name!)
+                }
+              />
             ))}
           </>
         )}

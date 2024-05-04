@@ -31,12 +31,12 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
       postRequest({
         endPoint: 'users/join-community',
         data: { communityName: communityName },
-      }),
-    {
-      onError: () => {
-        console.log('Error');
-      },
-    }
+      })
+    // {
+    // onError: () => {
+    //   console.log('Error');
+    // },
+    // }
   );
 
   const leaveMutation = useMutation(
@@ -44,12 +44,12 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
       postRequest({
         endPoint: 'users/leave-community',
         data: { communityName: communityName },
-      }),
-    {
-      onError: () => {
-        console.log('Error');
-      },
-    }
+      })
+    // {
+    //   onError: () => {
+    //     console.log('Error');
+    //   },
+    // }
   );
 
   return (

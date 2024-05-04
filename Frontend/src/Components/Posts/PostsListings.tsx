@@ -1,16 +1,17 @@
 import { useQuery } from 'react-query';
 import SortOptions from '../SortOptions';
 import { fetchRequest } from '../../API/User';
-import { useEffect, useRef, useState } from 'react';
-import { PostType } from '../../types/types';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { CommunityOverviewType, PostType } from '../../types/types';
 import { useNavigate, useParams } from 'react-router-dom';
 import { capitalizeString } from '../../utils/helper_functions';
 import LoadingProvider from '../LoadingProvider';
-import PostPreview from './PostPreview';
+import useSession from '../../hooks/auth/useSession';
+import PostComponent from './PostComponent';
 
 const PostsListings = () => {
   const { sortOption: initialSortOption } = useParams();
-
+  const { user } = useSession();
   const sortOptions = ['Best', 'Hot', 'New', 'Top'];
   const [sortOption, setSortOption] = useState(
     capitalizeString(initialSortOption || '') || sortOptions[0]
@@ -20,18 +21,10 @@ const PostsListings = () => {
     setSortOption(sortOptions[0]);
   }
 
-  const response = useQuery({
-    queryKey: ['listings', sortOption],
-    queryFn: () => {
-      console.log('sortOption', sortOption);
-      return fetchRequest(`listing/posts/${sortOption.toLowerCase()}`);
-    },
-  });
-  console.log(response);
-
+  // Refetch data when sort option changes
+  // Batanesh awel mara ye load el page alshan kan by3ml refresh mareten
   const navigate = useNavigate();
   const isFirstRender = useRef(true);
-
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -42,6 +35,53 @@ const PostsListings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption]);
 
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [noMorePosts, setNoMorePosts] = useState(false);
+  const response = useQuery({
+    queryKey: ['listings', sortOption, page, pageSize],
+    queryFn: async () => {
+      console.log('sortOption', sortOption);
+      const res = await fetchRequest(
+        `listing/posts/${sortOption.toLowerCase()}?page=${page}&pageSize=${pageSize}`
+      );
+      console.log('res.data', res.data);
+      if (res.data.length === 0) {
+        setNoMorePosts(true);
+        return;
+      }
+      setPosts((prevPosts) => [...prevPosts, ...res.data]);
+    },
+  });
+
+  let moderatedCommunityNames: string[] = [];
+  useQuery({
+    queryKey: ['getModeratedCommunities'],
+    queryFn: async () => await fetchRequest('users/moderated-communities'),
+    onSuccess: (data) => {
+      moderatedCommunityNames = data?.data.map(
+        (com: CommunityOverviewType) => com.name
+      );
+    },
+  });
+
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastPostElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (response.isLoading || noMorePosts) return;
+      // Disconnect the previous observer after each
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          setPage((prevPageNumber) => prevPageNumber + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [response.isLoading, noMorePosts]
+  );
+
   return (
     <>
       {/* Sort by dropdown */}
@@ -51,17 +91,25 @@ const PostsListings = () => {
         setSortOption={setSortOption}
       />
       <hr className='border-neutral-muted' />
+      <PostComponent
+        posts={posts}
+        lastPostElementRef={lastPostElementRef}
+        user={user}
+        moderatedCommunityNames={moderatedCommunityNames}
+      />
       <LoadingProvider error={response.isError} isLoading={response.isLoading}>
-        {response.isSuccess && (
+        {response.isError ? (
+          <div className='text-center text-red-500'>Error fetching data</div>
+        ) : null}
+        {response.isLoading ? (
+          <div className='text-center'>Loading...</div>
+        ) : null}
+        {noMorePosts ? (
           <>
-            {response.data.data.map((post: PostType) => (
-              <div key={post._id}>
-                <PostPreview post={post} />
-                <hr className='border-neutral-muted' />
-              </div>
-            ))}
+            <hr className='border-neutral-muted' />
+            <div className='text-center my-5'>No more posts to show</div>
           </>
-        )}
+        ) : null}
       </LoadingProvider>
     </>
   );

@@ -5,12 +5,13 @@ import PostItem from './PostItem';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import { PostType } from '../../types/types';
+import useSession from '../../hooks/auth/useSession';
 
 export function RecentPosts() {
   const [isContentVisible, setContentVisible] = useState(true);
-
+  const { user } = useSession();
   const { data } = useQuery('recent posts data', () =>
-    fetchRequest('users/history-posts')
+    fetchRequest(`users/posts/${user?.username}`)
   );
   console.log(data);
 

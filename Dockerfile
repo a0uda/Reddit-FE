@@ -5,7 +5,7 @@ ENV VITE_BASE_URL=$VITE_BASE_URL
 
 WORKDIR /app
 COPY ./Frontend/package.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN npm install --save-dev typescript
 RUN npm install --save-dev vite
 COPY ./Frontend .

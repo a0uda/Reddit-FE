@@ -1,6 +1,9 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import moment from 'moment';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { v4 as uuidv4 } from 'uuid';
+import { imageDb } from '../../FirebaseConfig';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -74,3 +77,28 @@ export function addPrefixToUsername(
     return null;
   }
 }
+
+export function formatNumber(number: number) {
+  const units = ['', 'K', 'M', 'B', 'T'];
+  const unitIndex = Math.floor(Math.log10(Math.abs(number)) / 3);
+  const formattedNumber = (number / Math.pow(1000, unitIndex)).toFixed(1);
+  return formattedNumber.includes('.0')
+    ? formattedNumber.split('.')[0]
+    : formattedNumber + units[unitIndex];
+}
+
+export const uploadImageFirebase = async (img: Blob) => {
+  if (img !== null) {
+    try {
+      const imgRef = ref(imageDb, `${uuidv4()}`); // Generate a unique reference
+      const uploadResult = await uploadBytes(imgRef, img); // Upload the image
+      const url = await getDownloadURL(uploadResult.ref); // Get the download URL
+      return url; // Return the URL of the uploaded image
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw error; // Propagate the error if needed
+    }
+  } else {
+    throw new Error('No image to upload'); // Handle cases where img is null
+  }
+};

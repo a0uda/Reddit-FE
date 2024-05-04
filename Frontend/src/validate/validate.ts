@@ -24,36 +24,37 @@ type FormSchema = {
     newPassword: yup.Schema<string>;
     confirmNewPassword: yup.Schema<string>;
   };
-  createPost: {
+
+  text: {
     title: yup.Schema<string>;
     type: yup.Schema<string>;
     description: yup.Schema<string | undefined>;
-    community_name: yup.Schema<string>;
+    // community_name: yup.Schema<string>;
     oc_flag: yup.Schema<boolean>;
     spoiler_flag: yup.Schema<boolean>;
     nsfw_flag: yup.Schema<boolean>;
     post_in_community_flag: yup.Schema<boolean>;
   };
-  createPostImageAndVideo: {
+  image_and_videos: {
     title: yup.Schema<string>;
-    community_name: yup.Schema<string>;
+    // community_name: yup.Schema<string>;
     images: yup.Schema<any>;
     oc_flag: yup.Schema<boolean>;
     spoiler_flag: yup.Schema<boolean>;
     nsfw_flag: yup.Schema<boolean>;
     post_in_community_flag: yup.Schema<boolean>;
   };
-  createPostLink: {
+  url: {
     title: yup.Schema<string>;
     type: yup.Schema<string>;
-    community_name: yup.Schema<string>;
+    // community_name: yup.Schema<string>;
     link_url: yup.Schema<string>;
     oc_flag: yup.Schema<boolean>;
     spoiler_flag: yup.Schema<boolean>;
     nsfw_flag: yup.Schema<boolean>;
     post_in_community_flag: yup.Schema<boolean>;
   };
-  createPostPoll: {
+  polls: {
     title: yup.Schema<string>;
     type: yup.Schema<string>;
     oc_flag: yup.Schema<boolean>;
@@ -61,7 +62,7 @@ type FormSchema = {
     nsfw_flag: yup.Schema<boolean>;
     polls_voting_length: yup.Schema<number>;
     polls: yup.Schema<unknown>;
-    community_name: yup.Schema<string>;
+    // community_name: yup.Schema<string>;
     post_in_community_flag: yup.Schema<boolean>;
   };
 };
@@ -90,19 +91,20 @@ const Validation = (type: keyof FormSchema) => {
       newPassword: validationSchema['newPassword'],
       confirmNewPassword: validationSchema['confirmNewPassword'],
     },
-    createPost: {
+
+    text: {
       title: validationSchema['title'],
       description: validationSchema['description'],
-      community_name: validationSchema['community_name'],
+      // community_name: validationSchema['community_name'],
       type: validationSchema['type'],
       oc_flag: validationSchema['oc_flag'],
       spoiler_flag: validationSchema['spoiler_flag'],
       nsfw_flag: validationSchema['nsfw_flag'],
       post_in_community_flag: validationSchema['post_in_community_flag'],
     },
-    createPostLink: {
+    url: {
       title: validationSchema['title'],
-      community_name: validationSchema['community_name'],
+      // community_name: validationSchema['community_name'],
       link_url: validationSchema['link_url'],
       type: validationSchema['type'],
       oc_flag: validationSchema['oc_flag'],
@@ -110,16 +112,16 @@ const Validation = (type: keyof FormSchema) => {
       nsfw_flag: validationSchema['nsfw_flag'],
       post_in_community_flag: validationSchema['post_in_community_flag'],
     },
-    createPostImageAndVideo: {
+    image_and_videos: {
       title: validationSchema['title'],
-      community_name: validationSchema['community_name'],
+      // community_name: validationSchema['community_name'],
       images: validationSchema['images'],
       oc_flag: validationSchema['oc_flag'],
       spoiler_flag: validationSchema['spoiler_flag'],
       nsfw_flag: validationSchema['nsfw_flag'],
       post_in_community_flag: validationSchema['post_in_community_flag'],
     },
-    createPostPoll: {
+    polls: {
       title: validationSchema['title'],
       type: validationSchema['type'],
       spoiler_flag: validationSchema['spoiler_flag'],
@@ -127,7 +129,7 @@ const Validation = (type: keyof FormSchema) => {
       polls_voting_length: validationSchema['polls_voting_length'],
       polls: validationSchema['polls'],
       oc_flag: validationSchema['oc_flag'],
-      community_name: validationSchema['community_name'],
+      // community_name: validationSchema['community_name'],
       post_in_community_flag: validationSchema['post_in_community_flag'],
     },
   };

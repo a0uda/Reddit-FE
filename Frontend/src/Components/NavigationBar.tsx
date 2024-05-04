@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import {
   Button,
   IconButton,
@@ -14,10 +14,6 @@ import {
   List,
   ListItem,
   ListItemPrefix,
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  ListItemSuffix,
 } from '@material-tailwind/react';
 import {
   HiArrowRightOnRectangle,
@@ -27,27 +23,23 @@ import {
 import { LogoMark, LogoText } from '../assets/icons/Logo';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import {
-  ArrowLeftIcon,
   ArrowRightEndOnRectangleIcon,
   BellIcon,
   ChatBubbleOvalLeftEllipsisIcon,
-  ClockIcon,
   Cog8ToothIcon,
   ShieldCheckIcon,
-  XCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import SideBar from './SideBar';
-import { cn, getTimeDifference } from '../utils/helper_functions';
+import { getTimeDifference } from '../utils/helper_functions';
 import { CommunityIcon } from '../assets/icons/Icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from 'react-query';
 import { fetchRequest, patchRequest } from './../API/User';
-import Login from '../Pages/credential/Login';
-import RecoverUsername from '../Pages/credential/RecoverUsername';
-import ResetPassword from '../Pages/credential/ResetPassword';
-import Signup from '../Pages/credential/Signup';
 import useSession from '../hooks/auth/useSession';
+import SearchBar from './Search/SearchBar';
+import MobileSearchBar from './Search/MobileSearchBar';
+import Credentials from '../Pages/credential/Credentials';
 
 export function NavigationBar() {
   const [openNav, setOpenNav] = useState(false);
@@ -151,239 +143,14 @@ export function NavigationBar() {
   );
 }
 
-const SearchBar = () => {
-  const navigate = useNavigate();
-  const [search, setSearch] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  return (
-    <>
-      <Menu
-        open={isFocused}
-        handler={() => {
-          setIsFocused((cur) => !cur);
-        }}
-        offset={{ mainAxis: -41 }}
-        placement='bottom'
-        dismiss={{
-          itemPress: false,
-        }}
-      >
-        <MenuHandler>
-          <div
-            className={cn(
-              'flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute max-w-[550px] w-full'
-            )}
-          >
-            <HiMagnifyingGlass size={20} className='fill-black' />
-            {/* <input
-              className='!border-0 bg-transparent w-full focus:outline-none placeholder:text-black/80 placeholder:font-light'
-              placeholder='Search Reddit'
-              aria-label='Search Reddit'
-            /> */}
-            <span className='text-black/80 font-light'>Search Reddit</span>
-          </div>
-        </MenuHandler>
-        <MenuList className='*:focus:bg-transparent *:hover:bg-transparent p-0 pt-1 hidden z-30 shadow-md shadow-black/25 max-w-[550px] w-full rounded-3xl lg:block min-h-24 max-h-[calc(100vh-3.5rem)]'>
-          <div
-            className={cn(
-              'flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute z-30 max-w-[550px] w-full h-10',
-              isFocused
-                ? ' bg-white border-b-2 border-neutral-muted relative items-start rounded-none rounded-t-xl overflow-y-auto overflow-x-hidden'
-                : ''
-            )}
-          >
-            <HiMagnifyingGlass size={20} className='fill-black' />
-            <input
-              className='!border-0 bg-transparent w-full focus:outline-none placeholder:text-black/80 placeholder:font-light'
-              placeholder='Search Reddit'
-              aria-label='Search Reddit'
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  setIsFocused(false);
-                  setSearch('');
-                  navigate(`/r/AskReddit/search/?q=${search}&type=link`);
-                }
-              }}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              ref={inputRef}
-              // onFocus={() => inputRef.current?.focus()}
-              onBlur={() => inputRef.current?.focus()}
-            />
-          </div>
-          <div className='hidden z-50 max-w-[550px] w-full rounded-none rounded-b-xl lg:block'>
-            <SearchList />
-          </div>
-        </MenuList>
-      </Menu>
-    </>
-  );
-};
-
-const MobileSearchBar = () => {
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
-
-  return (
-    <div className='lg:hidden'>
-      {/* Use Dialog as a fullscreen */}
-      <IconButton variant='text' onClick={() => setOpen(!open)}>
-        <HiMagnifyingGlass size={20} className='fill-black' />
-      </IconButton>
-
-      <Dialog open={open} handler={() => setOpen(!open)} size='xxl'>
-        <DialogHeader className='px-4 space-x-5'>
-          <IconButton variant='text' onClick={() => setOpen(!open)}>
-            <ArrowLeftIcon className='w-6 h-6' />
-          </IconButton>
-          <div className='flex items-center space-x-2 rounded-full z-50 w-full'>
-            <HiMagnifyingGlass size={20} className='fill-black' />
-            <input
-              className='!border-0 bg-transparent w-full font-normal focus:outline-none placeholder:text-black/80 placeholder:font-light'
-              placeholder='Search Reddit'
-              aria-label='Search Reddit'
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  setOpen(false);
-                  navigate(`/r/AskReddit/search/?q=${search}&type=link`);
-                }
-              }}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-        </DialogHeader>
-        <DialogBody className='p-0'>
-          <SearchList />
-        </DialogBody>
-      </Dialog>
-    </div>
-  );
-};
-
-const SearchList = () => {
-  const [recent, setRecent] = useState([
-    {
-      title: 'programming',
-      icon: 'https://www.redditstatic.com/avatars/avatar_default_07_24A0ED.png',
-    },
-    {
-      title: 'test',
-    },
-  ]);
-
-  return (
-    <List className='p-0'>
-      {recent.length > 0 ? (
-        recent.map((item, index) => (
-          <ListItem ripple={false} key={index}>
-            <ListItemPrefix>
-              {item.icon ? (
-                <img
-                  src={item.icon}
-                  alt={item.title}
-                  className='w-6 h-6 rounded-full'
-                />
-              ) : (
-                <ClockIcon className='h-6 w-6' />
-              )}
-            </ListItemPrefix>
-            {item.title}
-            <ListItemSuffix>
-              <IconButton
-                variant='text'
-                onClick={() => setRecent(recent.filter((_, i) => i !== index))}
-              >
-                <XCircleIcon className='h-6 w-6' />
-              </IconButton>
-            </ListItemSuffix>
-          </ListItem>
-        ))
-      ) : (
-        <ListItem className='p-0 flex flex-col items-center justify-center text-center hover:bg-transparent focus:bg-transparent'>
-          <img
-            className='max-h-[150px] mb-xl'
-            role='presentation'
-            src='https://www.redditstatic.com/shreddit/assets/snoovatar-full-hi.png'
-            alt='Image for an empty inbox'
-          />
-          <Typography variant='lead'>No Recent Searches</Typography>
-          <Typography variant='small'>
-            Your recent searches will appear here.
-          </Typography>
-        </ListItem>
-      )}
-    </List>
-  );
-};
-
 const CampainLoggedOut = () => {
   const [loginMod, setLoginMod] = useState(false);
-  const [recoverMod, setRecoverMod] = useState(false);
-  const [resetPwdMod, setResetPwdMod] = useState(false);
-  const [signupMod, setSignupMod] = useState(false);
-  console.log(loginMod);
 
   return (
     <>
       <div className='flex items-center gap-x-1'>
-        <Login
-          open={loginMod}
-          handleOpen={() => {
-            setLoginMod(!loginMod);
-          }}
-          openPassword={() => {
-            setResetPwdMod(true);
-          }}
-          openSignup={() => {
-            setSignupMod(true);
-          }}
-          openUsername={() => {
-            setRecoverMod(true);
-          }}
-        />
-        <RecoverUsername
-          open={recoverMod}
-          handleOpen={() => {
-            setRecoverMod(!recoverMod);
-          }}
-          handlePrevious={() => {
-            setLoginMod(true);
-          }}
-          openSignup={() => {
-            setSignupMod(true);
-          }}
-        />
-        <ResetPassword
-          open={resetPwdMod}
-          handleOpen={() => {
-            setResetPwdMod(!resetPwdMod);
-          }}
-          handlePrevious={() => {
-            setLoginMod(true);
-          }}
-          openSignup={() => {
-            setSignupMod(true);
-          }}
-          openUsername={() => {
-            setRecoverMod(true);
-          }}
-        />
-        <Signup
-          open={signupMod}
-          handleOpen={() => {
-            setSignupMod(!signupMod);
-          }}
-          openLogin={() => {
-            setLoginMod(true);
-          }}
-        />
-        <IconButton variant='text'>
-          <HiMagnifyingGlass size={20} className='fill-black' />
-        </IconButton>
+        <Credentials loginMod={loginMod} setLoginMod={setLoginMod} />
+        <MobileSearchBar />
         <Button
           className='bg-orange-muted'
           onClick={() => {
@@ -421,7 +188,7 @@ const AvatarMenu = () => {
         <ListItem
           className='py-2 flex gap-2 items-center'
           onClick={() => {
-            navigate(`user/${user?.username}/saved`);
+            navigate(`/u/${user?.username}/saved`);
             location.reload();
           }}
         >
@@ -494,7 +261,7 @@ const CampainLoggedIn = ({
     <>
       <div className='flex items-center gap-x-1'>
         <MobileSearchBar />
-        <Link to='/chat'>
+        <Link to='/chat/create'>
           <IconButton variant='text'>
             <ChatBubbleOvalLeftEllipsisIcon className='w-6 h-6' />
           </IconButton>
@@ -775,7 +542,6 @@ const NotificationMenu = () => {
                 variant='text'
                 className='text-gray-600 hover:bg-transparent'
               >
-                {/* // TODO: update the link after creating the messages page */}
                 Messages
               </Button>
             </a>

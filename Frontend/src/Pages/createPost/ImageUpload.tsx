@@ -7,6 +7,7 @@ interface Image {
   path: string;
   caption: string;
   link: string;
+  file: File;
 }
 type ImageUploadProps = {
   setFieldValue: (
@@ -33,18 +34,24 @@ export default function ImageUpload({
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
+    console.log(selectedFiles, 'selectedfiles');
+
     if (selectedFiles) {
       const newFiles: File[] = Array.from(selectedFiles);
       setFiles([...files, ...newFiles]);
+      console.log(files, 'files');
 
       const newImages: Image[] = [];
       newFiles.forEach((file) => {
         const imageUrl = URL.createObjectURL(file);
+        console.log(imageUrl, 'url');
+
         newImages.push({
           id: index,
           path: imageUrl,
           caption: '',
           link: '',
+          file: file,
         });
         setIndex((prevIndex) => prevIndex + 1);
       });
@@ -59,7 +66,7 @@ export default function ImageUpload({
         })),
       ]);
     }
-    console.log(images);
+    console.log(images, 'imagesss');
     if (images.length > 0) {
       setSelectedImage(images[0].id);
     }
@@ -89,13 +96,21 @@ export default function ImageUpload({
   };
 
   const handleDelete = (id: number) => {
+    console.log('image ID:', id);
+
     const updatedImages = images.filter((image) => image.id !== id);
     setImages(updatedImages);
-    const updatedImagesWithIndices = updatedImages.map((image, index) => ({
-      ...image,
-      id: index,
-    }));
-    setFieldValue('images', updatedImagesWithIndices);
+
+    if (updatedImages.length === 0) {
+      setFieldValue('images', []);
+    } else {
+      const updatedImagesWithIndices = updatedImages.map((image, index) => ({
+        ...image,
+        id: index,
+      }));
+      console.log('updated images:', updatedImagesWithIndices);
+      setFieldValue('images', updatedImagesWithIndices);
+    }
   };
 
   return (
@@ -221,8 +236,8 @@ export default function ImageUpload({
                     className='h-20 placeholder:text-gray-500 placeholder:opacity-100 focus:!border-gray-900 !border !border-t-[rgb(176,190,197)]'
                     placeholder='Add Caption...'
                     type='text'
-                    id='caption'
                     NoCheck={true}
+                    value={images[selectedImage]?.caption}
                     onChange={(event) =>
                       handleCaptionChange(selectedImage, event.target.value)
                     }
@@ -231,7 +246,7 @@ export default function ImageUpload({
                     className='h-20 placeholder:text-gray-500 placeholder:opacity-100 focus:!border-gray-900 !border !border-t-[rgb(176,190,197)]'
                     placeholder='Add Link...'
                     type='text'
-                    id='link'
+                    value={images[selectedImage]?.link}
                     NoCheck={true}
                     onChange={(event) =>
                       handleLinkChange(selectedImage, event.target.value)

@@ -5,12 +5,17 @@ import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, postRequest } from '../../API/User';
 import { addPrefixToUsername } from '../../utils/helper_functions';
 import useSession from '../../hooks/auth/useSession';
+import { CommunityOverviewType } from '../../types/types';
+import queryString from 'query-string'; // Useful for parsing query strings
+import { useLocation } from 'react-router-dom';
 
 const Compose = () => {
   const { user } = useSession();
+  const location = useLocation();
+  const { to } = queryString.parse(location.search);
   const [from, setFrom] = React.useState(user?.username);
   const [fromFeedback, setFromFeedback] = React.useState('');
-  const [to, setTo] = React.useState('');
+  const [toString, setTo] = React.useState<string>(to == null ? '' : to);
   const [subject, setSubject] = React.useState('');
   const [message, setMessage] = React.useState('');
   const [fromBool, setfromBool] = React.useState(false);
@@ -23,7 +28,7 @@ const Compose = () => {
   }, [user]);
 
   const getCommResponse = useQuery('getModeratedCommunities', () =>
-    fetchRequest('users/moderated-communities2')
+    fetchRequest('users/moderated-communities')
   );
   console.log(getCommResponse.data, 'getCommResponse.data');
 
@@ -47,7 +52,7 @@ const Compose = () => {
     setMessageBool(false);
     setfromBool(false);
 
-    if (!to) {
+    if (!toString) {
       setToFeedback('Please Enter a Username');
       setToBool(true);
       return;
@@ -61,13 +66,13 @@ const Compose = () => {
       return;
     }
     const moderatedCommunityNames = getCommResponse.data?.data.map(
-      (com) => com.name
+      (com: CommunityOverviewType) => com.name
     );
     console.log(moderatedCommunityNames, 'mmmmm');
     const senderType = moderatedCommunityNames.includes(from)
       ? 'moderator'
       : 'user';
-    const recType = to.includes('r/') ? 'moderator' : 'user';
+    const recType = toString.includes('r/') ? 'moderator' : 'user';
     if (senderType == 'moderator' && recType == 'moderator') {
       setFromFeedback(
         "You can't send a message from a Subreddit to another Subreddit"
@@ -75,21 +80,23 @@ const Compose = () => {
       setfromBool(true);
       return;
     }
-    const splitted = to.split('/');
+    const splitted = toString.split('/');
     const recUsername = splitted[splitted.length - 1];
     postReq.mutate({
       endPoint: 'messages/compose/',
       data: {
-        sender_username: from,
-        sender_type: senderType,
-        receiver_username: recUsername,
-        receiver_type: recType,
-        subject: subject,
-        message: message,
-        created_at: new Date(),
-        deleted_at: null,
-        unread_flag: false,
-        senderVia: from,
+        data: {
+          sender_username: from,
+          sender_type: senderType,
+          receiver_username: recUsername,
+          receiver_type: recType,
+          subject: subject,
+          message: message,
+          created_at: new Date(),
+          deleted_at: null,
+          unread_flag: false,
+          senderVia: from,
+        },
       },
     });
   };
@@ -133,7 +140,7 @@ const Compose = () => {
             </span>
           </p>
           <input
-            value={to}
+            value={toString}
             onChange={(e) => {
               setTo(e.target.value);
             }}

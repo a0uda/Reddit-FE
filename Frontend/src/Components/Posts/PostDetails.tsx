@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Card,
   CardBody,
   CardFooter,
@@ -18,7 +17,6 @@ import { CommentType, CommunityType, PostType } from '../../types/types';
 import { useEffect, useState } from 'react';
 import LoadingProvider from '../LoadingProvider';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
-import { CommunityIcon } from '../../assets/icons/Icons';
 import Comment from './Comment';
 import AddComment from './AddComment';
 import { useParams } from 'react-router-dom';
@@ -40,7 +38,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
   const [comments, setComments] = useState<CommentType[] | undefined>();
   const commentsResponse = useQuery({
     queryKey: ['comments', comments],
-    queryFn: () => fetchRequest(`posts/get-comments/${postId}/`),
+    queryFn: () => fetchRequest(`posts/get-comments?id=${postId}`),
     onSuccess: (data) => {
       const comments: CommentType[] = data.data;
       setComments(
@@ -84,6 +82,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                   <ArrowLeftIcon className='h-6 w-6 fill-black' />
                 </IconButton>
                 {/* {post.avatar ? (
+                {/* {post.avatar ? (
                   <Avatar
                     variant='circular'
                     alt={post.community_name}
@@ -93,8 +92,24 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 ) : (
                   <CommunityIcon className='h-5 w-5' />
                 )} */}
+                )} */}
                 <div className='flex flex-col justify-between m-0'>
                   <div className='flex flex-row items-center justify-between gap-1 m-0'>
+                    {community && (
+                      <CommunityBadge
+                        name={post.community_name ?? ''}
+                        joined={community?.joined_flag}
+                        avatar={community?.profile_picture}
+                        coverImage={community?.banner_picture}
+                        description={community?.description}
+                        members={community?.members_count}
+                        // online={Community.communityOnline}
+                        username={post.username}
+                        // page={page}
+                        page='post'
+                      />
+                    )}
+                    {!community && <UserBadge username={post.username} />}
                     {community && (
                       <CommunityBadge
                         name={post.community_name ?? ''}
@@ -115,11 +130,6 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                       {dateDuration(new Date(post.created_at))}
                     </Typography>
                   </div>
-                  <div>
-                    {/* <Typography variant='small' className='text-xs'>
-                      {post.username}
-                    </Typography> */}
-                  </div>
                 </div>
               </div>
               <div>
@@ -137,7 +147,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
               </Typography>
               {post.images?.[0] && (
                 <img
-                  src={post.images?.[0].link}
+                  src={post.images?.[0].path}
                   alt='post'
                   className='object-contain rounded-md w-full max-h-[100vw]'
                 />
@@ -168,9 +178,17 @@ const PostDetails = ({ post }: { post?: PostType }) => {
       >
         <>
           {comments &&
-            comments.map((comment) => (
-              <Comment key={comment._id} comment={comment} showButton={true} />
-            ))}
+            comments.map((comment) => {
+              return (
+                !comment.is_reply && (
+                  <Comment
+                    key={comment._id}
+                    comment={comment}
+                    showButton={true}
+                  />
+                )
+              );
+            })}
         </>
       </LoadingProvider>
     </>

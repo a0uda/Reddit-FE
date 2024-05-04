@@ -3,37 +3,50 @@ import ContentContainer from './Containers/ContentContainer';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
+import { useEffect } from 'react';
 
-const Sent = () => {
-  const { data, isError, isLoading, refetch } = useQuery('messages', () =>
-    fetchRequest('messages/read-all-messages')
+const Messages = () => {
+  let parentChildrenMap: [];
+  const response = useQuery(
+    'getAllMessages',
+    () => fetchRequest('messages/read-all-messages'),
+    {
+      onSuccess: (data) => {
+        console.log(data.data.messages, 'felonsuccess');
+
+        parentChildrenMap = data?.data.messages.reduce((acc, message) => {
+          if (
+            message.parent_message_id != null ||
+            message.parent_message_id != undefined
+          ) {
+            if (acc[message.parent_message_id]) {
+              acc[message.parent_message_id].push(message);
+            } else {
+              acc[message.parent_message_id] = [message];
+            }
+          }
+          return acc;
+        }, {});
+        console.log(parentChildrenMap, 'parentChildrenMap');
+      },
+    }
   );
-  console.log(data?.data);
+  console.log(response.data?.data, 'middd');
 
   // const parentIds = data?.data
-  //   .filter((message) => message.parentMessageId === null)
+  //   .filter((message) => message.parent_message_id === null)
   //   .map((message) => message._id);
-
-  const parentChildrenMap = data?.data.reduce((acc, message) => {
-    if (message.parentMessageId !== null) {
-      if (acc[message.parentMessageId]) {
-        acc[message.parentMessageId].push(message);
-      } else {
-        acc[message.parentMessageId] = [message];
-      }
-    }
-    return acc;
-  }, {});
-
-  console.log(parentChildrenMap, 'parentChildrenMap');
+  // console.log(, 'loading');
 
   return (
-    <LoadingProvider error={isError} isLoading={isLoading}>
-      <ContentContainer length={data?.data.length}>
+    <LoadingProvider error={response.isError} isLoading={response.isLoading}>
+      <ContentContainer length={response.data?.data.messages.length}>
         <div className=''>
-          {!!data?.data &&
-            data?.data.map((mess) => {
-              if (mess.parentMessageId == null) {
+          {!!response.data?.data.messages &&
+            response.data?.data.messages.map((mess) => {
+              console.log(parentChildrenMap, 'messs');
+
+              if (mess.parent_message_id == null) {
                 return (
                   <Message
                     unread={mess['unread_flag']}
@@ -47,12 +60,16 @@ const Sent = () => {
                     sendingDate={new Date(mess['created_at'])}
                     subject={mess['subject']}
                     isReply={mess['isReply']}
-                    repliesArr={parentChildrenMap[mess['_id']] || null}
+                    repliesArr={
+                      parentChildrenMap != undefined
+                        ? parentChildrenMap[mess['_id']]
+                        : []
+                    }
                     messageId={mess['_id']}
                     key={mess['_id']}
                     senderVia={mess['senderVia']}
-                    refetch={refetch}
-                    parentMessageId={mess['parentMessageId']}
+                    refetch={response.refetch}
+                    parent_message_id={mess['parent_message_id'] || null}
                     query='messages'
                   />
                 );
@@ -66,4 +83,4 @@ const Sent = () => {
   );
 };
 
-export default Sent;
+export default Messages;

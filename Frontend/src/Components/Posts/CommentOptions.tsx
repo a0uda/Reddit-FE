@@ -17,7 +17,7 @@ import { useState } from 'react';
 type CommentOptionsProps = {
   saved: boolean;
 
-  handleEditComment: (editedText: string) => void;
+  handleEditComment: () => void;
   handleSaveComment: () => void;
   handleDeleteComment: () => void;
   isMyComment?: boolean;
@@ -27,6 +27,7 @@ const CommentOptions = ({
   saved,
   handleSaveComment,
   handleDeleteComment,
+  handleEditComment,
   isMyComment,
 }: CommentOptionsProps) => {
   const [isSaved, setIsSaved] = useState(saved);
@@ -53,7 +54,10 @@ const CommentOptions = ({
       </MenuHandler>
       <MenuList className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'>
         {isMyComment && (
-          <MenuItem className='py-3 flex gap-2 items-center'>
+          <MenuItem
+            onClick={handleEditComment}
+            className='py-3 flex gap-2 items-center'
+          >
             <PencilIcon className='w-5 h-5' />
             <span>Edit comment</span>
           </MenuItem>

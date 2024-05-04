@@ -40,7 +40,7 @@ const PostItem: React.FC<PostItemProps> = (props) => {
   const [Community, setCommunity] = useState<CommunityType | undefined>();
   const link = Community
     ? `/r/${props.communityName}/comments/${props.postId}/${props.postTitle.split(' ').splice(0, 10).join('_')}/`
-    : `/user/${props.username}/comments/${props.postId}/${props.postTitle.split(' ').splice(0, 10).join('_')}/`;
+    : `/u/${props.username}/comments/${props.postId}/${props.postTitle.split(' ').splice(0, 10).join('_')}/`;
 
   return (
     <div>

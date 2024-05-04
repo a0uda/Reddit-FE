@@ -13,13 +13,16 @@ const Sent = () => {
 
   return (
     <LoadingProvider error={isError} isLoading={isLoading}>
-      <ContentContainer length={data?.data.length}>
+      <ContentContainer length={data?.data.messages.length}>
         <div className=''>
-          {!!data?.data &&
-            data?.data.map((mess) => {
+          {!!data?.data.messages &&
+            data?.data.messages.map((mess) => {
               console.log(mess.postCreator, 'mess.postCreator');
 
-              if (mess.postCreator == undefined) {
+              if (
+                mess.postCreator == undefined &&
+                mess.postSubject == undefined
+              ) {
                 return (
                   <Message
                     unread={mess['unread_flag']}
@@ -38,7 +41,7 @@ const Sent = () => {
                     key={mess['_id']}
                     senderVia={mess['senderVia']}
                     refetch={refetch}
-                    parentMessageId={mess['parentMessageId']}
+                    parent_message_id={mess['parent_message_id']}
                     query='inbox'
                   />
                 );
@@ -51,10 +54,10 @@ const Sent = () => {
                     postCreatorType={mess['postCreatorType']}
                     postSubject={mess['postSubject']}
                     replyContent={mess['replyContent']}
-                    replyId={mess['id']}
+                    replyId={mess['_id']}
                     unread={mess['unread']}
                     commentsCount={mess['commentsCount']}
-                    key={mess['id']}
+                    key={mess['_id']}
                     vote={mess['vote']}
                     query='inbox'
                     refetch={refetch}

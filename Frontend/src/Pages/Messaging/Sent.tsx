@@ -13,10 +13,10 @@ const Sent = () => {
 
   return (
     <LoadingProvider error={isError} isLoading={isLoading}>
-      <ContentContainer length={data?.data.length}>
+      <ContentContainer length={data?.data.messages.length}>
         <div className=''>
-          {!!data?.data &&
-            data?.data.map((mess) => (
+          {!!data?.data.messages &&
+            data?.data.messages.map((mess) => (
               <Message
                 unread={mess['unread_flag']}
                 type='sent'
@@ -34,7 +34,7 @@ const Sent = () => {
                 key={mess['_id']}
                 senderVia={mess['senderVia']}
                 refetch={refetch}
-                parentMessageId={mess['parentMessageId']}
+                parent_message_id={mess['parent_message_id']}
               />
             ))}
           {/* <Message type='message' />

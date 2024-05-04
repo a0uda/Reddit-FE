@@ -141,9 +141,11 @@ export const ChangeEmailModal = (props: {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
 
@@ -303,9 +305,11 @@ export const DisconnectGoogleModal = (props: {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
 
@@ -407,9 +411,11 @@ export const DeleteAccountModal = (props: {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
 
@@ -518,9 +524,11 @@ export const ChangePasswordModal = (props: { handleOpen; open; refetch }) => {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
 

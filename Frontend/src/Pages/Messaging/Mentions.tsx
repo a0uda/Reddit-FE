@@ -21,10 +21,10 @@ const Sent = () => {
 
   return (
     <LoadingProvider error={isError} isLoading={isLoading}>
-      <ContentContainer length={data?.data.length}>
+      <ContentContainer length={data?.data.mentions.length}>
         <div className=''>
           {!!data?.data &&
-            data?.data.map((reply, i) => (
+            data?.data.mentions.map((reply, i) => (
               <PostReply
                 createDate={reply['created_at']}
                 senderUsername={reply['senderUsername']}
@@ -32,10 +32,10 @@ const Sent = () => {
                 postCreatorType={reply['postCreatorType']}
                 postSubject={reply['postSubject']}
                 replyContent={reply['replyContent']}
-                replyId={reply['id']}
+                replyId={reply['_id']}
                 unread={reply['unread']}
                 commentsCount={reply['commentsCount']}
-                key={reply['id']}
+                key={reply['_id']}
                 vote={reply['rank']}
                 query='usernameMentions'
                 refetch={refetch}

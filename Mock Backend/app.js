@@ -5,6 +5,12 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 
+const port = 4000;
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
 const getAuthUsername = (req) => {
   const token = req.headers?.authorization;
   console.log("req.headers", req.headers);
@@ -18,11 +24,24 @@ const getAuthUsername = (req) => {
   return username;
 };
 
-app.use(
-  cors({
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Add PATCH method here
-  })
-);
+const whitelist = ["http://localhost:5174", "http://localhost:5173"];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
+
+// app.use(
+//   cors({
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Add PATCH method here
+//   })
+// );
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -380,23 +399,6 @@ let users = [
     banner_picture: "",
     gender: "Female",
   },
-  {
-    id: "user-1",
-    created_at: "2024-01-01",
-    username: "JohnDoe",
-    email: "john.doe@example.com",
-    verified_email_flag: "true",
-    gmail: "john.doe@gmail.com",
-    facebook_email: null,
-    display_name: "John Doe",
-    about: "I love creating content!",
-    social_links: [],
-    profile_picture: "profile.jpg",
-    banner_picture: null,
-    country: "US",
-    gender: "male",
-    connected_google: true,
-  },
 ];
 
 app.post("/users/signup", (req, res) => {
@@ -454,34 +456,58 @@ app.post("/users/signup-google", (req, res) => {
 });
 const communitiesPost = [
   {
-    id: "1",
-    name: "r/announcements",
+    id: "661732b95ef02bd2dddfde17",
+    name: "programming",
+    profile_picture: "",
+    favorite_flag: true,
+    members_count: 163,
+  },
+  {
+    id: "661732b95ef02bd2dddfde1e",
+    name: "Rowe, Heller and McKenzie",
+    profile_picture: "",
+    favorite_flag: false,
+    members_count: 924,
+  },
+  {
+    id: "661732b95ef02bd2dddfde1f",
+    name: "announcements",
     profile_picture:
       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    favorite_flag: true,
+    members_count: 50,
   },
   {
-    id: "2",
-    name: "r/annou",
+    id: "661732b95ef02bd2dddfde2e",
+    name: "annou",
     profile_picture:
       "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+    favorite_flag: true,
+    members_count: 60,
   },
   {
-    id: "3",
-    name: "r/football",
+    id: "661732b95ef02bd2dddfde3e",
+    name: "football",
     profile_picture:
       "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+    favorite_flag: true,
+    members_count: 20,
   },
   {
-    id: "4",
-    name: "r/redditGroup",
+    id: "661732b95ef02bd2dddfde4e",
+    name: "redditGroup",
     profile_picture:
       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    favorite_flag: true,
+    members_count: 40,
   },
   {
-    id: "5",
-    name: "r/testcommunity",
+    id: "661732b95ef02bd2dddfde5e",
+    name: "testcommunity",
     profile_picture:
       "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+    favorite_flag: true,
+    members_count: 50,
   },
 ];
 
@@ -489,9 +515,9 @@ app.get("/users/communities", (req, res) => {
   res.status(200).json(communitiesPost);
 });
 
-app.get("/users/communities2", (req, res) => {
-  res.status(200).json(communities);
-});
+// app.get("/users/communities2", (req, res) => {
+//   res.status(200).json(communities);
+// });
 app.post("/posts/new-post", (req, res) => {
   // const {} = req.body;
   res.status(200).json({ message: "	post created successfully" });
@@ -678,7 +704,7 @@ app.get("/communities/get-history-posts/", (req, res) => {
 app.get("/communities/get-community-view/:communityname", (req, res) => {
   const { communityname } = req.params;
 
-  const community = communities.find(
+  const community = communitiesPost.find(
     (community) => community.name === communityname
   );
   if (community) {
@@ -1528,6 +1554,182 @@ app.patch("/notifications/hide/:id", (req, res) => {
 
 let postsListings = [
   {
+    _id: "7",
+    avatar:
+      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1.jpg",
+    saved: false,
+    user_id: "8",
+    username: "user101",
+    title: "Post with Spoiler",
+    description: "This post contains spoilers",
+    created_at: new Date(),
+    deleted: false,
+    type: "polls",
+    link_url: null,
+    images: [],
+    videos: [],
+    polls: [
+      { options: "Option 1", votes: 10 },
+      { options: "Option 2", votes: 5 },
+    ],
+    polls_voting_length: 7,
+    polls_voting_is_expired_flag: false,
+    post_in_community_flag: false,
+    community_id: "6",
+    community_name: "programming",
+    comments_count: 3,
+    views_count: 15,
+    shares_count: 2,
+    upvotes_count: 7,
+    downvotes_count: 1,
+    oc_flag: true,
+    spoiler_flag: true,
+    nsfw_flag: true,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "Top",
+    scheduled_flag: false,
+    moderator_details: {
+      approved_flag: true,
+      approved_by: "john",
+      approved_date: new Date(),
+      removed_flag: false,
+      removed_by: null,
+      removed_date: null,
+      removed_removal_reason: null,
+      spammed_flag: false,
+      spammed_by: null,
+      spammed_type: null,
+      spammed_removal_reason: null,
+      reported_flag: false,
+      reported_by: null,
+      reported_type: null,
+    },
+    user_details: {
+      total_views: 15,
+      upvote_rate: 0.7,
+      total_shares: 2,
+    },
+    is_reposted_flag: false,
+    reposted: null,
+  },
+  {
+    _id: "8",
+    avatar:
+      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/2.jpg",
+    saved: true,
+    user_id: "9",
+    username: "user202",
+    title: "Video Post",
+    description: "Check out this cool video",
+    created_at: new Date(),
+    deleted: false,
+    type: "reposted",
+    link_url: null,
+    images: [],
+    videos: [
+      // { "path": "/videos/video2.mp4", "caption": "Cool Video", "link": "https://example.com/video2" }
+    ],
+    polls: [],
+    polls_voting_length: 3,
+    polls_voting_is_expired_flag: false,
+    post_in_community_flag: false,
+    community_id: "6",
+    community_name: "programming",
+    comments_count: 5,
+    views_count: 30,
+    shares_count: 10,
+    upvotes_count: 20,
+    downvotes_count: 3,
+    oc_flag: false,
+    spoiler_flag: false,
+    nsfw_flag: false,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "New",
+    scheduled_flag: false,
+    moderator_details: {
+      approved_flag: true,
+      approved_by: "sara",
+      approved_date: new Date(),
+      removed_flag: false,
+      removed_by: null,
+      removed_date: null,
+      removed_removal_reason: null,
+      spammed_flag: false,
+      spammed_by: null,
+      spammed_type: null,
+      spammed_removal_reason: null,
+      reported_flag: false,
+      reported_by: null,
+      reported_type: null,
+    },
+    user_details: {
+      total_views: 30,
+      upvote_rate: 0.75,
+      total_shares: 10,
+    },
+    is_reposted_flag: true,
+    reposted: "7",
+  },
+  {
+    _id: "9",
+    avatar:
+      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/3.jpg",
+    saved: false,
+    user_id: "10",
+    username: "user303",
+    title: "URL Post",
+    description: "This is a URL-based post",
+    created_at: new Date(),
+    deleted: false,
+    type: "url",
+    link_url: "https://example3.com",
+    images: [],
+    videos: [],
+    polls: [],
+    polls_voting_length: 3,
+    polls_voting_is_expired_flag: false,
+    post_in_community_flag: true,
+    community_id: "10",
+    community_name: "Tech Community",
+    comments_count: 6,
+    views_count: 25,
+    shares_count: 8,
+    upvotes_count: 15,
+    downvotes_count: 2,
+    oc_flag: false,
+    spoiler_flag: false,
+    nsfw_flag: false,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "Controversial",
+    scheduled_flag: false,
+    moderator_details: {
+      approved_flag: true,
+      approved_by: "mohamed",
+      approved_date: new Date(),
+      removed_flag: false,
+      removed_by: null,
+      removed_date: null,
+      removed_removal_reason: null,
+      spammed_flag: false,
+      spammed_by: null,
+      spammed_type: null,
+      spammed_removal_reason: null,
+      reported_flag: false,
+      reported_by: null,
+      reported_type: null,
+    },
+    user_details: {
+      total_views: 25,
+      upvote_rate: 0.6,
+      total_shares: 8,
+    },
+    is_reposted_flag: false,
+    reposted: null,
+  },
+  {
     _id: "1",
     avatar:
       "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
@@ -1535,7 +1737,7 @@ let postsListings = [
     user_id: "2",
     username: "user123",
     title: "A Random Post",
-    description: "A random post description.",
+    description: "da description",
     created_at: new Date(),
     deleted: false,
     type: "text",
@@ -1546,18 +1748,16 @@ let postsListings = [
     polls_voting_length: 3,
     polls_voting_is_expired_flag: false,
     post_in_community_flag: false,
-    community_id: null,
-    community_name: null,
-    comments_count: 3,
-    comments_ids: [11, 17, 14],
-    followers_ids: [],
+    community_id: "6",
+    community_name: "programming",
+    comments_count: 2,
     views_count: 10,
     shares_count: 1,
     upvotes_count: 5,
     downvotes_count: 0,
     oc_flag: true,
-    spoiler_flag: true,
-    nsfw_flag: false,
+    spoiler_flag: false,
+    nsfw_flag: true,
     locked_flag: false,
     allowreplies_flag: true,
     set_suggested_sort: "Best",
@@ -1583,8 +1783,8 @@ let postsListings = [
       upvote_rate: 0.8,
       total_shares: 1,
     },
-    is_reposted_flag: false,
-    reposted: [],
+    is_reposted_flag: true,
+    reposted: "9",
   },
   {
     _id: "4",
@@ -1600,16 +1800,8 @@ let postsListings = [
     type: "image_and_videos",
     link_url: "https://example.com",
     images: [
-      {
-        path: "/images/img1.jpg",
-        caption: "First Image",
-        link: "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
-      },
-      {
-        path: "/images/img1.jpg",
-        caption: "sec Image",
-        link: "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
-      },
+      // { "path": "/images/img1.jpg", "caption": "First Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" },
+      // { "path": "/images/img1.jpg", "caption": "sec Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" }
     ],
     videos: [
       {
@@ -1627,16 +1819,14 @@ let postsListings = [
     post_in_community_flag: true,
     community_id: "6",
     community_name: "programming",
-    comments_count: 2,
-    comments_ids: [15, 12],
-    followers_ids: [],
+    comments_count: 10,
     views_count: 50,
     shares_count: 5,
     upvotes_count: 25,
     downvotes_count: 2,
     oc_flag: false,
-    spoiler_flag: true,
-    nsfw_flag: true,
+    spoiler_flag: false,
+    nsfw_flag: false,
     locked_flag: false,
     allowreplies_flag: true,
     set_suggested_sort: "New",
@@ -1663,7 +1853,7 @@ let postsListings = [
       total_shares: 5,
     },
     is_reposted_flag: false,
-    reposted: [],
+    reposted: null,
   },
   {
     _id: "6",
@@ -1673,12 +1863,14 @@ let postsListings = [
     user_id: "7",
     username: "user789",
     title: "Third Random Post",
-    description: "Yet another random post with different details.",
+    description: "",
     created_at: new Date(),
     deleted: false,
     type: "url",
     link_url: "https://example2.com",
-    images: [],
+    images: [
+      // { "path": "/images/img1.jpg", "caption": "First Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" },
+    ],
     videos: [],
     polls: [],
     polls_voting_length: 3,
@@ -1694,7 +1886,7 @@ let postsListings = [
     upvotes_count: 10,
     downvotes_count: 1,
     oc_flag: false,
-    spoiler_flag: false,
+    spoiler_flag: true,
     nsfw_flag: false,
     locked_flag: false,
     allowreplies_flag: true,
@@ -1722,7 +1914,302 @@ let postsListings = [
       total_shares: 2,
     },
     is_reposted_flag: false,
-    reposted: [],
+    reposted: null,
+  },
+  {
+    _id: "10",
+    avatar:
+      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
+    saved: true,
+    user_id: "7",
+    username: "user789",
+    title: "4th Random Post",
+    description: "",
+    created_at: new Date(),
+    deleted: false,
+    type: "url",
+    link_url: "https://example2.com",
+    images: [
+      // { "path": "/images/img1.jpg", "caption": "First Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" },
+    ],
+    videos: [],
+    polls: [],
+    polls_voting_length: 3,
+    polls_voting_is_expired_flag: false,
+    post_in_community_flag: true,
+    community_id: "8",
+    community_name: "TECH",
+    comments_count: 5,
+    views_count: 20,
+    shares_count: 2,
+    upvotes_count: 10,
+    downvotes_count: 1,
+    oc_flag: false,
+    spoiler_flag: true,
+    nsfw_flag: false,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "Top",
+    scheduled_flag: false,
+    moderator_details: {
+      approved_flag: true,
+      approved_by: "youssef",
+      approved_date: new Date(),
+      removed_flag: false,
+      removed_by: null,
+      removed_date: null,
+      removed_removal_reason: null,
+      spammed_flag: false,
+      spammed_by: null,
+      spammed_type: null,
+      spammed_removal_reason: null,
+      reported_flag: false,
+      reported_by: null,
+      reported_type: null,
+    },
+    user_details: {
+      total_views: 20,
+      upvote_rate: 0.7,
+      total_shares: 2,
+    },
+    is_reposted_flag: false,
+    reposted: null,
+  },
+  {
+    _id: "11",
+    avatar:
+      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
+    saved: true,
+    user_id: "7",
+    username: "user789",
+    title: "5th Random Post",
+    description: "",
+    created_at: new Date(),
+    deleted: false,
+    type: "url",
+    link_url: "https://example2.com",
+    images: [
+      // { "path": "/images/img1.jpg", "caption": "First Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" },
+    ],
+    videos: [],
+    polls: [],
+    polls_voting_length: 3,
+    polls_voting_is_expired_flag: false,
+    post_in_community_flag: true,
+    community_id: "8",
+    community_name: "TECH",
+    comments_count: 5,
+    views_count: 20,
+    shares_count: 2,
+    upvotes_count: 10,
+    downvotes_count: 1,
+    oc_flag: false,
+    spoiler_flag: true,
+    nsfw_flag: false,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "Top",
+    scheduled_flag: false,
+    moderator_details: {
+      approved_flag: true,
+      approved_by: "youssef",
+      approved_date: new Date(),
+      removed_flag: false,
+      removed_by: null,
+      removed_date: null,
+      removed_removal_reason: null,
+      spammed_flag: false,
+      spammed_by: null,
+      spammed_type: null,
+      spammed_removal_reason: null,
+      reported_flag: false,
+      reported_by: null,
+      reported_type: null,
+    },
+    user_details: {
+      total_views: 20,
+      upvote_rate: 0.7,
+      total_shares: 2,
+    },
+    is_reposted_flag: false,
+    reposted: null,
+  },
+  {
+    _id: "12",
+    avatar:
+      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
+    saved: true,
+    user_id: "7",
+    username: "user789",
+    title: "6th Random Post",
+    description: "",
+    created_at: new Date(),
+    deleted: false,
+    type: "url",
+    link_url: "https://example2.com",
+    images: [
+      // { "path": "/images/img1.jpg", "caption": "First Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" },
+    ],
+    videos: [],
+    polls: [],
+    polls_voting_length: 3,
+    polls_voting_is_expired_flag: false,
+    post_in_community_flag: true,
+    community_id: "8",
+    community_name: "TECH",
+    comments_count: 5,
+    views_count: 20,
+    shares_count: 2,
+    upvotes_count: 10,
+    downvotes_count: 1,
+    oc_flag: false,
+    spoiler_flag: true,
+    nsfw_flag: false,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "Top",
+    scheduled_flag: false,
+    moderator_details: {
+      approved_flag: true,
+      approved_by: "youssef",
+      approved_date: new Date(),
+      removed_flag: false,
+      removed_by: null,
+      removed_date: null,
+      removed_removal_reason: null,
+      spammed_flag: false,
+      spammed_by: null,
+      spammed_type: null,
+      spammed_removal_reason: null,
+      reported_flag: false,
+      reported_by: null,
+      reported_type: null,
+    },
+    user_details: {
+      total_views: 20,
+      upvote_rate: 0.7,
+      total_shares: 2,
+    },
+    is_reposted_flag: false,
+    reposted: null,
+  },
+  {
+    _id: "13",
+    avatar:
+      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
+    saved: true,
+    user_id: "7",
+    username: "user789",
+    title: "7th Random Post",
+    description: "",
+    created_at: new Date(),
+    deleted: false,
+    type: "url",
+    link_url: "https://example2.com",
+    images: [
+      // { "path": "/images/img1.jpg", "caption": "First Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" },
+    ],
+    videos: [],
+    polls: [],
+    polls_voting_length: 3,
+    polls_voting_is_expired_flag: false,
+    post_in_community_flag: true,
+    community_id: "8",
+    community_name: "TECH",
+    comments_count: 5,
+    views_count: 20,
+    shares_count: 2,
+    upvotes_count: 10,
+    downvotes_count: 1,
+    oc_flag: false,
+    spoiler_flag: true,
+    nsfw_flag: false,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "Top",
+    scheduled_flag: false,
+    moderator_details: {
+      approved_flag: true,
+      approved_by: "youssef",
+      approved_date: new Date(),
+      removed_flag: false,
+      removed_by: null,
+      removed_date: null,
+      removed_removal_reason: null,
+      spammed_flag: false,
+      spammed_by: null,
+      spammed_type: null,
+      spammed_removal_reason: null,
+      reported_flag: false,
+      reported_by: null,
+      reported_type: null,
+    },
+    user_details: {
+      total_views: 20,
+      upvote_rate: 0.7,
+      total_shares: 2,
+    },
+    is_reposted_flag: false,
+    reposted: null,
+  },
+  {
+    _id: "14",
+    avatar:
+      "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
+    saved: true,
+    user_id: "7",
+    username: "user789",
+    title: "8th Random Post",
+    description: "",
+    created_at: new Date(),
+    deleted: false,
+    type: "url",
+    link_url: "https://example2.com",
+    images: [
+      // { "path": "/images/img1.jpg", "caption": "First Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" },
+    ],
+    videos: [],
+    polls: [],
+    polls_voting_length: 3,
+    polls_voting_is_expired_flag: false,
+    post_in_community_flag: true,
+    community_id: "8",
+    community_name: "TECH",
+    comments_count: 5,
+    views_count: 20,
+    shares_count: 2,
+    upvotes_count: 10,
+    downvotes_count: 1,
+    oc_flag: false,
+    spoiler_flag: true,
+    nsfw_flag: false,
+    locked_flag: false,
+    allowreplies_flag: true,
+    set_suggested_sort: "Top",
+    scheduled_flag: false,
+    moderator_details: {
+      approved_flag: true,
+      approved_by: "youssef",
+      approved_date: new Date(),
+      removed_flag: false,
+      removed_by: null,
+      removed_date: null,
+      removed_removal_reason: null,
+      spammed_flag: false,
+      spammed_by: null,
+      spammed_type: null,
+      spammed_removal_reason: null,
+      reported_flag: false,
+      reported_by: null,
+      reported_type: null,
+    },
+    user_details: {
+      total_views: 20,
+      upvote_rate: 0.7,
+      total_shares: 2,
+    },
+    is_reposted_flag: false,
+    reposted: null,
   },
 ];
 
@@ -2030,414 +2517,308 @@ let comments = {
       show_comment_flag: true,
       __v: 0,
     },
+    {
+      moderator_details: {
+        approved_flag: true,
+        approved_by: "ModeratorC",
+        approved_date: "2024-04-22T22:45:00Z",
+        removed_flag: false,
+        removed_by: "",
+        removed_date: "",
+        removed_removal_reason: "",
+        spammed_flag: false,
+        spammed_by: "",
+        spammed_type: "",
+        spammed_removal_reason: "",
+        reported_flag: false,
+        reported_by: "",
+        reported_type: "",
+      },
+      is_post: false,
+      is_reply: true,
+      parent_username: "UserE",
+      _id: "17",
+      post_id: "7",
+      user_id: "user789",
+      username: "UserC",
+      saved: false,
+      parent_id: "parentOPQ",
+      replies_comments_ids: [],
+      created_at: "2024-04-22T23:30:00Z",
+      edited_at: "",
+      deleted_at: "",
+      deleted: false,
+      description: "I agree with your assessment. Gedan.",
+      comment_in_community_flag: true,
+      community_id: "communityOPQ",
+      community_name: "CommunityOPQ",
+      upvotes_count: 10,
+      downvotes_count: 2,
+      spam_flag: false,
+      locked_flag: false,
+      spoiler_flag: false,
+      show_comment_flag: true,
+      __v: 0,
+    },
+    {
+      moderator_details: {
+        approved_flag: true,
+        approved_by: "ModeratorC",
+        approved_date: "2024-04-22T22:45:00Z",
+        removed_flag: false,
+        removed_by: "",
+        removed_date: "",
+        removed_removal_reason: "",
+        spammed_flag: false,
+        spammed_by: "",
+        spammed_type: "",
+        spammed_removal_reason: "",
+        reported_flag: false,
+        reported_by: "",
+        reported_type: "",
+      },
+      is_post: false,
+      is_reply: false,
+      parent_username: "UserE",
+      _id: "17",
+      post_id: "7",
+      user_id: "user789",
+      username: "UserC",
+      saved: false,
+      parent_id: "parentOPQ",
+      replies_comments_ids: [],
+      created_at: "2024-04-22T23:30:00Z",
+      edited_at: "",
+      deleted_at: "",
+      deleted: false,
+      description: "I agree with your assessment.",
+      comment_in_community_flag: true,
+      community_id: "communityOPQ",
+      community_name: "CommunityOPQ",
+      upvotes_count: 7,
+      downvotes_count: 2,
+      spam_flag: false,
+      locked_flag: false,
+      spoiler_flag: false,
+      show_comment_flag: true,
+      __v: 0,
+    },
   ],
 };
-// {
-//   moderator_details: {
-//     approved_by: "",
-//     approved_date: "",
-//     removed_by: "",
-//     removed_date: "",
-//     spammed_by: "",
-//     spammed_type: "",
-//     removed_flag: false,
-//     spammed_flag: false,
-//   },
-//   is_post: false,
-//   votes_count: 0,
-//   _id: "11",
-//   post_id: "7",
-//   user_id: "567",
-//   username: "commenter567",
-//   parent_id: "",
-//   replies_comments_ids: [],
-//   created_at: "2024-03-30T11:30:00",
-//   edited_at: "",
-//   deleted_at: "",
-//   approved: false,
-//   deleted: false,
-//   description:
-//     "I found this post thought-provoking. It made me reconsider my own perspective.",
-//   upvotes_count: 14,
-//   downvotes_count: 1,
-//   allowreplies_flag: true,
-//   spam_flag: false,
-//   locked_flag: false,
-//   show_comment_flag: true,
-//   __v: 0,
-// },
-// {
-//   moderator_details: {
-//     approved_by: "",
-//     approved_date: "",
-//     removed_by: "",
-//     removed_date: "",
-//     spammed_by: "",
-//     spammed_type: "",
-//     removed_flag: false,
-//     spammed_flag: false,
-//   },
-//   is_post: false,
-//   votes_count: 0,
-//   _id: "12",
-//   post_id: "7",
-//   user_id: "678",
-//   username: "user678",
-//   parent_id: "",
-//   replies_comments_ids: [],
-//   created_at: "2024-03-29T14:45:00",
-//   edited_at: "",
-//   deleted_at: "",
-//   approved: false,
-//   deleted: false,
-//   description:
-//     "I have a question regarding one of the points you raised. Can you elaborate?",
-//   upvotes_count: 6,
-//   downvotes_count: 3,
-//   allowreplies_flag: true,
-//   spam_flag: false,
-//   locked_flag: false,
-//   show_comment_flag: true,
-//   __v: 0,
-// },
-// {
-//   moderator_details: {
-//     approved_by: "moderator123",
-//     approved_date: "2024-03-28T12:40:00",
-//     removed_by: "",
-//     removed_date: "",
-//     spammed_by: "",
-//     spammed_type: "",
-//     removed_flag: false,
-//     spammed_flag: false,
-//   },
-//   is_post: false,
-//   votes_count: 0,
-//   _id: "13",
-//   post_id: "8",
-//   user_id: "789",
-//   username: "user789",
-//   parent_id: "",
-//   replies_comments_ids: [],
-//   created_at: "2024-03-28T10:20:00",
-//   edited_at: "2024-03-28T12:35:00",
-//   deleted_at: "",
-//   approved: false,
-//   deleted: false,
-//   description:
-//     "I enjoyed reading your post. It provided a fresh perspective on the topic.",
-//   upvotes_count: 11,
-//   downvotes_count: 0,
-//   allowreplies_flag: true,
-//   spam_flag: false,
-//   locked_flag: false,
-//   show_comment_flag: true,
-//   __v: 0,
-// },
-// {
-//   moderator_details: {
-//     approved_by: "",
-//     approved_date: "",
-//     removed_by: "",
-//     removed_date: "",
-//     spammed_by: "",
-//     spammed_type: "",
-//     removed_flag: false,
-//     spammed_flag: false,
-//   },
-//   is_post: false,
-//   votes_count: 0,
-//   _id: "14",
-//   post_id: "8",
-//   user_id: "901",
-//   username: "commenter901",
-//   parent_id: "",
-//   replies_comments_ids: [],
-//   created_at: "2024-03-27T13:55:00",
-//   edited_at: "",
-//   deleted_at: "",
-//   approved: false,
-//   deleted: false,
-//   description:
-//     "I found your post very informative. It helped me understand the topic better.",
-//   upvotes_count: 9,
-//   downvotes_count: 1,
-//   allowreplies_flag: true,
-//   spam_flag: false,
-//   locked_flag: false,
-//   show_comment_flag: true,
-//   __v: 0,
-// },
-// {
-//   moderator_details: {
-//     approved_by: "",
-//     approved_date: "",
-//     removed_by: "",
-//     removed_date: "",
-//     spammed_by: "",
-//     spammed_type: "",
-//     removed_flag: false,
-//     spammed_flag: false,
-//   },
-//   is_post: false,
-//   votes_count: 10,
-//   _id: "15",
-//   post_id: "9",
-//   user_id: "234",
-//   username: "user234",
-//   parent_id: "",
-//   replies_comments_ids: [],
-//   created_at: "2024-03-26T16:40:00",
-//   edited_at: "",
-//   deleted_at: "",
-//   approved: false,
-//   deleted: false,
-//   description:
-//     "Your post raises some important points. I appreciate the insights.",
-//   upvotes_count: 7,
-//   downvotes_count: 2,
-//   allowreplies_flag: true,
-//   spam_flag: false,
-//   locked_flag: false,
-//   show_comment_flag: true,
-//   __v: 0,
-// },
-// {
-//   moderator_details: {
-//     approved_by: "",
-//     approved_date: "",
-//     removed_by: "",
-//     removed_date: "",
-//     spammed_by: "",
-//     spammed_type: "",
-//     removed_flag: false,
-//     spammed_flag: false,
-//   },
-//   is_post: false,
-//   votes_count: 0,
-//   _id: "16",
-//   post_id: "9",
-//   user_id: "345",
-//   username: "commenter345",
-//   parent_id: "",
-//   replies_comments_ids: [],
-//   created_at: "2024-03-25T09:10:00",
-//   edited_at: "",
-//   deleted_at: "",
-//   approved: false,
-//   deleted: false,
-//   description:
-//     "I strongly agree with your viewpoint. Your post is well-argued and convincing.",
-//   upvotes_count: 8,
-//   downvotes_count: 0,
-//   allowreplies_flag: true,
-//   spam_flag: false,
-//   locked_flag: false,
-//   show_comment_flag: true,
-//   __v: 0,
-// },
-// {
-//   moderator_details: {
-//     approved_by: "",
-//     approved_date: "",
-//     removed_by: "",
-//     removed_date: "",
-//     spammed_by: "",
-//     spammed_type: "",
-//     removed_flag: false,
-//     spammed_flag: false,
-//   },
-//   is_post: false,
-//   votes_count: 0,
-//   _id: "17",
-//   post_id: "10",
-//   user_id: "567",
-//   username: "user567",
-//   parent_id: "",
-//   replies_comments_ids: [],
-//   created_at: "2024-03-24T14:20:00",
-//   edited_at: "",
-//   deleted_at: "",
-//   approved: false,
-//   deleted: false,
-//   description:
-//     "I have a different perspective on this topic. Let's discuss!",
-//   upvotes_count: 5,
-//   downvotes_count: 3,
-//   allowreplies_flag: true,
-//   spam_flag: false,
-//   locked_flag: false,
-//   show_comment_flag: true,
-//   __v: 0,
-// },
-// {
-//   moderator_details: {
-//     approved_by: "",
-//     approved_date: "",
-//     removed_by: "",
-//     removed_date: "",
-//     spammed_by: "",
-//     spammed_type: "",
-//     removed_flag: false,
-//     spammed_flag: false,
-//   },
-//   is_post: false,
-//   votes_count: 0,
-//   _id: "18",
-//   post_id: "10",
-//   user_id: "678",
-//   username: "commenter678",
-//   parent_id: "",
-//   replies_comments_ids: [],
-//   created_at: "2024-03-23T12:05:00",
-//   edited_at: "",
-//   deleted_at: "",
-//   approved: false,
-//   deleted: false,
-//   description:
-//     "Your post provides a comprehensive overview of the topic. Well done!",
-//   upvotes_count: 10,
-//   downvotes_count: 1,
-//   allowreplies_flag: true,
-//   spam_flag: false,
-//   locked_flag: false,
-//   show_comment_flag: true,
-//   __v: 0,
-// },
-// {
-//   moderator_details: {
-//     approved_by: "",
-//     approved_date: "",
-//     removed_by: "",
-//     removed_date: "",
-//     spammed_by: "",
-//     spammed_type: "",
-//     removed_flag: false,
-//     spammed_flag: false,
-//   },
-//   is_post: false,
-//   votes_count: 0,
-//   _id: "19",
-//   post_id: "1",
-//   user_id: "901",
-//   username: "user901",
-//   parent_id: "1",
-//   replies_comments_ids: [
-//     {
-//       moderator_details: {
-//         approved_by: "",
-//         approved_date: "",
-//         removed_by: "",
-//         removed_date: "",
-//         spammed_by: "",
-//         spammed_type: "",
-//         removed_flag: false,
-//         spammed_flag: false,
-//       },
-//       votes_count: 0,
-//       _id: "21",
-//       post_id: "1",
-//       user_id: "902",
-//       username: "user902",
-//       parent_id: "19",
-//       replies_comments_ids: [],
-//       created_at: "2024-03-22T09:50:00",
-//       edited_at: "",
-//       deleted_at: "",
-//       approved: false,
-//       deleted: false,
-//       description: "Replyyyyyy.",
-//       upvotes_count: 12,
-//       downvotes_count: 0,
-//       allowreplies_flag: true,
-//       spam_flag: false,
-//       locked_flag: false,
-//       show_comment_flag: true,
-//       __v: 0,
-//     },
-//   ],
-//   created_at: "2024-03-22T09:50:00",
-//   edited_at: "",
-//   deleted_at: "",
-//   approved: false,
-//   deleted: false,
-//   description:
-//     "I found your post very insightful. It shed light on a complex issue.",
-//   upvotes_count: 12,
-//   downvotes_count: 0,
-//   allowreplies_flag: true,
-//   spam_flag: false,
-//   locked_flag: false,
-//   show_comment_flag: true,
-//   __v: 0,
-// },
-// {
-//   moderator_details: {
-//     approved_by: "",
-//     approved_date: "",
-//     removed_by: "",
-//     removed_date: "",
-//     spammed_by: "",
-//     spammed_type: "",
-//     removed_flag: false,
-//     spammed_flag: false,
-//   },
-//   is_post: false,
-//   votes_count: 0,
-//   _id: "20",
-//   post_id: "1",
-//   user_id: "901",
-//   username: "user901",
-//   parent_id: "1",
-//   replies_comments_ids: [
-//     {
-//       moderator_details: {
-//         approved_by: "",
-//         approved_date: "",
-//         removed_by: "",
-//         removed_date: "",
-//         spammed_by: "",
-//         spammed_type: "",
-//         removed_flag: false,
-//         spammed_flag: false,
-//       },
-//       is_post: false,
-//       votes_count: 0,
-//       _id: "22",
-//       post_id: "1",
-//       user_id: "903",
-//       username: "user903",
-//       parent_id: "20",
-//       replies_comments_ids: [],
-//       created_at: "2024-03-22T09:50:00",
-//       edited_at: "",
-//       deleted_at: "",
-//       approved: false,
-//       deleted: false,
-//       description: "Replyyyyyy from user903.",
-//       upvotes_count: 12,
-//       downvotes_count: 0,
-//       allowreplies_flag: true,
-//       spam_flag: false,
-//       locked_flag: false,
-//       show_comment_flag: true,
-//       __v: 0,
-//     },
-//   ],
-//   created_at: "2024-03-22T09:50:00",
-//   edited_at: "",
-//   deleted_at: "",
-//   approved: false,
-//   deleted: false,
-//   description: "I found your post very insightful. But I have a question.",
-//   upvotes_count: 12,
-//   downvotes_count: 0,
-//   allowreplies_flag: true,
-//   spam_flag: false,
-//   locked_flag: false,
-//   show_comment_flag: true,
-//   __v: 0,
-// },
+
+let searchComments = [
+  {
+    moderator_details: {
+      approved_flag: true,
+      approved_by: "ModeratorX",
+      approved_date: "2024-04-22T08:15:00Z",
+      removed_flag: false,
+      removed_by: "",
+      removed_date: "",
+      removed_removal_reason: "",
+      spammed_flag: false,
+      spammed_by: "",
+      spammed_type: "",
+      spammed_removal_reason: "",
+      reported_flag: false,
+      reported_by: "",
+      reported_type: "",
+    },
+    is_post: false,
+    is_reply: true,
+    parent_username: "User123",
+    _id: "11",
+    post_id: {
+      _id: "1",
+      avatar:
+        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
+      saved: true,
+      user_id: "2",
+      username: "user123",
+      title: "A Random Post",
+      description: "da description",
+      created_at: new Date(),
+      deleted: false,
+      type: "text",
+      link_url: null,
+      images: [],
+      videos: [],
+      polls: [],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_id: "6",
+      community_name: "programming",
+      comments_count: 2,
+      views_count: 10,
+      shares_count: 1,
+      upvotes_count: 5,
+      downvotes_count: 0,
+      oc_flag: true,
+      spoiler_flag: false,
+      nsfw_flag: true,
+      locked_flag: false,
+      allowreplies_flag: true,
+      set_suggested_sort: "Best",
+      scheduled_flag: false,
+      moderator_details: {
+        approved_flag: true,
+        approved_by: "hazem",
+        approved_date: new Date(),
+        removed_flag: false,
+        removed_by: null,
+        removed_date: null,
+        removed_removal_reason: null,
+        spammed_flag: false,
+        spammed_by: null,
+        spammed_type: null,
+        spammed_removal_reason: null,
+        reported_flag: false,
+        reported_by: null,
+        reported_type: null,
+      },
+      user_details: {
+        total_views: 10,
+        upvote_rate: 0.8,
+        total_shares: 1,
+      },
+      is_reposted_flag: true,
+      reposted: "9",
+    },
+    user_id: "user456",
+    username: "User789",
+    parent_id: "parent456",
+    replies_comments_ids: [],
+    created_at: "2024-04-22T09:30:00Z",
+    edited_at: "",
+    deleted_at: "",
+    deleted: false,
+    description: "Great point! I completely agree.",
+    comment_in_community_flag: true,
+    community_id: "community123",
+    community_name: "Example Community",
+    upvotes_count: 10,
+    downvotes_count: 2,
+    spam_flag: false,
+    locked_flag: false,
+    spoiler_flag: false,
+    show_comment_flag: true,
+    saved: false,
+    __v: 0,
+  },
+  {
+    moderator_details: {
+      approved_flag: true,
+      approved_by: "ModeratorZ",
+      approved_date: "2024-04-22T12:20:00Z",
+      removed_flag: false,
+      removed_by: "",
+      removed_date: "",
+      removed_removal_reason: "",
+      spammed_flag: false,
+      spammed_by: "",
+      spammed_type: "",
+      spammed_removal_reason: "",
+      reported_flag: false,
+      reported_by: "",
+      reported_type: "",
+    },
+    is_post: false,
+    is_reply: true,
+    parent_username: "User789",
+    _id: "12",
+    post_id: {
+      _id: "4",
+      avatar:
+        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
+      saved: true,
+      user_id: "5",
+      username: "user456",
+      title: "Another Random Post",
+      description: "description",
+      created_at: new Date(),
+      deleted: false,
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        // { "path": "/images/img1.jpg", "caption": "First Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" },
+        // { "path": "/images/img1.jpg", "caption": "sec Image", "link": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg" }
+      ],
+      videos: [
+        {
+          path: "/videos/video1.mp4",
+          caption: "First Video",
+          link: "https://example.com/video1",
+        },
+      ],
+      polls: [
+        { options: "Option 1", votes: 10 },
+        { options: "Option 2", votes: 5 },
+      ],
+      polls_voting_length: 7,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: true,
+      community_id: "6",
+      community_name: "programming",
+      comments_count: 10,
+      views_count: 50,
+      shares_count: 5,
+      upvotes_count: 25,
+      downvotes_count: 2,
+      oc_flag: false,
+      spoiler_flag: false,
+      nsfw_flag: false,
+      locked_flag: false,
+      allowreplies_flag: true,
+      set_suggested_sort: "New",
+      scheduled_flag: false,
+      moderator_details: {
+        approved_flag: false,
+        approved_by: "ahmed",
+        approved_date: new Date(),
+        removed_flag: false,
+        removed_by: null,
+        removed_date: new Date(),
+        removed_removal_reason: null,
+        spammed_flag: false,
+        spammed_by: null,
+        spammed_type: null,
+        spammed_removal_reason: null,
+        reported_flag: false,
+        reported_by: null,
+        reported_type: null,
+      },
+      user_details: {
+        total_views: 50,
+        upvote_rate: 0.9,
+        total_shares: 5,
+      },
+      is_reposted_flag: false,
+      reposted: null,
+    },
+    user_id: "user123",
+    username: "User369",
+    parent_id: "parent456",
+    replies_comments_ids: [],
+    created_at: "2024-04-22T13:00:00Z",
+    edited_at: "",
+    deleted_at: "",
+    deleted: false,
+    description: "I have a different perspective on this.",
+    comment_in_community_flag: true,
+    community_id: "community123",
+    community_name: "Example Community",
+    upvotes_count: 5,
+    downvotes_count: 3,
+    spam_flag: false,
+    locked_flag: false,
+    spoiler_flag: false,
+    show_comment_flag: true,
+    saved: true,
+    __v: 0,
+  },
+];
+
 function shuffleList(list) {
   let currentIndex = list.length,
     randomIndex;
@@ -2457,6 +2838,16 @@ function shuffleList(list) {
 
   return list;
 }
+
+app.get("/posts/trending", (req, res) => {
+  const { page, pageSize } = req.query;
+  res.status(200).json({
+    success: true,
+    status: 200,
+    // content: postsListings.slice(page * pageSize, page * pageSize + pageSize),
+    content: postsListings.slice(0, 5),
+  });
+});
 
 let historyPosts = {
   success: true,
@@ -2878,37 +3269,68 @@ app.get("/users/history-posts", (req, res) => {
 });
 
 app.get("/listing/posts/random", (req, res) => {
-  res.status(200).json({ success: true, status: 200, content: postsListings });
-});
-
-app.get("/listing/posts/best", (req, res) => {
+  const { page, pageSize } = req.query;
   res.status(200).json({
     success: true,
     status: 200,
-    content: postsListings.reverse(),
+    content: postsListings.slice(page * pageSize, page * pageSize + pageSize),
   });
 });
 
-app.get("/listing/posts/hot", (req, res) => {
-  res
-    .status(200)
-    .json({ success: true, status: 200, content: shuffleList(postsListings) });
+app.get("/listing/posts/best", (req, res) => {
+  const { page, pageSize } = req.query;
+  console.log(page, pageSize);
 
-  // res.status(200).json(shuffleList(postsListings));
+  res.status(200).json({
+    success: true,
+    status: 200,
+    content: postsListings
+      .slice(page * pageSize, page * pageSize + pageSize)
+      .reverse(),
+  });
+  console.log(
+    postsListings.slice(page * pageSize, page * pageSize + pageSize).reverse()
+  );
+});
+
+app.get("/listing/posts/hot", (req, res) => {
+  const { page, pageSize } = req.query;
+
+  res.status(200).json({
+    success: true,
+    status: 200,
+    content: shuffleList(
+      postsListings.slice(page * pageSize, page * pageSize + pageSize)
+    ),
+  });
+
+  // res.status(200).json(shuffleList(postsListings.slice(page * pageSize, page * pageSize + pageSize)));
 });
 
 app.get("/listing/posts/new", (req, res) => {
-  res
-    .status(200)
-    .json({ success: true, status: 200, content: shuffleList(postsListings) });
+  const { page, pageSize } = req.query;
 
-  // res.status(200).json(shuffleList(postsListings));
+  res.status(200).json({
+    success: true,
+    status: 200,
+    content: shuffleList(
+      postsListings.slice(page * pageSize, page * pageSize + pageSize)
+    ),
+  });
+
+  // res.status(200).json(shuffleList(postsListings.slice(page * pageSize, page * pageSize + pageSize)));
 });
 
 app.get("/listing/posts/top", (req, res) => {
-  res
-    .status(200)
-    .json({ success: true, status: 200, content: shuffleList(postsListings) });
+  const { page, pageSize } = req.query;
+
+  res.status(200).json({
+    success: true,
+    status: 200,
+    content: shuffleList(
+      postsListings.slice(page * pageSize, page * pageSize + pageSize)
+    ),
+  });
 });
 
 app.post("/posts-or-comments/vote", (req, res) => {
@@ -2993,6 +3415,71 @@ app.post("/posts-or-comments/delete", (req, res) => {
   res.sendStatus(200);
 });
 
+let i = 0;
+app.get("/search/:type", (req, res) => {
+  const { type } = req.params;
+  const { query, sort, page, pageSize } = req.query;
+  console.log(query, type, sort, pageSize, i);
+  i++;
+  let pageIndex = page ?? 0;
+  let page_size = pageSize ?? 10;
+
+  if (type === "posts") {
+    // posts
+    res.status(200).json({
+      success: true,
+      status: 200,
+      content: [
+        ...new Set(
+          postsListings
+            .filter((post) =>
+              post.title.toLowerCase().includes(query.toLowerCase())
+            )
+            .concat(
+              postsListings.filter((post) =>
+                post.description.toLowerCase().includes(query.toLowerCase())
+              )
+            )
+            .slice(pageIndex * page_size, pageIndex * page_size + page_size)
+        ),
+      ],
+    });
+  } else if (type === "communities") {
+    // communities
+    res.status(200).json({
+      success: true,
+      status: 200,
+      content: communitiesPost
+        .filter((comm) => comm.name.toLowerCase().includes(query.toLowerCase()))
+        .slice(pageIndex * page_size, pageIndex * page_size + page_size),
+    });
+  } else if (type === "comments") {
+    // comments
+    const comms = searchComments.filter((comment) =>
+      comment.description.toLowerCase().includes(query.toLocaleString())
+    );
+    res.status(200).json({
+      success: true,
+      status: 200,
+      content: comms.slice(
+        pageIndex * page_size,
+        pageIndex * page_size + page_size
+      ),
+    });
+  } else if (type === "people") {
+    // users
+    res.status(200).json({
+      success: true,
+      status: 200,
+      content: users
+        .filter((user) =>
+          user.username.toLowerCase().includes(query.toLowerCase())
+        )
+        .slice(pageIndex * page_size, pageIndex * page_size + page_size),
+    });
+  }
+});
+
 // app.post("/comments/reply", (req, res) => {
 //   const { id, description } = req.body;
 //   console.log(req.body);
@@ -3013,7 +3500,7 @@ let sentMessages = [
     unread_flag: false,
     isSent: true,
     isReply: true,
-    parentMessageId: "5da454f4307b0a8b30838830",
+    parent_message_id: "5da454f4307b0a8b30838830",
     subject: "header 2",
   },
   {
@@ -3030,7 +3517,7 @@ let sentMessages = [
     unread_flag: false,
     isSent: true,
     isReply: false,
-    parentMessageId: null,
+    parent_message_id: null,
   },
   {
     _id: "5da454f4307b0a8b30838831",
@@ -3046,7 +3533,7 @@ let sentMessages = [
     unread_flag: false,
     isSent: true,
     isReply: false,
-    parentMessageId: null,
+    parent_message_id: null,
   },
   {
     _id: "5da456f4307b0a8b30838831",
@@ -3061,7 +3548,7 @@ let sentMessages = [
     unread_flag: false,
     isSent: true,
     isReply: true,
-    parentMessageId: "5da454f4307b0a8b30838831",
+    parent_message_id: "5da454f4307b0a8b30838831",
     subject: "header 3", //subject of parent message
   },
   {
@@ -3077,7 +3564,7 @@ let sentMessages = [
     unread_flag: false,
     isSent: true,
     isReply: true,
-    parentMessageId: "5da454f430712430a8b308938830",
+    parent_message_id: "5da454f430712430a8b308938830",
     subject: "header 5",
   },
 ];
@@ -3096,7 +3583,7 @@ let recievedMessages = [
     unread_flag: false,
     isSent: false,
     isReply: true,
-    parentMessageId: "5da454f4307b0a8b30838830",
+    parent_message_id: "5da454f4307b0a8b30838830",
   },
   {
     _id: "5da454f430712430a8b308938830",
@@ -3112,7 +3599,7 @@ let recievedMessages = [
     unread_flag: false,
     isSent: false,
     isReply: false,
-    parentMessageId: null,
+    parent_message_id: null,
   },
   {
     _id: "5da454f4323407b0a8b3760838831",
@@ -3128,7 +3615,7 @@ let recievedMessages = [
     unread_flag: true,
     isSent: false,
     isReply: false,
-    parentMessageId: null,
+    parent_message_id: null,
   },
   {
     _id: "5da456f4307b0a8b308384k53831",
@@ -3143,7 +3630,7 @@ let recievedMessages = [
     unread_flag: false,
     isSent: false,
     isReply: true,
-    parentMessageId: "5da454f4307b0a8b30838831",
+    parent_message_id: "5da454f4307b0a8b30838831",
     subject: "header 3",
   },
   {
@@ -3159,7 +3646,7 @@ let recievedMessages = [
     unread_flag: true,
     isSent: false,
     isReply: true,
-    parentMessageId: "5da454f4307b0a8b30838831",
+    parent_message_id: "5da454f4307b0a8b30838831",
     subject: "header 3",
   },
 ];
@@ -3291,7 +3778,7 @@ app.post("/messages/compose/", (req, res) => {
       ...req.body,
       isSent: true,
       isReply: false,
-      parentMessageId: null,
+      parent_message_id: null,
       _id: c,
       // "subject": "header 5",
     });
@@ -3323,10 +3810,10 @@ app.post("/messages/del-msg", (req, res) => {
   recievedMessages = recievedMessages.filter(
     (message) =>
       message._id !== req.body["_id"] &&
-      message.parentMessageId !== req.body["_id"]
+      message.parent_message_id !== req.body["_id"]
   );
   sentMessages = sentMessages.filter(
-    (message) => message.parentMessageId !== req.body["_id"]
+    (message) => message.parent_message_id !== req.body["_id"]
   );
 
   res.sendStatus(200);
@@ -3336,10 +3823,10 @@ app.post("/messages/report-msg", (req, res) => {
   recievedMessages = recievedMessages.filter(
     (message) =>
       message._id !== req.body["_id"] &&
-      message.parentMessageId !== req.body["_id"]
+      message.parent_message_id !== req.body["_id"]
   );
   sentMessages = sentMessages.filter(
-    (message) => message.parentMessageId !== req.body["_id"]
+    (message) => message.parent_message_id !== req.body["_id"]
   );
 
   res.sendStatus(200);
@@ -3410,8 +3897,8 @@ app.get("/user/about/:id", (req, res) => {
 });
 
 // * Post
-app.get("/posts/get-post/:id", (req, res) => {
-  const { id } = req.params;
+app.get("/posts/get-post", (req, res) => {
+  const { id } = req.query;
   console.log(id);
   const post = postsListings.find((postt) => postt._id === id);
   if (!post) {
@@ -3420,8 +3907,8 @@ app.get("/posts/get-post/:id", (req, res) => {
   res.status(200).json(post);
 });
 
-app.get("/posts/get-comments/:id", (req, res) => {
-  const { id } = req.params;
+app.get("/posts/get-comments", (req, res) => {
+  const { id } = req.query;
   const postComments = comments.content.filter(
     (comment) => comment.post_id === id
   );
@@ -3699,10 +4186,10 @@ let postsComments = [
     __v: 0,
   },
 ];
-app.get("/users/:username/about", (req, res) => {
+app.get("/users/about/:username", (req, res) => {
   res.status(200).json(userAbout);
 });
-app.get("/users/moderated-communities2", (req, res) => {
+app.get("/users/moderated-communities", (req, res) => {
   res.status(200).json({
     success: true,
     status: 200,
@@ -3725,9 +4212,9 @@ app.get("/users/moderated-communities2", (req, res) => {
     ],
   });
 });
-app.get("/users/moderated-communities", (req, res) => {
-  res.status(200).json(moderatedCommunities);
-});
+// app.get("/users/moderated-communities", (req, res) => {
+//   res.status(200).json(moderatedCommunities);
+// });
 app.get("/users/downvoted-posts", (req, res) => {
   res.status(200).json(postsListings);
 });
@@ -3738,18 +4225,152 @@ app.get("/users/hidden-and-reported-posts", (req, res) => {
   res.status(200).json(postsListings);
 });
 app.get("/users/saved-posts-and-comments", (req, res) => {
-  res.status(200).json(postsComments);
+  res.status(200).json(postscom);
 });
 
-app.get("/users/:username/posts", (req, res) => {
+app.get("/users/posts/:username", (req, res) => {
   res.status(200).json(postsListings);
 });
 
-app.get("/users/:username/comments", (req, res) => {
+app.get("/users/comments/:username", (req, res) => {
   res.status(200).json(comments);
 });
-app.get("/users/:username/overview", (req, res) => {
-  res.status(200).json(postsComments);
+let postscom = {
+  content: {
+    posts: [
+      {
+        is_post: true,
+        _id: "6",
+        avatar:
+          "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg", //metzweda
+        saved: true,
+        user_id: "7",
+        username: "user789",
+        title: "Third Random Post",
+        description: "Yet another random post with different details.",
+        created_at: "2024-04-20T11:30:00",
+        deleted: false,
+        type: "url",
+        link_url: "https://example2.com",
+        images: [],
+        videos: [],
+        polls: [],
+        polls_voting_length: 3,
+        polls_voting_is_expired_flag: false,
+        post_in_community_flag: true,
+        community_id: "8",
+        community_name: "Community B",
+        comments_count: 5,
+        views_count: 20,
+        shares_count: 2,
+        upvotes_count: 10,
+        downvotes_count: 1,
+        oc_flag: false,
+        spoiler_flag: false,
+        nsfw_flag: false,
+        locked_flag: false,
+        allowreplies_flag: true,
+        set_suggested_sort: "Top",
+        scheduled_flag: false,
+        moderator_details: {
+          approved_flag: true,
+          approved_by: "youssef",
+          approved_date: new Date(),
+          removed_flag: false,
+          removed_by: null,
+          removed_date: null,
+          removed_removal_reason: null,
+          spammed_flag: false,
+          spammed_by: null,
+          spammed_type: null,
+          spammed_removal_reason: null,
+          reported_flag: false,
+          reported_by: null,
+          reported_type: null,
+        },
+        user_details: {
+          total_views: 20,
+          upvote_rate: 0.7,
+          total_shares: 2,
+        },
+        is_reposted_flag: false,
+        reposted: [],
+      },
+    ],
+    comments: [
+      {
+        moderator_details: {
+          approved_by: "",
+          approved_date: "",
+          removed_by: "",
+          removed_date: "",
+          spammed_by: "",
+          spammed_type: "",
+          removed_flag: false,
+          spammed_flag: false,
+        },
+        is_post: false,
+        votes_count: 0,
+        _id: "11",
+        post_id: "7",
+        user_id: "567",
+        username: "commenter567",
+        parent_id: "",
+        replies_comments_ids: [],
+        created_at: "2024-03-30T11:30:00",
+        edited_at: "",
+        deleted_at: "",
+        approved: false,
+        deleted: false,
+        description:
+          "I found this post thought-provoking. It made me reconsider my own perspective.",
+        upvotes_count: 14,
+        downvotes_count: 1,
+        allowreplies_flag: true,
+        spam_flag: false,
+        locked_flag: false,
+        show_comment_flag: true,
+        __v: 0,
+      },
+      {
+        moderator_details: {
+          approved_by: "",
+          approved_date: "",
+          removed_by: "",
+          removed_date: "",
+          spammed_by: "",
+          spammed_type: "",
+          removed_flag: false,
+          spammed_flag: false,
+        },
+        is_post: false,
+        votes_count: 0,
+        _id: "12",
+        post_id: "7",
+        user_id: "678",
+        username: "user678",
+        parent_id: "",
+        replies_comments_ids: [],
+        created_at: "2023-03-29T14:45:00",
+        edited_at: "",
+        deleted_at: "",
+        approved: false,
+        deleted: false,
+        description:
+          "I have a question regarding one of the points you raised. Can you elaborate?",
+        upvotes_count: 6,
+        downvotes_count: 3,
+        allowreplies_flag: true,
+        spam_flag: false,
+        locked_flag: false,
+        show_comment_flag: true,
+        __v: 0,
+      },
+    ],
+  },
+};
+app.get("/users/overview/:username", (req, res) => {
+  res.status(200).json(postscom);
 });
 
 const CommunityModerators = [
@@ -4002,7 +4623,7 @@ app.post("/comments/new-comment", (req, res) => {
   const { id, description } = req.body;
 
   const username = getAuthUsername(req);
-  console.log("username", username);
+  // console.log("username", username);
   if (!username) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -4128,9 +4749,501 @@ app.post("/comments/reply", (req, res) => {
 
   comments.content = updatedComments;
 
-  console.log(comments.content);
+  // console.log(comments.content);
 
   res.status(200).json({ message: "Comment added successfully." });
+});
+
+app.get("/communities/get-removal-reasons/:communityName", (req, res) => {
+  // console.log("rem reasons");
+  res.status(200).json([
+    {
+      removal_reason_title: "Spam",
+      reason_message: "This post is spam",
+      _id: "6618520b1135daf6066366ea",
+    },
+  ]);
+});
+
+app.get("/communities/about/unmoderated/:communityName", (req, res) => {
+  // console.log("hi");
+  res.status(200).json([
+    {
+      vote: 1,
+      moderator_details: {
+        approved_flag: false,
+        approved_date: null,
+        removed_flag: false,
+        removed_date: null,
+        removed_removal_reason: null,
+        spammed_flag: false,
+        spammed_type: null,
+        spammed_removal_reason: null,
+        reported_flag: false,
+        reported_type: null,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      reposted: [],
+      _id: "6624e0ceb67f43e82ce56df5",
+      title: "Test8",
+      description: "ff",
+      created_at: "2024-04-21T09:47:58.302Z",
+      edited_at: null,
+      deleted_at: null,
+      deleted: false,
+      type: "text",
+      link_url: "https://www.youtuddbej.com",
+      images: [],
+      videos: [],
+      polls: [],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      comment_in_community_flag: false,
+      community_name: "Thiel___Wolff",
+      comments_count: 4,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 1,
+      downvotes_count: 0,
+      oc_flag: false,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: false,
+      allowreplies_flag: true,
+      set_suggested_sort: "None (Recommended)",
+      scheduled_flag: false,
+      is_reposted_flag: false,
+      upvote_users: [],
+      downvote_users: [],
+      user_id: "661ed9a12b42f5ea45ed7f6e",
+      username: "m",
+      __v: 7,
+    },
+    {
+      vote: 1,
+      moderator_details: {
+        approved_date: null,
+        removed_date: null,
+        removed_removal_reason: null,
+        spammed_type: null,
+        spammed_removal_reason: null,
+        reported_type: null,
+        approved_flag: false,
+        removed_flag: false,
+        spammed_flag: false,
+        reported_flag: false,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      reposted: [],
+      edited_at: null,
+      deleted_at: null,
+      _id: "662406de7380d06d8413baa0",
+      title: "Test7 ",
+      description: "ff",
+      created_at: "2024-04-20T18:18:06.146Z",
+      deleted: false,
+      type: "url",
+      link_url: "https://www.youtuddbej.com",
+      images: [],
+      videos: [],
+      polls: [],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_name: "Thiel___Wolff",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 2,
+      downvotes_count: 0,
+      oc_flag: false,
+      spoiler_flag: false,
+      nsfw_flag: false,
+      locked_flag: false,
+      allowreplies_flag: true,
+      scheduled_flag: false,
+      is_reposted_flag: false,
+      user_id: "661ed9a12b42f5ea45ed7f6e",
+      username: "m",
+      __v: 0,
+      set_suggested_sort: "None (Recommended)",
+    },
+    {
+      vote: -1,
+
+      moderator_details: {
+        approved_date: null,
+        removed_date: null,
+        removed_removal_reason: null,
+        spammed_type: null,
+        spammed_removal_reason: null,
+        reported_type: null,
+        approved_flag: false,
+        removed_flag: false,
+        spammed_flag: false,
+        reported_flag: false,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      reposted: [],
+      edited_at: null,
+      deleted_at: null,
+      set_suggested_sort: "None (Recommended)",
+      _id: "662405271a2be695b0767eaf",
+      title: "Test6 ",
+      description: "ff",
+      created_at: "2024-04-20T18:10:47.134Z",
+      deleted: false,
+      type: "url",
+      link_url: "https://www.youtuddbej.com",
+      images: [],
+      videos: [],
+      polls: [],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_name: "Thiel___Wolff",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 0,
+      downvotes_count: 0,
+      oc_flag: false,
+      spoiler_flag: false,
+      nsfw_flag: false,
+      locked_flag: false,
+      allowreplies_flag: true,
+      scheduled_flag: false,
+      is_reposted_flag: false,
+      user_id: "661ed9a12b42f5ea45ed7f6e",
+      username: "m",
+      __v: 0,
+    },
+    {
+      moderator_details: {
+        approved_date: null,
+        removed_date: null,
+        removed_removal_reason: null,
+        spammed_type: null,
+        spammed_removal_reason: null,
+        reported_type: null,
+        approved_flag: false,
+        removed_flag: false,
+        spammed_flag: false,
+        reported_flag: false,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      reposted: [],
+      edited_at: null,
+      deleted_at: null,
+      _id: "662405211a2be695b0767eaa",
+      title: "Test5 ",
+      description: "ff",
+      created_at: "2024-04-20T18:10:41.796Z",
+      deleted: false,
+      type: "url",
+      link_url: "https://www.youtuddbej.com",
+      images: [],
+      videos: [],
+      polls: [],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_name: "Thiel___Wolff",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 1,
+      downvotes_count: 1,
+      oc_flag: false,
+      spoiler_flag: false,
+      nsfw_flag: false,
+      locked_flag: false,
+      allowreplies_flag: true,
+      scheduled_flag: false,
+      is_reposted_flag: false,
+      user_id: "661ed9a12b42f5ea45ed7f6e",
+      username: "m",
+      __v: 0,
+      set_suggested_sort: "None (Recommended)",
+    },
+    {
+      moderator_details: {
+        approved_date: null,
+        removed_date: null,
+        removed_removal_reason: null,
+        spammed_type: null,
+        spammed_removal_reason: null,
+        reported_type: null,
+        approved_flag: false,
+        removed_flag: false,
+        spammed_flag: false,
+        reported_flag: false,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      reposted: [],
+      edited_at: null,
+      deleted_at: null,
+      _id: "6624051a1a2be695b0767ea5",
+      title: "Test4 ",
+      description: "ff",
+      created_at: "2024-04-20T18:10:34.830Z",
+      deleted: false,
+      type: "url",
+      link_url: "https://www.youtuddbej.com",
+      images: [],
+      videos: [],
+      polls: [],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_name: "Thiel___Wolff",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 2,
+      downvotes_count: 1,
+      oc_flag: false,
+      spoiler_flag: false,
+      nsfw_flag: false,
+      locked_flag: false,
+      allowreplies_flag: true,
+      scheduled_flag: false,
+      is_reposted_flag: false,
+      user_id: "661ed9a12b42f5ea45ed7f6e",
+      username: "m",
+      __v: 0,
+      set_suggested_sort: "None (Recommended)",
+    },
+    {
+      moderator_details: {
+        approved_date: null,
+        removed_date: null,
+        removed_removal_reason: null,
+        spammed_type: null,
+        spammed_removal_reason: null,
+        reported_type: null,
+        approved_flag: false,
+        removed_flag: false,
+        spammed_flag: false,
+        reported_flag: false,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      reposted: [],
+      edited_at: null,
+      deleted_at: null,
+      _id: "662405121a2be695b0767e9d",
+      title: "Test3 ",
+      description: "ff",
+      created_at: "2024-04-20T18:10:26.054Z",
+      deleted: false,
+      type: "url",
+      link_url: "https://www.youtuddbej.com",
+      images: [],
+      videos: [],
+      polls: [],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_name: "Thiel___Wolff",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 1,
+      downvotes_count: 2,
+      oc_flag: false,
+      spoiler_flag: false,
+      nsfw_flag: false,
+      locked_flag: false,
+      allowreplies_flag: true,
+      scheduled_flag: false,
+      is_reposted_flag: false,
+      user_id: "661ed9a12b42f5ea45ed7f6e",
+      username: "m",
+      __v: 0,
+      set_suggested_sort: "None (Recommended)",
+    },
+    {
+      moderator_details: {
+        removed_date: null,
+        removed_removal_reason: null,
+        spammed_type: null,
+        spammed_removal_reason: null,
+        reported_type: null,
+        approved_flag: false,
+        approved_by: null,
+        approved_date: null,
+        removed_flag: false,
+        spammed_flag: false,
+        reported_flag: false,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      reposted: [],
+      edited_at: null,
+      deleted_at: null,
+      set_suggested_sort: "None (Recommended)",
+      _id: "6623c0956c9b7daa1bce58e9",
+      title: "Test3 ",
+      description: "ff",
+      created_at: "2024-04-20T13:18:13.158Z",
+      deleted: false,
+      type: "url",
+      link_url: "https://www.youtuddbej.com",
+      images: [],
+      videos: [],
+      polls: [],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_name: "Thiel___Wolff",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 2,
+      downvotes_count: 0,
+      oc_flag: false,
+      spoiler_flag: false,
+      nsfw_flag: false,
+      locked_flag: false,
+      allowreplies_flag: true,
+      scheduled_flag: false,
+      is_reposted_flag: false,
+      user_id: "661ed9a12b42f5ea45ed7f6e",
+      username: "m",
+      __v: 0,
+    },
+    {
+      moderator_details: {
+        approved_date: null,
+        removed_date: null,
+        removed_removal_reason: null,
+        spammed_type: null,
+        spammed_removal_reason: null,
+        reported_type: null,
+        approved_flag: false,
+        removed_flag: false,
+        spammed_flag: false,
+        reported_flag: false,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      reposted: [],
+      edited_at: null,
+      deleted_at: null,
+      set_suggested_sort: "None (Recommended)",
+      _id: "6623bfd46071f2b693c0a41a",
+      title: "fvfvv vestigium voluntarius ater audax admitto ",
+      description: "ff",
+      created_at: "2024-04-20T13:15:00.256Z",
+      deleted: false,
+      type: "url",
+      link_url: "https://www.youtuddbej.com",
+      images: [],
+      videos: [],
+      polls: [],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_name: "Thiel___Wolff",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 1,
+      downvotes_count: 0,
+      oc_flag: false,
+      spoiler_flag: false,
+      nsfw_flag: false,
+      locked_flag: false,
+      allowreplies_flag: true,
+      scheduled_flag: false,
+      is_reposted_flag: false,
+      user_id: "661ed9a12b42f5ea45ed7f6e",
+      username: "m",
+      __v: 0,
+    },
+    {
+      moderator_details: {
+        approved_date: null,
+        removed_date: null,
+        removed_removal_reason: null,
+        spammed_type: null,
+        spammed_removal_reason: null,
+        reported_type: null,
+        approved_flag: false,
+        removed_flag: false,
+        spammed_flag: false,
+        reported_flag: false,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      reposted: [],
+      edited_at: null,
+      deleted_at: null,
+      set_suggested_sort: "None (Recommended)",
+      _id: "6623a50bd5696cd5e6cfe3b8",
+      title: "fvfvv vestigium voluntarius ater audax admitto ",
+      description: "ff",
+      created_at: "2024-04-20T11:20:43.384Z",
+      deleted: false,
+      type: "url",
+      link_url: "https://www.youtuddbej.com",
+      images: [],
+      videos: [],
+      polls: [],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_name: "Thiel___Wolff",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 0,
+      downvotes_count: 1,
+      oc_flag: false,
+      spoiler_flag: false,
+      nsfw_flag: false,
+      locked_flag: false,
+      allowreplies_flag: true,
+      scheduled_flag: false,
+      is_reposted_flag: false,
+      user_id: "661ed9a12b42f5ea45ed7f6e",
+      username: "m",
+      __v: 0,
+    },
+  ]);
 });
 
 let communityGeneralSettings = [

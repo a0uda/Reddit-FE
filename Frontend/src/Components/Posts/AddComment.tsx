@@ -17,6 +17,8 @@ import { AiOutlineOrderedList } from 'react-icons/ai';
 import { useMutation, useQueryClient } from 'react-query';
 import { postRequest } from '../../API/User';
 import { tiptapConfig } from '../../utils/tiptap_config';
+import useSession from '../../hooks/auth/useSession';
+import Credentials from '../../Pages/credential/Credentials';
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   const setLink = useCallback(() => {
@@ -177,10 +179,10 @@ const MenuFooter = ({
         // Invalidate or refetch a query on success
         queryClient.invalidateQueries('comments');
       },
-      onError: () => {
-        // Perform any actions on error, like showing an error message
-        console.log('Error');
-      },
+      // onError: () => {
+      //   // Perform any actions on error, like showing an error message
+      //   console.log('Error');
+      // },
     }
   );
 
@@ -257,6 +259,8 @@ export default function AddComment({ postId }: { postId: string }) {
   const [openMenuBar, setOpenMenuBar] = useState<boolean>(false);
   const [focused, setFocused] = useState<boolean>(false);
   const [error, setError] = useState('');
+  const { status } = useSession();
+  const [loginMod, setLoginMod] = useState(false);
 
   return (
     <>
@@ -297,9 +301,17 @@ export default function AddComment({ postId }: { postId: string }) {
         </>
       ) : (
         <>
+          <Credentials loginMod={loginMod} setLoginMod={setLoginMod} />
+
           <div
             className='py-2 px-4 text-neutral-900 border-2 border-neutral-muted rounded-3xl'
-            onClick={() => setFocused(true)}
+            onClick={() => {
+              if (status === 'unauthenticated') {
+                setLoginMod(true);
+                return;
+              }
+              setFocused(true);
+            }}
           >
             Add a comment
           </div>

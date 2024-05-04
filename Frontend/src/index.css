@@ -9,6 +9,7 @@
 /* width */
 ::-webkit-scrollbar {
   width: 7px;
+  height: 7px; /* for horizontal scrollbar: source: https://dev.to/ghostaram/how-to-set-and-customize-horizontal-and-vertical-scrollbars-with-css-2f98#:~:text=When%20applying%20CSS%20styles%2C%20make,of%20the%20vertical%20scroll%20bar. */
 }
 
 /* Track */

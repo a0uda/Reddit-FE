@@ -17,7 +17,7 @@ const UserBadge = ({ username }: UserBadgeProps) => {
   const [aboutData, setAboutData] = useState<AboutType | undefined>();
   useQuery({
     queryKey: 'about data',
-    queryFn: () => fetchRequest(`users/${username}/about`),
+    queryFn: () => fetchRequest(`users/about/${username}`),
     onSuccess: (data) => {
       setAboutData(data.data);
     },
@@ -29,17 +29,20 @@ const UserBadge = ({ username }: UserBadgeProps) => {
     <>
       <div className='flex justify-start items-center gap-2 pt-0'>
         <Avatar
+          src={
+            aboutData?.profile_picture ||
+            'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+          }
+          alt={username + "'s Profile"}
           variant='circular'
-          alt={username}
-          src={aboutData?.profile_picture ?? ''}
-          style={{ width: '35px', height: '35px' }}
+          size='sm'
         />
         <div>
           <Typography
             variant='small'
             className='font-body -tracking-tight text-xs font-bold text-gray-600'
           >
-            <Link to={`/user/${username}/saved`} className='hover:underline'>
+            <Link to={`/u/${username}/overview`} className='hover:underline'>
               {userNameWithPrefix}
             </Link>
           </Typography>

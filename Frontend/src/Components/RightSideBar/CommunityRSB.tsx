@@ -56,12 +56,12 @@ export function CommunityRSB({
       postRequest({
         endPoint: 'users/join-community',
         data: { communityName: communityName },
-      }),
-    {
-      onError: () => {
-        console.log('Error');
-      },
-    }
+      })
+    // {
+    //   onError: () => {
+    //     console.log('Error');
+    //   },
+    // }
   );
 
   const leaveMutation = useMutation(
@@ -69,12 +69,12 @@ export function CommunityRSB({
       postRequest({
         endPoint: 'users/leave-community',
         data: { communityName: communityName },
-      }),
-    {
-      onError: () => {
-        console.log('Error');
-      },
-    }
+      })
+    // {
+    //   onError: () => {
+    //     console.log('Error');
+    //   },
+    // }
   );
 
   return (

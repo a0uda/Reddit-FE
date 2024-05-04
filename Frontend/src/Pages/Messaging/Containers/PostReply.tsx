@@ -55,7 +55,17 @@ const PostReply = (props: {
   return (
     <div
       onClick={() => {
+        // postReq.mutate(
+        //   {
+        //     endPoint: 'messages/mark-as-read',
+        //     data: { _id: props.replyId },
+        //   },
+        //   {
+        //     onSuccess: () => {
         setMsgUnead(false);
+        //     },
+        //   }
+        // );
       }}
       className='w-full odd:bg-[#f6f7f8] px-4 py-3'
     >
@@ -87,6 +97,7 @@ const PostReply = (props: {
                 setVote(1);
                 newVote = 1;
               }
+              console.log(props.replyId, 'repliid');
 
               postReq.mutate(
                 {
@@ -144,7 +155,7 @@ const PostReply = (props: {
               {' '}
               from{' '}
               <Link
-                to={`/user/${props.senderUsername}`}
+                to={`/u/${props.senderUsername}`}
                 className='text-[#80bce9] hover:underline'
               >
                 {addPrefixToUsername(props.senderUsername, 'user')}
@@ -156,7 +167,7 @@ const PostReply = (props: {
               via{' '}
               <Link
                 className='text-[#228822] hover:underline'
-                to={`/${props.postCreatorType === 'user' ? 'user/' + props.postCreator : addPrefixToUsername(props.postCreator, props.postCreatorType)}`}
+                to={`/${props.postCreatorType === 'user' ? 'u/' + props.postCreator : addPrefixToUsername(props.postCreator, props.postCreatorType)}`}
               >
                 {addPrefixToUsername(
                   props.postCreator || '',
@@ -194,10 +205,9 @@ const PostReply = (props: {
                     onClick={() => {
                       postReq.mutate(
                         {
-                          endPoint: 'posts-or-comments/report',
+                          endPoint: 'comments/report',
                           data: {
                             id: props.replyId,
-                            is_post: false,
                             reason: 'spam',
                           },
                         },

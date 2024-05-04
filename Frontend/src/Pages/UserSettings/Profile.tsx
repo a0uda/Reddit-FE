@@ -12,24 +12,59 @@ import instagramIcon from '../../assets/instagramIcon.svg';
 import SocialLinksModal, {
   EnterLinkDetails,
 } from './Containers/SocialLinksModal';
-import LoadingProvider from './Containers/LoadingProvider';
+import LoadingProvider from '../../Components/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
+import { uploadImageFirebase } from '../../utils/helper_functions';
+import { SocialLink } from '../../types/types';
 
 function ImageInput(props: {
   id: string;
   children: React.ReactNode;
   width: string;
   image?: string;
+  type: 'banner' | 'profile';
 }) {
   const [selectedImage, setSelectedImage] = React.useState(props.image);
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
+  const postReq = useMutation(postRequest);
+  const handleImageChange = async (event, type: 'profile' | 'banner') => {
+    const file = event.target.files[0]; // Get the selected file
+
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const imageBlob = file; // This is already the Blob, which you can upload
+
+        // Upload the image and get the download URL
+        const imageUrl = await uploadImageFirebase(imageBlob);
+        if (type == 'profile') {
+          postReq.mutate(
+            {
+              endPoint: 'users/add-profile-picture',
+              data: { profile_picture: imageUrl },
+            },
+            {
+              onSuccess: () => {
+                setSelectedImage(imageUrl);
+              },
+            }
+          );
+        } else {
+          postReq.mutate(
+            {
+              endPoint: 'users/add-banner-picture',
+              data: { banner_picture: imageUrl },
+            },
+            {
+              onSuccess: () => {
+                setSelectedImage(imageUrl);
+              },
+            }
+          );
+        }
+        console.log('Image URL:', imageUrl); // Optional: log the image URL
+        // You can use this URL to set the image preview or other logic
+      } catch (error) {
+        console.error('Error uploading image:', error); // Handle error
+      }
     }
   };
 
@@ -72,7 +107,9 @@ function ImageInput(props: {
           type='file'
           accept='image/jpeg, image/png'
           className='hidden'
-          onChange={handleImageChange}
+          onChange={(e) => {
+            handleImageChange(e, props.type);
+          }}
         />
         {/* </> */}
       </div>
@@ -94,10 +131,11 @@ function Profile() {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
-      console.log(error.message);
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
   const patchReq = useMutation(patchRequest, {
@@ -108,9 +146,11 @@ function Profile() {
       setAlertMessage('User Settings Updated Successfully');
     },
     onError: (error) => {
+      const errorObj = JSON.parse(error.message);
+
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(errorObj.data);
     },
   });
   // console.log(data);
@@ -213,14 +253,14 @@ function Profile() {
         {/* <Card> */}
         <div className='flex flex-start gap-2 flex-wrap'>
           {social_links &&
-            social_links.map((link, i: number) => {
+            social_links.map((link: SocialLink, i: number) => {
               return (
                 <Link
                   key={link + i}
                   to={
-                    link.icon != 'Facebook'
+                    link.type != 'facebook'
                       ? 'https://www.' +
-                        link.icon.toLowerCase() +
+                        link.type.toLowerCase() +
                         '.com/' +
                         link.username +
                         '/'
@@ -231,7 +271,7 @@ function Profile() {
                   <RoundedButton
                     buttonBorderColor='none'
                     buttonColor='bg-[#EDEFF1]'
-                    buttonText={link.displayName || link.username}
+                    buttonText={link.display_text || link.username}
                     buttonTextColor='text-black'
                     imgRight={
                       <XCircleIcon
@@ -249,7 +289,7 @@ function Profile() {
                   >
                     <img
                       src={
-                        link.icon == 'Facebook' ? facebookIcon : instagramIcon
+                        link.type == 'facebook' ? facebookIcon : instagramIcon
                       }
                       className='h-3.5 w-3.5'
                     />
@@ -271,17 +311,18 @@ function Profile() {
               handleEnterLinkDetails();
             }}
             saveDisabled={
-              (!usernameInput && socialLinkType != 'Facebook') ||
-              ((!usernameInput || !nameInput) && socialLinkType == 'Facebook')
+              (!usernameInput && socialLinkType != 'facebook') ||
+              ((!usernameInput || !nameInput) && socialLinkType == 'facebook')
             }
             handleSaveButton={() => {
               console.log(nameInput, usernameInput);
               postReq.mutate({
                 endPoint: 'users/add-social-link',
                 data: {
-                  icon: socialLinkType,
+                  type: socialLinkType.toLowerCase(),
                   username: usernameInput,
-                  displayName: nameInput,
+                  display_text: nameInput,
+                  custom_url: usernameInput,
                 },
               });
               handleEnterLinkDetails();
@@ -295,12 +336,12 @@ function Profile() {
             >
               <img
                 src={
-                  socialLinkType == 'Facebook' ? facebookIcon : instagramIcon
+                  socialLinkType == 'facebook' ? facebookIcon : instagramIcon
                 }
                 className='h-3.5 w-3.5'
               />
             </RoundedButton>
-            {socialLinkType != 'Facebook' ? (
+            {socialLinkType != 'facebook' ? (
               <input
                 value={usernameInput}
                 onChange={(e) => {
@@ -354,10 +395,20 @@ function Profile() {
         />
         <Card>
           <div className='flex flex-start w-full gap-2'>
-            <ImageInput id='avatar' width='w-[30%]' image={profile_picture}>
+            <ImageInput
+              id='avatar'
+              width='w-[30%]'
+              image={profile_picture}
+              type='profile'
+            >
               Upload Image
             </ImageInput>
-            <ImageInput id='banner' width='w-[50%]' image={banner_picture}>
+            <ImageInput
+              id='banner'
+              width='w-[50%]'
+              image={banner_picture}
+              type='banner'
+            >
               Upload <strong>Banner</strong> Image
             </ImageInput>
           </div>

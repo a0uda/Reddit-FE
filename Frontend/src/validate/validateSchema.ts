@@ -26,13 +26,17 @@ export const validationSchema = {
     .string()
     .required('Link URl is required')
     .url('Invalid URL format'),
-  images: yup.array().of(
-    yup.object().shape({
-      path: yup.string().required('Path is required'),
-      caption: yup.string().required('Caption is required'),
-      link: yup.string().required('Link is required'),
-    })
-  ),
+  images: yup
+    .array()
+    .of(
+      yup.object().shape({
+        path: yup.string().required('Path is required'),
+        caption: yup.string().required('Caption is required'),
+        link: yup.string().required('Link is required'),
+      })
+    )
+    .min(1, 'At least one image is required')
+    .required(),
   videos: yup.array().of(
     yup.object().shape({
       path: yup.string().required('Path is required'),
@@ -41,7 +45,12 @@ export const validationSchema = {
     })
   ),
   type: yup.string().required(),
-  community_name: yup.string().required(),
+  post_in_community_flag: yup.boolean().required(),
+  // community_name: yup.string().when('post_in_community_flag', {
+  //   is: true,
+  //   then: yup.string().required('Community name is required'),
+  //   otherwise: yup.string(),
+  // }),
   nsfw_flag: yup.boolean().required(),
   spoiler_flag: yup.boolean().required(),
   oc_flag: yup.boolean().required(),
@@ -56,5 +65,4 @@ export const validationSchema = {
     .min(2, 'At least 2 options are required')
     .required(),
   gender: yup.string(),
-  post_in_community_flag: yup.boolean().required(),
 };
