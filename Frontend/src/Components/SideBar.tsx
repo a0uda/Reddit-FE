@@ -75,8 +75,8 @@ const SideBar = ({ className }: { className?: string }) => {
     queryKey: ['communities'],
     queryFn: () => fetchRequest(`users/communities/`),
     onSuccess: (data) => {
-      const formattedCommunities = data.data?.map(
-        (community: CommunityOverviewType) => ({
+      setCommunities(
+        data.data?.map((community: CommunityOverviewType) => ({
           icon: (
             <>
               {community.profile_picture ? (
@@ -93,14 +93,14 @@ const SideBar = ({ className }: { className?: string }) => {
           ),
           title: 'r/' + community.name,
           link: `/r/${community.name}`,
-        })
+        }))
       );
 
-      const communityList: ListItemProps[] = formattedCommunities || [];
+      // const communityList: ListItemProps[] = formattedCommunities || [];
 
-      console.log('communityList', communityList);
+      // console.log('communityList', communityList);
 
-      setCommunities(communityList);
+      // setCommunities(communityList);
     },
   });
 
@@ -128,30 +128,32 @@ const SideBar = ({ className }: { className?: string }) => {
           <AccordionDropDown title='Recent' list={recent} />
           <hr className='my-2 border-blue-gray-50' />
           {/* BE */}
+          <button
+            onClick={() => {
+              setCreateCommunityModal(true);
+            }}
+          >
+            <ListItemComponent
+              icon={<PlusIcon className='h-5 w-5' />}
+              title='Create Community'
+            />
+          </button>
+
           {communities && communities?.length > 0 && (
             <>
-              <AccordionDropDown title='Communities' list={communities!}>
-                <button
-                  onClick={() => {
-                    setCreateCommunityModal(true);
-                  }}
-                >
-                  <ListItemComponent
-                    icon={<PlusIcon className='h-5 w-5' />}
-                    title='Create Community'
-                  />
-                </button>
-              </AccordionDropDown>
+              <hr className='my-2 border-blue-gray-50' />
+              <AccordionDropDown
+                title='Communities'
+                list={communities!}
+              ></AccordionDropDown>
             </>
           )}
-          {isCreateCommunityModal && (
-            <CreateCommunity
-              open={isCreateCommunityModal}
-              handleOpen={() => {
-                setCreateCommunityModal(!isCreateCommunityModal);
-              }}
-            />
-          )}
+          <CreateCommunity
+            open={isCreateCommunityModal}
+            handleOpen={() => {
+              setCreateCommunityModal(!isCreateCommunityModal);
+            }}
+          />
           <hr className='my-2 border-blue-gray-50' />
           <AccordionDropDown title='Create Post' list={createPost} />
           <hr className='my-2 border-blue-gray-50' />

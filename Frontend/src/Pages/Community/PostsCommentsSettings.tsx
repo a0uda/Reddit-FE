@@ -2,13 +2,14 @@ import { useMutation, useQuery } from 'react-query';
 import RoundedButton from '../../Components/RoundedButton';
 import Section from '../UserSettings/Containers/Section';
 import { useAlert } from '../../Providers/AlertProvider';
-import { fetchRequest, patchRequest } from '../../API/User';
+import { fetchRequest, postRequest } from '../../API/User';
 import Card from '../UserSettings/Containers/Card';
 import SwitchButton from '../../Components/SwitchButton';
 import DropDownButton from '../UserSettings/Containers/DropDownButton';
 import { useEffect, useState } from 'react';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useParams } from 'react-router-dom';
+import ModSideBar from '../Rules and Removal reasons/ModSidebar';
 
 function PostsCommentsSettings() {
   const [crossPost, setCrossPost] = useState(false);
@@ -57,7 +58,7 @@ function PostsCommentsSettings() {
       setCommentScores(data.data.comments.minutes_to_hide_comment_scores);
     }
   }, [data]);
-  const patchReq = useMutation(patchRequest, {
+  const postReq = useMutation(postRequest, {
     onSuccess: () => {
       refetch();
       setTrigger(!trigger);
@@ -71,9 +72,9 @@ function PostsCommentsSettings() {
     },
   });
   const handleSaveChanges = () => {
-    patchReq.mutate({
+    postReq.mutate({
       endPoint: `communities/change-posts-and-comments/${community_name}`,
-      newSettings: {
+      data: {
         posts: {
           spam_filter_strength: {
             posts: postSpam,
@@ -103,176 +104,210 @@ function PostsCommentsSettings() {
     });
   };
   return (
-    <LoadingProvider error={isError} isLoading={isLoading}>
-      <div className='flex justify-end my-4'>
-        <RoundedButton
-          buttonText='Save changes'
-          buttonBorderColor=''
-          buttonColor='bg-[#0079D3]'
-          buttonTextColor='white'
-          onClick={handleSaveChanges}
-        ></RoundedButton>
+    <div className='Container'>
+      <div className='text-blue-light ps-4 ms-4 mt-4 font-bold border-b-2 pb-2 '>
+        <span className='border rounded-full bg-blue-light text-white ps-1 pe-1 me-2'>
+          r/
+        </span>{' '}
+        R/ {community_name}
+        <span className='text-black ms-2 uppercase'>
+          {' / community settings'}
+        </span>
       </div>
-      <h2 className='text-xl my-4 font-semibold'>Post and Comment Settings</h2>
-      <Section sectionTitle='Posts'>
-        <Card title='Post type options' description=''>
-          <DropDownButton
-            buttonList={['Any', 'Links Only', 'Text Posts Only']}
-            buttonText={postOptions}
-            selected={postOptions}
-            handleSelectionChange={(value) => setPostOptions(value)}
-          />
-        </Card>
-        <Card title='Allow crossposting of posts.' description=''>
-          <SwitchButton
-            checked={crossPost}
-            onChange={(value) => setCrossPost(value)}
-          />
-        </Card>
-        <Card
-          title='Archive posts'
-          description='Don’t allow commenting or voting on posts older than 6 months'
-        >
-          <SwitchButton
-            checked={archivePost}
-            onChange={(value) => setArchivePost(value)}
-          />
-        </Card>
-        <Card
-          title='Enable spoiler tag'
-          description='Media on posts with the spoiler tag are blurred'
-        >
-          <SwitchButton
-            checked={spoilerTag}
-            onChange={(value) => setSpoilerTag(value)}
-          />
-        </Card>
-        <Card
-          title='Allow image uploads and links to image hosting sites'
-          description=''
-        >
-          <SwitchButton
-            checked={imageUploads}
-            onChange={(value) => setImageUploads(value)}
-          />
-        </Card>
-        {imageUploads && (
-          <Card title='Allow multiple images per post' description=''>
-            <SwitchButton
-              checked={multipleImages}
-              onChange={(value) => setMultipleImages(value)}
-            />
-          </Card>
-        )}
-        <Card title='Allow polls' description=''>
-          <SwitchButton
-            checked={allowPolls}
-            onChange={(value) => setAllowPolls(value)}
-          />
-        </Card>
-        <Card
-          title='Spam filter strength'
-          description="'HIGH' is the standard filter, 'LOW' disables most filtering, 'ALL' will filter every post initially and they will need to be approved manually to be visible"
-        ></Card>
-        <Card className='pl-10' title='Posts' description=''>
-          <DropDownButton
-            buttonList={['High (Default)', 'Low', 'All']}
-            buttonText={postSpam}
-            selected={postSpam}
-            handleSelectionChange={(value) => setPostSpam(value)}
-          />
-        </Card>
-        <Card className='pl-10' title='Links' description=''>
-          <DropDownButton
-            buttonList={['High (Default)', 'Low', 'All']}
-            buttonText={linkSpam}
-            selected={linkSpam}
-            handleSelectionChange={(value) => setLinkSpam(value)}
-          />
-        </Card>
-        <Card className='pl-10' title='Comments' description=''>
-          <DropDownButton
-            buttonList={['High', 'Low (Default)', 'All']}
-            buttonText={commentSpam}
-            selected={commentSpam}
-            handleSelectionChange={(value) => setCommentSpam(value)}
-          />
-        </Card>
-      </Section>
-      <Section sectionTitle='Comments'>
-        <Card
-          title='Suggested sort'
-          description='All comment feeds in community will default to this sort setting'
-        >
-          <DropDownButton
-            buttonList={[
-              'None (Recommended)',
-              'Best',
-              'Old',
-              'Top',
-              'Q&A',
-              'Live (Beta)',
-              'Controversial',
-              'New',
-            ]}
-            buttonText={suggestedSort}
-            selected={suggestedSort}
-            handleSelectionChange={(value) => setSuggestedSort(value)}
-          />
-        </Card>
-        <Card title='Collapse deleted and removed comments' description=''>
-          <SwitchButton
-            checked={collapse}
-            onChange={(value) => setCollpase(value)}
-          />
-        </Card>
-        <Card title='Minutes to hide comment scores' description=''></Card>
-        <Card title='' description=''>
-          <input
-            type='number'
-            min={1}
-            value={commentScores}
-            onChange={(e) => setCommentScores(parseInt(e.target.value))}
-            className='appearance-none w-36  h-11 px-3 py-1 text-left text-gray-900 bg-white border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent'
-          />
-        </Card>
-        <Card title='Media in comments' description=''></Card>
-        <Card
-          className='pl-10'
-          title='GIFs from GIPHY'
-          description='Allow comments with GIFs from GIPHY.'
-        >
-          <SwitchButton checked={giphy} onChange={(value) => setGiphy(value)} />
-        </Card>
-        <Card
-          className='pl-10'
-          title='Collectible Expressions'
-          description='Allow comments with Collectible Expressions.'
-        >
-          <SwitchButton
-            checked={expressions}
-            onChange={(value) => setExpressions(value)}
-          />
-        </Card>
-        <Card
-          className='pl-10'
-          title='Images'
-          description='Allow comments with uploaded images.'
-        >
-          <SwitchButton
-            checked={images}
-            onChange={(value) => setImages(value)}
-          />
-        </Card>
-        <Card
-          className='pl-10'
-          title='GIFs'
-          description='Allow comments with uploaded GIFs.'
-        >
-          <SwitchButton checked={gifs} onChange={(value) => setGifs(value)} />
-        </Card>
-      </Section>
-    </LoadingProvider>
+      <div className='grid grid-col-1 xl:grid-cols-layout'>
+        <div className='hidden xl:block'>
+          <ModSideBar className='sticky top-[var(--navbar-height)] ' />
+        </div>
+        <LoadingProvider error={isError} isLoading={isLoading}>
+          <div className='ml-5'>
+            <div className='flex justify-end my-4'>
+              <RoundedButton
+                buttonText='Save changes'
+                buttonBorderColor=''
+                buttonColor='bg-[#0079D3]'
+                buttonTextColor='white'
+                onClick={handleSaveChanges}
+              ></RoundedButton>
+            </div>
+            <div className='w-[900px]'>
+              <h2 className='text-xl my-4 font-semibold'>
+                Post and Comment Settings
+              </h2>
+              <Section sectionTitle='Posts'>
+                <Card title='Post type options' description=''>
+                  <DropDownButton
+                    buttonList={['Any', 'Links Only', 'Text Posts Only']}
+                    buttonText={postOptions}
+                    selected={postOptions}
+                    handleSelectionChange={(value) => setPostOptions(value)}
+                  />
+                </Card>
+                <Card title='Allow crossposting of posts.' description=''>
+                  <SwitchButton
+                    checked={crossPost}
+                    onChange={(value) => setCrossPost(value)}
+                  />
+                </Card>
+                <Card
+                  title='Archive posts'
+                  description='Don’t allow commenting or voting on posts older than 6 months'
+                >
+                  <SwitchButton
+                    checked={archivePost}
+                    onChange={(value) => setArchivePost(value)}
+                  />
+                </Card>
+                <Card
+                  title='Enable spoiler tag'
+                  description='Media on posts with the spoiler tag are blurred'
+                >
+                  <SwitchButton
+                    checked={spoilerTag}
+                    onChange={(value) => setSpoilerTag(value)}
+                  />
+                </Card>
+                <Card
+                  title='Allow image uploads and links to image hosting sites'
+                  description=''
+                >
+                  <SwitchButton
+                    checked={imageUploads}
+                    onChange={(value) => setImageUploads(value)}
+                  />
+                </Card>
+                {imageUploads && (
+                  <Card title='Allow multiple images per post' description=''>
+                    <SwitchButton
+                      checked={multipleImages}
+                      onChange={(value) => setMultipleImages(value)}
+                    />
+                  </Card>
+                )}
+                <Card title='Allow polls' description=''>
+                  <SwitchButton
+                    checked={allowPolls}
+                    onChange={(value) => setAllowPolls(value)}
+                  />
+                </Card>
+                <Card
+                  title='Spam filter strength'
+                  description="'HIGH' is the standard filter, 'LOW' disables most filtering, 'ALL' will filter every post initially and they will need to be approved manually to be visible"
+                ></Card>
+                <Card className='pl-10' title='Posts' description=''>
+                  <DropDownButton
+                    buttonList={['High (Default)', 'Low', 'All']}
+                    buttonText={postSpam}
+                    selected={postSpam}
+                    handleSelectionChange={(value) => setPostSpam(value)}
+                  />
+                </Card>
+                <Card className='pl-10' title='Links' description=''>
+                  <DropDownButton
+                    buttonList={['High (Default)', 'Low', 'All']}
+                    buttonText={linkSpam}
+                    selected={linkSpam}
+                    handleSelectionChange={(value) => setLinkSpam(value)}
+                  />
+                </Card>
+                <Card className='pl-10' title='Comments' description=''>
+                  <DropDownButton
+                    buttonList={['High', 'Low (Default)', 'All']}
+                    buttonText={commentSpam}
+                    selected={commentSpam}
+                    handleSelectionChange={(value) => setCommentSpam(value)}
+                  />
+                </Card>
+              </Section>
+              <Section sectionTitle='Comments'>
+                <Card
+                  title='Suggested sort'
+                  description='All comment feeds in community will default to this sort setting'
+                >
+                  <DropDownButton
+                    buttonList={[
+                      'None (Recommended)',
+                      'Best',
+                      'Old',
+                      'Top',
+                      'Q&A',
+                      'Live (Beta)',
+                      'Controversial',
+                      'New',
+                    ]}
+                    buttonText={suggestedSort}
+                    selected={suggestedSort}
+                    handleSelectionChange={(value) => setSuggestedSort(value)}
+                  />
+                </Card>
+                <Card
+                  title='Collapse deleted and removed comments'
+                  description=''
+                >
+                  <SwitchButton
+                    checked={collapse}
+                    onChange={(value) => setCollpase(value)}
+                  />
+                </Card>
+                <Card
+                  title='Minutes to hide comment scores'
+                  description=''
+                ></Card>
+                <Card title='' description=''>
+                  <input
+                    type='number'
+                    min={1}
+                    value={commentScores}
+                    onChange={(e) => setCommentScores(parseInt(e.target.value))}
+                    className='appearance-none w-36  h-11 px-3 py-1 text-left text-gray-900 bg-white border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent'
+                  />
+                </Card>
+                <Card title='Media in comments' description=''></Card>
+                <Card
+                  className='pl-10'
+                  title='GIFs from GIPHY'
+                  description='Allow comments with GIFs from GIPHY.'
+                >
+                  <SwitchButton
+                    checked={giphy}
+                    onChange={(value) => setGiphy(value)}
+                  />
+                </Card>
+                <Card
+                  className='pl-10'
+                  title='Collectible Expressions'
+                  description='Allow comments with Collectible Expressions.'
+                >
+                  <SwitchButton
+                    checked={expressions}
+                    onChange={(value) => setExpressions(value)}
+                  />
+                </Card>
+                <Card
+                  className='pl-10'
+                  title='Images'
+                  description='Allow comments with uploaded images.'
+                >
+                  <SwitchButton
+                    checked={images}
+                    onChange={(value) => setImages(value)}
+                  />
+                </Card>
+                <Card
+                  className='pl-10'
+                  title='GIFs'
+                  description='Allow comments with uploaded GIFs.'
+                >
+                  <SwitchButton
+                    checked={gifs}
+                    onChange={(value) => setGifs(value)}
+                  />
+                </Card>
+              </Section>
+            </div>
+          </div>
+        </LoadingProvider>
+      </div>
+    </div>
   );
 }
 

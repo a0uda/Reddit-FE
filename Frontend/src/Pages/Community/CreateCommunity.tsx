@@ -122,7 +122,7 @@ const CreateCommunity = ({
     page,
   ]);
 
-  const [selectedOption, setSelectedOption] = useState<string>('public');
+  const [selectedOption, setSelectedOption] = useState<string>('Public');
 
   const [NSFWisChecked, setNSFWisChecked] = useState(false);
   const handleSwitchChange = () => {
@@ -171,7 +171,6 @@ const CreateCommunity = ({
 
   return (
     <>
-      <Alert>ana ela lert</Alert>
       <Dialog
         size='md'
         className='h-5/6 z-0 rounded-3xl w-fit-content'
@@ -319,7 +318,7 @@ const CreateCommunity = ({
                 <Card className='p-1 m-0 rounded-none shadow-none'>
                   <List className='p-0 m-0 rounded-none shadow-none'>
                     <ListItem
-                      className={`p-2 m-0 rounded-none ${selectedOption === 'public' ? 'bg-gray-200' : ''}`}
+                      className={`p-2 m-0 rounded-none ${selectedOption === 'Public' ? 'bg-gray-200' : ''}`}
                     >
                       <label
                         htmlFor='vertical-list-public'
@@ -357,13 +356,13 @@ const CreateCommunity = ({
                             crossOrigin={null}
                             // checked={selectedOption === 'public'}
                             // onChange={handleOptionChange}
-                            onChange={() => setSelectedOption('public')}
+                            onChange={() => setSelectedOption('Public')}
                           />
                         </ListItemPrefix>
                       </label>
                     </ListItem>
                     <ListItem
-                      className={`p-1 m-0 rounded-none ${selectedOption === 'restricted' ? 'bg-gray-200' : ''}`}
+                      className={`p-1 m-0 rounded-none ${selectedOption === 'Restricted' ? 'bg-gray-200' : ''}`}
                     >
                       <label
                         htmlFor='vertical-list-restricted'
@@ -401,13 +400,13 @@ const CreateCommunity = ({
                             crossOrigin={null}
                             // checked={selectedOption === 'restricted'}
                             // onChange={handleOptionChange}
-                            onChange={() => setSelectedOption('restricted')}
+                            onChange={() => setSelectedOption('Restricted')}
                           />
                         </ListItemPrefix>
                       </label>
                     </ListItem>
                     <ListItem
-                      className={`p-1 m-0 rounded-none ${selectedOption === 'private' ? 'bg-gray-200' : ''}`}
+                      className={`p-1 m-0 rounded-none ${selectedOption === 'Private' ? 'bg-gray-200' : ''}`}
                     >
                       <label
                         htmlFor='vertical-list-private'
@@ -444,7 +443,7 @@ const CreateCommunity = ({
                             crossOrigin={null}
                             // checked={selectedOption === 'private'}
                             // onChange={handleOptionChange}
-                            onChange={() => setSelectedOption('private')}
+                            onChange={() => setSelectedOption('Private')}
                           />
                         </ListItemPrefix>
                       </label>
