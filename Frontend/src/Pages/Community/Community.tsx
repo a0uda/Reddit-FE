@@ -859,7 +859,16 @@ const Community = () => {
                               <span>Mute {communityNameWithPrefix}</span>
                             </MenuItem>
                           )}
-
+                          {!isJoined && isModerator && (
+                            <MenuItem
+                              onClick={() => {
+                                joinMutation.mutate(communityName ?? '');
+                              }}
+                              className='p-4'
+                            >
+                              <span>Join</span>
+                            </MenuItem>
+                          )}
                           {isJoined && isModerator && (
                             <MenuItem
                               onClick={() => {
@@ -870,16 +879,6 @@ const Community = () => {
                               <span>Leave</span>
                             </MenuItem>
                           )}
-                          {/* {!isJoined && community.moderator_flag && (
-                            <MenuItem
-                              onClick={() => {
-                                joinMutation.mutate(communityName ?? '');
-                              }}
-                              className='p-4'
-                            >
-                              <span>Join</span>
-                            </MenuItem>
-                          )} */}
                         </MenuList>
                       </Menu>
                     </div>
