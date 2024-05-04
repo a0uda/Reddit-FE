@@ -92,15 +92,15 @@ export function CommunityRSB({
         }}
       >
         <Card
-          className='w-80 bg-gray-100 rounded-xl shadow-none p-0 pb-3 min-w-0'
+          className='w-80 bg-gray-100 rounded-xl shadow-none p-0 pb-3 min-w-0 '
           data-testid='community-card'
         >
           <LoadingProvider error={isError} isLoading={isLoading}>
             {!page && (
-              <div className='p-4  flex justify-between items-end'>
+              <div className='p-4 flex justify-between items-end'>
                 <Typography
                   variant='h5'
-                  className='p-0 font-body font-semibold -tracking-tight text-black'
+                  className='p-0 font-body font-semibold -tracking-tight text-black overflow-hidden whitespace-nowrap text-ellipsis'
                 >
                   r/{communityName}
                 </Typography>
@@ -240,7 +240,8 @@ const CommunityModerators = ({ name: communityName }: CommunityProps) => {
   const [moderatorsList, setMods] = useState([]);
 
   return (
-    <LoadingProvider error={isError} isLoading={isLoading}>
+    // <LoadingProvider error={isError} isLoading={isLoading}>
+    <>
       {moderatorsList.map((community: ModeratorProps, index: number) => (
         <ModeratorItem
           key={index}
@@ -248,7 +249,8 @@ const CommunityModerators = ({ name: communityName }: CommunityProps) => {
           username={community.username}
         />
       ))}
-    </LoadingProvider>
+    </>
+    // </LoadingProvider>
   );
 };
 

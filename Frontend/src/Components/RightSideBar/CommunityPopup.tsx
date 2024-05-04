@@ -79,7 +79,7 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
             )}
             <Typography
               variant='small'
-              className='font-body font-bold -tracking-tight text-lg text-black'
+              className='font-body font-bold -tracking-tight text-lg text-black overflow-hidden whitespace-nowrap text-ellipsis'
             >
               <Link
                 to={`/r/${props.communityName}`}

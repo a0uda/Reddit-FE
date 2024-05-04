@@ -16,7 +16,7 @@ const ContentLayout = ({
           <SideBar className='sticky top-[var(--navbar-height)] ' />
         </div>
 
-        <div className='mx-auto w-full md:w-[1120px] md:max-w-[calc(100vw-272px)]'>
+        <div className='mx-auto w-full md:w-[1080px] md:max-w-[calc(100vw-272px)]'>
           <div>{header && header}</div>
           <div className='flex justify-center gap-2'>{children}</div>
         </div>

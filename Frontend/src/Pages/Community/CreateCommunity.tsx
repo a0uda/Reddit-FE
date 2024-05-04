@@ -53,7 +53,6 @@ const CreateCommunity = ({
   // console.log(data);
   const communitiesNamesList =
     data?.data.map((community: community) => community.name) ?? [];
-  console.log('comunityyyynamessss', communitiesNamesList);
 
   const handleNameLength = (name: string) => {
     setCommunityName(name);

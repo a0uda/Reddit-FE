@@ -31,7 +31,6 @@ export function RecentPosts() {
     }
   }, [user?.username]);
 
-
   return (
     <>
       {isContentVisible && (
@@ -42,7 +41,7 @@ export function RecentPosts() {
             scrollbarWidth: 'thin',
           }}
         >
-          <Card className='w-72 bg-gray-100 rounded-2xl shadow-none p-0 pt-3 pb-3 min-w-0 mb-3'>
+          <Card className='w-80 bg-gray-100 rounded-2xl shadow-none p-0 pt-3 pb-3 min-w-0 mb-3'>
             <div className='flex flex-row justify-between p-4 py-3'>
               <Typography
                 variant='small'
