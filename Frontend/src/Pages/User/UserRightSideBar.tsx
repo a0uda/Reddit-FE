@@ -309,31 +309,31 @@ function UserRightSideBar() {
           )}
           <SidebarSection sectionTitle='Links'>
             <div className='flex flex-start gap-2 flex-wrap'>
-              {/* {social_links &&
+              {social_links &&
                 social_links.map((link: SocialLink, i: number) => {
                   return (
                     <Link
                       key={i}
                       to={
-                        link.icon != 'Facebook'
+                        link.type != 'facebook'
                           ? 'https://www.' +
-                            link.icon.toLowerCase() +
+                            link.type.toLowerCase() +
                             '.com/' +
-                            link.username +
+                            link.custom_url +
                             '/'
-                          : link.username
+                          : 'https://' + link.custom_url
                       }
                       target='_blank'
                     >
                       <RoundedButton
                         buttonBorderColor='none'
                         buttonColor='bg-neutral-500'
-                        buttonText={link.displayName || link.username}
+                        buttonText={link.display_text || link.custom_url}
                         buttonTextColor='text-black'
                       >
                         <img
                           src={
-                            link.icon == 'Facebook'
+                            link.type == 'facebook'
                               ? facebookIcon
                               : instagramIcon
                           }
@@ -342,7 +342,7 @@ function UserRightSideBar() {
                       </RoundedButton>
                     </Link>
                   );
-                })} */}
+                })}
               {myData ? (
                 <Link
                   to={`/settings/profile`}
