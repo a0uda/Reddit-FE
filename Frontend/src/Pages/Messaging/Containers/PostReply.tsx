@@ -293,7 +293,7 @@ const PostReply = (props: {
               handleThankyouModal={handleThankyouModal}
               id={props.replyId}
               username={props.senderUsername}
-              type='postReply'
+              type='comment'
               senderType='user'
             />
             <ThankYouModal

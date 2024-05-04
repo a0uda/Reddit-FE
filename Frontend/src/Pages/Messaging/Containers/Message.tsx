@@ -169,7 +169,7 @@ export const ReportModal = (props: {
                 onClick={(e) => {
                   e.stopPropagation();
 
-                  if (props.type != 'postReply') {
+                  if (props.type == 'message') {
                     postReq.mutate(
                       {
                         endPoint: 'messages/del-msg',
@@ -185,10 +185,28 @@ export const ReportModal = (props: {
                         },
                       }
                     );
-                  } else {
+                  } else if (props.type == 'comment') {
                     postReq.mutate(
                       {
                         endPoint: 'comments/report',
+                        data: {
+                          id: props.id,
+                          // is_post: props.isPost || false,
+                          reason: chosenMsg,
+                        },
+                      },
+                      {
+                        onSuccess: () => {
+                          setChosenMsg('');
+                          props.handleThankyouModal();
+                          props.handleOpen();
+                        },
+                      }
+                    );
+                  } else if (props.type == 'post') {
+                    postReq.mutate(
+                      {
+                        endPoint: 'posts/report',
                         data: {
                           id: props.id,
                           // is_post: props.isPost || false,
