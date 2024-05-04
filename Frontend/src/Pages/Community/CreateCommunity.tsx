@@ -1,11 +1,16 @@
-// import MyForm from '../../Components/Form';
-// import { ButtonType } from '../../validate/buttonType';
-// import { postRequest } from '../../API/User';
 import { useState, useEffect } from 'react';
+import { useMutation } from 'react-query';
+import { postRequest } from '../../API/User';
+import { TfiClose } from 'react-icons/tfi';
+import { GoDotFill } from 'react-icons/go';
+import { FaRegEyeSlash } from 'react-icons/fa6';
+import { FiLock } from 'react-icons/fi';
+import { BsExclamationDiamond } from 'react-icons/bs';
+import { TbWorld } from 'react-icons/tb';
 import {
   Dialog,
   DialogBody,
-  IconButton,
+  Switch,
   Button,
   Typography,
   Input,
@@ -17,17 +22,6 @@ import {
   ListItem,
   ListItemPrefix,
 } from '@material-tailwind/react';
-// import { IoMdClose } from 'react-icons/io';
-import { TfiClose } from 'react-icons/tfi';
-import { GoDotFill } from 'react-icons/go';
-import { BsDot } from 'react-icons/bs';
-// import { useMutation } from 'react-query';
-// import { saveToken } from '../../utils/tokens_helper';
-// import { object } from 'yup';
-// import { MdCatchingPokemon } from 'react-icons/md';
-// import axios from 'axios';
-import { GenericAlert } from '../../Components/GenericAlert';
-import { useAlert } from '../../Providers/AlertProvider';
 
 interface CreateCommunityProps {
   open: boolean;
@@ -39,10 +33,7 @@ const CreateCommunity = ({
   handleOpen: handleOpen,
 }: CreateCommunityProps) => {
   const [opendd, setOpendd] = useState(false);
-  //   const handleOpen = () => setOpen(!open);
-  // const nextPage = () => {
-  //   setPage(page === 1 ? 2 : 1);
-  // };
+  const postReq = useMutation(postRequest);
 
   //===================================================== Name ==========================================================
 
@@ -51,10 +42,6 @@ const CreateCommunity = ({
     useState<boolean>(false);
   const [communtiyNameErrorMsg, setCommunityNameErrorMsg] =
     useState<string>('');
-
-  //   const [description, setDescription] = useState<string>('');
-  //   const [communityType, setCommunityType] = useState<CommunityType>('public');
-  //   const [isOver18, setIsOver18] = useState<boolean>(false);
 
   const handleNameLength = (name: string) => {
     setCommunityName(name);
@@ -124,34 +111,64 @@ const CreateCommunity = ({
     page,
   ]);
 
-  //   const handleCancel = () => {
-  //     onClose();
-  //   };
+  const [selectedOption, setSelectedOption] = useState<string>('public');
 
-  //   const handleNext = () => {
-  //     setPage(page + 1);
-  //   };
+  const [NSFWisChecked, setNSFWisChecked] = useState(false);
+  const handleSwitchChange = () => {
+    setNSFWisChecked(!NSFWisChecked);
+  };
 
-  //   const handleBack = () => {
-  //     setPage(page - 1);
-  //   };
-
-  //   console.log('communityName', communityName);
+  const submitMutation = useMutation(
+    ({
+      communityName,
+      communityDescription,
+      selectedOption,
+      NSFWisChecked,
+    }: {
+      communityName: string;
+      communityDescription: string;
+      selectedOption: string;
+      NSFWisChecked: boolean;
+    }) =>
+      postRequest({
+        endPoint: 'communities/add-community',
+        data: {
+          name: communityName,
+          description: communityDescription,
+          type: selectedOption,
+          nsfw_flag: NSFWisChecked,
+          category: 'Technology',
+        },
+      }),
+    {
+      onSuccess: () => {
+        handleOpen();
+      },
+      onError: () => {
+        console.log('Error while creating community');
+      },
+    }
+  );
+  const handleSubmit = () => {
+    submitMutation.mutate({
+      communityName,
+      communityDescription,
+      selectedOption,
+      NSFWisChecked,
+    });
+  };
 
   return (
     <>
-      {/* <GenericAlert
-        msgg='Community name should be less than 21 characters'
-        errorr={true}
-      /> */}
       <Alert>ana ela lert</Alert>
       <Dialog
         size='md'
-        className='h-5/6 z-0 rounded-3xl'
+        className='h-5/6 z-0 rounded-3xl w-fit-content'
         open={open}
         handler={handleOpen}
       >
         <DialogBody className=''>
+          {/*================================================== page 1 ================================================== */}
           {page === 1 && (
             <div className='flex flex-col gap-6'>
               <div className='flex justify-between'>
@@ -166,8 +183,7 @@ const CreateCommunity = ({
                     variant='small'
                     className='font-body -tracking-tight text-gray-600 mb-10 mt-2'
                   >
-                    Descriptions help redditors discover and understand your
-                    community.
+                    Descriptions help redditors discover your community.
                   </Typography>
                 </div>
                 <div>
@@ -254,6 +270,244 @@ const CreateCommunity = ({
                     disabled={nextDisabled}
                   >
                     Next
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+          {/*================================================== page 2 ================================================== */}
+          {page === 2 && (
+            <div className='flex flex-col gap-6'>
+              <div className='flex justify-between'>
+                <div>
+                  <Typography
+                    variant='h4'
+                    className='font-body font-bold -tracking-tight text-black'
+                  >
+                    What kind of community?
+                  </Typography>
+                  <Typography
+                    variant='small'
+                    className='font-body -tracking-tight text-gray-600 mb-0 mt-2'
+                  >
+                    Decide who can view and contribute in your community. Only
+                    public communities show up in search.
+                  </Typography>
+                </div>
+                <div>
+                  <Button
+                    onClick={handleOpen}
+                    variant='text'
+                    className=' p-2 bg-gray-300  rounded-full'
+                  >
+                    <TfiClose size={15} />
+                  </Button>
+                </div>
+              </div>
+              <div>
+                <Card className='p-1 m-0 rounded-none shadow-none'>
+                  <List className='p-0 m-0 rounded-none shadow-none'>
+                    <ListItem
+                      className={`p-2 m-0 rounded-none ${selectedOption === 'public' ? 'bg-gray-200' : ''}`}
+                    >
+                      <label
+                        htmlFor='vertical-list-public'
+                        className='flex justify-between w-full cursor-pointer items-center px-3 py-2'
+                      >
+                        <div className='flex'>
+                          <ListItemPrefix className='mr-3'>
+                            <TbWorld size={25} />
+                          </ListItemPrefix>
+                          <div>
+                            <Typography
+                              color='blue-gray'
+                              className='font-medium text-blue-gray-800'
+                            >
+                              Public
+                            </Typography>
+                            <Typography
+                              color='blue-gray'
+                              className='font-medium text-blue-gray-400 text-xs'
+                            >
+                              Anyone can view and contribute
+                            </Typography>
+                          </div>
+                        </div>
+                        <ListItemPrefix className='mr-3'>
+                          <Radio
+                            defaultChecked
+                            name='vertical-list'
+                            id='vertical-list-public'
+                            ripple={false}
+                            className='hover:before:opacity-0'
+                            containerProps={{
+                              className: 'p-0',
+                            }}
+                            crossOrigin={null}
+                            // checked={selectedOption === 'public'}
+                            // onChange={handleOptionChange}
+                            onChange={() => setSelectedOption('public')}
+                          />
+                        </ListItemPrefix>
+                      </label>
+                    </ListItem>
+                    <ListItem
+                      className={`p-1 m-0 rounded-none ${selectedOption === 'restricted' ? 'bg-gray-200' : ''}`}
+                    >
+                      <label
+                        htmlFor='vertical-list-restricted'
+                        className='flex justify-between w-full cursor-pointer items-center px-3 py-2'
+                      >
+                        <div className='flex'>
+                          <ListItemPrefix className='mr-3'>
+                            <FaRegEyeSlash size={25} />
+                          </ListItemPrefix>
+                          <div>
+                            <Typography
+                              color='blue-gray'
+                              className='font-medium text-blue-gray-800'
+                            >
+                              Restricted
+                            </Typography>
+                            <Typography
+                              color='blue-gray'
+                              className='font-medium text-blue-gray-400 text-xs'
+                            >
+                              Anyone can view, but only approved users can
+                              contribute
+                            </Typography>
+                          </div>
+                        </div>
+                        <ListItemPrefix className='mr-3'>
+                          <Radio
+                            name='vertical-list'
+                            id='vertical-list-restricted'
+                            ripple={false}
+                            className='hover:before:opacity-0'
+                            containerProps={{
+                              className: 'p-0',
+                            }}
+                            crossOrigin={null}
+                            // checked={selectedOption === 'restricted'}
+                            // onChange={handleOptionChange}
+                            onChange={() => setSelectedOption('restricted')}
+                          />
+                        </ListItemPrefix>
+                      </label>
+                    </ListItem>
+                    <ListItem
+                      className={`p-1 m-0 rounded-none ${selectedOption === 'private' ? 'bg-gray-200' : ''}`}
+                    >
+                      <label
+                        htmlFor='vertical-list-private'
+                        className='flex justify-between w-full cursor-pointer items-center px-3 py-2'
+                      >
+                        <div className='flex'>
+                          <ListItemPrefix className='mr-3'>
+                            <FiLock size={25} />
+                          </ListItemPrefix>
+                          <div>
+                            <Typography
+                              color='blue-gray'
+                              className='font-medium text-blue-gray-800'
+                            >
+                              Private
+                            </Typography>
+                            <Typography
+                              color='blue-gray'
+                              className='font-medium text-blue-gray-400 text-xs'
+                            >
+                              Only approved users can view and contribute
+                            </Typography>
+                          </div>
+                        </div>
+                        <ListItemPrefix className='mr-3'>
+                          <Radio
+                            name='vertical-list'
+                            id='vertical-list-private'
+                            ripple={false}
+                            className='hover:before:opacity-0'
+                            containerProps={{
+                              className: 'p-0',
+                            }}
+                            crossOrigin={null}
+                            // checked={selectedOption === 'private'}
+                            // onChange={handleOptionChange}
+                            onChange={() => setSelectedOption('private')}
+                          />
+                        </ListItemPrefix>
+                      </label>
+                    </ListItem>
+                  </List>
+                </Card>
+                <div className='w-11/12 h-0.5 m-3 bg-gray-300'></div>
+                <div>
+                  <ListItem className={'p-1 mb-4 rounded-none'}>
+                    <label
+                      htmlFor='vertical-list-nsfw'
+                      className='flex justify-between w-full cursor-pointer items-center px-3 py-2'
+                    >
+                      <div className='flex'>
+                        <ListItemPrefix className='mr-3'>
+                          <BsExclamationDiamond size={25} />
+                        </ListItemPrefix>
+                        <div>
+                          <Typography
+                            color='blue-gray'
+                            className='font-medium text-blue-gray-800'
+                          >
+                            Mature (18+)
+                          </Typography>
+                          <Typography
+                            color='blue-gray'
+                            className='font-medium text-blue-gray-400 text-xs'
+                          >
+                            Users must be over 18 to view and contribute
+                          </Typography>
+                        </div>
+                      </div>
+                      <ListItemPrefix className='mr-3'>
+                        <Switch
+                          id='vertical-list-nsfw'
+                          crossOrigin={''}
+                          className='h-full w-full checked:bg-blue-light-muted'
+                          containerProps={{
+                            className: 'w-11 h-6',
+                          }}
+                          circleProps={{
+                            className: 'before:hidden left-0.5 border-none',
+                          }}
+                          checked={NSFWisChecked}
+                          onChange={handleSwitchChange}
+                        />
+                      </ListItemPrefix>
+                    </label>
+                  </ListItem>
+                </div>
+              </div>
+              <div className='flex justify-between items-end '>
+                <div className='flex'>
+                  <GoDotFill className='text-gray-400 m-0 p-0' />
+                  <GoDotFill className='text-black m-0 p-0' />
+                </div>
+                <div className='flex gap-1'>
+                  <Button
+                    variant='text'
+                    className='h-10 font-bold flex items-center gap-1.5 bg-gray-200'
+                    onClick={() => {
+                      setPage(1);
+                    }}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    variant='text'
+                    className='h-10 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
+                    onClick={() => {
+                      handleSubmit();
+                    }}
+                  >
+                    Create Community
                   </Button>
                 </div>
               </div>

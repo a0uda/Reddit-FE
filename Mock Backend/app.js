@@ -689,6 +689,41 @@ app.get("/communities/get-community-view/:communityname", (req, res) => {
   }
 });
 
+app.post("/communities/add-community", (req, res) => {
+  const { name, description, type, nsfw_flag, category } = req.body;
+  // console.log(
+  //   "name",
+  //   name,
+  //   "description",
+  //   description,
+  //   "type",
+  //   type,
+  //   "nsfw_flag",
+  //   nsfw_flag,
+  //   "category",
+  //   category
+  // );
+  const newCommunity = {
+    name: name,
+    description: description,
+    welcome_message: "",
+    type: type,
+    nsfw_flag: nsfw_flag,
+    members_count: 1,
+    profile_picture: "",
+    banner_picture: "",
+    created_at: new Date().toISOString(),
+    joined_flag: true,
+    moderator_flag: true,
+    muted_flag: false,
+    favorite_flag: false,
+  };
+
+  communities.push(newCommunity);
+  console.log(communities);
+  res.sendStatus(200);
+});
+
 app.post("/users/mute-unmute-community", (req, res) => {
   const { community_name } = req.body;
   // console.log(community_name);
@@ -709,7 +744,7 @@ app.patch("/users/favorite-unfavorite-community", (req, res) => {
     if (community.name === community_name) {
       community.favorite_flag = !community.favorite_flag;
     }
-    console.log(community);
+    // console.log(community);
     return community;
   });
   res.sendStatus(200);
@@ -717,12 +752,12 @@ app.patch("/users/favorite-unfavorite-community", (req, res) => {
 
 app.post("/communities/add-profile-picture", (req, res) => {
   const { community_name, profile_picture } = req.body;
-  console.log(
-    "community_name",
-    community_name,
-    "profile_picture",
-    profile_picture
-  );
+  // console.log(
+  //   "community_name",
+  //   community_name,
+  //   "profile_picture",
+  //   profile_picture
+  // );
   communities = communities.map((community) => {
     if (community.name === community_name) {
       community.profile_picture = profile_picture;

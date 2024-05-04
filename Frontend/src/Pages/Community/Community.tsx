@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import ContentLayout from '../../Components/ContentLayout';
 import { CommunityRSB } from '../../Components/RightSideBar/CommunityRSB';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useQuery, useMutation } from 'react-query';
 import { fetchRequest, postRequest, patchRequest } from '../../API/User';
@@ -17,9 +17,6 @@ import { Link } from 'react-router-dom';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { HiEllipsisHorizontal } from 'react-icons/hi2';
 import { addPrefixToUsername } from '../../utils/helper_functions';
-// import Input from '../../Components/Input';
-import { useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
 import {
   Avatar,
   Button,
@@ -32,7 +29,6 @@ import {
   AccordionHeader,
   ListItem,
   Typography,
-  Input,
 } from '@material-tailwind/react';
 
 const Community = () => {
@@ -236,7 +232,7 @@ const Community = () => {
   const addBannerPictureMutation = useMutation(
     (communityName: string) =>
       postRequest({
-        endPoint: 'communities/add-profile-picture',
+        endPoint: 'communities/add-banner-picture',
         data: {
           community_name: communityName,
           banner_picture: uploadedBanner,
@@ -500,13 +496,13 @@ const Community = () => {
               <>
                 {!uploadedProfile && (
                   <div>
-                    <input
+                    {/* <input
                       type='file'
                       accept='image/*'
                       onChange={profilePictureHandleFileUpload}
                       className='hidden'
                       id='upload-button-profile'
-                    />
+                    /> */}
                     <label
                       htmlFor='upload-button-profile'
                       className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
@@ -517,7 +513,8 @@ const Community = () => {
                     >
                       <IoCloudUploadOutline className='m-50' size={30} />
                       <Typography className='text-gray-700 font-bold text-sm'>
-                        Drag and drop or browse your device
+                        {/* Drag and drop or browse your device */}
+                        Drag and drop your profile image here
                       </Typography>
                     </label>
                   </div>
@@ -629,13 +626,13 @@ const Community = () => {
               <>
                 {!uploadedBanner && (
                   <div>
-                    <input
+                    {/* <input
                       type='file'
                       accept='image/*'
                       onChange={bannerPictureHandleFileUpload}
                       className='hidden'
                       id='upload-button-banner'
-                    />
+                    /> */}
                     <label
                       htmlFor='upload-button-banner'
                       className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
@@ -646,7 +643,8 @@ const Community = () => {
                     >
                       <IoCloudUploadOutline className='m-50' size={30} />
                       <Typography className='text-gray-700 font-bold text-sm'>
-                        Drag and drop or browse your device
+                        {/* Drag and drop or browse your device */}
+                        Drag and drop your banner image here
                       </Typography>
                     </label>
                   </div>
