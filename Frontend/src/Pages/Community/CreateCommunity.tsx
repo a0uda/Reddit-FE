@@ -43,11 +43,17 @@ const CreateCommunity = ({
   const [communtiyNameErrorMsg, setCommunityNameErrorMsg] =
     useState<string>('');
 
+  interface community {
+    _id: string;
+    name: string;
+  }
   const { data } = useQuery('communities names', () =>
-    fetchRequest('communities/get-communities-names')
+    fetchRequest('communities/get-community-names')
   );
   // console.log(data);
-  const communitiesNamesList = data?.data ?? [];
+  const communitiesNamesList =
+    data?.data.map((community: community) => community.name) ?? [];
+  console.log('comunityyyynamessss', communitiesNamesList);
 
   const handleNameLength = (name: string) => {
     setCommunityName(name);

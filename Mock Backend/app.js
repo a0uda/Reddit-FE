@@ -651,7 +651,7 @@ let communities = [
     favorite_flag: false,
   },
   {
-    name: "musicFLASE",
+    name: "musicFALSE",
     description: "The musical community of reddit",
     welcome_message: "",
     type: "Private",
@@ -724,9 +724,15 @@ app.post("/communities/add-community", (req, res) => {
   res.sendStatus(200);
 });
 
-app.get("/communities/get-communities-names", (req, res) => {
-  const communityNames = communities.map((community) => community.name);
-  res.status(200).json(communityNames);
+app.get("/communities/get-community-names", (req, res) => {
+  const communityDetails = communities.map((community) => {
+    return {
+      _id: community.description, // just to semulate the id
+      name: community.name,
+    };
+  });
+  console.log(communityDetails);
+  res.status(200).json(communityDetails);
 });
 
 app.post("/users/mute-unmute-community", (req, res) => {
