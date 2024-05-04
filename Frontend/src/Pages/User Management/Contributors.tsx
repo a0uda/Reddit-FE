@@ -4,7 +4,7 @@ import { getTimeDifferenceAsString } from '../../utils/helper_functions';
 import RoundedButton from '../../Components/RoundedButton';
 import useSession from '../../hooks/auth/useSession';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import { useState } from 'react';
 import AddApprovedUser from './AddApprovedUser';
@@ -206,7 +206,13 @@ const Contributors = () => {
       <ButtonList buttArr={buttArr} />
       <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
       <LoadingProvider error={isError} isLoading={isLoading}>
-        <UsersList userArr={selectedData} refetch={refetch} />
+        {data?.data.length > 0 ? (
+          <UsersList userArr={selectedData} refetch={refetch} />
+        ) : (
+          <div className='border-[1px] rounded-md flex items-center justify-center font-semibold text-xl text-gray-600 p-10'>
+            Approved list is empty
+          </div>
+        )}
       </LoadingProvider>
     </div>
   );

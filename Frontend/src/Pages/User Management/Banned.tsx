@@ -292,7 +292,13 @@ const Banned = () => {
       <ButtonList buttArr={buttArr} />
       <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
       <LoadingProvider isLoading={isLoading} error={isError}>
-        <UsersList userArr={selectedData} refetch={refetch} />
+        {data?.data.length > 0 ? (
+          <UsersList userArr={selectedData} refetch={refetch} />
+        ) : (
+          <div className='border-[1px] rounded-md flex items-center justify-center font-semibold text-xl text-gray-600 p-10'>
+            Banned list is empty
+          </div>
+        )}{' '}
       </LoadingProvider>
     </div>
   );

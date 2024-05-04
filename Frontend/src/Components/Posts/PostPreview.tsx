@@ -90,7 +90,11 @@ export const PollPostContainer = (props: { post: PostType }) => {
               <Radio
                 name={props.post._id}
                 label={
-                  poll.options + ' ' + '(Number of votes: ' + poll.votes + ')'
+                  poll.options +
+                  ' ' +
+                  '(Number of votes: ' +
+                  (poll.votes + (chosenOptionId == poll._id ? 1 : 0)) +
+                  ')'
                 }
                 value={poll._id}
                 checked={poll._id == chosenOptionId}

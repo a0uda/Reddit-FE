@@ -4,7 +4,7 @@ import CreateChat from './CreateChat';
 const ChatMain = ({ page }: { page: 'create' | 'chat' }) => {
   return (
     <div className='flex'>
-      <SideBar  />
+      <SideBar />
       {page == 'create' ? <CreateChat /> : <></>}
     </div>
   );

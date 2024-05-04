@@ -1,32 +1,18 @@
-import {
-  Accordion,
-  AccordionBody,
-  AccordionHeader,
-  Avatar,
-  IconButton,
-  List,
-  ListItem,
-  ListItemPrefix,
-  Typography,
-} from '@material-tailwind/react';
-import {
-  HomeIcon,
-  ChevronDownIcon,
-  ShieldCheckIcon,
-  PlusIcon,
-  DocumentTextIcon,
-  PhotoIcon,
-  LinkIcon,
-} from '@heroicons/react/24/solid';
-import { ReactNode, useState } from 'react';
-import { CommunityIcon } from '../../assets/icons/Icons';
+import { Avatar, Typography } from '@material-tailwind/react';
+
 import { cn } from '../../utils/helper_functions';
 import newChat from '../../assets/newChat.svg';
-import { useQuery } from 'react-query';
-import { CommunityOverviewType, CommunityType } from '../../types/types';
-import { fetchRequest } from '../../API/User';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import { useQuery } from 'react-query';
+import { fetchRequest } from '../../API/User';
+type ChatItemType = {
+  _id: string;
+  otherUsername: string;
+  lastMessageSender: string;
+  lastMessageText: string;
+  lastMessageTimestamp: string;
+  otherProfilePicture: string;
+};
 const SideBar = ({ className }: { className?: string }) => {
   const chats = [
     {
@@ -49,14 +35,21 @@ const SideBar = ({ className }: { className?: string }) => {
       username: 'User3',
     },
   ];
+
+  const { data, isLoading, isError } = useQuery('chatsSidebar', () =>
+    fetchRequest('chats/')
+  );
   const navigate = useNavigate();
-  const username= useParams();
+  const username = useParams();
   console.log(username);
 
   return (
     <>
       <div
-        className={cn('h-[calc(100vh-var(--navbar-height))]  w-80 shadow-none border-r', className)}
+        className={cn(
+          'h-[calc(100vh-var(--navbar-height))]  w-80 shadow-none border-r',
+          className
+        )}
         // style={{ scrollbarWidth: 'none' }} // Hide scrollbar
       >
         <div className='flex justify-between items-center p-3'>
@@ -70,10 +63,10 @@ const SideBar = ({ className }: { className?: string }) => {
             <img src={newChat} alt='new chat' className='w-5 h-5' />
           </div>
         </div>
-        {chats.map((chat: ChatType, i) => (
+        {data?.data.map((chat: ChatItemType, i) => (
           <ChatItem
             lastMessage={chat}
-            key={chat.created_at}
+            key={chat.lastMessageTimestamp}
             // isSelected={username == chat.username.toLowerCase()}
           />
         ))}
@@ -82,44 +75,42 @@ const SideBar = ({ className }: { className?: string }) => {
   );
 };
 
-type ChatType = {
-  content: string;
-  created_at: string;
-  profilePicture: string;
-  username: string;
-};
-
 type ListItemProps = {
-  lastMessage: ChatType;
+  lastMessage: ChatItemType;
 };
 
 const ChatItem = ({ lastMessage }: ListItemProps) => {
   const navigate = useNavigate();
   const { username } = useParams();
-  console.log(username, lastMessage.username, 'hiii');
+  console.log(username, lastMessage.lastMessageSender, 'hiii');
 
   return (
     <div
-      className={`p-3 flex gap-1 items-center cursor-pointer hover:bg-gray-200  w-[320px] ${username == lastMessage.username && 'bg-gray-200'} `}
+      className={`p-3 flex gap-1 items-center cursor-pointer hover:bg-gray-200  w-[320px] ${username == lastMessage.lastMessageSender && 'bg-gray-200'} `}
       onClick={() => {
-        navigate(`/chat/u/${lastMessage.username}`);
+        navigate(`/chat/u/${lastMessage.lastMessageSender}`);
       }}
     >
       <Avatar
         variant='circular'
-        alt={name}
-        src={newChat}
+        // alt={name}
+        src={
+          lastMessage.otherProfilePicture ||
+          'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+        }
         style={{ width: '35px', height: '35px' }}
       />
       <div className='w-72 items-center justify-center '>
         <div className='flex gap-[8.5rem] w-full'>
-          <Typography className='text-xs'>{lastMessage.username}</Typography>
           <Typography className='text-xs'>
-            {`${new Date(lastMessage.created_at).toDateString()}`}
+            {lastMessage.lastMessageSender}
+          </Typography>
+          <Typography className='text-xs'>
+            {`${new Date(lastMessage.lastMessageTimestamp).toDateString()}`}
           </Typography>
         </div>
         <Typography className='text-xs w-[16.5rem] overflow-hidden whitespace-nowrap text-ellipsis'>
-          {lastMessage.content}
+          {lastMessage.lastMessageText}
         </Typography>
       </div>
     </div>

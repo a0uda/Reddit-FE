@@ -184,7 +184,7 @@ const Moderators = () => {
     fetchRequest(`communities/about/editable-moderators/${community_name}`)
   );
   const invitedListRes = useQuery('getInvitedModerators', () =>
-    fetchRequest(`communities/about/invited/${community_name}`)
+    fetchRequest(`communities/about/invited-moderators/${community_name}`)
   );
 
   const handleSearch = () => {
@@ -236,7 +236,13 @@ const Moderators = () => {
         isLoading={allModRes.isLoading}
         error={allModRes.isError}
       >
-        <UsersList userArr={selectedData} type='default' />
+        {allModRes.data?.data.length > 0 ? (
+          <UsersList userArr={selectedData} type='default' />
+        ) : (
+          <div className='border-[1px] rounded-md flex items-center justify-center font-semibold text-xl text-gray-600 p-10'>
+            Moderators list is empty
+          </div>
+        )}
       </LoadingProvider>
       <LoadingProvider
         error={editableListRes.isError}
