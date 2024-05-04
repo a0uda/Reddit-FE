@@ -45,8 +45,10 @@ axios.interceptors.response.use(
     // if (data.content != undefined) {
     //   response.data = data.content;
     // }
+    console.log(response, 'da response');
 
     if (noStatus) data = Object.values(data)[0]; // Last object in the response
+    if (data == undefined) data = 'ok';
     response.data = data;
     return response;
   },

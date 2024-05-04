@@ -816,38 +816,31 @@ const Message = (props: {
                     'hiiiiii'
                   );
 
-                  postReq.mutate(
-                    {
-                      endPoint: 'messages/reply',
+                  postReq.mutate({
+                    endPoint: 'messages/reply',
+                    data: {
                       data: {
-                        data: {
-                          sender_username: senderUsername,
-                          sender_type: senderType,
-                          senderVia: senderVia,
-                          receiver_username: recUsername,
-                          receiver_type: recType,
-                          message: reply,
-                          created_at: new Date(),
-                          deleted_at: null,
-                          unread_flag: false,
-                          isSent: true,
-                          isReply: true,
-                          parentMessageId:
-                            props.parentMessageId || props.messageId,
-                          subject: props.subject,
-                        },
+                        sender_username: senderUsername,
+                        sender_type: senderType,
+                        senderVia: senderVia,
+                        receiver_username: recUsername,
+                        receiver_type: recType,
+                        message: reply,
+                        created_at: new Date(),
+                        deleted_at: null,
+                        unread_flag: false,
+                        isSent: true,
+                        isReply: true,
+                        parent_message_id:
+                          props.parentMessageId || props.messageId,
+                        subject: props.subject,
                       },
                     },
-                    {
-                      onSuccess: () => {
-                        console.log('reply tmam');
+                  });
 
-                        setReplyBool(false);
-                        setReply('');
-                        props.refetch();
-                      },
-                    }
-                  );
+                  setReplyBool(false);
+                  setReply('');
+                  props.refetch();
                 }}
                 className='rounded-sm bg-blue-light text-[1rem] px-4 py-1 uppercase'
               >
