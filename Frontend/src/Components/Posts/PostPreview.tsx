@@ -530,6 +530,7 @@ const PostPreview = ({
   const postReq = useMutation(postRequest);
   const patchReq = useMutation(patchRequest);
 
+
   const handleDeletePost = () => {
     postRequest({
       endPoint: 'posts/delete',
@@ -915,6 +916,7 @@ const PostPreview = ({
                     comments_replies={post.comments_count}
                     refLink={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
                     myVote={post.vote}
+                    isReposted={post.is_reposted_flag}
                   />
                   {isMyPost && (
                     <div className=' flex justify-end gap-4'>
@@ -1150,6 +1152,7 @@ const PostPreview = ({
             comments_replies={post.comments_count}
             refLink={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
             myVote={post.vote}
+            isReposted={post.is_reposted_flag}
           />
         </>
       )}

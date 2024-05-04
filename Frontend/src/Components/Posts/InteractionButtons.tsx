@@ -32,6 +32,7 @@ const InteractionButtons = ({
   refLink,
   className,
   myVote,
+  isReposted,
 }: {
   id: string;
   upvotes: number;
@@ -41,6 +42,7 @@ const InteractionButtons = ({
   refLink?: string;
   className?: string;
   myVote: number;
+  isReposted: boolean;
 }) => {
   const [vote, setVote] = useState<number>(myVote || 0);
   const [upVotes, setUpVotes] = useState(upvotes);
@@ -230,7 +232,7 @@ const InteractionButtons = ({
               <span>Copy Link</span>
             </MenuItem>
 
-            {isPost ? (
+            {isPost && !isReposted && (
               <MenuItem
                 onClick={handleOpenSPModal}
                 className='py-3 flex gap-2 items-center'
@@ -241,8 +243,6 @@ const InteractionButtons = ({
                 />
                 <span>Cross Post</span>
               </MenuItem>
-            ) : (
-              <span></span>
             )}
           </MenuList>
         </Menu>
