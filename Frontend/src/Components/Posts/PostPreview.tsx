@@ -481,13 +481,6 @@ const PostPreview = ({
   // TODO Fetch Community
   const [community, setCommunity] = useState<CommunityType | undefined>();
   const [link, setLink] = useState<string>(
-<<<<<<< HEAD
-    `/user/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
-  );
-  const [moderatedCommunities, setModeratedCommunities] = useState<[string]>();
-  const [viewSpoiler, setViewSpoiler] = useState<boolean>(post.spoiler_flag);
-  const [isMyPost, setIsMyPost] = useState<boolean>();
-=======
     `/u/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
   );
   const [viewSpoiler, setViewSpoiler] = useState<boolean>(
@@ -504,7 +497,6 @@ const PostPreview = ({
         post.polls?.length != 0 &&
         (post.link_url?.length || 0) > 0)
   );
->>>>>>> main
   const { user } = useSession();
   const navigate = useNavigate();
   const [canEdit, setCanEdit] = useState(false);
@@ -531,24 +523,6 @@ const PostPreview = ({
       setCommunity(community);
       setLink(
         `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
-<<<<<<< HEAD
-      );
-    },
-  });
-  useQuery({
-    queryKey: ['getModeratedCommunities'],
-    queryFn: () => fetchRequest('users/moderated-communities2'),
-    onSuccess: (data) => {
-      console.log(data);
-      const moderatedCommunityNames = data?.data.map((com) => com.name);
-      // const modCommunity: CommunityType = data.data;
-      console.log(moderatedCommunityNames);
-      setModeratedCommunities(moderatedCommunityNames);
-      setIsMyPost(
-        post.username == user?.username ||
-          moderatedCommunities?.includes(post.community_name || '')
-=======
->>>>>>> main
       );
     },
   });
@@ -718,46 +692,11 @@ const PostPreview = ({
     });
   };
 
-<<<<<<< HEAD
-  // const { isLoading, isError } = useQuery({
-  //   queryKey: ['communities', props.communityName],
-  //   queryFn: () =>
-  //     fetchRequest(`communities/get-community-view/${props.communityName}/`),
-  //   onSuccess: (data) => {
-  //     setCommunity(data.data);
-  //   },
-
-=======
->>>>>>> main
   // const link = community
   //   ? `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
   //   : `/user/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`;
 
   return (
-<<<<<<< HEAD
-    <div
-      className='relative'
-      onClick={() => {
-        navigate(link);
-      }}
-    >
-      {/* <Link
-        to={`/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
-        reloadDocument
-        // className='absolute inset-0'
-      > */}
-      <Card
-        className='relative w-full px-4 py-2 hover:bg-neutral-200'
-        shadow={false}
-      >
-        <CardHeader
-          shadow={false}
-          floated={false}
-          className='flex flex-row items-center justify-between gap-2 m-0 bg-inherit'
-        >
-          <div className='flex flex-row items-center justify-between gap-1 m-0'>
-            {/* <CommunityBadge
-=======
     <>
       {!showEditPost ? (
         <div
@@ -777,7 +716,6 @@ const PostPreview = ({
             >
               <div className='flex flex-row items-center justify-between gap-1 m-0'>
                 {/* <CommunityBadge
->>>>>>> main
               name={
                 addPrefixToUsername(post.community_name || '', 'moderator') ||
                 addPrefixToUsername(post.username, 'user') ||
@@ -785,92 +723,6 @@ const PostPreview = ({
               }
               // joined={community?.joined_flag}
               avatar={post.avatar} //3dlt
-<<<<<<< HEAD
-              coverImage={community?.banner_picture}
-              members={community?.members_count}
-              description={community?.description}
-            /> */}
-            {community && (
-              <CommunityBadge
-                name={post.community_name ?? ''}
-                joined={community?.joined_flag}
-                avatar={community?.profile_picture}
-                coverImage={community?.banner_picture}
-                description={community?.description}
-                members={community?.members_count}
-                // online={Community.communityOnline}
-                username={post.username}
-                // page={page}
-                page='home'
-              />
-            )}
-            {!community && <UserBadge username={post.username} />}
-            <span className='relative -top-0.5'>•</span>
-            <Typography variant='small' className=''>
-              {dateDuration(new Date(post.created_at))}
-            </Typography>
-          </div>
-          <div>
-            <PostOptions
-              saved={post.saved}
-              NSFW={post.nsfw_flag}
-              spoiler={post.spoiler_flag}
-              myPost={isMyPost}
-              handleEditPost={handleEditPost}
-              handleSavePost={handleSaveUnsavePost}
-              handleHidePost={handleHideUnhidePost}
-              handleReportPost={handleReportPost}
-              handleDeletePost={handleDeletePost}
-              handleSpoiler={handleSpoilPost}
-              handleNSFW={handleNSFWFlag}
-            />
-          </div>
-        </CardHeader>
-        <CardBody className='m-0 p-0'>
-          <div>
-            {!post.spoiler_flag || !viewSpoiler ? (
-              <div className='flex gap-7 justify-between pb-2'>
-                <div className='flex flex-col justify-between space-y-2 overflow-hidden'>
-                  <div>
-                    <Typography
-                      variant='h5'
-                      className='mb-2 font-normal text-black'
-                    >
-                      {post.title}
-                    </Typography>
-                    <div className='flex gap-2 mb-2'>
-                      {post.spoiler_flag && (
-                        <div className='flex gap-1 items-center'>
-                          <ExclamationTriangleIcon
-                            strokeWidth={3}
-                            className='w-4 h-4 font-bold text-black'
-                          />
-                          <Typography
-                            variant='small'
-                            className='font-bold text-black text-xs'
-                          >
-                            SPOILER
-                          </Typography>
-                        </div>
-                      )}
-                      {post.nsfw_flag && (
-                        <div className='flex gap-1 items-center'>
-                          <img
-                            src={eighteenPic}
-                            // strokeWidth={3}
-                            className='w-4 h-4 font-bold text-black'
-                          />
-                          <Typography
-                            variant='small'
-                            className='font-bold text-black text-xs'
-                          >
-                            NSFW
-                          </Typography>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-=======
               // coverImage={community?.banner_picture}
               // members={community?.members_count}
               // description={community?.description}
@@ -929,7 +781,6 @@ const PostPreview = ({
                   <SpoilerContainer
                     handleViewSpoiler={() => {
                       console.log(viewSpoiler, 'spoilerrrr');
->>>>>>> main
 
                       setViewSpoiler(false);
                     }}

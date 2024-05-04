@@ -150,15 +150,15 @@ function App() {
             />
             <Route path='/chat/create' element={<ChatMain page='create' />} />
             <Route
-              path='/communitysettings'
+              path='/r/:community_name/about/edit/community'
               element={<HandleRoutes element={<GeneralSettings />} />}
             />
             <Route
-              path='/postcommentsettings'
+              path='/r/:community_name/about/edit/posts'
               element={<HandleRoutes element={<PostsCommentsSettings />} />}
             />
             <Route
-              path='/contentcontrol'
+              path='/r/:community_name/about/settings'
               element={<HandleRoutes element={<ContentControls />} />}
             />
             <Route
