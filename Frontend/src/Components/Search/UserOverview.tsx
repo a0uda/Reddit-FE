@@ -12,7 +12,7 @@ const UserOverview = ({
 }) => {
   return (
     <>
-      <Link to={`/user/${user.username}`}>
+      <Link to={`/u/${user.username}`}>
         <Card
           className='relative w-full min-w-0 p-4 bg-transparent hover:bg-neutral-200'
           shadow={false}

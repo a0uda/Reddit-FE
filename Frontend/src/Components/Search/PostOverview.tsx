@@ -13,7 +13,7 @@ const PostOverview = ({ post }: { post: PostType }) => {
   return (
     <>
       <Link
-        to={`/user/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
+        to={`/u/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
       >
         <Card
           className='relative w-full px-4 hover:bg-neutral-200 flex justify-between gap-2 m-0 p-0 py-2'

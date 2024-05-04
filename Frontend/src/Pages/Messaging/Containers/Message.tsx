@@ -177,7 +177,7 @@ export const ReportModal = (props: {
                           report: chosenMsg,
                           sender_username: props.username,
                           sender_type: props.senderType,
-                          _id: props.id,
+                          id: props.id,
                         },
                       },
                       {
@@ -191,10 +191,10 @@ export const ReportModal = (props: {
                   } else {
                     postReq.mutate(
                       {
-                        endPoint: 'posts-or-comments/report',
+                        endPoint: 'comments/report',
                         data: {
                           id: props.id,
-                          is_post: props.isPost || false,
+                          // is_post: props.isPost || false,
                           reason: chosenMsg,
                         },
                       },
@@ -347,7 +347,7 @@ const Message = (props: {
   senderVia?: string;
   messageContent: string;
   messageId: string;
-  parentMessageId: string;
+  parent_message_id: string;
   refetch: () => void;
   query?: string;
 }) => {
@@ -438,7 +438,7 @@ const Message = (props: {
               {' '}
               from{' '}
               <Link
-                to={`/${props.sendType === 'user' ? 'user/' + props.sendUsername : addPrefixToUsername(props.sendUsername, props.sendType)}`}
+                to={`/${props.sendType === 'user' ? 'u/' + props.sendUsername : addPrefixToUsername(props.sendUsername, props.sendType)}`}
                 className='text-[#80bce9] hover:underline'
               >
                 {addPrefixToUsername(props.sendUsername, props.sendType)}
@@ -450,7 +450,7 @@ const Message = (props: {
               {' '}
               to{' '}
               <Link
-                to={`/${props.recType === 'user' ? 'user/' + props.recUsername : addPrefixToUsername(props.recUsername, props.recType)}`}
+                to={`/${props.recType === 'user' ? 'u/' + props.recUsername : addPrefixToUsername(props.recUsername, props.recType)}`}
                 className='text-[#80bce9] hover:underline'
               >
                 {addPrefixToUsername(props.recUsername, props.recType)}
@@ -487,7 +487,17 @@ const Message = (props: {
   return (
     <div
       onClick={() => {
-        setMsgUnead(false);
+        postReq.mutate(
+          {
+            endPoint: 'messages/mark-as-read',
+            data: { _id: props.messageId },
+          },
+          {
+            onSuccess: () => {
+              setMsgUnead(false);
+            },
+          }
+        );
       }}
       className='w-full odd:bg-[#f6f7f8] px-4 py-3'
     >
@@ -496,7 +506,7 @@ const Message = (props: {
           <div className='flex gap-3'>
             <div className='border-2 border-blue-light rounded-[10px] px-3 font-bold text-blue-light'>
               <Link
-                to={`/${props.senderType === 'user' ? 'user/' + props.senderUsername : addPrefixToUsername(props.senderUsername, props.senderType)}`}
+                to={`/${props.senderType === 'user' ? 'u/' + props.senderUsername : addPrefixToUsername(props.senderUsername, props.senderType)}`}
               >
                 {addPrefixToUsername(props.senderUsername, props.senderType)}
               </Link>
@@ -549,7 +559,7 @@ const Message = (props: {
               {' '}
               from{' '}
               <Link
-                to={`/${props.senderType === 'user' ? 'user/' + props.senderUsername : addPrefixToUsername(props.senderUsername, props.senderType)}`}
+                to={`/${props.senderType === 'user' ? 'u/' + props.senderUsername : addPrefixToUsername(props.senderUsername, props.senderType)}`}
                 className='text-[#80bce9] hover:underline'
               >
                 {addPrefixToUsername(props.senderUsername, props.senderType)}
@@ -561,7 +571,7 @@ const Message = (props: {
               {' '}
               to{' '}
               <Link
-                to={`/${props.receiverType === 'user' ? 'user/' + props.receiverUsername : addPrefixToUsername(props.receiverUsername, props.receiverType)}`}
+                to={`/${props.receiverType === 'user' ? 'u/' + props.receiverUsername : addPrefixToUsername(props.receiverUsername, props.receiverType)}`}
                 className='text-[#80bce9] hover:underline'
               >
                 {addPrefixToUsername(
@@ -796,26 +806,28 @@ const Message = (props: {
                     recUsername = props.senderUsername;
                     recType = props.senderType;
                   }
-                  console.log(props.parentMessageId || props.messageId);
+                  console.log(props.parent_message_id || props.messageId);
 
                   postReq.mutate(
                     {
                       endPoint: 'messages/reply',
                       data: {
-                        sender_username: senderUsername,
-                        sender_type: senderType,
-                        senderVia: senderVia,
-                        receiver_username: recUsername,
-                        receiver_type: recType,
-                        message: reply,
-                        created_at: new Date(),
-                        deleted_at: null,
-                        unread_flag: false,
-                        isSent: true,
-                        isReply: true,
-                        parentMessageId:
-                          props.parentMessageId || props.messageId,
-                        subject: props.subject,
+                        data: {
+                          sender_username: senderUsername,
+                          sender_type: senderType,
+                          senderVia: senderVia,
+                          receiver_username: recUsername,
+                          receiver_type: recType,
+                          message: reply,
+                          created_at: new Date(),
+                          deleted_at: null,
+                          unread_flag: false,
+                          isSent: true,
+                          isReply: true,
+                          parent_message_id:
+                            props.parent_message_id || props.messageId,
+                          subject: props.subject,
+                        },
                       },
                     },
                     {

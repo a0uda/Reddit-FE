@@ -43,7 +43,8 @@ const InteractionButtons = ({
   myVote: number;
 }) => {
   const [vote, setVote] = useState<number>(myVote || 0);
-  const [totalVotes, setTotalVotes] = useState(upvotes - downvotes);
+  const [upVotes, setUpVotes] = useState(upvotes);
+  const [downVotes, setDownVotes] = useState(downvotes);
   const [openSPModal, setOpenSPModal] = useState(false);
   const handleOpenSPModal = () => setOpenSPModal(!openSPModal);
   const mutate = useMutation(
@@ -101,22 +102,23 @@ const InteractionButtons = ({
             onClick={() => {
               const lastVote = vote;
               let newVote = vote;
-
               if (vote === 1) {
-                setVote(0);
+                // setVote(0);
                 newVote = 0;
               } else {
-                setVote(1);
+                // setVote(1);
                 newVote = 1;
               }
-              // const { id, isPost, rank } = req.body;
-              console.log(newVote);
 
               mutate.mutate(
-                { id, rank: newVote },
+                {
+                  id,
+                  rank: newVote,
+                },
                 {
                   onSuccess: () => {
-                    setTotalVotes(totalVotes + (newVote == 0 ? -1 : 1));
+                    setUpVotes(upVotes + newVote - lastVote);
+                    setVote(newVote);
                   },
                   onError: () => {
                     setVote(lastVote);
@@ -131,7 +133,7 @@ const InteractionButtons = ({
             variant='lead'
             className={cn('text-sm', vote != 0 ? 'text-white' : '')}
           >
-            {totalVotes}
+            {upVotes - downVotes}
           </Typography>
           <IconButton
             variant='text'
@@ -160,7 +162,9 @@ const InteractionButtons = ({
                 },
                 {
                   onSuccess: () => {
-                    setTotalVotes(totalVotes + (newVote == 0 ? 1 : -1));
+                    // setDownVotes(totalVotes + (newVote == 0 ? 1 : -1));
+                    setDownVotes(downVotes - newVote + lastVote);
+                    setVote(newVote);
                   },
                   onError: () => {
                     setVote(lastVote);

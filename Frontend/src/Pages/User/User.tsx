@@ -24,7 +24,7 @@ const NavButton = (props: {
 }) => {
   return (
     <Link
-      to={`/user/${props.username}/${props.buttonLink}`}
+      to={`/u/${props.username}/${props.buttonLink}`}
       className={`${props.active ? 'bg-neutral-500' : ''}  text-black rounded-full p-[10px] mx-[5px]  hover:underline`}
     >
       <div className={`text-black ${props.textSize}`}>{props.buttonName}</div>

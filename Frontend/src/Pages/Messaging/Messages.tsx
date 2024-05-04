@@ -16,13 +16,13 @@ const Messages = () => {
 
         parentChildrenMap = data?.data.messages.reduce((acc, message) => {
           if (
-            message.parentMessageId != null ||
-            message.parentMessageId != undefined
+            message.parent_message_id != null ||
+            message.parent_message_id != undefined
           ) {
-            if (acc[message.parentMessageId]) {
-              acc[message.parentMessageId].push(message);
+            if (acc[message.parent_message_id]) {
+              acc[message.parent_message_id].push(message);
             } else {
-              acc[message.parentMessageId] = [message];
+              acc[message.parent_message_id] = [message];
             }
           }
           return acc;
@@ -34,7 +34,7 @@ const Messages = () => {
   console.log(response.data?.data, 'middd');
 
   // const parentIds = data?.data
-  //   .filter((message) => message.parentMessageId === null)
+  //   .filter((message) => message.parent_message_id === null)
   //   .map((message) => message._id);
   // console.log(, 'loading');
 
@@ -46,7 +46,7 @@ const Messages = () => {
             response.data?.data.messages.map((mess) => {
               console.log(parentChildrenMap, 'messs');
 
-              if (mess.parentMessageId == null) {
+              if (mess.parent_message_id == null) {
                 return (
                   <Message
                     unread={mess['unread_flag']}
@@ -69,7 +69,7 @@ const Messages = () => {
                     key={mess['_id']}
                     senderVia={mess['senderVia']}
                     refetch={response.refetch}
-                    parentMessageId={mess['parentMessageId'] || null}
+                    parent_message_id={mess['parent_message_id'] || null}
                     query='messages'
                   />
                 );
