@@ -147,6 +147,8 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                   .split(' ')
                   .splice(0, 10)
                   .join('_')}/`}
+                myVote={post.vote}
+                isReposted={post.is_reposted_flag}
               />
             </CardFooter>
           </Card>
