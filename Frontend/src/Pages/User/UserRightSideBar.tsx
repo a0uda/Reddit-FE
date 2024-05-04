@@ -34,6 +34,13 @@ function UserRightSideBar() {
     ModeratedCommunity[]
   >([]);
   const fetchReq = useMutation(fetchRequest);
+  const [joinStates, setJoinStates] = useState(() => {
+    if (moderatedCommunities) {
+      return moderatedCommunities.map(() => true);
+    } else {
+      return [];
+    }
+  });
   const [followState, setFollowState] = useState(false);
   useEffect(() => {
     console.log('reemtasneem', user?.username);
@@ -43,6 +50,15 @@ function UserRightSideBar() {
           console.log('reemn', data.data);
           setAboutData(data.data);
           setModeratedCommunities(data.data.moderatedCommunities);
+          if (data.data.moderatedCommunities) {
+            setJoinStates(
+              data.data.moderatedCommunities.map(
+                (community) => community.joined
+              )
+            );
+          } else {
+            setJoinStates([]);
+          }
           if (user?.username == username) {
             setMyData(true);
           }
@@ -92,6 +108,7 @@ function UserRightSideBar() {
 
     setFollowState(!followState);
   };
+  const navigate = useNavigate();
   const social_links = aboutData?.social_links ?? [];
   const display_name = aboutData?.display_name ?? '';
   const profile_picture = aboutData?.profile_picture ?? '';
@@ -102,14 +119,6 @@ function UserRightSideBar() {
     month: 'short',
     day: '2-digit',
     year: 'numeric',
-  });
-
-  const [joinStates, setJoinStates] = useState(() => {
-    if (moderatedCommunities) {
-      return moderatedCommunities.map((community) => community.joined);
-    } else {
-      return [];
-    }
   });
 
   const handleJoin = (index: number) => {
@@ -139,7 +148,7 @@ function UserRightSideBar() {
       data: { reported_username: username },
     });
   };
-  const navigate = useNavigate();
+
   const handleSendMessage = () => {
     navigate(`/message/compose?to=${username}`);
   };
@@ -359,11 +368,17 @@ function UserRightSideBar() {
                         key={i}
                         className='flex justify-between items-center'
                       >
-                        <CommunityItem
-                          src={link.profile_picture}
-                          name={link.name}
-                          membersNumber={link.members_count}
-                        ></CommunityItem>
+                        <div
+                          onClick={() => {
+                            navigate(`/r/${link.name}`);
+                          }}
+                        >
+                          <CommunityItem
+                            src={link.profile_picture}
+                            name={link.name}
+                            membersNumber={link.members_count}
+                          ></CommunityItem>
+                        </div>
                         {joinStates[i] ? (
                           <RoundedButton
                             buttonBorderColor='none'
