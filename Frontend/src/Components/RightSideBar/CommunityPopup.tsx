@@ -31,12 +31,15 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
       postRequest({
         endPoint: 'users/join-community',
         data: { community_name: communityName },
-      })
-    // {
-    // onError: () => {
-    //   console.log('Error');
-    // },
-    // }
+      }),
+    {
+      onSuccess: () => {
+        setIsJoined(true);
+      },
+      onError: () => {
+        console.log('Error Joining Community');
+      },
+    }
   );
 
   const leaveMutation = useMutation(
@@ -44,12 +47,16 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
       postRequest({
         endPoint: 'users/leave-community',
         data: { community_name: communityName },
-      })
-    // {
-    //   onError: () => {
-    //     console.log('Error');
-    //   },
-    // }
+      }),
+    {
+      onSuccess: () => {
+        setJustJoined(false);
+        setIsJoined(false);
+      },
+      onError: () => {
+        console.log('Error Leaving Community');
+      },
+    }
   );
 
   return (
@@ -93,7 +100,6 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
             <button
               className='bg-gray-200 rounded-full font-body font-semibold text-black -tracking-tight text-xs m-0 px-3 py-1 selection:border-0'
               onClick={() => {
-                setIsJoined(!isJoined);
                 joinMutation.mutate(props.communityName);
               }}
             >
@@ -104,8 +110,6 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
             <button
               className='bg-gray-200 rounded-full font-body font-semibold text-black -tracking-tight text-xs m-0 px-3 py-1 selection:border-0'
               onClick={() => {
-                setIsJoined(!isJoined);
-                setJustJoined(false);
                 leaveMutation.mutate(props.communityName);
               }}
             >

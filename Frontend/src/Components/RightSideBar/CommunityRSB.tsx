@@ -61,12 +61,15 @@ export function CommunityRSB({
       postRequest({
         endPoint: 'users/join-community',
         data: { community_name: communityName },
-      })
-    // {
-    //   onError: () => {
-    //     console.log('Error');
-    //   },
-    // }
+      }),
+    {
+      onSuccess: () => {
+        setIsJoined(true);
+      },
+      onError: () => {
+        console.log('Error in join mutation');
+      },
+    }
   );
 
   const leaveMutation = useMutation(
@@ -74,12 +77,15 @@ export function CommunityRSB({
       postRequest({
         endPoint: 'users/leave-community',
         data: { community_name: communityName },
-      })
-    // {
-    //   onError: () => {
-    //     console.log('Error');
-    //   },
-    // }
+      }),
+    {
+      onSuccess: () => {
+        setIsJoined(false);
+      },
+      onError: () => {
+        console.log('Error in leave mutation');
+      },
+    }
   );
 
   return (
@@ -108,7 +114,6 @@ export function CommunityRSB({
                   <button
                     className='bg-gray-900 rounded-full font-body font-semibold text-white -tracking-tight text-xs m-0 px-6 py-2 selection:border-0'
                     onClick={() => {
-                      setIsJoined(!isJoined);
                       joinMutation.mutate(communityName);
                     }}
                     data-testid='join-button'
@@ -120,7 +125,6 @@ export function CommunityRSB({
                   <button
                     className='bg-gray-200 rounded-full font-body font-semibold text-black -tracking-tight text-xs px-4 py-2 border-black border'
                     onClick={() => {
-                      setIsJoined(!isJoined);
                       leaveMutation.mutate(communityName);
                     }}
                     data-testid='leave-button'
