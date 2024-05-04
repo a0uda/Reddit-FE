@@ -33,7 +33,7 @@ const Sent = () => {
                 key={mess['_id']}
                 senderVia={mess['senderVia']}
                 refetch={refetch}
-                parent_message_id={mess['parent_message_id']}
+                parentMessageId={mess['parentMessageId']}
                 query='unreadMessages'
               />
             ))}

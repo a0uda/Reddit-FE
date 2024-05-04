@@ -15,7 +15,7 @@ const PostReply = (props: {
   createDate: Date;
   senderUsername: string;
   postCreator: string;
-  postCreatorType: string;
+  postCreatorType: 'user' | 'moderator' | 'community';
   postSubject: string;
   replyContent: string;
   replyId: string;
@@ -23,6 +23,7 @@ const PostReply = (props: {
   commentsCount: number;
   vote: number;
   query: string;
+  is_username_mention: boolean;
   refetch: () => void;
 }) => {
   const [msgUnread, setMsgUnead] = React.useState(props.unread);
@@ -71,11 +72,13 @@ const PostReply = (props: {
     >
       <div className='flex gap-4'>
         <h3 className='font-bold'>
-          {props.query === 'postReplies' ? 'post reply ' : 'username mentions '}
+          {props.is_username_mention === false
+            ? 'post reply '
+            : 'username mentions '}
           :
         </h3>
         <h3
-          className={`font-bold ${props.query === 'usernameMentions' && 'text-blue-light'}`}
+          className={`font-bold ${props.is_username_mention === true && 'text-blue-light'}`}
         >
           {props.postSubject}
         </h3>
@@ -184,11 +187,8 @@ const PostReply = (props: {
           </p>
 
           <ul className='flex gap-3 mt-3 text-xs text-[#888] font-bold'>
-            <li className='cursor-pointer hover:underline'>Context</li>
-            <li className='cursor-pointer hover:underline'>
-              Full Comments ({props.commentsCount})
-            </li>
-            {props.query === 'postReplies' &&
+            <li>Full Comments ({props.commentsCount})</li>
+            {props.is_username_mention === false &&
               (!spamBool ? (
                 <li
                   onClick={() => {
@@ -213,6 +213,7 @@ const PostReply = (props: {
                         },
                         {
                           onSuccess: () => {
+                            setSpamBool(false);
                             props.refetch();
                           },
                         }
@@ -234,7 +235,7 @@ const PostReply = (props: {
                 </li>
               ))}
 
-            {props.query === 'postReplies' &&
+            {props.is_username_mention === false &&
               (!removeBool ? (
                 <li
                   onClick={() => {
@@ -256,6 +257,7 @@ const PostReply = (props: {
                         },
                         {
                           onSuccess: () => {
+                            setRemoveBool(false);
                             props.refetch();
                           },
                         }

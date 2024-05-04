@@ -3,10 +3,10 @@ import ContentContainer from './Containers/ContentContainer';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const Messages = () => {
-  let parentChildrenMap: [];
+  const [parentChildrenMap, setParentChildrenMap] = useState([]);
   const response = useQuery(
     'getAllMessages',
     () => fetchRequest('messages/read-all-messages'),
@@ -14,27 +14,29 @@ const Messages = () => {
       onSuccess: (data) => {
         console.log(data.data.messages, 'felonsuccess');
 
-        parentChildrenMap = data?.data.messages.reduce((acc, message) => {
-          if (
-            message.parent_message_id != null ||
-            message.parent_message_id != undefined
-          ) {
-            if (acc[message.parent_message_id]) {
-              acc[message.parent_message_id].push(message);
-            } else {
-              acc[message.parent_message_id] = [message];
+        setParentChildrenMap(
+          data?.data.messages.reduce((acc, message) => {
+            if (
+              message.parentMessageId != null ||
+              message.parentMessageId != undefined
+            ) {
+              if (acc[message.parentMessageId]) {
+                acc[message.parentMessageId].push(message);
+              } else {
+                acc[message.parentMessageId] = [message];
+              }
             }
-          }
-          return acc;
-        }, {});
+            return acc;
+          }, {})
+        );
         console.log(parentChildrenMap, 'parentChildrenMap');
+        // console.log(parentChildrenMap['663669e084f87cfbd0848f24'], 'middd');
       },
     }
   );
-  console.log(response.data?.data, 'middd');
 
   // const parentIds = data?.data
-  //   .filter((message) => message.parent_message_id === null)
+  //   .filter((message) => message.parentMessageId === null)
   //   .map((message) => message._id);
   // console.log(, 'loading');
 
@@ -46,7 +48,7 @@ const Messages = () => {
             response.data?.data.messages.map((mess) => {
               console.log(parentChildrenMap, 'messs');
 
-              if (mess.parent_message_id == null) {
+              if (mess.parentMessageId == null) {
                 return (
                   <Message
                     unread={mess['unread_flag']}
@@ -69,7 +71,7 @@ const Messages = () => {
                     key={mess['_id']}
                     senderVia={mess['senderVia']}
                     refetch={response.refetch}
-                    parent_message_id={mess['parent_message_id'] || null}
+                    parentMessageId={mess['parentMessageId'] || null}
                     query='messages'
                   />
                 );
