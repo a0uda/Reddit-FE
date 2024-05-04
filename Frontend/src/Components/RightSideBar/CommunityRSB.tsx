@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   Typography,
@@ -42,7 +42,7 @@ export function CommunityRSB({
 
   const [Community, setCommunity] = useState<CommunityType | undefined>();
   const { isLoading, isError } = useQuery({
-    queryKey: ['communitiesRSB', communityName],
+    queryKey: ['communitiesRSB', communityName, page],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${communityName}/`),
     onSuccess: (data) => {
@@ -87,6 +87,10 @@ export function CommunityRSB({
       },
     }
   );
+
+  useEffect(() => {
+    setIsJoined(Community?.joined_flag);
+  }, [Community, communityName]);
 
   return (
     <>
