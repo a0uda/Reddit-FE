@@ -451,6 +451,9 @@ export type CommunityType = {
   banner_picture: string;
   created_at: string;
   joined_flag: boolean;
+  moderator_flag: boolean;
+  muted_flag: boolean;
+  favorite_flag: boolean;
   title: string;
 };
 

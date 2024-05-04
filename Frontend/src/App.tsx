@@ -10,6 +10,10 @@ import Notifications from './Pages/Notifications.tsx';
 import Post from './Pages/Post.tsx';
 import User from './Pages/User/User.tsx';
 import CreatePost from './Pages/createPost/CreatePost.tsx';
+import GeneralSettings from './Pages/Community/GeneralSettings.tsx';
+import PostsCommentsSettings from './Pages/Community/PostsCommentsSettings.tsx';
+import ContentControls from './Pages/Community/ContentControls.tsx';
+import Community from './Pages/Community/Community.tsx';
 import Main from './Pages/Mod Queues/Main.tsx';
 import Search from './Pages/Search.tsx';
 import UserManagement from './Pages/User Management/UserManagement.tsx';
@@ -96,11 +100,7 @@ function App() {
               element={<HandleRoutes element={<User />} />}
             />
             <Route
-              path={'/submit'}
-              element={<HandleRoutes element={<CreatePost />} />}
-            />
-            <Route
-              path={'/r/:community_name/submit'}
+              path={'/:prefix?/:communityName?/submit'}
               element={<HandleRoutes element={<CreatePost />} />}
             />
             <Route
@@ -149,6 +149,22 @@ function App() {
               element={<ChatMain page='chat' />}
             />
             <Route path='/chat/create' element={<ChatMain page='create' />} />
+            <Route
+              path='/r/:community_name/about/edit/community'
+              element={<HandleRoutes element={<GeneralSettings />} />}
+            />
+            <Route
+              path='/r/:community_name/about/edit/posts'
+              element={<HandleRoutes element={<PostsCommentsSettings />} />}
+            />
+            <Route
+              path='/r/:community_name/about/settings'
+              element={<HandleRoutes element={<ContentControls />} />}
+            />
+            <Route
+              path='/r/:communityName'
+              element={<HandleRoutes element={<Community />} />}
+            />
           </Routes>
         </Router>
       </div>

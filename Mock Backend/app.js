@@ -318,20 +318,20 @@ app.post("/users/block-unblock-user", (req, res) => {
   res.sendStatus(200);
 });
 
-app.post("/users/mute-unmute-community", (req, res) => {
-  if (!req.body.mute) {
-    safetySettings.content.muted_communities =
-      safetySettings.content.muted_communities.filter(
-        (user) => user["community-title"] !== req.body["community-title"]
-      );
-  } else {
-    safetySettings.content.muted_communities.push({
-      "community-title": req.body["community-title"],
-      muted_date: new Date(),
-    });
-  }
-  res.sendStatus(200);
-});
+// app.post("/users/mute-unmute-community", (req, res) => {
+//   if (!req.body.mute) {
+//     safetySettings.content.muted_communities =
+//       safetySettings.content.muted_communities.filter(
+//         (user) => user["community-title"] !== req.body["community-title"]
+//       );
+//   } else {
+//     safetySettings.content.muted_communities.push({
+//       "community-title": req.body["community-title"],
+//       muted_date: new Date(),
+//     });
+//   }
+//   res.sendStatus(200);
+// });
 
 let chatSettings = {
   msg: "asdad",
@@ -358,7 +358,7 @@ let credentials = [{ username: "username", password: "password" }];
 let users = [
   {
     _id: "661a2c3fab10a4b012e8f59a",
-    username: "m",
+    username: "Osama",
     created_at: "2024-04-13T06:53:20.537Z",
     email: "me22@gmail.com",
     verified_email_flag: false,
@@ -366,9 +366,10 @@ let users = [
     display_name: "m",
     about: "",
     social_links: [],
-    profile_picture: "",
+    profile_picture:
+      "https://conflictresolutionmn.org/wp-content/uploads/2020/01/flat-business-man-user-profile-avatar-icon-vector-4333097.jpg",
     banner_picture: "",
-    gender: "Female",
+    gender: "Male",
   },
   {
     _id: "661a2c3fab10a4b012e8f59b",
@@ -638,6 +639,62 @@ app.get("/communities/get-popular-communities", (req, res) => {
 //   },
 // ];
 
+let communities = [
+  {
+    name: "sports",
+    description:
+      "Sports News and Highlights from the NFL, NBA, NHL, MLB, MLS, and leagues around the world.",
+    welcome_message: "",
+    type: "Private",
+    nsfw_flag: false,
+    members_count: 5000,
+    profile_picture:
+      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    banner_picture:
+      "https://wpimg.pixelied.com/blog/wp-content/uploads/2021/08/03132815/relevant-elements-reddit-banner-size.jpg",
+    created_at: "2024-04-16T15:06:52.270Z",
+    joined_flag: true,
+    moderator_flag: true,
+    muted_flag: true,
+    favorite_flag: true,
+  },
+  {
+    name: "programming",
+    description:
+      "programming news and discussion about programming culture and programming history",
+    welcome_message: "",
+    type: "Private",
+    nsfw_flag: false,
+    members_count: 1500,
+    profile_picture:
+      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    banner_picture:
+      "https://wpimg.pixelied.com/blog/wp-content/uploads/2021/08/03132815/relevant-elements-reddit-banner-size.jpg",
+    created_at: "2024-04-16T15:06:52.270Z",
+    joined_flag: true,
+    moderator_flag: false,
+    muted_flag: false,
+    favorite_flag: false,
+  },
+  {
+    name: "musicFALSE",
+    description: "The musical community of reddit",
+    welcome_message: "",
+    type: "Private",
+    nsfw_flag: false,
+    members_count: 2000,
+    profile_picture:
+      "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+    banner_picture:
+      "https://styles.redditmedia.com/t5_2qh1u/styles/communityIcon_21ykcg22rm6c1.png",
+    created_at: "2024-04-16T15:06:52.270Z",
+    joined_flag: true,
+    moderator_flag: false,
+    muted_flag: false,
+    favorite_flag: false,
+  },
+];
+
 app.get("/communities/get-history-posts/", (req, res) => {
   res.status(200).json(recentPostsList);
 });
@@ -651,10 +708,145 @@ app.get("/communities/get-community-view/:communityname", (req, res) => {
     (community) => community.name === communityname
   );
   if (community) {
+    // console.log(community);
     res.status(200).json(community);
   } else {
     res.status(404).json({ error: "Community not found" });
   }
+});
+
+app.post("/communities/add-community", (req, res) => {
+  const { name, description, type, nsfw_flag, category } = req.body;
+  // console.log(
+  //   "name",
+  //   name,
+  //   "description",
+  //   description,
+  //   "type",
+  //   type,
+  //   "nsfw_flag",
+  //   nsfw_flag,
+  //   "category",
+  //   category
+  // );
+  const newCommunity = {
+    name: name,
+    description: description,
+    welcome_message: "",
+    type: type,
+    nsfw_flag: nsfw_flag,
+    members_count: 1,
+    profile_picture: "",
+    banner_picture: "",
+    created_at: new Date().toISOString(),
+    joined_flag: true,
+    moderator_flag: true,
+    muted_flag: false,
+    favorite_flag: false,
+  };
+
+  communities.push(newCommunity);
+  // console.log(communities);
+  res.sendStatus(200);
+});
+
+app.get("/communities/get-community-names", (req, res) => {
+  const communityDetails = communities.map((community) => {
+    return {
+      _id: community.description, // just to semulate the id
+      name: community.name,
+    };
+  });
+  console.log(communityDetails);
+  res.status(200).json(communityDetails);
+});
+
+app.post("/users/mute-unmute-community", (req, res) => {
+  const { community_name } = req.body;
+  // console.log(community_name);
+  communities = communities.map((community) => {
+    if (community.name === community_name) {
+      community.muted_flag = !community.muted_flag;
+    }
+    // console.log(community);
+    return community;
+  });
+  res.sendStatus(200);
+});
+
+app.patch("/users/favorite-unfavorite-community", (req, res) => {
+  const { community_name } = req.body;
+  // console.log(community_name);
+  communities = communities.map((community) => {
+    if (community.name === community_name) {
+      community.favorite_flag = !community.favorite_flag;
+    }
+    // console.log(community);
+    return community;
+  });
+  res.sendStatus(200);
+});
+
+app.post("/communities/add-profile-picture", (req, res) => {
+  const { community_name, profile_picture } = req.body;
+  // console.log(
+  //   "community_name",
+  //   community_name,
+  //   "profile_picture",
+  //   profile_picture
+  // );
+  communities = communities.map((community) => {
+    if (community.name === community_name) {
+      community.profile_picture = profile_picture;
+    }
+    // console.log(community);
+    return community;
+  });
+  res.sendStatus(200);
+});
+
+app.post("/communities/delete-profile-picture", (req, res) => {
+  const { community_name } = req.body;
+  // console.log(community_name);
+  communities = communities.map((community) => {
+    if (community.name === community_name) {
+      community.profile_picture = null;
+    }
+    // console.log(community);
+    return community;
+  });
+  res.sendStatus(200);
+});
+
+app.post("/communities/add-banner-picture", (req, res) => {
+  const { community_name, banner_picture } = req.body;
+  console.log(
+    "community_name",
+    community_name,
+    "banner_picture",
+    banner_picture
+  );
+  communities = communities.map((community) => {
+    if (community.name === community_name) {
+      community.banner_picture = banner_picture;
+    }
+    // console.log(community);
+    return community;
+  });
+  res.sendStatus(200);
+});
+
+app.post("/communities/delete-banner-picture", (req, res) => {
+  const { community_name } = req.body;
+  // console.log(community_name);
+  communities = communities.map((community) => {
+    if (community.name === community_name) {
+      community.banner_picture = null;
+    }
+    // console.log(community);
+    return community;
+  });
+  res.sendStatus(200);
 });
 
 let recentPostsList = [
@@ -697,15 +889,15 @@ let recentPostsList = [
     community_name: "sports",
     comments_count: 9,
     // added //
-    communityAvatarSrc:
-      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
-    communityCoverSrc:
-      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
-    joined: true,
-    communityDescription:
-      "Sports news and discussion about sports culture and sports history",
-    communityMembers: 356,
-    communityOnline: 12,
+    // communityAvatarSrc:
+    //   "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    // communityCoverSrc:
+    //   "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+    // joined: true,
+    // communityDescription:
+    //   "Sports news and discussion about sports culture and sports history",
+    // communityMembers: 356,
+    // communityOnline: 12,
     //
     views_count: 100,
     shares_count: 20,
@@ -769,17 +961,17 @@ let recentPostsList = [
     community_id: "community123",
     community_name: "programming",
     comments_count: 20,
-    // added //
-    communityAvatarSrc:
-      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
-    communityCoverSrc:
-      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
-    joined: false,
-    communityDescription:
-      "programming news and discussion about programming culture and programming history",
-    communityMembers: 2114,
-    communityOnline: 63,
-    //
+    // // added //
+    // communityAvatarSrc:
+    //   "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    // communityCoverSrc:
+    //   "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+    // joined: false,
+    // communityDescription:
+    //   "programming news and discussion about programming culture and programming history",
+    // communityMembers: 2114,
+    // communityOnline: 63,
+    // //
     views_count: 100,
     shares_count: 20,
     upvotes_count: 57,
@@ -808,25 +1000,43 @@ let recentPostsList = [
 
 app.post("/users/join-community", (req, res) => {
   const { communityName } = req.body;
-  recentPostsList = recentPostsList.map((post) => {
-    if (post.community_name === communityName) {
-      post.joined = true;
-      console.log(post);
+  // recentPostsList = recentPostsList.map((post) => {
+  //   if (post.community_name === communityName) {
+  //     post.joined = true;
+  //     console.log(post);
+  //   }
+  //   return post;
+  // });
+  communities = communities.map((community) => {
+    if (community.name === communityName) {
+      community.joined_flag = true;
+      console.log(community);
     }
-    return post;
+    return community;
   });
   res.sendStatus(200);
 });
 
 app.post("/users/leave-community", (req, res) => {
   const { communityName } = req.body;
-  recentPostsList = recentPostsList.map((post) => {
-    if (post.community_name === communityName) {
-      post.joined = false;
-      console.log(post);
+  // recentPostsList = recentPostsList.map((post) => {
+  //   if (post.community_name === communityName) {
+  //     post.joined_flag = false;
+  //     post.moderator_flag = false;
+  //     console.log(post);
+  //   }
+  // return post;
+  // });
+
+  communities = communities.map((community) => {
+    if (community.name === communityName) {
+      community.joined_flag = false;
+      community.moderator_flag = false;
+      console.log(community);
     }
-    return post;
+    return community;
   });
+
   res.sendStatus(200);
 });
 
@@ -1667,8 +1877,10 @@ let postsListings = [
     polls_voting_is_expired_flag: false,
     post_in_community_flag: true,
     community_id: "8",
-    community_name: "TECH",
-    comments_count: 5,
+    community_name: "sports",
+    comments_count: 2,
+    comments_ids: [16, 13],
+    followers_ids: [],
     views_count: 20,
     shares_count: 2,
     upvotes_count: 10,
@@ -2634,6 +2846,425 @@ app.get("/posts/trending", (req, res) => {
     status: 200,
     // content: postsListings.slice(page * pageSize, page * pageSize + pageSize),
     content: postsListings.slice(0, 5),
+  });
+});
+
+let historyPosts = {
+  success: true,
+  status: 200,
+  posts: [
+    {
+      _id: "1",
+      title: "First Post in sports community",
+      description: "This is the first post",
+      created_at: "2024-03-29",
+      edited_at: "2024-03-29",
+      deleted_at: "2024-03-29",
+      deleted: false,
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        // {
+        //   path: "image1.jpg",
+        //   caption: "Image 1",
+        //   link: "https://source.unsplash.com/random",
+        // },
+      ],
+      videos: [
+        {
+          path: "video1.mp4",
+          caption: "Video 1",
+          link: "https://example.com/video1.mp4",
+        },
+      ],
+      polls: [
+        {
+          options: "option 1",
+          votes: 0,
+        },
+        {
+          options: "option 2",
+          votes: 0,
+        },
+        {
+          options: "option 3",
+          votes: 4,
+        },
+      ],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_name: "sports",
+      comments_count: 1,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 2,
+      downvotes_count: 3,
+      oc_flag: true,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: true,
+      allowreplies_flag: true,
+      scheduled_flag: false,
+      set_suggested_sort: "null (Recommended)",
+      moderator_details: {
+        approved_by: "moderator1",
+        approved_date: "2024-03-29",
+        removed_by: "moderator2",
+        removed_date: "2024-03-29",
+        spammed_by: "moderator3",
+        spammed_type: "spam",
+        spammed_flag: false,
+        approved_flag: false,
+        removed_flag: false,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      is_reposted_flag: false,
+      reposted: [],
+      user_id: "661574f4faed34e05f91ded3",
+      username: "john_doe",
+      __v: 0,
+    },
+    {
+      is_post: true,
+      id: "18",
+      avatar:
+        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+      user_id: "user2",
+      username: "jane_smith",
+      title: "Second Post",
+      description: "This is the second post",
+      created_at: "2024-03-26",
+      edited_at: "2024-03-26",
+      deleted_at: "2024-03-26",
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        {
+          path: "image2.jpg",
+          caption: "Image 2",
+          link: "https://source.unsplash.com/random",
+        },
+      ],
+      videos: [
+        {
+          path: "video2.mp4",
+          caption: "Video 2",
+          link: "https://example.com/video2.mp4",
+        },
+      ],
+      poll: {
+        options: ["Option 1", "Option 2", "Option 3"],
+        votes: [0, 0, 0],
+      },
+      community_id: "community2",
+      community_name: "programming",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 0,
+      downvotes_count: 0,
+      oc_flag: true,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: true,
+      allowreplies_flag: true,
+      set_suggested_sort: "null (Recommended)",
+      moderator_details: {
+        approved_flag: true,
+        approved_by: "moderator1",
+        approved_date: "2024-03-26",
+        removed_by: "moderator2",
+        removed_date: "2024-03-26",
+        spammed_by: "moderator3",
+        spammed_type: "spam",
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+    },
+    {
+      is_post: true,
+      _id: "3",
+      user_id: "user3",
+      username: "Osama",
+      avatar:
+        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+      title: "Third Post",
+      description: "This is the third post",
+      created_at: "2024-03-27",
+      edited_at: "2024-03-27",
+      deleted_at: "2024-03-27",
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        {
+          path: "image3.jpg",
+          caption: "Image 3",
+          link: "https://source.unsplash.com/random",
+        },
+      ],
+      videos: [
+        {
+          path: "video3.mp4",
+          caption: "Video 3",
+          link: "https://example.com/video3.mp4",
+        },
+      ],
+      poll: {
+        options: ["Option 1", "Option 2", "Option 3"],
+        votes: [0, 0, 0],
+      },
+      community_id: "community3",
+      community_name: "music",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 0,
+      downvotes_count: 0,
+      oc_flag: true,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: true,
+      allowreplies_flag: true,
+      set_suggested_sort: "null (Recommended)",
+      moderator_details: {
+        approved_flag: false,
+        approved_by: "moderator1",
+        approved_date: "2024-03-27",
+        removed_by: "moderator2",
+        removed_date: "2024-03-27",
+        spammed_by: "moderator3",
+        spammed_type: "spam",
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+    },
+    {
+      _id: "15",
+      title: "second Post in sports community",
+      description: "This is the first post",
+      created_at: "2024-03-29",
+      edited_at: "2024-03-29",
+      deleted_at: "2024-03-29",
+      deleted: false,
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        {
+          path: "image1.jpg",
+          caption: "Image 1",
+          link: "https://source.unsplash.com/random",
+        },
+      ],
+      videos: [
+        {
+          path: "video1.mp4",
+          caption: "Video 1",
+          link: "https://example.com/video1.mp4",
+        },
+      ],
+      polls: [
+        {
+          options: "option 1",
+          votes: 0,
+        },
+        {
+          options: "option 2",
+          votes: 0,
+        },
+        {
+          options: "option 3",
+          votes: 4,
+        },
+      ],
+      polls_voting_length: 3,
+      polls_voting_is_expired_flag: false,
+      post_in_community_flag: false,
+      community_name: "sports",
+      comments_count: 1,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 2,
+      downvotes_count: 3,
+      oc_flag: true,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: true,
+      allowreplies_flag: true,
+      scheduled_flag: false,
+      set_suggested_sort: "null (Recommended)",
+      moderator_details: {
+        approved_by: "moderator1",
+        approved_date: "2024-03-29",
+        removed_by: "moderator2",
+        removed_date: "2024-03-29",
+        spammed_by: "moderator3",
+        spammed_type: "spam",
+        spammed_flag: false,
+        approved_flag: false,
+        removed_flag: false,
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+      is_reposted_flag: false,
+      reposted: [],
+      user_id: "661574f4faed34e05f91ded3",
+      username: "john_doe",
+      __v: 0,
+    },
+    {
+      is_post: true,
+      id: "19",
+      avatar:
+        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+      user_id: "user2",
+      username: "jane_smith",
+      title: "Second Post",
+      description: "This is the second post",
+      created_at: "2024-03-26",
+      edited_at: "2024-03-26",
+      deleted_at: "2024-03-26",
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        {
+          path: "image2.jpg",
+          caption: "Image 2",
+          link: "https://source.unsplash.com/random",
+        },
+      ],
+      videos: [
+        {
+          path: "video2.mp4",
+          caption: "Video 2",
+          link: "https://example.com/video2.mp4",
+        },
+      ],
+      poll: {
+        options: ["Option 1", "Option 2", "Option 3"],
+        votes: [0, 0, 0],
+      },
+      community_id: "community2",
+      community_name: "programming",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 0,
+      downvotes_count: 0,
+      oc_flag: true,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: true,
+      allowreplies_flag: true,
+      set_suggested_sort: "null (Recommended)",
+      moderator_details: {
+        approved_flag: true,
+        approved_by: "moderator1",
+        approved_date: "2024-03-26",
+        removed_by: "moderator2",
+        removed_date: "2024-03-26",
+        spammed_by: "moderator3",
+        spammed_type: "spam",
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+    },
+    {
+      is_post: true,
+      _id: "5",
+      user_id: "user3",
+      username: "username",
+      avatar:
+        "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+      title: "Third Post",
+      description: "This is the third post",
+      created_at: "2024-03-27",
+      edited_at: "2024-03-27",
+      deleted_at: "2024-03-27",
+      type: "image_and_videos",
+      link_url: "https://example.com",
+      images: [
+        {
+          path: "image3.jpg",
+          caption: "Image 3",
+          link: "https://source.unsplash.com/random",
+        },
+      ],
+      videos: [
+        {
+          path: "video3.mp4",
+          caption: "Video 3",
+          link: "https://example.com/video3.mp4",
+        },
+      ],
+      poll: {
+        options: ["Option 1", "Option 2", "Option 3"],
+        votes: [0, 0, 0],
+      },
+      community_id: "community3",
+      community_name: "music",
+      comments_count: 0,
+      views_count: 0,
+      shares_count: 0,
+      upvotes_count: 0,
+      downvotes_count: 0,
+      oc_flag: true,
+      spoiler_flag: true,
+      nsfw_flag: true,
+      locked_flag: true,
+      allowreplies_flag: true,
+      set_suggested_sort: "null (Recommended)",
+      moderator_details: {
+        approved_flag: false,
+        approved_by: "moderator1",
+        approved_date: "2024-03-27",
+        removed_by: "moderator2",
+        removed_date: "2024-03-27",
+        spammed_by: "moderator3",
+        spammed_type: "spam",
+      },
+      user_details: {
+        total_views: 0,
+        upvote_rate: 0,
+        total_shares: 0,
+      },
+    },
+  ],
+  msg: "Posts retrieved successfully.",
+};
+
+app.get("/posts/:communityName", (req, res) => {
+  const { communityName } = req.params;
+  res.status(200).json({
+    success: true,
+    status: 200,
+    content: historyPosts.posts.filter(
+      (post) => post.community_name === communityName
+    ),
+  });
+});
+
+app.get("/users/history-posts", (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: 200,
+    content: historyPosts.posts,
   });
 });
 
@@ -4613,4 +5244,218 @@ app.get("/communities/about/unmoderated/:communityName", (req, res) => {
       __v: 0,
     },
   ]);
+});
+
+let communityGeneralSettings = [
+  {
+    community_name: "reem",
+    welcome_message: {
+      send_welcome_message_flag: true,
+      message:
+        "Welcome to our community! We're excited to have you join us. Feel free to explore the discussions and share your thoughts.",
+    },
+    _id: "661d40f3481ae66a900fb918",
+    title: "Cheese Lovers Club",
+    description:
+      "Are you passionate about all things cheese? Join our community to discuss your favorite cheeses, recipes, and more!",
+    type: "Public",
+    nsfw_flag: true,
+    approved_users_have_the_ability_to: "Post Only (Default)",
+    accepting_new_requests_to_post: true,
+    accepting_requests_to_join: true,
+    __v: 0,
+  },
+  {
+    community_name: "habiba",
+    welcome_message: {
+      send_welcome_message_flag: true,
+      message:
+        "Welcome to the Grated Cheese Enthusiasts community! Get ready to dive into discussions about the world of grated cheese.",
+    },
+    _id: "661d40f3481ae66a900fb918",
+    title: "Grated Cheese Enthusiasts",
+    description:
+      "Join our community of cheese lovers as we explore the world of grated cheese. Share your favorite recipes, tips, and more!",
+    type: "Public",
+    nsfw_flag: false,
+    approved_users_have_the_ability_to: "Post Only (Default)",
+    accepting_new_requests_to_post: false,
+    accepting_requests_to_join: true,
+    __v: 0,
+  },
+  {
+    community_name: "halla",
+    welcome_message: {
+      send_welcome_message_flag: true,
+      message:
+        "Welcome to the Cheese Connoisseurs Club! Prepare to indulge in discussions about the finest cheeses from around the world.",
+    },
+    _id: "661d40f3481ae66a900fb918",
+    title: "Cheese Connoisseurs Club",
+    description:
+      "Calling all cheese enthusiasts! Join us in exploring the art of cheese appreciation. From aged cheddars to creamy bries, there's something for every cheese lover here.",
+    type: "Public",
+    nsfw_flag: false,
+    approved_users_have_the_ability_to: "Post Only (Default)",
+    accepting_new_requests_to_post: false,
+    accepting_requests_to_join: true,
+    __v: 0,
+  },
+];
+
+app.get("/communities/get-general-settings/:communityname", (req, res) => {
+  const { communityname } = req.params;
+
+  const community = communityGeneralSettings.find(
+    (community) => community.community_name === communityname
+  );
+  if (community) {
+    res.status(200).json(community);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+app.patch("/communities/change-general-settings/:communityname", (req, res) => {
+  const { communityname } = req.params;
+  console.log(communityname);
+  const {
+    welcome_message,
+    description,
+    type,
+    nsfw_flag,
+    approved_users_have_the_ability_to,
+    accepting_new_requests_to_post,
+    accepting_requests_to_join,
+    title,
+  } = req.body;
+  console.log("approved_users_have_the_ability_to", nsfw_flag);
+  const setting = communityGeneralSettings.find(
+    (sett) => sett.community_name === communityname
+  );
+  if (!setting) {
+    return res.status(404).json({ message: "Notification not found" });
+  }
+  setting.welcome_message = welcome_message;
+  setting.description = description;
+  setting.type = type;
+  setting.nsfw_flag = nsfw_flag;
+  setting.approved_users_have_the_ability_to =
+    approved_users_have_the_ability_to;
+  setting.accepting_new_requests_to_post = accepting_new_requests_to_post;
+  setting.accepting_requests_to_join = accepting_requests_to_join;
+  setting.title = title;
+  console.log("new general setting", setting);
+  res.sendStatus(200);
+});
+
+let postandcommentsettings = [
+  {
+    community_name: "reem",
+    posts: {
+      spam_filter_strength: {
+        posts: "High (default)",
+        links: "All",
+        comments: "High",
+      },
+      post_type_options: "Text Posts Only",
+      allow_crossposting_of_posts: false,
+      archive_posts: true,
+      enable_spoiler_tag: false,
+      allow_image_uploads_and_links_to_image_hosting_sites: true,
+      allow_multiple_images_per_post: true,
+      allow_polls: false,
+      allow_videos: false,
+    },
+    comments: {
+      media_in_comments: {
+        gifs_from_giphy: false,
+        collectible_expressions: true,
+        images: true,
+        gifs: false,
+      },
+      suggested_sort: "Best",
+      collapse_deleted_and_removed_comments: false,
+      minutes_to_hide_comment_scores: 59,
+    },
+    _id: "661d40f3481ae66a900fb942",
+    __v: 0,
+  },
+];
+
+app.get("/communities/get-posts-and-comments/:communityname", (req, res) => {
+  const { communityname } = req.params;
+
+  const community = postandcommentsettings.find(
+    (community) => community.community_name === communityname
+  );
+  if (community) {
+    res.status(200).json(community);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+app.patch(
+  "/communities/change-posts-and-comments/:communityname",
+  (req, res) => {
+    const { communityname } = req.params;
+    console.log(communityname);
+    console.log("patch", req.body);
+  }
+);
+
+let contentcontrols = [
+  {
+    community_name: "reem",
+    providing_members_with_posting_guidlines: {
+      flag: true,
+      guidline_text: "",
+    },
+    require_words_in_post_title: {
+      flag: true,
+      add_required_words: [
+        "adaugeo",
+        "expedita",
+        "utilis",
+        "adfero",
+        "amaritudo",
+      ],
+    },
+    ban_words_from_post_title: {
+      flag: true,
+      add_banned_words: ["tero", "spiculum", "advenio", "decumbo", "eum"],
+    },
+    ban_words_from_post_body: {
+      flag: true,
+      add_banned_words: ["abutor", "clibanus", "atque", "arx", "ultra"],
+    },
+    require_or_ban_links_from_specific_domains: {
+      flag: false,
+      restriction_type: "Required domains",
+      require_or_block_link_posts_with_these_domains: ["reem"],
+    },
+    restrict_how_often_the_same_link_can_be_posted: {
+      flag: false,
+      number_of_days: 0,
+    },
+    _id: "661d40f3481ae66a900fb92d",
+    __v: 0,
+  },
+];
+app.get("/communities/get-content-controls/:communityname", (req, res) => {
+  //console.log("weslt");
+  const { communityname } = req.params;
+
+  const community = contentcontrols.find(
+    (community) => community.community_name === communityname
+  );
+  if (community) {
+    res.status(200).json(community);
+  } else {
+    res.status(404).json({ error: "Community not found" });
+  }
+});
+app.patch("/communities/change-content-controls/:communityname", (req, res) => {
+  const { communityname } = req.params;
+  console.log(communityname);
+  console.log("patch content", req.body);
 });

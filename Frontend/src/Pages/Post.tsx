@@ -9,7 +9,8 @@ import LoadingProvider from '../Components/LoadingProvider';
 const Post = () => {
   const { id: postId } = useParams();
   const { prefix } = useParams();
-  console.log('fe post', prefix, postId);
+
+  console.log(postId);
   // const [community, setCommunity] = useState<PostType | undefined>();
   // const [post, setPost] = useState<PostType | undefined>();
   const { data, isLoading, isError } = useQuery({

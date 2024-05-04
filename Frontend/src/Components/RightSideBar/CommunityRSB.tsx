@@ -21,6 +21,7 @@ import { CommunityType } from '../../types/types';
 
 interface CommunityProps {
   name: string;
+  communityPage?: boolean | undefined;
   //joined?: boolean;
 }
 
@@ -33,7 +34,10 @@ interface CommunityProps {
 //   rank: number;
 // }
 
-export function CommunityRSB({ name: communityName }: CommunityProps) {
+export function CommunityRSB({
+  name: communityName,
+  communityPage: page = false,
+}: CommunityProps) {
   console.log('arrived');
   const { isLoading, isError } = useQuery({
     queryKey: ['communities', communityName],
@@ -87,44 +91,46 @@ export function CommunityRSB({ name: communityName }: CommunityProps) {
           data-testid='community-card'
         >
           <LoadingProvider error={isError} isLoading={isLoading}>
-            <div className='p-4  flex justify-between items-end'>
-              <Typography
-                variant='h5'
-                className='p-0 font-body font-semibold -tracking-tight text-black'
-              >
-                r/{communityName}
-              </Typography>
-              {!isJoined && (
-                <button
-                  className='bg-gray-900 rounded-full font-body font-semibold text-white -tracking-tight text-xs m-0 px-6 py-2 selection:border-0'
-                  onClick={() => {
-                    setIsJoined(!isJoined);
-                    joinMutation.mutate(communityName);
-                  }}
-                  data-testid='join-button'
+            {!page && (
+              <div className='p-4  flex justify-between items-end'>
+                <Typography
+                  variant='h5'
+                  className='p-0 font-body font-semibold -tracking-tight text-black'
                 >
-                  Join
-                </button>
-              )}
-              {isJoined && (
-                <button
-                  className='bg-gray-200 rounded-full font-body font-semibold text-black -tracking-tight text-xs px-4 py-2 border-black border'
-                  onClick={() => {
-                    setIsJoined(!isJoined);
-                    leaveMutation.mutate(communityName);
-                  }}
-                  data-testid='leave-button'
-                >
-                  Joined
-                </button>
-              )}
-            </div>
+                  r/{communityName}
+                </Typography>
+                {!isJoined && (
+                  <button
+                    className='bg-gray-900 rounded-full font-body font-semibold text-white -tracking-tight text-xs m-0 px-6 py-2 selection:border-0'
+                    onClick={() => {
+                      setIsJoined(!isJoined);
+                      joinMutation.mutate(communityName);
+                    }}
+                    data-testid='join-button'
+                  >
+                    Join
+                  </button>
+                )}
+                {isJoined && (
+                  <button
+                    className='bg-gray-200 rounded-full font-body font-semibold text-black -tracking-tight text-xs px-4 py-2 border-black border'
+                    onClick={() => {
+                      setIsJoined(!isJoined);
+                      leaveMutation.mutate(communityName);
+                    }}
+                    data-testid='leave-button'
+                  >
+                    Joined
+                  </button>
+                )}
+              </div>
+            )}
             <div className='px-4'>
               <Typography
                 variant='h6'
                 className='p-0 font-body font-semibold -tracking-tight text-black'
               >
-                {Community?.title}
+                {communityName}
               </Typography>
               <Typography
                 variant='small'
