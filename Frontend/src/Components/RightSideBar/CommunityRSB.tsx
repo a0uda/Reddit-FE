@@ -205,8 +205,9 @@ interface Rule {
 }
 
 const CommunityRules = ({ name: communityName }: CommunityProps) => {
+  const url = window.location.href;
   const { isLoading, isError } = useQuery({
-    queryKey: ['communities/rules/', communityName],
+    queryKey: ['communities/rules/', communityName, url],
     queryFn: () => fetchRequest(`communities/get-rules/${communityName}/`),
     onSuccess: (data) => {
       setMods(data.data);
@@ -237,8 +238,9 @@ const CommunityRules = ({ name: communityName }: CommunityProps) => {
 };
 
 const CommunityModerators = ({ name: communityName }: CommunityProps) => {
+  const url = window.location.href;
   const { isLoading, isError } = useQuery({
-    queryKey: ['communities/about/moderators', communityName],
+    queryKey: ['communities/about/moderators', communityName, url],
     queryFn: () =>
       fetchRequest(`communities/about/moderators/${communityName}/`),
     onSuccess: (data) => {
