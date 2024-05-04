@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useMutation } from 'react-query';
-import { postRequest } from '../../API/User';
+import { useMutation, useQuery } from 'react-query';
+import { postRequest, fetchRequest } from '../../API/User';
 import { TfiClose } from 'react-icons/tfi';
 import { GoDotFill } from 'react-icons/go';
 import { FaRegEyeSlash } from 'react-icons/fa6';
@@ -32,8 +32,8 @@ const CreateCommunity = ({
   open: open,
   handleOpen: handleOpen,
 }: CreateCommunityProps) => {
-  const [opendd, setOpendd] = useState(false);
-  const postReq = useMutation(postRequest);
+  // const [opendd, setOpendd] = useState(false);
+  // const postReq = useMutation(postRequest);
 
   //===================================================== Name ==========================================================
 
@@ -42,6 +42,12 @@ const CreateCommunity = ({
     useState<boolean>(false);
   const [communtiyNameErrorMsg, setCommunityNameErrorMsg] =
     useState<string>('');
+
+  const { data } = useQuery('communities names', () =>
+    fetchRequest('communities/get-communities-names')
+  );
+  // console.log(data);
+  const communitiesNamesList = data?.data ?? [];
 
   const handleNameLength = (name: string) => {
     setCommunityName(name);
@@ -59,10 +65,9 @@ const CreateCommunity = ({
   const handleNameUniqeness = (name: string) => {
     handleNameLength(name);
     setCommunityName(name);
-    // TODO: Check if the community name is already exists
-    if (communityName === 'sports') {
+    if (communitiesNamesList.includes(name)) {
       setCommunityNameIsError(true);
-      setCommunityNameErrorMsg('"' + communityName + '" is already exists');
+      setCommunityNameErrorMsg('"' + name + '" already exists');
     }
   };
 

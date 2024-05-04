@@ -720,8 +720,13 @@ app.post("/communities/add-community", (req, res) => {
   };
 
   communities.push(newCommunity);
-  console.log(communities);
+  // console.log(communities);
   res.sendStatus(200);
+});
+
+app.get("/communities/get-communities-names", (req, res) => {
+  const communityNames = communities.map((community) => community.name);
+  res.status(200).json(communityNames);
 });
 
 app.post("/users/mute-unmute-community", (req, res) => {
