@@ -72,25 +72,17 @@ function UserRightSideBar() {
       postRequest({
         endPoint: 'users/join-community',
         data: { community_name: communityName },
-      })
-    // {
-    //   onError: () => {
-    //     console.log('Error');
-    //   },
-    // }
+      }),
+    {
+      onSuccess: () => {},
+    }
   );
 
-  const leaveMutation = useMutation(
-    (communityName: string) =>
-      postRequest({
-        endPoint: 'users/leave-community',
-        data: { community_name: communityName },
-      })
-    // {
-    //   onError: () => {
-    //     console.log('Error');
-    //   },
-    // }
+  const leaveMutation = useMutation((communityName: string) =>
+    postRequest({
+      endPoint: 'users/leave-community',
+      data: { community_name: communityName },
+    })
   );
   const handleFollow = () => {
     postRequest({
@@ -114,7 +106,7 @@ function UserRightSideBar() {
 
   const [joinStates, setJoinStates] = useState(() => {
     if (moderatedCommunities) {
-      return moderatedCommunities.map(() => false);
+      return moderatedCommunities.map((community) => community.joined);
     } else {
       return [];
     }
@@ -295,46 +287,6 @@ function UserRightSideBar() {
                         >
                           <div className='gap-2 flex justify-between items-center p-2 px-3 text-black'>
                             Edit profile
-                          </div>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </CardHeader>
-              </Card>
-              <Card
-                color='transparent'
-                shadow={false}
-                className='w-full max-w-[20rem] '
-              >
-                <CardHeader
-                  color='transparent'
-                  floated={false}
-                  shadow={false}
-                  className='mx-0  flex items-center gap-4 pt-0 '
-                >
-                  <ShieldCheckIcon strokeWidth={1.5} className='h-8 w-8 mx-2' />
-                  <div className='flex w-full flex-col '>
-                    <div className='flex items-center justify-between mb-0'>
-                      <Typography variant='small' color='blue-gray'>
-                        Moderation
-                        <Typography
-                          variant='small'
-                          color='gray'
-                          className='text-xs mt-0'
-                        >
-                          Moderation Tools
-                        </Typography>
-                      </Typography>
-
-                      <div className='3 flex items-center'>
-                        <Link
-                          //   to be changed to mod setting later ree
-                          to={`/settings/profile`}
-                          className='flex rounded-full border text-xs bg-neutral-500'
-                        >
-                          <div className='gap-2 flex justify-between items-center p-2 px-3 text-black'>
-                            Mod settings
                           </div>
                         </Link>
                       </div>
