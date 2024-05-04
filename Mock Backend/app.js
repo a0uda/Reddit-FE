@@ -2627,6 +2627,16 @@ function shuffleList(list) {
   return list;
 }
 
+app.get("/posts/trending", (req, res) => {
+  const { page, pageSize } = req.query;
+  res.status(200).json({
+    success: true,
+    status: 200,
+    // content: postsListings.slice(page * pageSize, page * pageSize + pageSize),
+    content: postsListings.slice(0, 5),
+  });
+});
+
 app.get("/listing/posts/random", (req, res) => {
   const { page, pageSize } = req.query;
   res.status(200).json({

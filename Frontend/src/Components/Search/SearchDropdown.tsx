@@ -9,10 +9,14 @@ import {
   Typography,
 } from '@material-tailwind/react';
 import { useState } from 'react';
-import { CommunityOverviewType, UserType } from '../../types/types';
+import { CommunityOverviewType, PostType, UserType } from '../../types/types';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { CommunityIcon } from '../../assets/icons/Icons';
 import { useNavigate } from 'react-router-dom';
+import { fetchRequest } from '../../API/User';
+import { useQuery } from 'react-query';
+import PostOverview from './PostOverview';
+import { HiTrendingUp } from 'react-icons/hi';
 
 const SearchDropdown = ({
   searchQuery,
@@ -36,6 +40,16 @@ const SearchDropdown = ({
       title: 'test',
     },
   ]);
+
+  const [posts, setPosts] = useState<PostType[] | undefined>();
+
+  useQuery({
+    queryKey: ['trending posts'],
+    queryFn: () => fetchRequest('posts/trending'),
+    onSuccess: (data) => {
+      setPosts(data.data);
+    },
+  });
 
   const navigate = useNavigate();
 
@@ -93,6 +107,29 @@ const SearchDropdown = ({
             </Typography>
           </ListItem>
         ))}
+
+      {/* Trending today */}
+      {searchQuery.length === 0 && posts && posts.length > 0 && (
+        <div>
+          <ListItem
+            ripple={false}
+            className='px-4 mt-2 border-t-2 border-neutral-muted rounded-none'
+          >
+            <Typography
+              variant='small'
+              className='font-medium flex items-center gap-2'
+            >
+              <HiTrendingUp className='h-5 w-5' />
+              Trending today
+            </Typography>
+          </ListItem>
+          <div className='px-4'>
+            {posts.map((post) => (
+              <PostOverview key={post._id} post={post} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Communities */}
       {searchQuery.length > 0 && communities.length > 0 && (
