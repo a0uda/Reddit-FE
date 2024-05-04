@@ -802,7 +802,7 @@ const Community = () => {
                         </Button>
                       )}
                       {isModerator && (
-                        <Link to={`/${communityNameWithPrefix}/about/removed`}>
+                        <Link to={`/${communityNameWithPrefix}/about/spam`}>
                           <Button
                             variant='text'
                             className='h-10 font-bold flex items-center gap-1.5 border border-black bg-light-blue-900 text-white hover:bg-black'

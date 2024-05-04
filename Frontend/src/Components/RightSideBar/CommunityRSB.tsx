@@ -169,7 +169,8 @@ export function CommunityRSB({
               <CommunityModerators name={communityName} />
             </div>
             <div className='px-4 p-2'>
-              <Link to='/message'>
+              <Link to={`/message/compose?to=r/${communityName}`}>
+                {/* TODO: change the path */}
                 <Button
                   variant='filled'
                   className='w-full h-8 bg-neutral-muted text-black text-sm shadow-none hover:shadow-none flex items-center justify-center hover:underline'
@@ -198,7 +199,7 @@ interface Rule {
 const CommunityRules = ({ name: communityName }: CommunityProps) => {
   const { isLoading, isError } = useQuery({
     queryKey: ['communities/rules/', communityName],
-    queryFn: () => fetchRequest(`communities/rules/${communityName}/`),
+    queryFn: () => fetchRequest(`communities/get-rules/${communityName}/`),
     onSuccess: (data) => {
       setMods(data.data);
     },

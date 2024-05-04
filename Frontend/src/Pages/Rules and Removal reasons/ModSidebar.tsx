@@ -139,7 +139,7 @@ const ModSideBar = ({ className }: { className?: string }) => {
           />
         </svg>
       ),
-      link: `/r/${community_name}/about/edit?=page=community`,
+      link: `/r/${community_name}/about/edit/community`,
     },
     {
       title: 'Posts and Comments',
@@ -159,7 +159,7 @@ const ModSideBar = ({ className }: { className?: string }) => {
           />
         </svg>
       ),
-      link: `/r/${community_name}/about/edit?=page=posts`,
+      link: `/r/${community_name}/about/edit/posts`,
     },
   ];
 
