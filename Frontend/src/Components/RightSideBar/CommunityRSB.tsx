@@ -38,16 +38,21 @@ export function CommunityRSB({
   name: communityName,
   communityPage: page = false,
 }: CommunityProps) {
-  console.log('arrived');
+  // console.log('arrived');
+
+  const [Community, setCommunity] = useState<CommunityType | undefined>();
   const { isLoading, isError } = useQuery({
-    queryKey: ['communities', communityName],
+    queryKey: ['communitiesRSB', communityName],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${communityName}/`),
     onSuccess: (data) => {
       setCommunity(data.data);
     },
+    onError: () => {
+      console.log('can not fetch community data in RSB');
+    },
   });
-  const [Community, setCommunity] = useState<CommunityType | undefined>();
+  // console.log('Community in RSB', Community);
 
   const [isJoined, setIsJoined] = useState(Community?.joined_flag);
 
@@ -55,7 +60,7 @@ export function CommunityRSB({
     (communityName: string) =>
       postRequest({
         endPoint: 'users/join-community',
-        data: { communityName: communityName },
+        data: { community_name: communityName },
       })
     // {
     //   onError: () => {
@@ -68,7 +73,7 @@ export function CommunityRSB({
     (communityName: string) =>
       postRequest({
         endPoint: 'users/leave-community',
-        data: { communityName: communityName },
+        data: { community_name: communityName },
       })
     // {
     //   onError: () => {
@@ -151,12 +156,6 @@ export function CommunityRSB({
             </div>
             <div className='w-100 min-h-px m-1 bg-gray-300'></div>
             <div className='px-4'>
-              <Typography
-                variant='small'
-                className='font-body font-semibold -tracking-tight text-xs text-gray-600 py-2 mt-3'
-              >
-                RULES
-              </Typography>
               <CommunityRules name={communityName} />
             </div>
             <div className='w-100 min-h-px m-1 bg-gray-300'></div>
@@ -171,7 +170,6 @@ export function CommunityRSB({
             </div>
             <div className='px-4 p-2'>
               <Link to='/message'>
-                {/* TODO: change the path */}
                 <Button
                   variant='filled'
                   className='w-full h-8 bg-neutral-muted text-black text-sm shadow-none hover:shadow-none flex items-center justify-center hover:underline'
@@ -199,7 +197,7 @@ interface Rule {
 
 const CommunityRules = ({ name: communityName }: CommunityProps) => {
   const { isLoading, isError } = useQuery({
-    queryKey: ['ruless', communityName],
+    queryKey: ['communities/rules/', communityName],
     queryFn: () => fetchRequest(`communities/rules/${communityName}/`),
     onSuccess: (data) => {
       setMods(data.data);
@@ -208,7 +206,14 @@ const CommunityRules = ({ name: communityName }: CommunityProps) => {
   const [rulesList, setMods] = useState([]);
 
   return (
-    <LoadingProvider error={isError} isLoading={isLoading}>
+    // <LoadingProvider error={isError} isLoading={isLoading}>
+    <>
+      <Typography
+        variant='small'
+        className='font-body font-semibold -tracking-tight text-xs text-gray-600 py-2 mt-3'
+      >
+        RULES
+      </Typography>
       {rulesList.map((rule: Rule) => (
         <AccordionDropDown
           key={rule.rule_order}
@@ -217,13 +222,14 @@ const CommunityRules = ({ name: communityName }: CommunityProps) => {
           description={rule.full_description}
         />
       ))}
-    </LoadingProvider>
+    </>
+    // </LoadingProvider>
   );
 };
 
 const CommunityModerators = ({ name: communityName }: CommunityProps) => {
   const { isLoading, isError } = useQuery({
-    queryKey: ['moderators', communityName],
+    queryKey: ['communities/about/moderators', communityName],
     queryFn: () =>
       fetchRequest(`communities/about/moderators/${communityName}/`),
     onSuccess: (data) => {

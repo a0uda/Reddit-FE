@@ -37,9 +37,9 @@ const Community = () => {
   //================================================ Community Info ======================================================//
 
   const [community, setCommunity] = useState<CommunityType | undefined>();
-  console.log(communityName);
+  console.log(' comm name in comm page', communityName);
   const { isLoading, isError } = useQuery({
-    queryKey: ['communities', communityName],
+    queryKey: ['communityPage', communityName],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${communityName}/`),
     onSuccess: (data) => {
@@ -48,7 +48,7 @@ const Community = () => {
       // setIsJoined(data.data.joined_flag);
       // setProfilePicture(data.data.profile_picture);
       // // todo:set the banner
-      console.log('the comm', community);
+      // console.log('the comm', community);
     },
   });
 
@@ -72,7 +72,7 @@ const Community = () => {
     (communityName: string) =>
       postRequest({
         endPoint: 'users/join-community',
-        data: { communityName: communityName },
+        data: { community_name: communityName },
       }),
     {
       onSuccess: () => {
@@ -88,7 +88,7 @@ const Community = () => {
     (communityName: string) =>
       postRequest({
         endPoint: 'users/leave-community',
-        data: { communityName: communityName },
+        data: { community_name: communityName },
       }),
     {
       onSuccess: () => {
@@ -269,7 +269,7 @@ const Community = () => {
   const [communityPosts, setCommunityPosts] = useState<PostType[]>([]);
   // console.log(communityName);
   useQuery({
-    queryKey: ['posts', communityName],
+    queryKey: ['postsInCommunityPage', communityName],
     queryFn: () => fetchRequest(`posts/${communityName}/`),
     onSuccess: (data) => {
       setCommunityPosts(data.data);
@@ -782,7 +782,6 @@ const Community = () => {
                           variant='text'
                           className='h-10 font-bold flex items-center gap-1.5 border border-black bg-light-blue-900 text-white hover:bg-black'
                           onClick={() => {
-                            setIsJoined(!isJoined);
                             joinMutation.mutate(communityName ?? '');
                           }}
                           data-testid='join-button'
@@ -795,7 +794,6 @@ const Community = () => {
                           variant='text'
                           className='h-10 font-bold flex items-center gap-1.5 border border-black'
                           onClick={() => {
-                            setIsJoined(!isJoined);
                             leaveMutation.mutate(communityName ?? '');
                           }}
                           data-testid='leave-button'
@@ -862,11 +860,9 @@ const Community = () => {
                             </MenuItem>
                           )}
 
-                          {isJoined && (
+                          {isJoined && isModerator && (
                             <MenuItem
                               onClick={() => {
-                                setIsJoined(!isJoined);
-                                setIsModerator(!isModerator);
                                 leaveMutation.mutate(communityName ?? '');
                               }}
                               className='p-4'
@@ -877,7 +873,6 @@ const Community = () => {
                           {/* {!isJoined && community.moderator_flag && (
                             <MenuItem
                               onClick={() => {
-                                setIsJoined(!isJoined);
                                 joinMutation.mutate(communityName ?? '');
                               }}
                               className='p-4'
@@ -899,7 +894,7 @@ const Community = () => {
                   <ContentLayout.Main>
                     {communityPosts.map((post) => (
                       <div key={post._id} className='w-full pr-4'>
-                        <PostPreview post={post} />
+                        <PostPreview post={post} page='community' />
                       </div>
                     ))}
                   </ContentLayout.Main>

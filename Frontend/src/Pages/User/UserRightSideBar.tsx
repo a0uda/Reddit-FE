@@ -71,8 +71,8 @@ function UserRightSideBar() {
     (communityName: string) =>
       postRequest({
         endPoint: 'users/join-community',
-        data: { communityName: communityName },
-      }),
+        data: { community_name: communityName },
+      })
     // {
     //   onError: () => {
     //     console.log('Error');
@@ -84,8 +84,8 @@ function UserRightSideBar() {
     (communityName: string) =>
       postRequest({
         endPoint: 'users/leave-community',
-        data: { communityName: communityName },
-      }),
+        data: { community_name: communityName },
+      })
     // {
     //   onError: () => {
     //     console.log('Error');

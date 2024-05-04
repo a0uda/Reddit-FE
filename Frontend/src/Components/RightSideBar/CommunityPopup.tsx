@@ -30,7 +30,7 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
     (communityName: string) =>
       postRequest({
         endPoint: 'users/join-community',
-        data: { communityName: communityName },
+        data: { community_name: communityName },
       })
     // {
     // onError: () => {
@@ -43,7 +43,7 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
     (communityName: string) =>
       postRequest({
         endPoint: 'users/leave-community',
-        data: { communityName: communityName },
+        data: { community_name: communityName },
       })
     // {
     //   onError: () => {

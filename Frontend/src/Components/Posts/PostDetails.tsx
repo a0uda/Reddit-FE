@@ -25,7 +25,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
   const [community, setCommunity] = useState<CommunityType | undefined>();
 
   useQuery({
-    queryKey: ['community'],
+    queryKey: ['communityPostDetails', post?.community_name],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${post?.community_name}`),
     onSuccess: (data) => {
@@ -94,21 +94,6 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 )} */}
                 <div className='flex flex-col justify-between m-0'>
                   <div className='flex flex-row items-center justify-between gap-1 m-0'>
-                    {community && (
-                      <CommunityBadge
-                        name={post.community_name ?? ''}
-                        joined={community?.joined_flag}
-                        avatar={community?.profile_picture}
-                        coverImage={community?.banner_picture}
-                        description={community?.description}
-                        members={community?.members_count}
-                        // online={Community.communityOnline}
-                        username={post.username}
-                        // page={page}
-                        page='post'
-                      />
-                    )}
-                    {!community && <UserBadge username={post.username} />}
                     {community && (
                       <CommunityBadge
                         name={post.community_name ?? ''}

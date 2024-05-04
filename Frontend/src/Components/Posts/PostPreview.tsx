@@ -512,7 +512,7 @@ const PostPreview = ({
     handleCanEditPost();
   }, []);
   useQuery({
-    queryKey: ['community'],
+    queryKey: ['communityPostPreview', post.community_name],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${post.community_name}`),
     onSuccess: (data) => {
