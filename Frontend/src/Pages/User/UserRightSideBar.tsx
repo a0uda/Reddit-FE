@@ -155,11 +155,27 @@ function UserRightSideBar() {
     <>
       <Card className=' shadow-none  mt-2 mx-1 bg-neutral-200 overflow-auto '>
         <div className='flex flex-col h-full relative '>
-          <img
-            src={banner_picture}
-            alt='card-image'
-            className='w-full h-[120px] object-cover'
-          />
+          {myData ? (
+            <img
+              src={
+                banner_picture ||
+                'https://upload.wikimedia.org/wikipedia/commons/b/bd/Oxford_Blue.png'
+              }
+              alt='card-image'
+              className='w-full h-[120px] object-cover'
+            />
+          ) : (
+            banner_picture && (
+              <img
+                src={
+                  banner_picture ||
+                  'https://upload.wikimedia.org/wikipedia/commons/b/bd/Oxford_Blue.png'
+                }
+                alt='card-image'
+                className='w-full h-[120px] object-cover'
+              />
+            )
+          )}
           {myData ? (
             <div className='absolute bottom-2 right-2 '>
               <Link
@@ -253,7 +269,10 @@ function UserRightSideBar() {
                   <Avatar
                     size='sm'
                     variant='circular'
-                    src={profile_picture}
+                    src={
+                      profile_picture ||
+                      'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+                    }
                     alt='tania andrew'
                   />
                   <div className='flex w-full flex-col '>
@@ -378,7 +397,7 @@ function UserRightSideBar() {
               )}
             </div>
           </SidebarSection>
-          <SidebarSection sectionTitle="YOU'RE A MODERATOR OF THESE COMMUNITIES">
+          <SidebarSection sectionTitle={`MODERATOR OF THESE COMMUNITIES`}>
             <div className='flex flex-col w-full '>
               {moderatedCommunities &&
                 moderatedCommunities.map(

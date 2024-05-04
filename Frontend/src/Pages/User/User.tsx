@@ -1,4 +1,4 @@
-import { Card, CardBody } from '@material-tailwind/react';
+import { Avatar, Card, CardBody } from '@material-tailwind/react';
 import UserRightSideBar from './UserRightSideBar';
 import { Link, useParams } from 'react-router-dom';
 import Overview from './Overview';
@@ -96,11 +96,21 @@ function User() {
             <CardBody className='px-0'>
               <div className='flex gap-2 mb-7'>
                 <div className='flex flex-col relative '>
-                  <img
+                  <Avatar
+                    src={
+                      profile_picture ||
+                      'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+                    }
+                    alt={username + "'s Profile"}
+                    variant='circular'
+                    size='sm'
+                    className='w-[70px] h-[70px] object-cover rounded-full'
+                  />
+                  {/* <img
                     src={profile_picture}
                     alt='card-image'
                     className='w-[70px] h-[70px] object-cover rounded-full'
-                  />
+                  /> */}
                   {myData ? (
                     <div className='absolute bottom-0 right-0 '>
                       <Link

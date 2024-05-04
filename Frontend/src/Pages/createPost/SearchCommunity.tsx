@@ -148,7 +148,10 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
                   <Avatar
                     variant='circular'
                     alt={user.imageUrl}
-                    src={user.imageUrl}
+                    src={
+                      user.imageUrl ||
+                      'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+                    }
                     className='w-8 h-8'
                   />
                   <p className='font-body font-bold tracking-tight text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 dark:text-gray-200 line-clamp-2 overflow-hidden text-ellipsis'>

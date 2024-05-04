@@ -126,7 +126,10 @@ const Notifications = () => {
                   size='sm'
                   variant='circular'
                   alt={notification.communityAvatarSrc}
-                  src={notification.communityAvatarSrc}
+                  src={
+                    notification.communityAvatarSrc ||
+                    'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+                  }
                 />
               </div>
             ) : (

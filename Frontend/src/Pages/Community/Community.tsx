@@ -30,6 +30,7 @@ import {
   ListItem,
   Typography,
 } from '@material-tailwind/react';
+import { CommunityIcon } from '../../assets/icons/Icons';
 
 const Community = () => {
   const { communityName } = useParams();
@@ -652,7 +653,10 @@ const Community = () => {
                 {uploadedBanner && (
                   <div>
                     <Avatar
-                      src={uploadedBanner}
+                      src={
+                        uploadedBanner ||
+                        'https://upload.wikimedia.org/wikipedia/commons/b/bd/Oxford_Blue.png'
+                      }
                       alt='banner image'
                       variant='rounded'
                       className='w-full h-32'
@@ -740,7 +744,7 @@ const Community = () => {
                   {!profilePicture && (
                     <Avatar
                       src={
-                        'https://htmlcolorcodes.com/assets/images/colors/light-gray-color-solid-background-1920x1080.png'
+                        'https://upload.wikimedia.org/wikipedia/commons/4/49/A_black_image.jpg'
                       }
                       alt='profile picture'
                       variant='circular'

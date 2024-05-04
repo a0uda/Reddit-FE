@@ -564,7 +564,10 @@ const PostHeader = ({
             <Avatar
               variant='circular'
               alt={name}
-              src={avatar}
+              src={
+                avatar ||
+                'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+              }
               //   style={{ width: '30px', height: '30px' }}
               className='h-7 w-7'
             />
