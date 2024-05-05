@@ -714,6 +714,8 @@ const PostFooter = ({
       }
     );
   };
+  console.log(post.moderator_details.removed_removal_reason, 'remreason');
+
   return (
     <div className='flex flex-col gap-2 mt-2'>
       {isPost && (
@@ -731,6 +733,8 @@ const PostFooter = ({
           <Typography variant='small' className='font-bold'>
             {post.moderator_details.approved_flag ? 'Approved' : 'Removed'}
             {post.moderator_details.spammed_flag && ' as spam'}
+            {post.moderator_details.removed_removal_reason &&
+              ': ' + post.moderator_details.removed_removal_reason}
           </Typography>
           <Typography variant='small'>
             <Link
@@ -763,9 +767,8 @@ const PostFooter = ({
           !post.moderator_details.removed_removal_reason && (
             <RoundedButt
               onClick={(e) => {
-                e.stopPropagation();
-
                 setRemModal(true);
+                e.stopPropagation();
               }}
             >
               Add Removal Reason
