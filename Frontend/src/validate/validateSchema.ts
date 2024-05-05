@@ -5,6 +5,7 @@ export const validationSchema = {
     .string()
     .required('Username is required')
     .min(3, 'Username should have more than 3 characters'),
+  userName: yup.string().required('Username is required'),
   email: yup.string().email('Invalid email').required('Required'),
   password: yup
     .string()

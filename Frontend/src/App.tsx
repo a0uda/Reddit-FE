@@ -27,6 +27,7 @@ import {
 } from 'react-query';
 import { useAlert } from './Providers/AlertProvider.tsx';
 import ChatMain from './Pages/Chatting/ChatMain.tsx';
+import { SocketContextProvider } from './Providers/SocketProvider.tsx';
 
 function App() {
   const { status } = useSession();
@@ -79,96 +80,98 @@ function App() {
     },
   });
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className='App'>
-        <Router>
-          <OfflineAlert />
-          <NavigationBar />
-          <Routes>
-            <Route path={'/'} element={<Mainfeed />} />
-            <Route path={'/:sortOption'} element={<Mainfeed />} />
-            <Route
-              path={'/:prefix/:communityNameOrUsername/comments/:id/:title/'}
-              element={<Post />}
-            />
-            <Route
-              path='/settings/:page'
-              element={<HandleRoutes element={<UserSettings />} />}
-            />
-            <Route
-              path={`/u/:username/:page`}
-              element={<HandleRoutes element={<User />} />}
-            />
-            <Route
-              path={'/:prefix?/:communityName?/submit'}
-              element={<HandleRoutes element={<CreatePost />} />}
-            />
-            <Route
-              path='/notifications'
-              element={<HandleRoutes element={<Notifications />} />}
-            />
-            <Route
-              path='/message/*'
-              element={<HandleRoutes element={<MessageRouter />} />}
-            />
-            <Route
-              path='/r/:community_name/about/unmoderated'
-              element={<Main page='unmoderated' />}
-            />
-            <Route
-              path='/r/:community_name/about/edited'
-              element={<Main page='edited' />}
-            />
-            <Route
-              path='/r/:community_name/about/spam'
-              element={<Main page='removed' />}
-            />
-            <Route
-              path='/r/:community_name/about/contributors'
-              element={<UserManagement page='approved' />}
-            />
-            <Route
-              path='/r/:community_name/about/moderators'
-              element={<UserManagement page='moderators' />}
-            />
-            <Route
-              path='/r/:community_name/about/banned'
-              element={<UserManagement page='banned' />}
-            />
-            <Route
-              path='/r/:community_name/about/muted'
-              element={<UserManagement page='muted' />}
-            />
-            <Route
-              path='/r/:community_name/about/rules/*'
-              element={<HandleRoutes element={<RuleRemoval />} />}
-            />
-            <Route path='/search/*' element={<Search />} />
-            <Route
-              path='/chat/u/:username'
-              element={<ChatMain page='chat' />}
-            />
-            <Route path='/chat/create' element={<ChatMain page='create' />} />
-            <Route
-              path='/r/:community_name/about/edit/community'
-              element={<HandleRoutes element={<GeneralSettings />} />}
-            />
-            <Route
-              path='/r/:community_name/about/edit/posts'
-              element={<HandleRoutes element={<PostsCommentsSettings />} />}
-            />
-            <Route
-              path='/r/:community_name/about/settings'
-              element={<HandleRoutes element={<ContentControls />} />}
-            />
-            <Route
-              path='/r/:communityName'
-              element={<HandleRoutes element={<Community />} />}
-            />
-          </Routes>
-        </Router>
-      </div>
-    </QueryClientProvider>
+    <SocketContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <div className='App'>
+          <Router>
+            <OfflineAlert />
+            <NavigationBar />
+            <Routes>
+              <Route path={'/'} element={<Mainfeed />} />
+              <Route path={'/:sortOption'} element={<Mainfeed />} />
+              <Route
+                path={'/:prefix/:communityNameOrUsername/comments/:id/:title/'}
+                element={<Post />}
+              />
+              <Route
+                path='/settings/:page'
+                element={<HandleRoutes element={<UserSettings />} />}
+              />
+              <Route
+                path={`/u/:username/:page`}
+                element={<HandleRoutes element={<User />} />}
+              />
+              <Route
+                path={'/:prefix?/:communityName?/submit'}
+                element={<HandleRoutes element={<CreatePost />} />}
+              />
+              <Route
+                path='/notifications'
+                element={<HandleRoutes element={<Notifications />} />}
+              />
+              <Route
+                path='/message/*'
+                element={<HandleRoutes element={<MessageRouter />} />}
+              />
+              <Route
+                path='/r/:community_name/about/unmoderated'
+                element={<Main page='unmoderated' />}
+              />
+              <Route
+                path='/r/:community_name/about/edited'
+                element={<Main page='edited' />}
+              />
+              <Route
+                path='/r/:community_name/about/spam'
+                element={<Main page='removed' />}
+              />
+              <Route
+                path='/r/:community_name/about/contributors'
+                element={<UserManagement page='approved' />}
+              />
+              <Route
+                path='/r/:community_name/about/moderators'
+                element={<UserManagement page='moderators' />}
+              />
+              <Route
+                path='/r/:community_name/about/banned'
+                element={<UserManagement page='banned' />}
+              />
+              <Route
+                path='/r/:community_name/about/muted'
+                element={<UserManagement page='muted' />}
+              />
+              <Route
+                path='/r/:community_name/about/rules/*'
+                element={<HandleRoutes element={<RuleRemoval />} />}
+              />
+              <Route path='/search/*' element={<Search />} />
+              <Route
+                path='/chat/u/:username'
+                element={<ChatMain page='chat' />}
+              />
+              <Route path='/chat/create' element={<ChatMain page='create' />} />
+              <Route
+                path='/r/:community_name/about/edit/community'
+                element={<HandleRoutes element={<GeneralSettings />} />}
+              />
+              <Route
+                path='/r/:community_name/about/edit/posts'
+                element={<HandleRoutes element={<PostsCommentsSettings />} />}
+              />
+              <Route
+                path='/r/:community_name/about/settings'
+                element={<HandleRoutes element={<ContentControls />} />}
+              />
+              <Route
+                path='/r/:communityName'
+                element={<HandleRoutes element={<Community />} />}
+              />
+            </Routes>
+          </Router>
+        </div>
+      </QueryClientProvider>
+    </SocketContextProvider>
   );
 }
 

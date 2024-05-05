@@ -238,7 +238,9 @@ function UserRightSideBar() {
                   buttonColor='bg-neutral-500'
                   buttonText='Chat'
                   buttonTextColor='text-black'
-                  onClick={() => handleFollow()}
+                  onClick={() => {
+                    navigate(`/chat/u/${username}`);
+                  }}
                 >
                   <ChatBubbleOvalLeftEllipsisIcon
                     strokeWidth={1.5}
@@ -315,13 +317,13 @@ function UserRightSideBar() {
                     <Link
                       key={i}
                       to={
-                        link.type != 'facebook'
-                          ? 'https://www.' +
+                        link.custom_url.includes('www')
+                          ? link.custom_url
+                          : 'https://www.' +
                             link.type.toLowerCase() +
                             '.com/' +
                             link.custom_url +
                             '/'
-                          : 'https://' + link.custom_url
                       }
                       target='_blank'
                     >

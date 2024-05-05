@@ -259,13 +259,13 @@ function Profile() {
                 <Link
                   key={link + i}
                   to={
-                    link.type != 'facebook'
-                      ? 'https://www.' +
+                    link.custom_url.includes('www')
+                      ? link.custom_url
+                      : 'https://www.' +
                         link.type.toLowerCase() +
                         '.com/' +
                         link.custom_url +
                         '/'
-                      : 'https://' + link.custom_url
                   }
                   //target='_blank'
                 >
