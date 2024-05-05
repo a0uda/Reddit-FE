@@ -18,7 +18,7 @@ import {
 import {
   HiArrowRightOnRectangle,
   HiEllipsisHorizontal,
-  HiMagnifyingGlass,
+  // HiMagnifyingGlass,
 } from 'react-icons/hi2';
 import { LogoMark, LogoText } from '../assets/icons/Logo';
 import { PlusIcon } from '@heroicons/react/24/solid';
@@ -397,7 +397,17 @@ const NotificationMenu = () => {
     community_name: string;
     unread_flag: boolean;
     hidden_flag: boolean;
-    type: 'upvotes_posts' | 'comments' | 'replies' | 'new_followers';
+    type:
+      | 'upvotes_posts'
+      | 'upvotes_comments'
+      | 'comments'
+      | 'replies'
+      | 'new_followers'
+      | 'invitations'
+      | 'private_messages'
+      | 'mentions'
+      | 'chat_messages'
+      | 'chat_requests';
     profile_picture: string;
     is_in_community: boolean;
   };
@@ -413,6 +423,9 @@ const NotificationMenu = () => {
       case 'upvotes_posts':
         description = `${notification.sending_user_username} upvoted your post${communityPart}`;
         break;
+      case 'upvotes_comments':
+        description = `${notification.sending_user_username} upvoted your comment${communityPart}`;
+        break;
       case 'comments':
         description = `${notification.sending_user_username} commented on your post${communityPart}`;
         break;
@@ -423,6 +436,21 @@ const NotificationMenu = () => {
         break;
       case 'new_followers':
         description = `${notification.sending_user_username} started following you`;
+        break;
+      case 'invitations':
+        description = `${notification.sending_user_username} invited you to be a moderator of r/${notification.community_name}`;
+        break;
+      case 'private_messages':
+        description = `${notification.sending_user_username} sent you a private message`;
+        break;
+      case 'mentions':
+        description = `${notification.sending_user_username} mentioned you in a post${communityPart}`;
+        break;
+      case 'chat_messages':
+        description = `${notification.sending_user_username} sent you a message in a chat`;
+        break;
+      case 'chat_requests':
+        description = `${notification.sending_user_username} sent you a chat request`;
         break;
       default:
         description = '';
