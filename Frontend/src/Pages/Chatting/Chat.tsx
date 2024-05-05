@@ -97,7 +97,7 @@ function Chat({ newMessage }: { newMessage: Message }) {
             updatedAt: 'null',
             __v: 1,
           };
-          
+          setMsg('');
 
           setMessages([...messages, newMess]);
         },
@@ -129,7 +129,7 @@ function Chat({ newMessage }: { newMessage: Message }) {
     }
   }, [newMessage]);
   return (
-    <div className='grid grid-cols-1 xl:grid-cols-layout h-[500px]'>
+    <div className='w-full xl:grid-cols-layout '>
       <div className='hidden xl:block'></div>
       <div className='container pt-4 flex flex-col h-full'>
         <div className='border-b'> {username}</div>
@@ -177,7 +177,10 @@ function Chat({ newMessage }: { newMessage: Message }) {
               placeholder='Message'
               style={{ backgroundColor: '#DCDCDC' }}
               NoCheck={true}
-              onChange={(e) => setMsg(e.target.value)}
+              onChange={(e) => {
+                setMsg(e.target.value);
+              }}
+              value={msg}
             />
           </form>
         </div>
