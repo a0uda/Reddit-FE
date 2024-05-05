@@ -238,7 +238,9 @@ function UserRightSideBar() {
                   buttonColor='bg-neutral-500'
                   buttonText='Chat'
                   buttonTextColor='text-black'
-                  onClick={() => handleFollow()}
+                  onClick={() => {
+                    navigate(`/chat/u/${username}`);
+                  }}
                 >
                   <ChatBubbleOvalLeftEllipsisIcon
                     strokeWidth={1.5}
