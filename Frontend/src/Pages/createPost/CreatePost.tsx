@@ -45,8 +45,9 @@ const NewPost: React.FC = () => {
   const [Imageindex, setImageIndex] = useState(0);
   const navigate = useNavigate();
   const { community_name } = useParams();
-  const [setScheduledDate] = useState<string>('');
-  const [setScheduledTime] = useState<string>('');
+  const [ScheduledDay, setScheduledDay] = useState<string>('');
+  const [ScheduledHour, setScheduledHour] = useState<string>('');
+  const [ScheduledMinutes, setScheduledMinutes] = useState<string>('');
 
   const [inputArr, setInputArr] = useState([
     {
@@ -173,9 +174,27 @@ const NewPost: React.FC = () => {
           if (values.type == 'image_and_videos') {
             await handleImages(values);
           }
+          if (
+            community_name &&
+            ScheduledDay &&
+            ScheduledHour &&
+            ScheduledMinutes
+          ) {
+            values = {
+              repetition_option: 'None',
+              submit_time: {
+                date: ScheduledDay,
+                hours: ScheduledHour,
+                minutes: ScheduledMinutes,
+              },
+              postInput: {
+                ...values,
+              },
+            };
+          }
           handleOnSubmit(values);
           setTimeout(() => {
-            // alert(JSON.stringify(values));
+            alert(JSON.stringify(values));
             setSubmitting(true);
             resetForm();
             setOC(false);
@@ -382,8 +401,9 @@ const NewPost: React.FC = () => {
               <SchedulePostComponent
                 handleOpen={() => setHandleOpenSchedule(!HandleOpenSchedule)}
                 open={HandleOpenSchedule}
-                setScheduledDate={() => setScheduledDate}
-                setScheduledTime={() => setScheduledTime}
+                setScheduledDate={setScheduledDay}
+                setScheduledHour={setScheduledHour}
+                setScheduledMinutes={setScheduledMinutes}
               />
 
               <DiscardPost

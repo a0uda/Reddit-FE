@@ -15,19 +15,31 @@ const SchedulePostComponent = (props: {
   handleOpen: () => void;
   open: boolean;
   setScheduledDate: (time: string) => void;
-  setScheduledTime: (time: string) => void;
+  setScheduledHour: (time: string) => void;
+  setScheduledMinutes: (time: string) => void;
 }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>('00:00');
+  const [selectedTime, setSelectedTime] = useState<string>('00:00');
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
   };
 
   const handleSubmit = () => {
-    console.log('sslkskskkml: ', selectedDate, selectedTime);
-    setSelectedDate(selectedDate);
-    setSelectedTime(selectedTime);
+    const formattedDates = selectedDate ? selectedDate.toDateString() : '';
+    console.log(formattedDates);
+    const dateString = formattedDates;
+    const date = new Date(dateString);
+
+    const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    console.log(formattedDate);
+    console.log('sslkskskkml: aaaaaaaaaaaaaaaaaa', formattedDate, selectedTime);
+    const [hours, minutes] = selectedTime.split(':');
+    console.log('Hours:', hours);
+    console.log('Minutes:', minutes);
+    props.setScheduledDate(formattedDate);
+    props.setScheduledHour(hours);
+    props.setScheduledMinutes(minutes);
     props.handleOpen();
   };
 
