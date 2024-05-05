@@ -4,28 +4,40 @@ import Input from '../../Components/Input';
 import { Avatar } from '@material-tailwind/react';
 import { useMutation } from 'react-query';
 import { postRequest } from '../../API/User';
+import { useParams } from 'react-router-dom';
+
+interface User {
+  _id: string;
+  username: string;
+  profile_picture: string;
+}
+
+interface MessageStatus {
+  flag: boolean;
+  reason: string | null;
+}
 
 interface Message {
-  id: number;
-  content: string;
-  author: string;
-}
-interface UserChatting {
-  _id: '66314d36c16d394bc516c17f';
-  otherUsername: 'Dayana.Buckridge';
-  lastMessageSender: 'Dayana.Buckridge';
-  lastMessageText: 'Conqueror cetera adsuesco arma communis vita.';
-  lastMessageTimestamp: '2024-04-30T19:57:35.732Z';
+  reported: MessageStatus;
+  removed: MessageStatus;
+  _id: string;
+  senderId: User;
+  receiverId: User;
+  message: string;
+  createdAt: string; // ISO 8601 date-time format
+  updatedAt: string; // ISO 8601 date-time format
+  __v: number; // version field, commonly used in MongoDB
 }
 
-function Chat(props: { userChatting: UserChatting }) {
+function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [msg, setMsg] = useState('');
   const postReq = useMutation(postRequest);
+  const { username } = useParams();
   const FetchMessages = async () => {
     try {
       const res = await axios.get(
-        `${process.env.VITE_BASE_URL}chats/${props.userChatting.otherUsername}`,
+        `${process.env.VITE_BASE_URL}chats/${username}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -46,7 +58,7 @@ function Chat(props: { userChatting: UserChatting }) {
     e.preventDefault();
     postReq.mutate(
       {
-        endPoint: `chats/send/${props.userChatting.otherUsername}`,
+        endPoint: `chats/send/${username}`,
         data: {
           message: msg,
         },
@@ -63,7 +75,7 @@ function Chat(props: { userChatting: UserChatting }) {
     <div className='grid grid-cols-1 xl:grid-cols-layout h-[500px]'>
       <div className='hidden xl:block'></div>
       <div className='container pt-4 flex flex-col h-full'>
-        <div className='border-b'> {props.userChatting.otherUsername}</div>
+        <div className='border-b'> {username}</div>
 
         <div className='flex-grow overflow-y-auto'>
           <div className='overflow-y-auto h-[70vh] mt-16'>
@@ -78,12 +90,12 @@ function Chat(props: { userChatting: UserChatting }) {
                     className='ms-2'
                   />
                 </div>
-                <div>{props.userChatting.otherUsername}</div>
+                <div>{username}</div>
               </div>
               {messages.map((message, index) => (
                 <div key={index}>
                   {index === 0 ||
-                  messages[index - 1].author !== message.author ? (
+                  messages[index - 1].senderId._id !== message.senderId._id ? (
                     <div className='font-bold'>
                       <Avatar
                         variant='circular'
@@ -92,10 +104,10 @@ function Chat(props: { userChatting: UserChatting }) {
                         style={{ width: '25px', height: '25px' }}
                         className='ms-2'
                       />
-                      {message.author}
+                      {message.senderId.username}
                     </div>
                   ) : null}{' '}
-                  <div className='ms-10'>{message.content}</div>
+                  <div className='ms-10'>{message.message}</div>
                 </div>
               ))}
             </div>

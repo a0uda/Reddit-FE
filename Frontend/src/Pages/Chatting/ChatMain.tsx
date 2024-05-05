@@ -22,7 +22,7 @@ const ChatMain = ({ page }: { page: 'create' | 'chat' }) => {
   useEffect(() => {
     socket?.on('newMessage', (newMessage) => {
       newMessage.shouldShake = true;
-      console.log(newMessage);
+      console.log(newMessage,'messfromabdo');
     });
 
     return () => socket?.off('newMessage');
@@ -30,7 +30,7 @@ const ChatMain = ({ page }: { page: 'create' | 'chat' }) => {
   return (
     <div className='flex'>
       <SideBar />
-      {page == 'create' ? <CreateChat /> : <Chat userChatting={ahmed} />}
+      {page == 'create' ? <CreateChat /> : <Chat />}
     </div>
   );
 };
