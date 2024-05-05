@@ -32,7 +32,7 @@ const Notifications = () => {
       },
     }
   );
-  console.log(data);
+  // console.log('notification dataaaa', data);
   const [notifications, setNotifications] = useState(data?.data ?? []);
 
   // handle mark all as read
@@ -42,7 +42,7 @@ const Notifications = () => {
       await markAllAsReadMutation.mutateAsync({
         endPoint: 'notifications/mark-all-as-read',
         newSettings: {
-          read_flag: true,
+          // read_flag: true,
         },
       });
       refetch();
@@ -53,14 +53,15 @@ const Notifications = () => {
   const markAsRead = async (id: string) => {
     try {
       await markAllAsReadMutation.mutateAsync({
-        endPoint: `notifications/mark-as-read/${id}`,
+        endPoint: `notifications/mark-as-read`,
         newSettings: {
-          read_flag: false,
+          // read_flag: false,
+          id: id,
         },
       });
       refetch();
     } catch (error) {
-      console.error('Failed to mark all notifications as read:', error);
+      console.error('Failed to notification as read:', error);
     }
   };
 
@@ -68,7 +69,10 @@ const Notifications = () => {
   const hideNotification = useMutation(
     (id: string) =>
       new Promise((resolve, reject) => {
-        patchRequest({ endPoint: `notifications/hide/${id}`, newSettings: {} })
+        patchRequest({
+          endPoint: `notifications/hide`,
+          newSettings: { id: id },
+        })
           .then((data) => {
             resolve(data);
           })
@@ -93,14 +97,41 @@ const Notifications = () => {
     post_id: string;
     comment_id: string;
     sending_user_username: string;
-    description: string;
+    // description: string;
+    community_name: string;
     unread_flag: boolean;
     hidden_flag: boolean;
-    type: string;
-    //Added
-    community_id: string;
-    community_name: string;
-    communityAvatarSrc: string;
+    type: 'upvotes_posts' | 'comments' | 'replies' | 'new_followers';
+    profile_picture: string;
+    is_in_community: boolean;
+  };
+
+  const generateNotificationDescription = (
+    notification: Notification
+  ): string => {
+    let description = '';
+    const communityPart = notification.is_in_community
+      ? ` in r/${notification.community_name}`
+      : '.';
+    switch (notification.type) {
+      case 'upvotes_posts':
+        description = `${notification.sending_user_username} upvoted your post${communityPart}`;
+        break;
+      case 'comments':
+        description = `${notification.sending_user_username} commented on your post${communityPart}`;
+        break;
+      case 'replies':
+        description = notification.comment_id
+          ? `${notification.sending_user_username} replied to your comment${communityPart}`
+          : `${notification.sending_user_username} replied to your post${communityPart}`;
+        break;
+      case 'new_followers':
+        description = `${notification.sending_user_username} started following you`;
+        break;
+      default:
+        description = '';
+    }
+    return description;
   };
 
   const renderNotificationItems = (notificationList: Notification[]) => {
@@ -120,33 +151,50 @@ const Notifications = () => {
           onClick={() => markAsRead(notification.id)}
         >
           <ListItemPrefix className='mr-0'>
-            {notification.communityAvatarSrc ? (
+            {notification.is_in_community ? (
+              <div className='min-w-10'>
+                {notification.profile_picture && (
+                  <Avatar
+                    size='sm'
+                    variant='circular'
+                    alt={notification.profile_picture}
+                    src={notification.profile_picture}
+                  />
+                )}
+                <CommunityIcon />
+              </div>
+            ) : (
               <div className='min-w-10'>
                 <Avatar
                   size='sm'
                   variant='circular'
-                  alt={notification.communityAvatarSrc}
+                  alt={notification.profile_picture}
                   src={
-                    notification.communityAvatarSrc ||
+                    notification.profile_picture ||
                     'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
                   }
                 />
               </div>
-            ) : (
-              <CommunityIcon />
             )}
           </ListItemPrefix>
           <div>
             <div className='flex items-center gap-2 '>
-              <Typography variant='small' color='blue-gray'>
-                r/{notification.community_name}
-              </Typography>
+              {notification.is_in_community && (
+                <Typography variant='small' color='blue-gray'>
+                  r/ {notification.community_name}
+                </Typography>
+              )}
+              {!notification.is_in_community && (
+                <Typography variant='small' color='blue-gray'>
+                  u/ {notification.sending_user_username}
+                </Typography>
+              )}
               <Typography variant='paragraph' className='text-xs text-gray-600'>
                 {getTimeDifference(notification.created_at)}
               </Typography>
             </div>
             <p className='font-normal text-xs text-gray-600 line-clamp-1 overflow-hidden text-ellipsis flex-grow '>
-              {notification.description}
+              {generateNotificationDescription(notification)}
             </p>
           </div>
           <div className='ml-auto'>

@@ -1040,104 +1040,173 @@ app.post("/users/leave-community", (req, res) => {
   res.sendStatus(200);
 });
 
-let notifications = [
-  {
-    id: "1",
-    created_at: new Date().toISOString().split("T")[0],
-    post_id: "post123",
-    comment_id: "comment456",
-    sending_user_username: "osama_youssef",
-    description:
-      "first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description",
-    unread_flag: true,
-    hidden_flag: false,
-    type: "message",
-    // added //
-    community_name: "sports",
-    communityAvatarSrc:
-      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
-  },
-  {
-    id: "5",
-    created_at: new Date().toISOString().split("T")[0],
-    post_id: "post123",
-    comment_id: "comment456",
-    sending_user_username: "osama_youssef",
-    description:
-      "first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description",
-    unread_flag: true,
-    hidden_flag: false,
-    type: "message",
-    // added //
-    community_name: "sports",
-    communityAvatarSrc:
-      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
-  },
-  {
-    id: "6",
-    created_at: new Date().toISOString().split("T")[0],
-    post_id: "post123",
-    comment_id: "comment456",
-    sending_user_username: "osama_youssef",
-    description:
-      "first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description",
-    unread_flag: true,
-    hidden_flag: false,
-    type: "message",
-    // added //
-    community_name: "sports",
-    communityAvatarSrc:
-      "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
-  },
-  {
-    id: "2",
-    created_at: "2024-03-25",
-    post_id: "post789",
-    comment_id: "comment012",
-    sending_user_username: "ahmed_tarek",
-    description: "You have a new comment",
-    unread_flag: false,
-    hidden_flag: false,
-    type: "comment",
-    // added //
-    community_name: "programming",
-    communityAvatarSrc:
-      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
-  },
-  {
-    id: "3",
-    created_at: "2024-03-24",
-    post_id: "post345",
-    comment_id: "comment678",
-    sending_user_username: "osama_youssef",
-    description: "You have a new reply",
-    unread_flag: true,
-    hidden_flag: false,
-    type: "reply",
-    // added //
-    community_name: "sports",
-    communityAvatarSrc:
-      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
-  },
-  {
-    id: "4",
-    created_at: "2024-03-24",
-    post_id: "post345",
-    comment_id: "comment678",
-    sending_user_username: "osama_youssef",
-    description: "You have a new reply",
-    unread_flag: true,
-    hidden_flag: false,
-    type: "reply",
-    // added //
-    community_name: "sports",
-    communityAvatarSrc:
-      "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
-  },
-];
+// let notifications = [
+//   {
+//     id: "1",
+//     created_at: new Date().toISOString().split("T")[0],
+//     post_id: "post123",
+//     comment_id: "comment456",
+//     sending_user_username: "osama_youssef",
+//     description:
+//       "first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description",
+//     unread_flag: true,
+//     hidden_flag: false,
+//     type: "message",
+//     // added //
+//     community_name: "sports",
+//     communityAvatarSrc:
+//       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+//   },
+//   {
+//     id: "5",
+//     created_at: new Date().toISOString().split("T")[0],
+//     post_id: "post123",
+//     comment_id: "comment456",
+//     sending_user_username: "osama_youssef",
+//     description:
+//       "first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description",
+//     unread_flag: true,
+//     hidden_flag: false,
+//     type: "message",
+//     // added //
+//     community_name: "sports",
+//     communityAvatarSrc:
+//       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+//   },
+//   {
+//     id: "6",
+//     created_at: new Date().toISOString().split("T")[0],
+//     post_id: "post123",
+//     comment_id: "comment456",
+//     sending_user_username: "osama_youssef",
+//     description:
+//       "first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description first notification description",
+//     unread_flag: true,
+//     hidden_flag: false,
+//     type: "message",
+//     // added //
+//     community_name: "sports",
+//     communityAvatarSrc:
+//       "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+//   },
+//   {
+//     id: "2",
+//     created_at: "2024-03-25",
+//     post_id: "post789",
+//     comment_id: "comment012",
+//     sending_user_username: "ahmed_tarek",
+//     description: "You have a new comment",
+//     unread_flag: false,
+//     hidden_flag: false,
+//     type: "comment",
+//     // added //
+//     community_name: "programming",
+//     communityAvatarSrc:
+//       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+//   },
+//   {
+//     id: "3",
+//     created_at: "2024-03-24",
+//     post_id: "post345",
+//     comment_id: "comment678",
+//     sending_user_username: "osama_youssef",
+//     description: "You have a new reply",
+//     unread_flag: true,
+//     hidden_flag: false,
+//     type: "reply",
+//     // added //
+//     community_name: "sports",
+//     communityAvatarSrc:
+//       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+//   },
+//   {
+//     id: "4",
+//     created_at: "2024-03-24",
+//     post_id: "post345",
+//     comment_id: "comment678",
+//     sending_user_username: "osama_youssef",
+//     description: "You have a new reply",
+//     unread_flag: true,
+//     hidden_flag: false,
+//     type: "reply",
+//     // added //
+//     community_name: "sports",
+//     communityAvatarSrc:
+//       "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+//   },
+// ];
+
+let Notifications = {
+  message: "Notifications retrieved successfully",
+  content: [
+    {
+      id: "662a9de91132db0243d8c00c",
+      created_at: "2024-04-25T18:16:09.907Z",
+      post_id: "6629afd4dfd778944105aef8",
+      sending_user_username: "malak",
+      community_name: "Wehner___Rohan",
+      unread_flag: false,
+      hidden_flag: false,
+      type: "upvotes_posts",
+      profile_picture:
+        "https://styles.redditmedia.com/t5_2fwo/styles/communityIcon_1bqa1ibfp8q11.png",
+      is_in_community: true,
+    },
+    {
+      id: "662aab84b84c27ffef962964",
+      created_at: "2024-04-25T19:14:12.707Z",
+      post_id: "6629afd4dfd778944105aef8",
+      comment_id: "662aab84b84c27ffef962960",
+      sending_user_username: "malak22",
+      community_name: "Wehner___Ron",
+      unread_flag: true,
+      hidden_flag: false,
+      type: "comments",
+      profile_picture:
+        "https://styles.redditmedia.com/t5_2qgzy/styles/communityIcon_rvt3zjh1fc551.png",
+      is_in_community: true,
+    },
+    {
+      id: "662aace0fd33b25b20528a6c",
+      created_at: "2024-04-25T19:20:00.089Z",
+      comment_id: "662aaaa43d96f655a0a28916",
+      sending_user_username: "malak22",
+      community_name: "Wehner___Rohan",
+      unread_flag: true,
+      hidden_flag: false,
+      type: "replies",
+      profile_picture: "",
+      is_in_community: true,
+    },
+    {
+      id: "662aad9e4349c05d95f23f4f",
+      created_at: "2024-04-25T19:23:10.986Z",
+      sending_user_username: "malak22",
+      community_name: null,
+      unread_flag: true,
+      hidden_flag: false,
+      type: "new_followers",
+      profile_picture:
+        "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_1.png",
+      is_in_community: false,
+    },
+    {
+      id: "662d80576e741daa421029f0",
+      created_at: "2024-04-27T22:46:47.010Z",
+      post_id: "662998cb8dbe0ea1ff3bfa52",
+      sending_user_username: "osss",
+      community_name: "malaktest",
+      unread_flag: true,
+      hidden_flag: false,
+      type: "upvotes_posts",
+      profile_picture: "",
+      is_in_community: true,
+    },
+  ],
+};
 
 app.get("/notifications", (req, res) => {
-  res.status(200).json(notifications);
+  res.status(200).json(notifications.content);
 });
 
 app.patch("/notifications/mark-all-as-read", (req, res) => {
