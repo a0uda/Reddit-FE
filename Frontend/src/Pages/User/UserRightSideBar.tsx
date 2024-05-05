@@ -34,6 +34,13 @@ function UserRightSideBar() {
     ModeratedCommunity[]
   >([]);
   const fetchReq = useMutation(fetchRequest);
+  const [joinStates, setJoinStates] = useState(() => {
+    if (moderatedCommunities) {
+      return moderatedCommunities.map(() => true);
+    } else {
+      return [];
+    }
+  });
   const [followState, setFollowState] = useState(false);
   useEffect(() => {
     console.log('reemtasneem', user?.username);
@@ -43,6 +50,15 @@ function UserRightSideBar() {
           console.log('reemn', data.data);
           setAboutData(data.data);
           setModeratedCommunities(data.data.moderatedCommunities);
+          if (data.data.moderatedCommunities) {
+            setJoinStates(
+              data.data.moderatedCommunities.map(
+                (community) => community.joined
+              )
+            );
+          } else {
+            setJoinStates([]);
+          }
           if (user?.username == username) {
             setMyData(true);
           }
@@ -72,25 +88,17 @@ function UserRightSideBar() {
       postRequest({
         endPoint: 'users/join-community',
         data: { community_name: communityName },
-      })
-    // {
-    //   onError: () => {
-    //     console.log('Error');
-    //   },
-    // }
+      }),
+    {
+      onSuccess: () => {},
+    }
   );
 
-  const leaveMutation = useMutation(
-    (communityName: string) =>
-      postRequest({
-        endPoint: 'users/leave-community',
-        data: { community_name: communityName },
-      })
-    // {
-    //   onError: () => {
-    //     console.log('Error');
-    //   },
-    // }
+  const leaveMutation = useMutation((communityName: string) =>
+    postRequest({
+      endPoint: 'users/leave-community',
+      data: { community_name: communityName },
+    })
   );
   const handleFollow = () => {
     postRequest({
@@ -100,6 +108,7 @@ function UserRightSideBar() {
 
     setFollowState(!followState);
   };
+  const navigate = useNavigate();
   const social_links = aboutData?.social_links ?? [];
   const display_name = aboutData?.display_name ?? '';
   const profile_picture = aboutData?.profile_picture ?? '';
@@ -110,14 +119,6 @@ function UserRightSideBar() {
     month: 'short',
     day: '2-digit',
     year: 'numeric',
-  });
-
-  const [joinStates, setJoinStates] = useState(() => {
-    if (moderatedCommunities) {
-      return moderatedCommunities.map(() => false);
-    } else {
-      return [];
-    }
   });
 
   const handleJoin = (index: number) => {
@@ -147,7 +148,7 @@ function UserRightSideBar() {
       data: { reported_username: username },
     });
   };
-  const navigate = useNavigate();
+
   const handleSendMessage = () => {
     navigate(`/message/compose?to=${username}`);
   };
@@ -155,11 +156,27 @@ function UserRightSideBar() {
     <>
       <Card className=' shadow-none  mt-2 mx-1 bg-neutral-200 overflow-auto '>
         <div className='flex flex-col h-full relative '>
-          <img
-            src={banner_picture}
-            alt='card-image'
-            className='w-full h-[120px] object-cover'
-          />
+          {myData ? (
+            <img
+              src={
+                banner_picture ||
+                'https://upload.wikimedia.org/wikipedia/commons/b/bd/Oxford_Blue.png'
+              }
+              alt='card-image'
+              className='w-full h-[120px] object-cover'
+            />
+          ) : (
+            banner_picture && (
+              <img
+                src={
+                  banner_picture ||
+                  'https://upload.wikimedia.org/wikipedia/commons/b/bd/Oxford_Blue.png'
+                }
+                alt='card-image'
+                className='w-full h-[120px] object-cover'
+              />
+            )
+          )}
           {myData ? (
             <div className='absolute bottom-2 right-2 '>
               <Link
@@ -253,7 +270,10 @@ function UserRightSideBar() {
                   <Avatar
                     size='sm'
                     variant='circular'
-                    src={profile_picture}
+                    src={
+                      profile_picture ||
+                      'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+                    }
                     alt='tania andrew'
                   />
                   <div className='flex w-full flex-col '>
@@ -283,77 +303,37 @@ function UserRightSideBar() {
                   </div>
                 </CardHeader>
               </Card>
-              <Card
-                color='transparent'
-                shadow={false}
-                className='w-full max-w-[20rem] '
-              >
-                <CardHeader
-                  color='transparent'
-                  floated={false}
-                  shadow={false}
-                  className='mx-0  flex items-center gap-4 pt-0 '
-                >
-                  <ShieldCheckIcon strokeWidth={1.5} className='h-8 w-8 mx-2' />
-                  <div className='flex w-full flex-col '>
-                    <div className='flex items-center justify-between mb-0'>
-                      <Typography variant='small' color='blue-gray'>
-                        Moderation
-                        <Typography
-                          variant='small'
-                          color='gray'
-                          className='text-xs mt-0'
-                        >
-                          Moderation Tools
-                        </Typography>
-                      </Typography>
-
-                      <div className='3 flex items-center'>
-                        <Link
-                          //   to be changed to mod setting later ree
-                          to={`/settings/profile`}
-                          className='flex rounded-full border text-xs bg-neutral-500'
-                        >
-                          <div className='gap-2 flex justify-between items-center p-2 px-3 text-black'>
-                            Mod settings
-                          </div>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </CardHeader>
-              </Card>
             </SidebarSection>
           ) : (
             <></>
           )}
           <SidebarSection sectionTitle='Links'>
             <div className='flex flex-start gap-2 flex-wrap'>
-              {/* {social_links &&
+              {social_links &&
                 social_links.map((link: SocialLink, i: number) => {
                   return (
                     <Link
                       key={i}
                       to={
-                        link.icon != 'Facebook'
+                        link.type != 'facebook'
                           ? 'https://www.' +
-                            link.icon.toLowerCase() +
+                            link.type.toLowerCase() +
                             '.com/' +
-                            link.username +
+                            link.custom_url +
                             '/'
-                          : link.username
+                          : 'https://' + link.custom_url
                       }
                       target='_blank'
                     >
                       <RoundedButton
                         buttonBorderColor='none'
                         buttonColor='bg-neutral-500'
-                        buttonText={link.displayName || link.username}
+                        buttonText={link.display_text || link.custom_url}
                         buttonTextColor='text-black'
                       >
                         <img
                           src={
-                            link.icon == 'Facebook'
+                            link.type == 'facebook'
                               ? facebookIcon
                               : instagramIcon
                           }
@@ -362,7 +342,7 @@ function UserRightSideBar() {
                       </RoundedButton>
                     </Link>
                   );
-                })} */}
+                })}
               {myData ? (
                 <Link
                   to={`/settings/profile`}
@@ -378,7 +358,7 @@ function UserRightSideBar() {
               )}
             </div>
           </SidebarSection>
-          <SidebarSection sectionTitle="YOU'RE A MODERATOR OF THESE COMMUNITIES">
+          <SidebarSection sectionTitle={`MODERATOR OF THESE COMMUNITIES`}>
             <div className='flex flex-col w-full '>
               {moderatedCommunities &&
                 moderatedCommunities.map(
@@ -388,11 +368,17 @@ function UserRightSideBar() {
                         key={i}
                         className='flex justify-between items-center'
                       >
-                        <CommunityItem
-                          src={link.profile_picture}
-                          name={link.name}
-                          membersNumber={link.members_count}
-                        ></CommunityItem>
+                        <div
+                          onClick={() => {
+                            navigate(`/r/${link.name}`);
+                          }}
+                        >
+                          <CommunityItem
+                            src={link.profile_picture}
+                            name={link.name}
+                            membersNumber={link.members_count}
+                          ></CommunityItem>
+                        </div>
                         {joinStates[i] ? (
                           <RoundedButton
                             buttonBorderColor='none'

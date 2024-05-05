@@ -67,7 +67,7 @@ const SocialLinksModal = (props: {
             buttonText='Instagram'
             buttonTextColor='text-black'
             onClick={() => {
-              props.setSocialLinkType('Instagram');
+              props.setSocialLinkType('instagram');
               props.handleOpen();
               props.handleOpenNextModal();
             }}

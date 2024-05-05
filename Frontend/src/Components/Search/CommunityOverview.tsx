@@ -29,7 +29,10 @@ const CommunityOverview = ({
                 <Avatar
                   variant='circular'
                   alt={community.name}
-                  src={community.profile_picture}
+                  src={
+                    community.profile_picture ||
+                    'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+                  }
                   className={variant === 'large' ? 'h-10 w-10' : 'h-8 w-8'}
                 />
               ) : (

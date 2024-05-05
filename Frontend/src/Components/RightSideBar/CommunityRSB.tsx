@@ -280,7 +280,10 @@ const ModeratorItem = ({
           <Avatar
             variant='circular'
             alt='candice'
-            src={avatar}
+            src={
+              avatar ||
+              'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+            }
             style={{ width: '35px', height: '35px' }}
           />
         </ListItemPrefix>

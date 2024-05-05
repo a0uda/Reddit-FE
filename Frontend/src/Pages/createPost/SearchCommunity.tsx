@@ -3,6 +3,7 @@ import { Avatar, Input } from '@material-tailwind/react';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import useSession from '../../hooks/auth/useSession';
+import { CommunityIcon } from '../../assets/icons/Icons';
 
 interface Suggestion {
   name: string;
@@ -148,7 +149,10 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
                   <Avatar
                     variant='circular'
                     alt={user.imageUrl}
-                    src={user.imageUrl}
+                    src={
+                      user.imageUrl ||
+                      'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+                    }
                     className='w-8 h-8'
                   />
                   <p className='font-body font-bold tracking-tight text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 dark:text-gray-200 line-clamp-2 overflow-hidden text-ellipsis'>
@@ -168,12 +172,16 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
                 className='flex items-start gap-4 p-2 m-0 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer'
               >
                 <div className='flex flex-row gap-2'>
-                  <Avatar
-                    variant='circular'
-                    alt={suggestion.name}
-                    src={suggestion.profile_picture}
-                    className='w-8 h-8'
-                  />
+                  {suggestion.profile_picture ? (
+                    <Avatar
+                      variant='circular'
+                      alt={suggestion.name}
+                      src={suggestion.profile_picture}
+                      className='w-8 h-8'
+                    />
+                  ) : (
+                    <CommunityIcon className='h-8 w-8' />
+                  )}
                   <p className='font-body font-bold tracking-tight text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 dark:text-gray-200 line-clamp-2 overflow-hidden text-ellipsis'>
                     {suggestion.name}
                   </p>

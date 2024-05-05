@@ -118,7 +118,7 @@ function Overview() {
 
                             <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
                               <div className='text-black text-xl font-bold '>
-                                {content.user_details.upvote_rate}
+                                {content.comments_count}
                               </div>
                               <div className='text-xs  gap-2 flex '>
                                 <ChatBubbleBottomCenterIcon
