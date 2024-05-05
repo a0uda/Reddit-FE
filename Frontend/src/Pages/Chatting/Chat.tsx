@@ -5,6 +5,7 @@ import { Avatar } from '@material-tailwind/react';
 import { useMutation } from 'react-query';
 import { postRequest } from '../../API/User';
 import { useParams } from 'react-router-dom';
+import useSession from '../../hooks/auth/useSession';
 
 interface User {
   _id: string;
@@ -29,11 +30,13 @@ interface Message {
   __v: number; // version field, commonly used in MongoDB
 }
 
-function Chat() {
+function Chat({ newMessage }: { newMessage: Message }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [msg, setMsg] = useState('');
   const postReq = useMutation(postRequest);
   const { username } = useParams();
+  const { user } = useSession();
+
   const FetchMessages = async () => {
     try {
       const res = await axios.get(
@@ -52,8 +55,9 @@ function Chat() {
     }
   };
   useEffect(() => {
+    setMessages([]);
     FetchMessages();
-  }, []);
+  }, [username]);
   function handlesend(e: any) {
     e.preventDefault();
     postReq.mutate(
@@ -65,12 +69,65 @@ function Chat() {
       },
       {
         onSuccess: () => {
-          alert('message sent');
+          const { myId, hisId } = messages.map((mess) => {
+            if (mess.senderId.username == user?.username) {
+              return mess.senderId, mess.receiverId;
+            } else if (mess.receiverId.username == user?.username) {
+              return mess.receiverId, mess.senderId;
+            }
+          });
+          const myHisIds = messages.map((mess) => {
+            if (mess.senderId.username === user?.username) {
+              return { myId: mess.senderId, hisId: mess.receiverId };
+            } else if (mess.receiverId.username === user.username) {
+              return { myId: mess.receiverId, hisId: mess.senderId };
+            } else {
+              // Returning null to indicate that the condition wasn't met
+              return null;
+            }
+          });
+          const newMess: Message = {
+            _id: '111',
+            createdAt: new Date().toISOString(),
+            message: msg,
+            receiverId: myHisIds[0]?.hisId,
+            senderId: myHisIds[0]?.myId,
+            removed: { flag: false, reason: null },
+            reported: { flag: false, reason: null },
+            updatedAt: 'null',
+            __v: 1,
+          };
+          
+
+          setMessages([...messages, newMess]);
         },
       }
     );
-    console.log('Sssssssssssssssss', msg);
   }
+
+  useEffect(() => {
+    if (newMessage) {
+      // if(newMessage.senderId)
+      let newMess: Message;
+      const m = messages.find(
+        (mess) => mess.senderId._id == newMessage.senderId
+      );
+      if (m) {
+        newMess = {
+          _id: newMessage._id,
+          createdAt: newMessage.createdAt,
+          message: newMessage.message,
+          receiverId: m.receiverId,
+          senderId: m.senderId,
+          removed: newMessage.removed,
+          reported: newMessage.reported,
+          updatedAt: newMessage.updatedAt,
+        };
+        console.log(m, newMessage, messages, 'newmesss');
+        setMessages([...messages, newMess]);
+      }
+    }
+  }, [newMessage]);
   return (
     <div className='grid grid-cols-1 xl:grid-cols-layout h-[500px]'>
       <div className='hidden xl:block'></div>

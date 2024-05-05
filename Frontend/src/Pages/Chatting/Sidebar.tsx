@@ -5,7 +5,8 @@ import newChat from '../../assets/newChat.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
-type ChatItemType = {
+import { useEffect, useState } from 'react';
+type UserChatSidebar = {
   _id: string;
   otherUsername: string;
   lastMessageSender: string;
@@ -13,35 +14,76 @@ type ChatItemType = {
   lastMessageTimestamp: string;
   otherProfilePicture: string;
 };
-const SideBar = ({ className }: { className?: string }) => {
-  const chats = [
-    {
-      content: "Hey, how's it going?",
-      created_at: '2024-05-03T14:23:00',
-      profilePicture: 'https://example.com/images/user1.jpg',
-      username: 'User1',
-    },
-    {
-      content: 'Pretty good, thanks! What about you?',
-      created_at: '2024-05-03T14:24:00',
-      profilePicture: 'https://example.com/images/user2.jpg',
-      username: 'User2',
-    },
-    {
-      content:
-        'Just got back from a hike, feeling great asdasdasdfafgefgadfafsdf!',
-      created_at: '2024-05-03T14:25:00',
-      profilePicture: 'https://example.com/images/user3.jpg',
-      username: 'User3',
-    },
-  ];
 
-  const { data, isLoading, isError } = useQuery('chatsSidebar', () =>
-    fetchRequest('chats/')
+interface User {
+  _id: string;
+  username: string;
+  profile_picture: string;
+}
+
+interface MessageStatus {
+  flag: boolean;
+  reason: string | null;
+}
+
+interface Message {
+  reported: MessageStatus;
+  removed: MessageStatus;
+  _id: string;
+  senderId: User;
+  receiverId: User;
+  message: string;
+  createdAt: string; // ISO 8601 date-time format
+  updatedAt: string; // ISO 8601 date-time format
+  __v: number; // version field, commonly used in MongoDB
+}
+const SideBar = ({
+  newMessage,
+  className,
+}: {
+  newMessage: Message;
+  className: string;
+}) => {
+  // const chats = [
+  //   {
+  //     content: "Hey, how's it going?",
+  //     created_at: '2024-05-03T14:23:00',
+  //     profilePicture: 'https://example.com/images/user1.jpg',
+  //     username: 'User1',
+  //   },
+  //   {
+  //     content: 'Pretty good, thanks! What about you?',
+  //     created_at: '2024-05-03T14:24:00',
+  //     profilePicture: 'https://example.com/images/user2.jpg',
+  //     username: 'User2',
+  //   },
+  //   {
+  //     content:
+  //       'Just got back from a hike, feeling great asdasdasdfafgefgadfafsdf!',
+  //     created_at: '2024-05-03T14:25:00',
+  //     profilePicture: 'https://example.com/images/user3.jpg',
+  //     username: 'User3',
+  //   },
+  // ];
+  const [response, setResponse] = useState<UserChatSidebar[]>([]);
+  const { data, isLoading, isError, refetch } = useQuery(
+    'chatsSidebar',
+    () => fetchRequest('chats/'),
+    {
+      onSuccess: (data) => {
+        setResponse(data.data);
+      },
+    }
   );
   const navigate = useNavigate();
   const username = useParams();
   console.log(username);
+
+  useEffect(() => {
+    if (newMessage) {
+      refetch();
+    }
+  }, [newMessage]);
 
   return (
     <>
@@ -63,7 +105,7 @@ const SideBar = ({ className }: { className?: string }) => {
             <img src={newChat} alt='new chat' className='w-5 h-5' />
           </div>
         </div>
-        {data?.data.map((chat: ChatItemType, i) => (
+        {data?.data.map((chat: UserChatSidebar, i) => (
           <ChatItem
             lastMessage={chat}
             key={chat.lastMessageTimestamp}
@@ -76,7 +118,7 @@ const SideBar = ({ className }: { className?: string }) => {
 };
 
 type ListItemProps = {
-  lastMessage: ChatItemType;
+  lastMessage: UserChatSidebar;
 };
 
 const ChatItem = ({ lastMessage }: ListItemProps) => {
@@ -103,14 +145,16 @@ const ChatItem = ({ lastMessage }: ListItemProps) => {
       <div className='w-72 items-center justify-center '>
         <div className='flex gap-[8.5rem] w-full'>
           <Typography className='text-xs'>
-            {lastMessage.lastMessageSender}
+            {lastMessage.lastMessageSender == 'You'
+              ? lastMessage.otherUsername
+              : lastMessage.lastMessageSender}
           </Typography>
           <Typography className='text-xs'>
             {`${new Date(lastMessage.lastMessageTimestamp).toDateString()}`}
           </Typography>
         </div>
         <Typography className='text-xs w-[16.5rem] overflow-hidden whitespace-nowrap text-ellipsis'>
-          {lastMessage.lastMessageText}
+          {lastMessage.lastMessageSender + ': ' + lastMessage.lastMessageText}
         </Typography>
       </div>
     </div>
