@@ -71,8 +71,10 @@ const SideBar = ({ className }: { className?: string }) => {
 
   const [communities, setCommunities] = useState<ListItemProps[] | undefined>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+  const url = window.location.href;
   const communitiesResponse = useQuery({
-    queryKey: ['communities'],
+    queryKey: ['communities', url],
     queryFn: () => fetchRequest(`users/communities/`),
     onSuccess: (data) => {
       setCommunities(

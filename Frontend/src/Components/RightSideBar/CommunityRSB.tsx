@@ -41,8 +41,9 @@ export function CommunityRSB({
   // console.log('arrived');
 
   const [Community, setCommunity] = useState<CommunityType | undefined>();
+  const url = window.location.href;
   const { isLoading, isError } = useQuery({
-    queryKey: ['communitiesRSB', communityName, page],
+    queryKey: ['communitiesRSB', communityName, page, url],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${communityName}/`),
     onSuccess: (data) => {

@@ -24,8 +24,9 @@ interface PostItemProps {
 }
 
 const PostItem: React.FC<PostItemProps> = (props) => {
+  const url = window.location.href;
   const { isLoading, isError } = useQuery({
-    queryKey: ['communitiesPostItem', props.communityName],
+    queryKey: ['communitiesPostItem', props.communityName, url],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${props.communityName}/`),
     onSuccess: (data) => {

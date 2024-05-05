@@ -24,8 +24,9 @@ import { useParams } from 'react-router-dom';
 const PostDetails = ({ post }: { post?: PostType }) => {
   const [community, setCommunity] = useState<CommunityType | undefined>();
 
+  const url = window.location.href;
   useQuery({
-    queryKey: ['communityPostDetails', post?.community_name],
+    queryKey: ['communityPostDetails', post?.community_name, url],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${post?.community_name}`),
     onSuccess: (data) => {
@@ -37,7 +38,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
   const { id: postId } = useParams();
   const [comments, setComments] = useState<CommentType[] | undefined>();
   const commentsResponse = useQuery({
-    queryKey: ['comments', comments],
+    queryKey: ['comments', comments, url],
     queryFn: () => fetchRequest(`posts/get-comments?id=${postId}`),
     onSuccess: (data) => {
       const comments: CommentType[] = data.data;

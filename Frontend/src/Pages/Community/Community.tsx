@@ -39,8 +39,9 @@ const Community = () => {
 
   const [community, setCommunity] = useState<CommunityType | undefined>();
   console.log(' comm name in comm page', communityName);
+  const url = window.location.href;
   const { isLoading, isError } = useQuery({
-    queryKey: ['communityPage', communityName],
+    queryKey: ['communityPage', communityName, url],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${communityName}/`),
     onSuccess: (data) => {
@@ -270,7 +271,7 @@ const Community = () => {
   const [communityPosts, setCommunityPosts] = useState<PostType[]>([]);
   // console.log(communityName);
   useQuery({
-    queryKey: ['postsInCommunityPage', communityName],
+    queryKey: ['postsInCommunityPage', communityName, url],
     queryFn: () => fetchRequest(`posts/${communityName}/`),
     onSuccess: (data) => {
       setCommunityPosts(data.data);

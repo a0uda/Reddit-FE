@@ -40,8 +40,9 @@ const PostsListings = () => {
   const pageSize = 10;
   const [posts, setPosts] = useState<PostType[]>([]);
   const [noMorePosts, setNoMorePosts] = useState(false);
+  const url = window.location.href;
   const response = useQuery({
-    queryKey: ['listings', sortOption, page, pageSize],
+    queryKey: ['listings', sortOption, page, pageSize, url],
     queryFn: async () => {
       console.log('sortOption', sortOption);
       const res = await fetchRequest(
@@ -66,7 +67,7 @@ const PostsListings = () => {
 
   let moderatedCommunityNames: string[] = [];
   useQuery({
-    queryKey: ['getModeratedCommunities'],
+    queryKey: ['getModeratedCommunities', url],
     queryFn: async () => await fetchRequest('users/moderated-communities'),
     onSuccess: (data) => {
       moderatedCommunityNames = data?.data.map(

@@ -55,8 +55,9 @@ const Search = () => {
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const [noMoreData, setNoMoreData] = useState(false);
+  const url = window.location.href;
   const { isLoading, isError } = useQuery({
-    queryKey: ['search results', q, type, sortOption, page, pageSize],
+    queryKey: ['search results', q, type, sortOption, page, pageSize, url],
     queryFn: async () => {
       const res = await axios.get(
         `/search/${type === 'link' ? 'posts' : type === 'sr' ? 'communities' : type === 'comment' ? 'comments' : 'people'}?query=${q}&page=${page}&pageSize=${pageSize}`
@@ -83,7 +84,7 @@ const Search = () => {
   }, [inView, noMoreData]);
 
   useQuery({
-    queryKey: ['communities search results', q, type, sortOption],
+    queryKey: ['communities search results', q, type, sortOption, url],
     queryFn: () => axios.get(`/search/communities?query=${q}&pageSize=5`),
     onSuccess: (data) => {
       setCommunities(data.data);
@@ -91,7 +92,7 @@ const Search = () => {
     enabled: type === 'link', // only run the query if type is 'link'
   });
   useQuery({
-    queryKey: ['people search results', q, type, sortOption],
+    queryKey: ['people search results', q, type, sortOption, url],
     queryFn: () => axios.get(`/search/people?query=${q}&pageSize=5`),
     onSuccess: (data) => {
       setUsers(data.data);
