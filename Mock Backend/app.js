@@ -1136,7 +1136,7 @@ app.post("/users/leave-community", (req, res) => {
 //   },
 // ];
 
-let Notifications = {
+let notifications = {
   message: "Notifications retrieved successfully",
   content: [
     {
