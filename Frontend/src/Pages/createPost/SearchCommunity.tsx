@@ -51,7 +51,10 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
 
   const handleOptionClick = (suggestion: Suggestion) => {
     setSearchQuery(suggestion.name);
-    setImageQuery(suggestion.profile_picture);
+    setImageQuery(
+      suggestion.profile_picture ||
+        'https://upload.wikimedia.org/wikipedia/commons/4/49/A_black_image.jpg'
+    );
     setShowSuggestions(false);
     setFieldValue('community_name', suggestion.name);
     setFieldValue('post_in_community_flag', true);
@@ -61,7 +64,10 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
     imageUrl: string;
   }) => {
     setSearchQuery(user.username);
-    setImageQuery(user.imageUrl);
+    setImageQuery(
+      user.imageUrl ||
+        'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+    );
     setShowSuggestions(false);
     setFieldValue('post_in_community_flag', false);
     // setFieldValue('community_name', '');
