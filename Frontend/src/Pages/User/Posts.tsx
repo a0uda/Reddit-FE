@@ -20,7 +20,7 @@ function Posts() {
   //   fetchRequest(`users/posts/${user?.username}`)
   // );
   const { username } = useParams();
-  const [response, setResponse] = useState<[PostType]>();
+  const [response, setResponse] = useState<PostType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const fetchReq = useMutation(fetchRequest);
@@ -49,7 +49,7 @@ function Posts() {
             return;
           }
           console.log('reem', data.data);
-          setResponse(data.data);
+          setResponse((prev) => [...prev, ...data.data]);
           if (username == user?.username) {
             setMyData(true);
           }
@@ -64,15 +64,6 @@ function Posts() {
 
   return (
     <>
-      <LoadingProvider error={false} isLoading={isLoading}>
-        {isLoading ? <div className='text-center'>Loading...</div> : null}
-        {noMoreData ? (
-          <>
-            <hr className='border-neutral-muted' />
-            <div className='text-center my-5'>No more posts to show</div>
-          </>
-        ) : null}
-      </LoadingProvider>
       {response && (
         <>
           {response.map((post: PostType) => (
@@ -140,6 +131,16 @@ function Posts() {
           ))}
         </>
       )}
+      <LoadingProvider error={false} isLoading={false}>
+        {error ? <div className='text-center'>Error...</div> : null}
+        {isLoading ? <div className='text-center'>Loading...</div> : null}
+        {noMoreData ? (
+          <>
+            <hr className='border-neutral-muted' />
+            <div className='text-center my-5'>No more posts to show</div>
+          </>
+        ) : null}
+      </LoadingProvider>
     </>
   );
 }
