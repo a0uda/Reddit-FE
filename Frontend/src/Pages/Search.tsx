@@ -20,7 +20,6 @@ import SortOptions from '../Components/SortOptions';
 import { capitalizeString } from '../utils/helper_functions';
 import { Typography } from '@material-tailwind/react';
 import { useInView } from 'react-intersection-observer';
-import MemoProvider from '../Providers/MemoProvider';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
