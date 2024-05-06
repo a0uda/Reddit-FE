@@ -53,7 +53,7 @@ const Search = () => {
   const [comments, setComments] = useState<SearchCommentType[]>([]);
   const [users, setUsers] = useState<UserType[]>([]);
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const pageSize = 10;
   const [noMoreData, setNoMoreData] = useState(false);
   const url = window.location.href;
@@ -140,14 +140,14 @@ const Search = () => {
               type === 'link' &&
               (posts.length > 0 ? (
                 <>
-                  <MemoProvider>
-                    {posts.map((post) => (
-                      <div ref={lastPostElementRef} key={post._id}>
-                        <PostOverview post={post} />
-                        <hr className='border-gray-300' />
-                      </div>
-                    ))}
-                  </MemoProvider>
+                  {/* <MemoProvider> */}
+                  {posts.map((post) => (
+                    <div ref={lastPostElementRef} key={post._id}>
+                      <PostOverview post={post} />
+                      <hr className='border-gray-300' />
+                    </div>
+                  ))}
+                  {/* </MemoProvider> */}
                 </>
               ) : (
                 <div className='flex justify-center items-center h-96'>
