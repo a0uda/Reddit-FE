@@ -20,6 +20,7 @@ import SortOptions from '../Components/SortOptions';
 import { capitalizeString } from '../utils/helper_functions';
 import { Typography } from '@material-tailwind/react';
 import { useInView } from 'react-intersection-observer';
+import MemoProvider from '../Providers/MemoProvider';
 
 const Search = () => {
   const [searchParams] = useSearchParams();
@@ -74,13 +75,19 @@ const Search = () => {
     },
   });
 
-  const { ref: lastPostElementRef, inView } = useInView();
+  const { ref: lastPostElementRef, inView: postInView } = useInView();
+  const { ref: lastCommunityElementRef, inView: communityInView } = useInView();
+  const { ref: lastCommentElementRef, inView: commentInView } = useInView();
+  const { ref: lastUserElementRef, inView: userInView } = useInView();
 
   useEffect(() => {
-    if (inView && !noMoreData) {
+    if (
+      (postInView || communityInView || commentInView || userInView) &&
+      !noMoreData
+    ) {
       setPage((prevPageNumber) => prevPageNumber + 1);
     }
-  }, [inView, noMoreData]);
+  }, [postInView, communityInView, commentInView, userInView, noMoreData]);
 
   useQuery({
     queryKey: ['communities search results', q, type, sortOption],
@@ -121,85 +128,88 @@ const Search = () => {
           </ContentLayout.Header>
         }
       >
-        <LoadingProvider error={isError} isLoading={isLoading}>
-          <>
-            <ContentLayout.Main>
-              <div className='px-6'>
-                {posts &&
-                  type === 'link' &&
-                  (posts.length > 0 ? (
-                    <>
-                      {posts.map((post) => (
-                        <div ref={lastPostElementRef} key={post._id}>
-                          <PostOverview post={post} />
-                          <hr className='border-gray-300' />
-                        </div>
-                      ))}
-                    </>
-                  ) : (
-                    <div className='flex justify-center items-center h-96'>
-                      <Typography variant='h5' className='text-gray-500'>
-                        No results found
-                      </Typography>
-                    </div>
-                  ))}
-                {communities &&
-                  type === 'sr' &&
-                  (communities.length > 0 ? (
-                    communities.map((community) => (
-                      <div ref={lastPostElementRef} key={community.id}>
-                        <CommunityOverview community={community} />
+        <ContentLayout.Main>
+          {(isError || isLoading) && isFirstRender && (
+            <LoadingProvider error={isError} isLoading={isLoading}>
+              {' '}
+            </LoadingProvider>
+          )}
+          <div className='px-6'>
+            {posts &&
+              type === 'link' &&
+              (posts.length > 0 ? (
+                <>
+                  <MemoProvider>
+                    {posts.map((post) => (
+                      <div ref={lastPostElementRef} key={post._id}>
+                        <PostOverview post={post} />
                         <hr className='border-gray-300' />
                       </div>
-                    ))
-                  ) : (
-                    <div className='flex justify-center items-center h-96'>
-                      <Typography variant='h5' className='text-gray-500'>
-                        No results found
-                      </Typography>
-                    </div>
-                  ))}
-                {comments &&
-                  type === 'comment' &&
-                  (comments.length > 0 ? (
-                    comments.map((comment) => (
-                      <div ref={lastPostElementRef} key={comment._id}>
-                        <CommentOverview comment={comment} />
-                        <hr className='border-gray-300' />
-                      </div>
-                    ))
-                  ) : (
-                    <div className='flex justify-center items-center h-96'>
-                      <Typography variant='h5' className='text-gray-500'>
-                        No results found
-                      </Typography>
-                    </div>
-                  ))}
-                {users &&
-                  type === 'user' &&
-                  (users.length > 0 ? (
-                    users.map((user) => (
-                      <div ref={lastPostElementRef} key={user._id}>
-                        <UserOverview user={user} variant='small' />
-                        <hr className='border-gray-300' />
-                      </div>
-                    ))
-                  ) : (
-                    <div className='flex justify-center items-center h-96'>
-                      <Typography variant='h5' className='text-gray-500'>
-                        No results found
-                      </Typography>
-                    </div>
-                  ))}
-              </div>
-            </ContentLayout.Main>
-            <ContentLayout.RightSideBar>
-              {type === 'link' && communities && users && (
-                <SearchRSB communities={communities} users={users} />
-              )}
-            </ContentLayout.RightSideBar>
-          </>
-        </LoadingProvider>
+                    ))}
+                  </MemoProvider>
+                </>
+              ) : (
+                <div className='flex justify-center items-center h-96'>
+                  <Typography variant='h5' className='text-gray-500'>
+                    No results found
+                  </Typography>
+                </div>
+              ))}
+            {communities &&
+              type === 'sr' &&
+              (communities.length > 0 ? (
+                communities.map((community) => (
+                  <div ref={lastCommunityElementRef} key={community.id}>
+                    <CommunityOverview community={community} />
+                    <hr className='border-gray-300' />
+                  </div>
+                ))
+              ) : (
+                <div className='flex justify-center items-center h-96'>
+                  <Typography variant='h5' className='text-gray-500'>
+                    No results found
+                  </Typography>
+                </div>
+              ))}
+            {comments &&
+              type === 'comment' &&
+              (comments.length > 0 ? (
+                comments.map((comment) => (
+                  <div ref={lastCommentElementRef} key={comment._id}>
+                    <CommentOverview comment={comment} />
+                    <hr className='border-gray-300' />
+                  </div>
+                ))
+              ) : (
+                <div className='flex justify-center items-center h-96'>
+                  <Typography variant='h5' className='text-gray-500'>
+                    No results found
+                  </Typography>
+                </div>
+              ))}
+            {users &&
+              type === 'user' &&
+              (users.length > 0 ? (
+                users.map((user) => (
+                  <div ref={lastUserElementRef} key={user._id}>
+                    <UserOverview user={user} variant='small' />
+                    <hr className='border-gray-300' />
+                  </div>
+                ))
+              ) : (
+                <div className='flex justify-center items-center h-96'>
+                  <Typography variant='h5' className='text-gray-500'>
+                    No results found
+                  </Typography>
+                </div>
+              ))}
+          </div>
+        </ContentLayout.Main>
+        <ContentLayout.RightSideBar>
+          {type === 'link' && communities && users && (
+            <SearchRSB communities={communities} users={users} />
+          )}
+        </ContentLayout.RightSideBar>
       </ContentLayout>
     </>
   );

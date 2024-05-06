@@ -7,8 +7,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { capitalizeString } from '../../utils/helper_functions';
 import LoadingProvider from '../LoadingProvider';
 import useSession from '../../hooks/auth/useSession';
-import PostComponent from './PostComponent';
 import { useInView } from 'react-intersection-observer';
+import PostPreview from './PostPreview';
 
 const PostsListings = () => {
   const { sortOption: initialSortOption } = useParams();
@@ -84,12 +84,36 @@ const PostsListings = () => {
         setSortOption={setSortOption}
       />
       <hr className='border-neutral-muted' />
-      <PostComponent
-        posts={posts}
-        lastPostElementRef={lastPostElementRef}
-        user={user}
-        moderatedCommunityNames={moderatedCommunityNames}
-      />
+      {posts &&
+        posts.map((post: PostType, index: number) => (
+          <div ref={lastPostElementRef} key={post._id}>
+            {posts.length === index + 1 ? (
+              <>
+                <hr className='border-neutral-muted' />
+                <PostPreview
+                  post={post}
+                  page='home'
+                  isMyPost={
+                    post.username == user?.username ||
+                    moderatedCommunityNames?.includes(post.community_name!)
+                  }
+                />
+              </>
+            ) : (
+              <>
+                <hr className='border-neutral-muted' />
+                <PostPreview
+                  post={post}
+                  page='home'
+                  isMyPost={
+                    post.username == user?.username ||
+                    moderatedCommunityNames?.includes(post.community_name!)
+                  }
+                />
+              </>
+            )}
+          </div>
+        ))}
       <LoadingProvider error={response.isError} isLoading={response.isLoading}>
         {response.isError ? (
           <div className='text-center text-red-500'>Error fetching data</div>
