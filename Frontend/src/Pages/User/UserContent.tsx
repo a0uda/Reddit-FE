@@ -8,13 +8,14 @@ import useSession from '../../hooks/auth/useSession';
 
 function UserContent(props: { endpoint: string; queryName: string }) {
   const { user } = useSession();
+  const url = window.location.href;
   const { data, isError, isLoading } = useQuery(
     [props.queryName, 'listings'],
     () => fetchRequest(props.endpoint)
   );
   let moderatedCommunityNames: string[] = [];
   useQuery({
-    queryKey: ['getModeratedCommunities'],
+    queryKey: ['getModeratedCommunities', url],
     queryFn: async () => await fetchRequest('users/moderated-communities'),
     onSuccess: (data) => {
       moderatedCommunityNames = data?.data.map(

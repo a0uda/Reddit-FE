@@ -72,6 +72,7 @@ const Messages = () => {
                     senderVia={mess['senderVia']}
                     refetch={response.refetch}
                     parentMessageId={mess['parentMessageId'] || null}
+                    is_invitation={mess['is_invitation']}
                     query='messages'
                   />
                 );

@@ -201,7 +201,13 @@ const Muted = () => {
       <ButtonList buttArr={buttArr} />
       <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
       <LoadingProvider error={isError} isLoading={isLoading}>
-        <UsersList userArr={selectedData} refetch={refetch} />
+        {data?.data.length > 0 ? (
+          <UsersList userArr={selectedData} refetch={refetch} />
+        ) : (
+          <div className='border-[1px] rounded-md flex items-center justify-center font-semibold text-xl text-gray-600 p-10'>
+            Muted list is empty
+          </div>
+        )}{' '}
       </LoadingProvider>
     </div>
   );

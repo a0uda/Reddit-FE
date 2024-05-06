@@ -56,6 +56,7 @@ export default function SharePostModal(props: {
         </DialogHeader>
         <DialogBody className='flex flex-col gap-2'>
           <ShareOption setFieldValue={setFieldValue} />
+
           <textarea
             placeholder='Title'
             className=' resize-none !border rounded border-[#EDEFF1] bg-white text-gray-900  shadow-none ring-4 ring-transparent placeholder:text-gray-500 w-full p-2 pt-3 h-20'

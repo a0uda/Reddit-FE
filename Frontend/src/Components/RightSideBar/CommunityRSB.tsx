@@ -41,8 +41,9 @@ export function CommunityRSB({
   // console.log('arrived');
 
   const [Community, setCommunity] = useState<CommunityType | undefined>();
+  const url = window.location.href;
   const { isLoading, isError } = useQuery({
-    queryKey: ['communitiesRSB', communityName, page],
+    queryKey: ['communitiesRSB', communityName, page, url],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${communityName}/`),
     onSuccess: (data) => {
@@ -280,7 +281,10 @@ const ModeratorItem = ({
           <Avatar
             variant='circular'
             alt='candice'
-            src={avatar}
+            src={
+              avatar ||
+              'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+            }
             style={{ width: '35px', height: '35px' }}
           />
         </ListItemPrefix>

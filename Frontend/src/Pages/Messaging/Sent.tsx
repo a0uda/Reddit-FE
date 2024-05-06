@@ -33,6 +33,7 @@ const Sent = () => {
                 messageId={mess['_id']}
                 key={mess['_id']}
                 senderVia={mess['senderVia']}
+                is_invitation={mess['is_invitation']}
                 refetch={refetch}
                 parentMessageId={mess['parentMessageId']}
               />

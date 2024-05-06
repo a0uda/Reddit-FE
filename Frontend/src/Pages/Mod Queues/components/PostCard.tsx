@@ -564,7 +564,10 @@ const PostHeader = ({
             <Avatar
               variant='circular'
               alt={name}
-              src={avatar}
+              src={
+                avatar ||
+                'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+              }
               //   style={{ width: '30px', height: '30px' }}
               className='h-7 w-7'
             />
@@ -714,6 +717,8 @@ const PostFooter = ({
       }
     );
   };
+  console.log(post.moderator_details.removed_removal_reason, 'remreason');
+
   return (
     <div className='flex flex-col gap-2 mt-2'>
       {isPost && (
@@ -731,6 +736,8 @@ const PostFooter = ({
           <Typography variant='small' className='font-bold'>
             {post.moderator_details.approved_flag ? 'Approved' : 'Removed'}
             {post.moderator_details.spammed_flag && ' as spam'}
+            {post.moderator_details.removed_removal_reason &&
+              ': ' + post.moderator_details.removed_removal_reason}
           </Typography>
           <Typography variant='small'>
             <Link
@@ -763,9 +770,8 @@ const PostFooter = ({
           !post.moderator_details.removed_removal_reason && (
             <RoundedButt
               onClick={(e) => {
-                e.stopPropagation();
-
                 setRemModal(true);
+                e.stopPropagation();
               }}
             >
               Add Removal Reason

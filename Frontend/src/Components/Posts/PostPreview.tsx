@@ -90,7 +90,11 @@ export const PollPostContainer = (props: { post: PostType }) => {
               <Radio
                 name={props.post._id}
                 label={
-                  poll.options + ' ' + '(Number of votes: ' + poll.votes + ')'
+                  poll.options +
+                  ' ' +
+                  '(Number of votes: ' +
+                  (poll.votes + (chosenOptionId == poll._id ? 1 : 0)) +
+                  ')'
                 }
                 value={poll._id}
                 checked={poll._id == chosenOptionId}
@@ -224,8 +228,9 @@ const SharedPostContainer = (props: {
   const [sharedViewNSFW, setSharedViewNSFW] = useState<boolean>();
 
   const [name, setName] = useState<string>();
+  const url = window.location.href;
   const { data } = useQuery({
-    queryKey: ['post', props.sharedPostId],
+    queryKey: ['post', props.sharedPostId, url],
     queryFn: () => fetchRequest(`posts/get-post?id=${props.sharedPostId}`),
     onSuccess: (data) => {
       console.log(data.data, 'sharedPost');
@@ -513,8 +518,9 @@ const PostPreview = ({
   useEffect(() => {
     handleCanEditPost();
   }, []);
+  const url = window.location.href;
   useQuery({
-    queryKey: ['communityPostPreview', post.community_name],
+    queryKey: ['communityPostPreview', post.community_name, url],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${post.community_name}`),
     onSuccess: (data) => {

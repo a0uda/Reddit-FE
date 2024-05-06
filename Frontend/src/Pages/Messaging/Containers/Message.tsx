@@ -472,6 +472,7 @@ const Message = (props: {
   messageContent: string;
   messageId: string;
   parentMessageId: string;
+  is_invitation: boolean;
   refetch: () => void;
   query?: string;
 }) => {
@@ -528,7 +529,10 @@ const Message = (props: {
               <Link
                 to={`/${props.senderType === 'user' ? 'u/' + props.senderUsername : addPrefixToUsername(props.senderUsername, props.senderType)}`}
               >
-                {addPrefixToUsername(props.senderUsername, props.senderType)}
+                {props.senderType === 'user'
+                  ? 'u/' + props.senderUsername
+                  : addPrefixToUsername(props.senderVia, props.senderType)}
+                {/* {addPrefixToUsername(props.senderUsername, props.senderType)} */}
               </Link>
             </div>
             <h3 className='font-bold'>{props.subject}:</h3>
@@ -629,8 +633,8 @@ const Message = (props: {
         {isExpandedMain && (
           <>
             <p>{props.messageContent}</p>
-            {props.is_invitation != undefined && (
-              <div className='flex gap-2 justify-center'>
+            {props.is_invitation == true && (
+              <div className='flex gap-2 justify-center items-center mt-3'>
                 <RoundedButton
                   buttonBorderColor='border-blue-light'
                   buttonColor='bg-blue-light'

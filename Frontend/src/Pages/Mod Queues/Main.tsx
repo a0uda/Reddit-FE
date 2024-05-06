@@ -17,7 +17,7 @@ const Main = (props: { page: string }) => {
       </div>
       <div className='grid grid-col-1 xl:grid-cols-layout'>
         <div className='hidden xl:block'>
-          <ModSideBar />
+          <ModSideBar className='sticky top-[var(--navbar-height)]' />
         </div>
         <div className='px-32 py-8'>
           <Navbar page={props.page} />

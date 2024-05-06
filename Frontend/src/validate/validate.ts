@@ -70,7 +70,7 @@ type FormSchema = {
 const Validation = (type: keyof FormSchema) => {
   const formSchema: FormSchema = {
     login: {
-      username: validationSchema['username'],
+      username: validationSchema['userName'],
       password: validationSchema['password'],
     },
     signup: {

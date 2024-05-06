@@ -30,6 +30,7 @@ import {
   ListItem,
   Typography,
 } from '@material-tailwind/react';
+import { CommunityIcon } from '../../assets/icons/Icons';
 
 const Community = () => {
   const { communityName } = useParams();
@@ -38,8 +39,9 @@ const Community = () => {
 
   const [community, setCommunity] = useState<CommunityType | undefined>();
   console.log(' comm name in comm page', communityName);
+  const url = window.location.href;
   const { isLoading, isError } = useQuery({
-    queryKey: ['communityPage', communityName],
+    queryKey: ['communityPage', communityName, url],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${communityName}/`),
     onSuccess: (data) => {
@@ -269,7 +271,7 @@ const Community = () => {
   const [communityPosts, setCommunityPosts] = useState<PostType[]>([]);
   // console.log(communityName);
   useQuery({
-    queryKey: ['postsInCommunityPage', communityName],
+    queryKey: ['postsInCommunityPage', communityName, url],
     queryFn: () => fetchRequest(`posts/${communityName}/`),
     onSuccess: (data) => {
       setCommunityPosts(data.data);
@@ -652,7 +654,10 @@ const Community = () => {
                 {uploadedBanner && (
                   <div>
                     <Avatar
-                      src={uploadedBanner}
+                      src={
+                        uploadedBanner ||
+                        'https://upload.wikimedia.org/wikipedia/commons/b/bd/Oxford_Blue.png'
+                      }
                       alt='banner image'
                       variant='rounded'
                       className='w-full h-32'
@@ -699,7 +704,7 @@ const Community = () => {
             <>
               <ContentLayout.Main>
                 <div className='relative'>
-                  {bannerPicture && (
+                  {bannerPicture && bannerPicture !== 'none' && (
                     <Avatar
                       src={community.banner_picture}
                       alt='banner image'
@@ -707,7 +712,7 @@ const Community = () => {
                       className='w-full h-32'
                     />
                   )}
-                  {!bannerPicture && (
+                  {(!bannerPicture || bannerPicture === 'none') && (
                     <Avatar
                       src={
                         'https://htmlcolorcodes.com/assets/images/colors/light-gray-color-solid-background-1920x1080.png'
@@ -729,7 +734,7 @@ const Community = () => {
                       <FaPen className='w-full' />
                     </button>
                   )}
-                  {profilePicture && (
+                  {profilePicture && profilePicture !== 'none' && (
                     <Avatar
                       src={community.profile_picture}
                       alt='profile picture'
@@ -737,10 +742,10 @@ const Community = () => {
                       className='absolute hover:z-0 z-10 w-24 h-24 top-20 left-3 border-4 border-white'
                     />
                   )}
-                  {!profilePicture && (
+                  {(!profilePicture || profilePicture === 'none') && (
                     <Avatar
                       src={
-                        'https://htmlcolorcodes.com/assets/images/colors/light-gray-color-solid-background-1920x1080.png'
+                        'https://upload.wikimedia.org/wikipedia/commons/4/49/A_black_image.jpg'
                       }
                       alt='profile picture'
                       variant='circular'

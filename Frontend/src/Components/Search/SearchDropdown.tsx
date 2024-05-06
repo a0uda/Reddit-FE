@@ -43,8 +43,9 @@ const SearchDropdown = ({
 
   const [posts, setPosts] = useState<PostType[] | undefined>();
 
+  const url = window.location.href;
   useQuery({
-    queryKey: ['trending posts'],
+    queryKey: ['trending posts', url],
     queryFn: () => fetchRequest('posts/trending'),
     onSuccess: (data) => {
       setPosts(data.data);

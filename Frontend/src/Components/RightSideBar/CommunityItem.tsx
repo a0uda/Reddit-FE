@@ -5,6 +5,7 @@ import {
   Avatar,
   Typography,
 } from '@material-tailwind/react';
+import { CommunityIcon } from '../../assets/icons/Icons';
 
 interface CommunityItemProps {
   src: string;
@@ -17,13 +18,17 @@ const CommunityItem: React.FC<CommunityItemProps> = (props) => {
     <div>
       <ListItem className='rounded-none' data-testid='community-item'>
         <ListItemPrefix>
-          <Avatar
-            variant='circular'
-            alt='candice'
-            src={props.src}
-            style={{ width: '35px', height: '35px' }}
-            data-testid='avatar'
-          />
+          {props.src ? (
+            <Avatar
+              variant='circular'
+              alt='candice'
+              src={props.src}
+              style={{ width: '35px', height: '35px' }}
+              data-testid='avatar'
+            />
+          ) : (
+            <CommunityIcon className='h-8 w-8' />
+          )}
         </ListItemPrefix>
         <div>
           <Typography

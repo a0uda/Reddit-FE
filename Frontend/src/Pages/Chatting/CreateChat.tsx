@@ -1,6 +1,8 @@
 import { Avatar, Typography } from '@material-tailwind/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { fetchRequest } from '../../API/User';
+import { useMutation } from 'react-query';
 
 const Suggestion = ({
   suggestion,
@@ -34,6 +36,7 @@ const CreateChat = () => {
     { profile_picture: string; username: string }[]
   >([]);
   const [query, setQuery] = useState('');
+  const fetchReq = useMutation(fetchRequest);
 
   const suggestionsArr = [
     { profile_picture: 'asasas', username: 'User1' },
@@ -44,16 +47,30 @@ const CreateChat = () => {
   const handleSearch = (e) => {
     setQuery(e.target.value);
     const searchQuery = e.target.value;
-
     if (searchQuery.trim().length === 0) {
       return setSelectedData([]);
     } else {
-      const queryLowerCase = searchQuery.toLowerCase();
-      setSelectedData(
-        suggestionsArr.filter((item) =>
-          item.username.toLowerCase().includes(queryLowerCase)
-        )
+      const res = fetchReq.mutate(
+        `search/people?page=1&pageSize=10&query=${searchQuery}`,
+        {
+          onSuccess: (data) => {
+            // setSelectedData(data.data)
+            const filteredArr = data.data.map((user) => {
+              return {
+                username: user.username,
+                profile_picture: user.profile_picture,
+              };
+            });
+            setSelectedData(filteredArr);
+          },
+        }
       );
+
+      // setSelectedData(
+      //   suggestionsArr.filter((item) =>
+      //     item.username.toLowerCase().includes(queryLowerCase)
+      //   )
+      // );
     }
   };
 

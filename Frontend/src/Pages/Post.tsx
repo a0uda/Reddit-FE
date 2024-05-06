@@ -13,8 +13,9 @@ const Post = () => {
   console.log(postId);
   // const [community, setCommunity] = useState<PostType | undefined>();
   // const [post, setPost] = useState<PostType | undefined>();
+  const url = window.location.href;
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['post', postId],
+    queryKey: ['post', postId, url],
     queryFn: () => fetchRequest(`posts/get-post?id=${postId}`),
   });
 

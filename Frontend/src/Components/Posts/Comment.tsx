@@ -85,8 +85,9 @@ const Comment = ({
     }
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const url = window.location.href;
   useQuery({
-    queryKey: ['users/about/comment', comment.username],
+    queryKey: ['users/about/comment', comment.username, url],
     queryFn: () => fetchRequest(`users/about/${comment.username}`),
     onSuccess: (data) => {
       setAuthor(data.data);

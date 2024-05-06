@@ -167,6 +167,7 @@ function Profile() {
     active_communities_visibility,
   } = data?.data || {};
 
+  console.log('mylinks', social_links);
   const [openSLModal, setOpenSLModal] = React.useState(false);
   const [enterLinkDetails, setEnterLinkDetails] = React.useState(false);
   const [socialLinkType, setSocialLinkType] = React.useState('');
@@ -258,20 +259,20 @@ function Profile() {
                 <Link
                   key={link + i}
                   to={
-                    link.type != 'facebook'
-                      ? 'https://www.' +
+                    link.custom_url.includes('www')
+                      ? link.custom_url
+                      : 'https://www.' +
                         link.type.toLowerCase() +
                         '.com/' +
-                        link.username +
+                        link.custom_url +
                         '/'
-                      : link.username
                   }
-                  target='_blank'
+                  //target='_blank'
                 >
                   <RoundedButton
                     buttonBorderColor='none'
                     buttonColor='bg-[#EDEFF1]'
-                    buttonText={link.display_text || link.username}
+                    buttonText={link.display_text || link.custom_url}
                     buttonTextColor='text-black'
                     imgRight={
                       <XCircleIcon
@@ -315,7 +316,7 @@ function Profile() {
               ((!usernameInput || !nameInput) && socialLinkType == 'facebook')
             }
             handleSaveButton={() => {
-              console.log(nameInput, usernameInput);
+              console.log(nameInput, usernameInput, 'hi ree');
               postReq.mutate({
                 endPoint: 'users/add-social-link',
                 data: {

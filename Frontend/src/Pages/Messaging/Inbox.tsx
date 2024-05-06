@@ -42,6 +42,7 @@ const Sent = () => {
                     senderVia={mess['senderVia']}
                     refetch={refetch}
                     parentMessageId={mess['parentMessageId']}
+                    is_invitation={mess['is_invitation']}
                     query='inbox'
                   />
                 );
