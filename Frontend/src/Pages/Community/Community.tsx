@@ -95,7 +95,7 @@ const Community = () => {
     {
       onSuccess: () => {
         setIsJoined(false);
-        setIsModerator(false);
+        // setIsModerator(false);
       },
       onError: () => {
         console.log('Error');
