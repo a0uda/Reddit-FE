@@ -7,9 +7,10 @@ import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../LoadingProvider';
 
 interface CommunityItemProps {
-  src: string;
+  _id: string;
+  profile_picture: string;
   name: string;
-  membersNumber: number;
+  members_count: number;
 }
 
 export function PopularCommunities() {
@@ -17,7 +18,7 @@ export function PopularCommunities() {
 
   const { data, isError, isLoading } = useQuery(
     'popular communities data',
-    () => fetchRequest('communities/get-popular-communities')
+    () => fetchRequest('communities/get-community-names-by-popularity')
   );
   // console.log(data);
 
@@ -47,9 +48,9 @@ export function PopularCommunities() {
                 (community: CommunityItemProps, index: number) => (
                   <CommunityItem
                     key={index}
-                    src={community.src}
+                    src={community.profile_picture}
                     name={community.name}
-                    membersNumber={community.membersNumber}
+                    membersNumber={community.members_count}
                   />
                 )
               )}
