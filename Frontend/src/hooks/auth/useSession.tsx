@@ -6,7 +6,7 @@ import { removeToken } from '../../utils/tokens_helper';
 export type User = {
   name: string;
   username: string;
-  imageUrl?: string;
+  profile_picture?: string;
 };
 
 export type Session = {

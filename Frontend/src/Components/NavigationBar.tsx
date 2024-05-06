@@ -15,11 +15,7 @@ import {
   ListItem,
   ListItemPrefix,
 } from '@material-tailwind/react';
-import {
-  HiArrowRightOnRectangle,
-  HiEllipsisHorizontal,
-  // HiMagnifyingGlass,
-} from 'react-icons/hi2';
+import { HiArrowRightOnRectangle, HiEllipsisHorizontal } from 'react-icons/hi2';
 import { LogoMark, LogoText } from '../assets/icons/Logo';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import {
@@ -194,7 +190,7 @@ const AvatarMenu = () => {
         >
           <Avatar
             src={
-              user?.imageUrl ||
+              user?.profile_picture ||
               'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
             }
             alt={user?.name + "'s Profile"}
@@ -285,7 +281,7 @@ const CampainLoggedIn = ({
               <Button variant='text' className=''>
                 <Avatar
                   src={
-                    user?.imageUrl ||
+                    user?.profile_picture ||
                     'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
                   }
                   alt={user?.name + "'s Profile"}
@@ -304,7 +300,7 @@ const CampainLoggedIn = ({
           <Button variant='text' onClick={() => setAvatarDrawer(true)}>
             <Avatar
               src={
-                user?.imageUrl ||
+                user?.profile_picture ||
                 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
               }
               alt={user?.name + "'s Profile"}

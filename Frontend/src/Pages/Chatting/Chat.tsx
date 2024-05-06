@@ -59,6 +59,7 @@ function Chat({ newMessage }: { newMessage: Message }) {
     FetchMessages();
   }, [username]);
   function handlesend(e: any) {
+    console.log('AOUDA');
     e.preventDefault();
     postReq.mutate(
       {
