@@ -4,12 +4,14 @@ import LoadingProvider from '../../Components/LoadingProvider';
 import Comment from '../../Components/Posts/Comment';
 import PostPreview from '../../Components/Posts/PostPreview';
 import React from 'react';
+import useSession from '../../hooks/auth/useSession';
 
 function Saved() {
   const { data, isError, isLoading } = useQuery(
     ['userComments', 'comments', 'posts', 'listings'],
     () => fetchRequest('users/saved-posts-and-comments')
   );
+  const { user } = useSession();
   console.log(data);
   return (
     <>
@@ -29,7 +31,7 @@ function Saved() {
                     <PostPreview
                       page='profile'
                       post={content}
-                      isMyPost={true}
+                      isMyPost={content.username == user?.username}
                     />
                   ) : (
                     //uncomment when deployed reem

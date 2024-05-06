@@ -56,10 +56,7 @@ function UserContent(props: { endpoint: string; queryName: string }) {
                 page='profile'
                 key={post._id}
                 post={post}
-                isMyPost={
-                  post.username == user?.username ||
-                  moderatedCommunityNames?.includes(post.community_name!)
-                }
+                isMyPost={post.username == user?.username}
               />
             </div>
           ))}

@@ -130,7 +130,13 @@ const ChatItem = ({ lastMessage }: ListItemProps) => {
     <div
       className={`p-3 flex gap-1 items-center cursor-pointer hover:bg-gray-200  w-[320px] ${username == lastMessage.lastMessageSender && 'bg-gray-200'} `}
       onClick={() => {
-        navigate(`/chat/u/${lastMessage.lastMessageSender}`);
+        navigate(
+          `/chat/u/${
+            lastMessage.lastMessageSender == 'You'
+              ? lastMessage.otherUsername
+              : lastMessage.lastMessageSender
+          }`
+        );
       }}
     >
       <Avatar

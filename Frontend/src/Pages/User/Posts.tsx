@@ -68,7 +68,11 @@ function Posts() {
         <>
           {response.map((post: PostType) => (
             <div ref={lastPostElementRef} key={post._id}>
-              <PostPreview page='profile' post={post} isMyPost />
+              <PostPreview
+                page='profile'
+                post={post}
+                isMyPost={post.username == user?.username}
+              />
               {myData ? (
                 <>
                   <div className='text-black m-2 text-sm'>

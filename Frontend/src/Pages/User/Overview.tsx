@@ -80,7 +80,7 @@ function Overview() {
                       <PostPreview
                         page='profile'
                         post={content}
-                        isMyPost={true}
+                        isMyPost={content.username == user?.username}
                       />
                       {myData ? (
                         <>
