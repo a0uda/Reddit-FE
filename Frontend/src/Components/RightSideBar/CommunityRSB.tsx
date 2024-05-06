@@ -103,7 +103,7 @@ export function CommunityRSB({
         }}
       >
         <Card
-          className='w-72 bg-gray-100 rounded-xl shadow-none p-0 pb-3 min-w-0 '
+          className='w-[19rem] bg-gray-100 rounded-xl shadow-none p-0 pb-3 min-w-0 '
           data-testid='community-card'
         >
           <LoadingProvider error={isError} isLoading={isLoading}>
