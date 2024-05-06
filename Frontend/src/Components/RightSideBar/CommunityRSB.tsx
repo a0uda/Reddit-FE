@@ -103,7 +103,7 @@ export function CommunityRSB({
         }}
       >
         <Card
-          className='w-80 bg-gray-100 rounded-xl shadow-none p-0 pb-3 min-w-0 '
+          className='w-[19rem] bg-gray-100 rounded-xl shadow-none p-0 pb-3 min-w-0 '
           data-testid='community-card'
         >
           <LoadingProvider error={isError} isLoading={isLoading}>
@@ -225,10 +225,10 @@ const CommunityRules = ({ name: communityName }: CommunityProps) => {
       >
         RULES
       </Typography>
-      {rulesList.map((rule: Rule) => (
+      {rulesList.map((rule: Rule, index: number) => (
         <AccordionDropDown
           key={rule.rule_order}
-          order={rule.rule_order}
+          order={index + 1}
           title={rule.rule_title}
           description={rule.full_description}
         />

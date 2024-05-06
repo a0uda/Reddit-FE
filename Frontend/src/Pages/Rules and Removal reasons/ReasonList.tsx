@@ -54,16 +54,26 @@ export default function ReasonList({
   }, []);
 
   const handleSelectRule = (reasonData: reasonDataType) => {
-    const { removal_reason_title, removal_reason } = reasonData;
-    const removal_reason_id = reasonData._id;
+    console.log('Reason Data:', reasonData);
+
+    const { removal_reason_title, reason_message, _id } = reasonData;
+    console.log('Extracted Data:', removal_reason_title, reason_message, _id);
+
+    const removal_reason_id = _id;
+    let removal_reason;
+    if (reason_message) {
+      removal_reason = reason_message;
+    } else {
+      removal_reason = '';
+    }
     const community_name = '';
+
     setInitialValues({
+      community_name,
       removal_reason_title,
       removal_reason,
-      community_name,
       removal_reason_id,
     });
-    console.log('ssssssssssssssssssssss', initialValues);
     setOpenAddRule(true);
   };
 

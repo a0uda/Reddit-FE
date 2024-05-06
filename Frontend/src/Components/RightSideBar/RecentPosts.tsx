@@ -17,7 +17,7 @@ export function RecentPosts() {
   useEffect(() => {
     if (user?.username) {
       setIsLoading(true);
-      fetchReq.mutate(`users/posts/${user?.username}`, {
+      fetchReq.mutate(`users/history-posts`, {
         onSuccess: (data) => {
           setIsLoading(false);
           console.log('reem', data.data);
@@ -41,7 +41,7 @@ export function RecentPosts() {
             scrollbarWidth: 'thin',
           }}
         >
-          <Card className='w-80 bg-gray-100 rounded-2xl shadow-none p-0 pt-3 pb-3 min-w-0 mb-3'>
+          <Card className='w-[19rem] bg-gray-100 rounded-2xl shadow-none p-0 pt-3 pb-3 min-w-0 mb-3'>
             <div className='flex flex-row justify-between p-4 py-3'>
               <Typography
                 variant='small'
