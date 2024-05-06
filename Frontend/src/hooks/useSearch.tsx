@@ -21,6 +21,11 @@ function useSearch(endpoint: string) {
         if (axios.isCancel(error)) {
           setError('Request cancelled');
           console.log('Request cancelled:', error.message);
+        } else if (
+          axios.isAxiosError(error) &&
+          error.response?.status === 400
+        ) {
+          console.log('Empty query provided.');
         } else {
           throw error; // Re-throw other errors
         }

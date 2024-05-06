@@ -14,10 +14,10 @@ type user = {
 type UserBadgeProps = user;
 
 const UserBadge = ({ username }: UserBadgeProps) => {
-  const url = window.location.href;
+  // const url = window.location.href;
   const [aboutData, setAboutData] = useState<AboutType | undefined>();
   useQuery({
-    queryKey: ['about data', url],
+    queryKey: ['about data', username],
     queryFn: () => fetchRequest(`users/about/${username}`),
     onSuccess: (data) => {
       setAboutData(data.data);
