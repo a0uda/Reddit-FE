@@ -1,105 +1,143 @@
-import { useState } from 'react';
-import ButtonList from './components/ButtonList';
-import SearchBar from './components/SearchBar';
-import { getTimeDifferenceAsString } from '../../utils/helper_functions';
-import RoundedButton from '../../Components/RoundedButton';
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
-import { fetchRequest } from '../../API/User';
-import MuteUser from './MuteUser';
-import UnmuteUser from './UnmuteUser';
-import LoadingProvider from '../../Components/LoadingProvider';
 import ModSideBar from '../Rules and Removal reasons/ModSidebar';
+import axios from 'axios';
 
-const scheduledpost = [
-  {
-    scheduling_details: {
-      repetition_option: 'weekly',
-      schedule_date: '2026-05-04T20:11:00.000Z',
-    },
-    user_details: {
-      total_views: 0,
-      upvote_rate: 0,
-      total_shares: 0,
-    },
-    _id: '6635f165a08ae9782c6e7ff2',
-    title: 'Back to the future',
-    description: 'This is a description for my test post.',
-    created_at: '2024-05-04T08:27:18.677Z',
-    edited_at: null,
-    deleted_at: null,
-    deleted: false,
-    type: 'text',
-    link_url: null,
-    images: [],
-    videos: [],
-    polls: [],
-    polls_voting_length: 3,
-    polls_voting_is_expired_flag: false,
-    post_in_community_flag: true,
-    community_name: 'Adams_Group',
-    comments_count: 0,
-    views_count: 0,
-    shares_count: 0,
-    upvotes_count: 1,
-    downvotes_count: 0,
-    oc_flag: true,
-    spoiler_flag: false,
-    nsfw_flag: false,
-    locked_flag: false,
-    allowreplies_flag: true,
-    set_suggested_sort: 'None (Recommended)',
-    scheduled_flag: false,
-    is_reposted_flag: false,
-    user_id: '663561b6720b7a2283bd8277',
-    username: 'fatema',
-    __v: 0,
-  },
-  {
-    scheduling_details: {
-      repetition_option: 'daily',
-      schedule_date: '2026-05-04T20:11:00.000Z',
-    },
-    user_details: {
-      total_views: 0,
-      upvote_rate: 0,
-      total_shares: 0,
-    },
-    _id: '6635f184a08ae9782c6e803f',
-    title: 'Back to the future',
-    description: 'This is a description for my test post.',
-    created_at: '2024-05-04T08:27:49.107Z',
-    edited_at: null,
-    deleted_at: null,
-    deleted: false,
-    type: 'text',
-    link_url: null,
-    images: [],
-    videos: [],
-    polls: [],
-    polls_voting_length: 3,
-    polls_voting_is_expired_flag: false,
-    post_in_community_flag: true,
-    community_name: 'Adams_Group',
-    comments_count: 0,
-    views_count: 0,
-    shares_count: 0,
-    upvotes_count: 1,
-    downvotes_count: 0,
-    oc_flag: true,
-    spoiler_flag: false,
-    nsfw_flag: false,
-    locked_flag: false,
-    allowreplies_flag: true,
-    set_suggested_sort: 'None (Recommended)',
-    scheduled_flag: false,
-    is_reposted_flag: false,
-    user_id: '663561b6720b7a2283bd8277',
-    username: 'fatema',
-    __v: 0,
-  },
-];
+// const scheduledpost = [
+//   {
+//     scheduling_details: {
+//       repetition_option: 'weekly',
+//       schedule_date: '2026-05-04T20:11:00.000Z',
+//     },
+//     user_details: {
+//       total_views: 0,
+//       upvote_rate: 0,
+//       total_shares: 0,
+//     },
+//     _id: '6635f165a08ae9782c6e7ff2',
+//     title: 'Back to the future',
+//     description: 'This is a description for my test post.',
+//     created_at: '2024-05-04T08:27:18.677Z',
+//     edited_at: null,
+//     deleted_at: null,
+//     deleted: false,
+//     type: 'text',
+//     link_url: null,
+//     images: [],
+//     videos: [],
+//     polls: [],
+//     polls_voting_length: 3,
+//     polls_voting_is_expired_flag: false,
+//     post_in_community_flag: true,
+//     community_name: 'Adams_Group',
+//     comments_count: 0,
+//     views_count: 0,
+//     shares_count: 0,
+//     upvotes_count: 1,
+//     downvotes_count: 0,
+//     oc_flag: true,
+//     spoiler_flag: false,
+//     nsfw_flag: false,
+//     locked_flag: false,
+//     allowreplies_flag: true,
+//     set_suggested_sort: 'None (Recommended)',
+//     scheduled_flag: false,
+//     is_reposted_flag: false,
+//     user_id: '663561b6720b7a2283bd8277',
+//     username: 'fatema',
+//     __v: 0,
+//   },
+//   {
+//     scheduling_details: {
+//       repetition_option: 'daily',
+//       schedule_date: '2026-05-04T20:11:00.000Z',
+//     },
+//     user_details: {
+//       total_views: 0,
+//       upvote_rate: 0,
+//       total_shares: 0,
+//     },
+//     _id: '6635f184a08ae9782c6e803f',
+//     title: 'Back to the future',
+//     description: 'This is a description for my test post.',
+//     created_at: '2024-05-04T08:27:49.107Z',
+//     edited_at: null,
+//     deleted_at: null,
+//     deleted: false,
+//     type: 'text',
+//     link_url: null,
+//     images: [],
+//     videos: [],
+//     polls: [],
+//     polls_voting_length: 3,
+//     polls_voting_is_expired_flag: false,
+//     post_in_community_flag: true,
+//     community_name: 'Adams_Group',
+//     comments_count: 0,
+//     views_count: 0,
+//     shares_count: 0,
+//     upvotes_count: 1,
+//     downvotes_count: 0,
+//     oc_flag: true,
+//     spoiler_flag: false,
+//     nsfw_flag: false,
+//     locked_flag: false,
+//     allowreplies_flag: true,
+//     set_suggested_sort: 'None (Recommended)',
+//     scheduled_flag: false,
+//     is_reposted_flag: false,
+//     user_id: '663561b6720b7a2283bd8277',
+//     username: 'fatema',
+//     __v: 0,
+//   },
+// ];
+interface SchedulingDetails {
+  repetition_option: string;
+  schedule_date: string;
+}
+
+interface UserDetails {
+  total_views: number;
+  upvote_rate: number;
+  total_shares: number;
+}
+
+interface PostDataType {
+  scheduling_details: SchedulingDetails;
+  user_details: UserDetails;
+  _id: string;
+  title: string;
+  description: string;
+  created_at: string;
+  edited_at: string | null;
+  deleted_at: string | null;
+  deleted: boolean;
+  type: string;
+  link_url: string | null;
+  images: string[];
+  videos: string[];
+  polls: any[];
+  polls_voting_length: number;
+  polls_voting_is_expired_flag: boolean;
+  post_in_community_flag: boolean;
+  community_name: string;
+  comments_count: number;
+  views_count: number;
+  shares_count: number;
+  upvotes_count: number;
+  downvotes_count: number;
+  oc_flag: boolean;
+  spoiler_flag: boolean;
+  nsfw_flag: boolean;
+  locked_flag: boolean;
+  allowreplies_flag: boolean;
+  set_suggested_sort: string;
+  scheduled_flag: boolean;
+  is_reposted_flag: boolean;
+  user_id: string;
+  username: string;
+  __v: number;
+}
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   const options = {
@@ -114,6 +152,35 @@ const formatDate = (dateString) => {
 
 const SchedulePost = (props: {}) => {
   const { community_name } = useParams();
+  const [posts, setPosts] = useState<PostDataType[]>([]);
+  const fetchPosts = async () => {
+    // setIsLoading(true);
+    // setIsError(false);
+    setPosts([]);
+    try {
+      const res = await axios.get(
+        `${process.env.VITE_BASE_URL}communities/get-scheduled-posts/${community_name}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('token'),
+          },
+        }
+      );
+      setPosts(res.data);
+      console.log(res.data, 'resss');
+    } catch (err) {
+      // setIsError(true);
+      console.error('Error fetching data:', err);
+    } finally {
+      // setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
   return (
     <div className='Container'>
       <div className='text-blue-light ps-4 ms-4 mt-4 font-bold border-b-2 pb-2 '>
@@ -130,7 +197,7 @@ const SchedulePost = (props: {}) => {
 
         <div className='mt-10 p-4 ms-4'>
           <div className='text-xl'>Scheduled posts</div>
-          {scheduledpost.map((post) => (
+          {posts.map((post) => (
             <div key={post._id} className=''>
               <div className='border p-4 mt-2'>
                 <div className='text-font text-xs'>
@@ -194,7 +261,22 @@ const SchedulePost = (props: {}) => {
                   <span>{post.title}</span>
                   <span>{post.community_name}</span>
                   <span>
-                    Edit <span className='ms-10'>delete</span>
+                    <span>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        fill='none'
+                        viewBox='0 0 24 24'
+                        strokeWidth={1.5}
+                        stroke='currentColor'
+                        className='w-5 h-5'
+                      >
+                        <path
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          d='m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0'
+                        />
+                      </svg>
+                    </span>
                   </span>
                 </div>
               </div>
