@@ -1,7 +1,7 @@
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
-import { CommunityOverviewType, PostType } from '../../types/types';
+import { PostType } from '../../types/types';
 
 import PostPreview from '../../Components/Posts/PostPreview';
 import useSession from '../../hooks/auth/useSession';
@@ -10,7 +10,6 @@ import { useInView } from 'react-intersection-observer';
 
 function UserContent(props: { endpoint: string; queryName: string }) {
   const { user } = useSession();
-  const url = window.location.href;
 
   // Pagination
   const [data, setData] = useState<PostType[]>([]);
@@ -35,17 +34,16 @@ function UserContent(props: { endpoint: string; queryName: string }) {
       setData((prev) => [...prev, ...res.data]);
     }
   );
-  let moderatedCommunityNames: string[] = [];
-  useQuery({
-    queryKey: ['getModeratedCommunities', url],
-    queryFn: async () => await fetchRequest('users/moderated-communities'),
-    onSuccess: (data) => {
-      moderatedCommunityNames = data?.data.map(
-        (com: CommunityOverviewType) => com.name
-      );
-    },
-  });
-  console.log(user?.username, 'test');
+  // let moderatedCommunityNames: string[] = [];
+  // useQuery({
+  //   queryKey: ['getModeratedCommunities', url],
+  //   queryFn: async () => await fetchRequest('users/moderated-communities'),
+  //   onSuccess: (data) => {
+  //     moderatedCommunityNames = data?.data.map(
+  //       (com: CommunityOverviewType) => com.name
+  //     );
+  //   },
+  // });
   return (
     <>
       {data && (

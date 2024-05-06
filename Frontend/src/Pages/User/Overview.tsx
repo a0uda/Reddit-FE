@@ -4,26 +4,18 @@ import LoadingProvider from '../../Components/LoadingProvider';
 import Comment from '../../Components/Posts/Comment';
 import PostPreview from '../../Components/Posts/PostPreview';
 import { Link, useParams } from 'react-router-dom';
-import {
-  ArrowUpIcon,
-  ArrowUturnRightIcon,
-  ChatBubbleBottomCenterIcon,
-  EyeIcon,
-  PlusIcon,
-} from '@heroicons/react/24/outline';
+import { PlusIcon } from '@heroicons/react/24/outline';
 import useSession from '../../hooks/auth/useSession';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { CommentType, PostType } from '../../types/types';
+import Metadata from './Metadata';
 
 function Overview() {
   const { user } = useSession();
   const { username } = useParams();
 
-  const [response, setResponse] = useState<{
-    posts: PostType[];
-    comments: CommentType[];
-  }>({});
+  const [response, setResponse] = useState<(PostType | CommentType)[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [myData, setMyData] = useState(false);
@@ -44,23 +36,26 @@ function Overview() {
   }, [inView, noMoreData]);
 
   useEffect(() => {
-    if (user?.username && !response) {
-      console.log('gowa eluseeffect', user?.username, response);
+    if (user?.username) {
       setIsLoading(true);
-      fetchReq.mutate(`users/overview/${username}?page=${page}&pageSize=10`, {
+      fetchReq.mutate(`users/overview/${username}?page=${page}&pageSize=5`, {
         onSuccess: (data) => {
           setIsLoading(false);
-          if (data.data.length === 0) {
+          const tmp = [...data.data.posts, ...data.data.comments];
+          if (tmp.length === 0) {
             setNoMoreData(true);
             return;
+          } else {
+            setNoMoreData(false);
           }
           //console.log('upvote', data.data.posts.upvote_rate,data.data.posts.up);
-          setResponse((prev) => [...prev?.posts, ...data.data]);
+          setResponse((prev) => [...prev, ...tmp]);
+          // setResponse(data.data);
           if (username == user?.username) {
             setMyData(true);
           }
         },
-        onError: (err) => {
+        onError: () => {
           setIsLoading(false); // Set loading state to false on error
           setError(true); // Set error state
         },
@@ -83,10 +78,9 @@ function Overview() {
       ) : (
         <></>
       )}
-      {response && (
+      {response.length > 0 && (
         <>
-          {response.posts
-            .concat(response.comments)
+          {response
             .sort(
               (a, b) =>
                 new Date(b.created_at).getTime() -
@@ -94,7 +88,7 @@ function Overview() {
             )
             .map((content) => (
               <div ref={lastElementRef} key={content._id}>
-                {content.is_post ? (
+                {!('post_id' in content) ? (
                   <div>
                     <PostPreview
                       page='profile'
@@ -103,61 +97,7 @@ function Overview() {
                     />
                     {myData ? (
                       <>
-                        <div className='text-black m-2 text-sm'>
-                          Lifetime Performance
-                        </div>
-                        <div className='flex flex-row border-b-[1px]'>
-                          <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
-                            <div className='text-black text-xl font-bold '>
-                              {content.user_details.total_views === 0
-                                ? 'N/A'
-                                : content.user_details.total_views}
-                            </div>
-                            <div className='text-xs  gap-2 flex '>
-                              <EyeIcon strokeWidth={2.5} className='h-4 w-4' />
-                              Total Views
-                            </div>
-                          </div>
-
-                          <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
-                            <div className='text-black text-xl font-bold '>
-                              {content.user_details.upvote_rate.toFixed(1)}%
-                            </div>
-                            <div className='text-xs  gap-2 flex '>
-                              <ArrowUpIcon
-                                strokeWidth={2.5}
-                                className='h-4 w-4'
-                              />
-                              Upvote Rate
-                            </div>
-                          </div>
-
-                          <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
-                            <div className='text-black text-xl font-bold '>
-                              {content.comments_count}
-                            </div>
-                            <div className='text-xs  gap-2 flex '>
-                              <ChatBubbleBottomCenterIcon
-                                strokeWidth={2.5}
-                                className='h-4 w-4'
-                              />
-                              Comments
-                            </div>
-                          </div>
-
-                          <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
-                            <div className='text-black text-xl font-bold '>
-                              {content.user_details.total_shares}
-                            </div>
-                            <div className='text-xs  gap-2 flex '>
-                              <ArrowUturnRightIcon
-                                strokeWidth={2.5}
-                                className='h-4 w-4'
-                              />
-                              Total Shares
-                            </div>
-                          </div>
-                        </div>
+                        <Metadata content={content} />
                       </>
                     ) : (
                       <></>
@@ -166,7 +106,7 @@ function Overview() {
                 ) : (
                   //uncomment when deployed reem
                   <Comment
-                    key={content.id}
+                    key={content._id}
                     comment={content}
                     showButton={true}
                   />

@@ -3,51 +3,51 @@ import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
 import Comment from '../../Components/Posts/Comment';
 import PostPreview from '../../Components/Posts/PostPreview';
-import { useEffect, useState } from 'react';
-import { useInView } from 'react-intersection-observer';
+import { useState } from 'react';
 import useSession from '../../hooks/auth/useSession';
+import { CommentType, PostType } from '../../types/types';
 
 function Saved() {
-  // Pagination
-  const [page, setPage] = useState(1);
-  const [noMoreData, setNoMoreData] = useState(false);
-  const { ref: lastElementRef, inView } = useInView();
+  const [response, setResponse] = useState<(PostType | CommentType)[]>([]);
 
-  useEffect(() => {
-    if (inView && !noMoreData) {
-      setPage((prevPageNumber) => prevPageNumber + 1);
-    }
-  }, [inView, noMoreData]);
+  // // Pagination
+  // const [page, setPage] = useState(1);
+  // const [noMoreData, setNoMoreData] = useState(false);
+  // const { ref: lastElementRef, inView } = useInView();
 
-  const { data, isError, isLoading } = useQuery(
-    ['userComments', 'comments', 'posts', 'listings'],
+  // useEffect(() => {
+  //   if (inView && !noMoreData) {
+  //     setPage((prevPageNumber) => prevPageNumber + 1);
+  //   }
+  // }, [inView, noMoreData]);
+
+  const { isError, isLoading } = useQuery(
+    ['userComments', 'comments', 'posts', 'listings'], // , page
     async () => {
-      const res = await fetchRequest(
-        `users/saved-posts-and-comments?page=${page}`
-      );
-      if (res.data.length === 0) {
-        setNoMoreData(true);
-        return [];
-      }
-      return res.data;
+      const res = await fetchRequest(`users/saved-posts-and-comments`);
+      const tmp = [...res.data.posts, ...res.data.comments];
+      // if (tmp.length === 0) {
+      //   setNoMoreData(true);
+      //   return;
+      // }
+      setResponse((prev) => [...prev, ...tmp]);
     }
   );
   const { user } = useSession();
-  console.log(data);
   return (
     <>
-      {data && (
+      {response.length > 0 && (
         <>
-          {data.posts
-            .concat(data.comments)
+          {response
             .sort(
               (a, b) =>
                 new Date(b.created_at).getTime() -
                 new Date(a.created_at).getTime()
             )
             .map((content) => (
-              <div ref={lastElementRef} key={content._id}>
-                {content.is_post ? (
+              // ref={lastElementRef}
+              <div key={content._id}>
+                {!('post_id' in content) ? (
                   <PostPreview
                     page='profile'
                     post={content}
@@ -56,7 +56,7 @@ function Saved() {
                 ) : (
                   //uncomment when deployed reem
                   <Comment
-                    key={content.id}
+                    key={content._id}
                     comment={content}
                     showButton={true}
                   />
@@ -70,7 +70,7 @@ function Saved() {
       <LoadingProvider error={false} isLoading={false}>
         {isError ? <div className='text-center'>Error...</div> : null}
         {isLoading ? <div className='text-center'>Loading...</div> : null}
-        {noMoreData ? (
+        {response.length === 0 ? (
           <>
             <hr className='border-neutral-muted' />
             <div className='text-center my-5'>Nothing to show</div>

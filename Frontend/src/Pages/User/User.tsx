@@ -85,7 +85,7 @@ function User() {
             setMyData(true);
           }
         },
-        onError: (err) => {
+        onError: () => {
           setIsLoading(false); // Set loading state to false on error
           setError(true); // Set error state
         },
