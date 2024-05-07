@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import ModSideBar from '../Rules and Removal reasons/ModSidebar';
 import axios from 'axios';
 import Button from '../../Components/Button';
@@ -156,6 +156,7 @@ const SchedulePost = (props: {}) => {
   const { community_name } = useParams();
   const [posts, setPosts] = useState<PostDataType[]>([]);
   const [submitPost, setSubmitPost] = useState('');
+  const [deletePost, setDeletePost] = useState('');
   const fetchPosts = async () => {
     // setIsLoading(true);
     // setIsError(false);
@@ -193,11 +194,31 @@ const SchedulePost = (props: {}) => {
         }
       );
       console.log(submitPost);
+      fetchPosts();
     } catch (err) {
       // setIsError(true);
       console.error('Error fetching data:', err);
     } finally {
       // setIsLoading(false);
+    }
+  };
+  const submitDeleteRequest = async () => {
+    console.log(submitPost);
+    try {
+      const res = await axios.post(
+        `${process.env.VITE_BASE_URL}communities/cancel-scheduled-post/${community_name}`,
+        { post_id: deletePost },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('token'),
+          },
+        }
+      );
+      console.log(submitPost);
+      fetchPosts();
+    } catch (err) {
+      console.error('Error fetching data:', err);
     }
   };
 
@@ -206,8 +227,11 @@ const SchedulePost = (props: {}) => {
   }, []);
   useEffect(() => {
     submitPostRequest();
-    fetchPosts();
   }, [submitPost]);
+  useEffect(() => {
+    console.log('sssssssssss', deletePost);
+    submitDeleteRequest();
+  }, [deletePost]);
 
   return (
     <div className='Container'>
@@ -224,7 +248,18 @@ const SchedulePost = (props: {}) => {
         </div>
 
         <div className='mt-10 p-4 ms-4'>
-          <div className='text-xl'>Scheduled posts</div>
+          <div className='text-xl flex flex-row justify-between items-center'>
+            <div>Schedule Posts</div>
+            <Link to={`/r/${community_name}/submit`}>
+              <RoundedButton
+                buttonText='Create Post'
+                buttonTextColor='text-white font-semibold text-[13px] text-xs'
+                buttonBorderColor='border-white'
+                buttonColor='bg-blue-light hover:!opacity-100'
+                onClick={() => setSubmitPost(post._id)}
+              />
+            </Link>
+          </div>
           {posts.map((post) => (
             <div key={post._id} className=''>
               <div className='border p-4 mt-2 flex flex-row space-x-2'>
@@ -314,7 +349,7 @@ const SchedulePost = (props: {}) => {
                       buttonColor='bg-inherit hover:bg-gray-200 hover:!opacity-100'
                       onClick={() => setSubmitPost(post._id)}
                     />
-                    <span>
+                    <button onClick={() => setDeletePost(post._id)}>
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
                         fill='none'
@@ -329,7 +364,7 @@ const SchedulePost = (props: {}) => {
                           d='m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0'
                         />
                       </svg>
-                    </span>
+                    </button>
                   </div>
                 </div>
               </div>

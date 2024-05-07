@@ -145,7 +145,7 @@ const NewPost: React.FC = () => {
 
   const mutateSchedulePost = useMutation(postRequest, {
     onSuccess: () => {
-      navigate(`/r/${community_name}`);
+      navigate(`/r/${community_name}/about/scheduledposts`);
     },
     onError: (error) => {
       setTrigger(!trigger);
