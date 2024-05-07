@@ -34,23 +34,23 @@ const SideBar = ({ className }: { className?: string }) => {
     },
   ];
   // BE
-  const recent = [
-    {
-      title: 'r/SWECommunity',
-      icon: <CommunityIcon className='h-5 w-5' />,
-      link: '/r/SWECommunity',
-    },
-    {
-      title: 'r/gamming',
-      icon: <CommunityIcon className='h-5 w-5' />,
-      link: '/r/gamming',
-    },
-    {
-      title: 'r/AhayEveryDay',
-      icon: <CommunityIcon className='h-5 w-5' />,
-      link: '/r/AhayEveryDay',
-    },
-  ];
+  // const recent = [
+  //   {
+  //     title: 'r/SWECommunity',
+  //     icon: <CommunityIcon className='h-5 w-5' />,
+  //     link: '/r/SWECommunity',
+  //   },
+  //   {
+  //     title: 'r/gamming',
+  //     icon: <CommunityIcon className='h-5 w-5' />,
+  //     link: '/r/gamming',
+  //   },
+  //   {
+  //     title: 'r/AhayEveryDay',
+  //     icon: <CommunityIcon className='h-5 w-5' />,
+  //     link: '/r/AhayEveryDay',
+  //   },
+  // ];
   const createPost = [
     {
       title: 'Input Text',
@@ -73,7 +73,7 @@ const SideBar = ({ className }: { className?: string }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   const url = window.location.href;
-  const communitiesResponse = useQuery({
+  useQuery({
     queryKey: ['communities', url],
     queryFn: () => fetchRequest(`users/communities/`),
     onSuccess: (data) => {
@@ -106,6 +106,36 @@ const SideBar = ({ className }: { className?: string }) => {
     },
   });
 
+  const [moderatedCommunities, setModeratedCommunities] = useState<
+    ListItemProps[] | undefined
+  >();
+  useQuery({
+    queryKey: ['moderatedCommunities', url],
+    queryFn: () => fetchRequest(`users/moderated-communities/`),
+    onSuccess: (data) => {
+      setModeratedCommunities(
+        data.data?.map((community: CommunityOverviewType) => ({
+          icon: (
+            <>
+              {community.profile_picture ? (
+                <Avatar
+                  variant='circular'
+                  alt={community.name}
+                  src={community.profile_picture}
+                  className='h-6 w-6'
+                />
+              ) : (
+                <CommunityIcon className='h-6 w-6' />
+              )}
+            </>
+          ),
+          title: 'r/' + community.name,
+          link: `/r/${community.name}`,
+        }))
+      );
+    },
+  });
+
   const [isCreateCommunityModal, setCreateCommunityModal] =
     useState<boolean>(false);
 
@@ -125,9 +155,13 @@ const SideBar = ({ className }: { className?: string }) => {
             link='/'
           />
           <hr className='my-2 border-blue-gray-50' />
-          <AccordionDropDown title='Moderation' list={moderation} />
-          <hr className='my-2 border-blue-gray-50' />
-          <AccordionDropDown title='Recent' list={recent} />
+          <AccordionDropDown
+            title='Moderation'
+            list={moderation}
+            fetchedList={moderatedCommunities || []}
+          />
+          {/* <hr className='my-2 border-blue-gray-50' />
+          <AccordionDropDown title='Recent' list={recent} /> */}
           <hr className='my-2 border-blue-gray-50' />
           {/* BE */}
           <button
@@ -190,12 +224,14 @@ type AccordionDropDownProps = {
     link?: string;
   }[];
   children?: ReactNode;
+  fetchedList?: ListItemProps[];
 };
 
 const AccordionDropDown = ({
   title,
   list,
   children,
+  fetchedList,
 }: AccordionDropDownProps) => {
   const [open, setOpen] = useState(true);
 
@@ -226,7 +262,20 @@ const AccordionDropDown = ({
             {list.map((item, index) => (
               <div key={index}>
                 <a href={item.link}>
-                  <ListItem>
+                  <ListItem className='w-56'>
+                    <ListItemPrefix>{item.icon}</ListItemPrefix>
+
+                    {item.title}
+                  </ListItem>
+                </a>
+              </div>
+            ))}
+          </List>
+          <List className='p-0 text-black'>
+            {fetchedList?.map((item, index) => (
+              <div key={index}>
+                <a href={item.link}>
+                  <ListItem className='w-56'>
                     <ListItemPrefix>{item.icon}</ListItemPrefix>
 
                     {item.title}
