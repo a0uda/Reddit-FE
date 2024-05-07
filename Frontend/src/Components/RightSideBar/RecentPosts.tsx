@@ -17,7 +17,7 @@ export function RecentPosts() {
   useEffect(() => {
     if (user?.username) {
       setIsLoading(true);
-      fetchReq.mutate(`users/history-posts`, {
+      fetchReq.mutate(`users/posts/${user.username}?page=1`, {
         onSuccess: (data) => {
           setIsLoading(false);
           console.log('reem', data.data);

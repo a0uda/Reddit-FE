@@ -36,6 +36,7 @@ interface Message {
 const ChatMain = ({ page }: { page: 'create' | 'chat' }) => {
   const { socket } = useSocketContext();
   const [newMessage, setNewMessage] = useState<Message>();
+  const [openNavbar, setOpenNavbar] = useState<boolean>(false);
 
   useEffect(() => {
     socket?.on('newMessage', (newMessage) => {
@@ -48,8 +49,20 @@ const ChatMain = ({ page }: { page: 'create' | 'chat' }) => {
   }, [socket]);
   return (
     <div className='flex'>
-      <SideBar newMessage={newMessage} />
-      {page == 'create' ? <CreateChat /> : <Chat newMessage={newMessage} />}
+      <SideBar
+        newMessage={newMessage}
+        openNavbar={openNavbar}
+        setOpenNavbar={setOpenNavbar}
+      />
+      {page == 'create' ? (
+        <CreateChat />
+      ) : (
+        <Chat
+          newMessage={newMessage}
+          openNavbar={openNavbar}
+          setOpenNavbar={setOpenNavbar}
+        />
+      )}
     </div>
   );
 };

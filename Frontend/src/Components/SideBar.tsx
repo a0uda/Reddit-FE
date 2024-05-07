@@ -24,6 +24,7 @@ import { useQuery } from 'react-query';
 import { CommunityOverviewType, CommunityType } from '../types/types';
 import { fetchRequest } from '../API/User';
 import CreateCommunity from '../Pages/Community/CreateCommunity';
+import useSession from '../hooks/auth/useSession';
 
 const SideBar = ({ className }: { className?: string }) => {
   const moderation = [
@@ -33,6 +34,7 @@ const SideBar = ({ className }: { className?: string }) => {
       link: '/r/Mod',
     },
   ];
+  const { status } = useSession();
   // BE
   // const recent = [
   //   {
@@ -72,9 +74,9 @@ const SideBar = ({ className }: { className?: string }) => {
   const [communities, setCommunities] = useState<ListItemProps[] | undefined>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-  const url = window.location.href;
+  // const url = window.location.href;
   useQuery({
-    queryKey: ['communities', url],
+    queryKey: ['communities'],
     queryFn: () => fetchRequest(`users/communities/`),
     onSuccess: (data) => {
       setCommunities(
@@ -110,7 +112,7 @@ const SideBar = ({ className }: { className?: string }) => {
     ListItemProps[] | undefined
   >();
   useQuery({
-    queryKey: ['moderatedCommunities', url],
+    queryKey: ['moderatedCommunities'],
     queryFn: () => fetchRequest(`users/moderated-communities/`),
     onSuccess: (data) => {
       setModeratedCommunities(
@@ -162,18 +164,21 @@ const SideBar = ({ className }: { className?: string }) => {
           />
           {/* <hr className='my-2 border-blue-gray-50' />
           <AccordionDropDown title='Recent' list={recent} /> */}
-          <hr className='my-2 border-blue-gray-50' />
-          {/* BE */}
-          <button
-            onClick={() => {
-              setCreateCommunityModal(true);
-            }}
-          >
-            <ListItemComponent
-              icon={<PlusIcon className='h-5 w-5' />}
-              title='Create Community'
-            />
-          </button>
+          {status == 'authenticated' && (
+            <>
+              <hr className='my-2 border-blue-gray-50' />
+              <button
+                onClick={() => {
+                  setCreateCommunityModal(true);
+                }}
+              >
+                <ListItemComponent
+                  icon={<PlusIcon className='h-5 w-5' />}
+                  title='Create Community'
+                />
+              </button>
+            </>
+          )}
 
           {communities && communities?.length > 0 && (
             <>

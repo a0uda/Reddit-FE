@@ -32,6 +32,7 @@ const PostsListings = () => {
       return;
     }
     navigate(`/${sortOption.toLowerCase()}`);
+    setPosts([]);
     response.refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption]);
@@ -42,7 +43,7 @@ const PostsListings = () => {
   const [noMorePosts, setNoMorePosts] = useState(false);
   const url = window.location.href;
   const response = useQuery({
-    queryKey: ['listings', sortOption, page, pageSize, url],
+    queryKey: ['listings', page, pageSize, url],
     queryFn: async () => {
       console.log('sortOption', sortOption);
       const res = await fetchRequest(

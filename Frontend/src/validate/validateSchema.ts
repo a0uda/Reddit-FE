@@ -33,7 +33,7 @@ export const validationSchema = {
       yup.object().shape({
         path: yup.string().required('Path is required'),
         caption: yup.string().required('Caption is required'),
-        link: yup.string().required('Link is required'),
+        link: yup.string(),
       })
     )
     .min(1, 'At least one image is required')

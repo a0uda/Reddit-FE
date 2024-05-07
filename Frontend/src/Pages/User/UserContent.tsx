@@ -10,7 +10,7 @@ import { useInView } from 'react-intersection-observer';
 
 function UserContent(props: { endpoint: string; queryName: string }) {
   const { user } = useSession();
-
+  const [toggle, setToggle] = useState(false);
   // Pagination
   const [data, setData] = useState<PostType[]>([]);
   const [page, setPage] = useState(1);
@@ -22,10 +22,28 @@ function UserContent(props: { endpoint: string; queryName: string }) {
       setPage((prevPageNumber) => prevPageNumber + 1);
     }
   }, [inView, noMoreData]);
+  const url = window.location.href;
+
+  useEffect(() => {
+    setData([]);
+    setPage(1);
+    setNoMoreData(false);
+    console.log('url', url);
+    // refetch();
+    return () => {
+      setData([]);
+      setPage(1);
+      setToggle(!toggle);
+    };
+  }, [url]);
+
+  // useEffect(() => {}, []);
 
   const { isError, isLoading } = useQuery(
-    [props.queryName, 'listings', page],
+    ['user content', url, page, toggle],
     async () => {
+      console.log(props.endpoint, 'props.queryName');
+
       const res = await fetchRequest(`${props.endpoint}?page=${page}`);
       if (res.data.length === 0) {
         setNoMoreData(true);

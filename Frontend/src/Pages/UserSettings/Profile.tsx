@@ -267,7 +267,7 @@ function Profile() {
                         link.custom_url +
                         '/'
                   }
-                  //target='_blank'
+                  target='_blank'
                 >
                   <RoundedButton
                     buttonBorderColor='none'
@@ -282,7 +282,7 @@ function Profile() {
                           console.log(link);
                           postReq.mutate({
                             endPoint: 'users/delete-social-link',
-                            data: link,
+                            data: { id: link._id },
                           });
                         }}
                       />
