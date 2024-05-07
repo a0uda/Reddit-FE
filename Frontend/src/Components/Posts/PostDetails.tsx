@@ -3,6 +3,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Carousel,
   IconButton,
   Typography,
 } from '@material-tailwind/react';
@@ -20,6 +21,7 @@ import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import Comment from './Comment';
 import AddComment from './AddComment';
 import { useParams } from 'react-router-dom';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 const PostDetails = ({ post }: { post?: PostType }) => {
   const [community, setCommunity] = useState<CommunityType | undefined>();
@@ -36,6 +38,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
     },
   });
   const { id: postId } = useParams();
+
   const [comments, setComments] = useState<CommentType[] | undefined>();
   const commentsResponse = useQuery({
     queryKey: ['comments', comments, url],
@@ -82,17 +85,6 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 >
                   <ArrowLeftIcon className='h-6 w-6 fill-black' />
                 </IconButton>
-                {/* {post.avatar ? (
-                {/* {post.avatar ? (
-                  <Avatar
-                    variant='circular'
-                    alt={post.community_name}
-                    src={post.avatar}
-                    className='w-10 h-10'
-                  />
-                ) : (
-                  <CommunityIcon className='h-5 w-5' />
-                )} */}
                 <div className='flex flex-col justify-between m-0'>
                   <div className='flex flex-row items-center justify-between gap-1 m-0'>
                     {community && (
@@ -130,12 +122,93 @@ const PostDetails = ({ post }: { post?: PostType }) => {
               <Typography variant='paragraph' className='text-black'>
                 {post.description}
               </Typography>
-              {post.images?.[0] && (
-                <img
-                  src={post.images?.[0].path}
-                  alt='post'
-                  className='object-contain rounded-md w-full max-h-[100vw]'
-                />
+              {post.images && post.images.length > 1 && (
+                <>
+                  <Carousel
+                    className='rounded-xl'
+                    prevArrow={({ handlePrev }) => (
+                      <IconButton
+                        variant='text'
+                        color='white'
+                        size='lg'
+                        onClick={handlePrev}
+                        className='!absolute top-2/4 left-4 -translate-y-2/4 bg-black/50'
+                      >
+                        <ChevronLeftIcon
+                          className='h-6 w-6'
+                          strokeWidth={2.5}
+                        />
+                      </IconButton>
+                    )}
+                    nextArrow={({ handleNext }) => (
+                      <IconButton
+                        variant='text'
+                        color='white'
+                        size='lg'
+                        onClick={handleNext}
+                        className='!absolute top-2/4 !right-4 -translate-y-2/4 bg-black/50'
+                      >
+                        <ChevronRightIcon
+                          className='h-6 w-6'
+                          strokeWidth={2.5}
+                        />
+                      </IconButton>
+                    )}
+                    navigation={({ setActiveIndex, activeIndex, length }) => (
+                      <div className='absolute bottom-0 left-2/4 z-50 flex -translate-x-2/4 gap-2 bg-black/50 p-1 rounded-full'>
+                        {new Array(length).fill('').map((_, i) => (
+                          <span
+                            key={i}
+                            className={`block h-1 cursor-pointer rounded-full transition-all content-[''] ${
+                              activeIndex === i
+                                ? 'w-6 bg-white'
+                                : 'w-4 bg-white/50'
+                            }`}
+                            onClick={() => setActiveIndex(i)}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  >
+                    {post.images.map((image, index) => (
+                      <div
+                        key={index}
+                        className='relative h-[50vh] flex justify-center rounded-sm bg-blue-gray-900'
+                      >
+                        <img
+                          src={image.path}
+                          alt={image.caption ?? 'Post Image'}
+                          className='object-contain'
+                        />
+                        {image.caption && (
+                          <div className='absolute w-11/12 bottom-4 bg-neutral-black/50 p-1 px-2 mx-4 rounded-md'>
+                            <Typography variant='small' className='text-white'>
+                              {image.caption}
+                            </Typography>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </Carousel>
+                </>
+              )}
+              {post.images && post.images.length === 1 && (
+                <>
+                  <div className='relative h-[50vh] flex justify-center rounded-sm bg-blue-gray-900'>
+                    <img
+                      src={post.images?.[0].path}
+                      alt={post.images?.[0].caption ?? 'Post Image'}
+                      className='object-contain'
+                    />
+                    {post.images?.[0].caption && (
+                      <div className='absolute w-full bottom-4 bg-neutral-black/50 p-1 mx-2'>
+                        <Typography variant='small' className='text-white'>
+                          {post.images?.[0].caption}
+                        </Typography>
+                      </div>
+                    )}
+                  </div>
+                </>
               )}
             </CardBody>
             <CardFooter className='px-0'>

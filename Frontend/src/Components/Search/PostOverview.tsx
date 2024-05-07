@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   CardBody,
   CardHeader,
@@ -46,7 +45,7 @@ const PostOverview = ({ post }: { post: PostType }) => {
                 </Typography>
               </div>
             </CardHeader>
-            <CardBody className='flex flex-col space-y-2 overflow-hidden p-0 py-2'>
+            <CardBody className='flex flex-col text-left space-y-2 overflow-hidden p-0 py-2'>
               <Typography variant='h5' className='font-normal text-black'>
                 {post.title}
               </Typography>
@@ -72,7 +71,7 @@ const PostOverview = ({ post }: { post: PostType }) => {
             >
               <img
                 src={post.images?.[0].path}
-                alt='post'
+                alt={post.images?.[0].caption}
                 className={cn(
                   'object-cover rounded-md w-32 h-24',
                   !showNsfw || !showSpoiler ? 'blur-sm' : ''
