@@ -20,11 +20,6 @@ import * as yup from 'yup';
 import { uploadImageFirebase } from '../../utils/helper_functions';
 import { useAlert } from '../../Providers/AlertProvider';
 
-// type FormSchema =
-//   | 'createPost'
-//   | 'createPostImageAndVideo'
-//   | 'createPostLink'
-//   | 'createPostPoll';
 type FormSchema = 'image_and_videos' | 'polls' | 'url' | 'text';
 
 interface Image {
@@ -216,7 +211,7 @@ const NewPost: React.FC = () => {
           handleOnSubmit(values);
           setTimeout(() => {
             console.log(JSON.stringify(values));
-            alert(JSON.stringify(values));
+            // alert(JSON.stringify(values));
             setSubmitting(true);
             resetForm();
             setOC(false);
