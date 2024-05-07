@@ -399,6 +399,7 @@ export type SocialLink = {
   username: string;
   display_text?: string; // Optional property
   custom_url: string;
+  _id: string;
 };
 
 export type ModeratedCommunity = {

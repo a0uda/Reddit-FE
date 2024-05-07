@@ -15,7 +15,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { AiOutlineOrderedList } from 'react-icons/ai';
 import { useMutation, useQueryClient } from 'react-query';
-import { postRequest } from '../../API/User';
+import { postRequest, postRequestnew } from '../../API/User';
 import { tiptapConfig } from '../../utils/tiptap_config';
 import useSession from '../../hooks/auth/useSession';
 import Credentials from '../../Pages/credential/Credentials';
@@ -167,22 +167,51 @@ const MenuFooter = ({
   setFocused: Dispatch<SetStateAction<boolean>>;
   setError: Dispatch<SetStateAction<string>>;
 }) => {
+  const [htmlk, setHtml] = useState('');
+  const extractUsername = (html: string): string | null => {
+    // Regular expression to match username mention in the form u/name
+    console.log('hiree');
+    const usernameRegex = /u\/(\w+)/;
+    const match = html.match(usernameRegex);
+    if (match && match.length > 1) {
+      // Extracted username is in the second group of the regex match
+      return match[1];
+    } else {
+      return null;
+    }
+  };
+  const postReq = useMutation(postRequest);
+  const usernamemention = (html: string, commentid: string) => {
+    const username = extractUsername(html);
+    console.log(html);
+    if (username) {
+      // Do something with the extracted username
+      console.log('Extracted username:', username);
+      postReq.mutate({
+        endPoint: 'messages/new-username-mention',
+        data: {
+          comment_id: commentid,
+          mentioned_username: username,
+        },
+      });
+    } else {
+      console.log('No username mention found.');
+    }
+
+    // Continue with your mutation logic
+  };
   const queryClient = useQueryClient();
   const addCommentMuation = useMutation(
     (content: string) =>
-      postRequest({
+      postRequestnew({
         endPoint: 'comments/new-comment',
         data: { id: postId, description: content },
       }),
     {
-      onSuccess: () => {
-        // Invalidate or refetch a query on success
+      onSuccess: (data) => {
+        usernamemention(editor.getHTML(), data?.data);
         queryClient.invalidateQueries('comments');
       },
-      // onError: () => {
-      //   // Perform any actions on error, like showing an error message
-      //   console.log('Error');
-      // },
     }
   );
 
@@ -237,7 +266,9 @@ const MenuFooter = ({
                 return;
               }
               const html = editor.getHTML();
+
               addCommentMuation.mutate(html);
+
               setFocused(false);
             }}
           >
@@ -256,6 +287,7 @@ export default function AddComment({ postId }: { postId: string }) {
       setError('');
     },
   });
+
   const [openMenuBar, setOpenMenuBar] = useState<boolean>(false);
   const [focused, setFocused] = useState<boolean>(false);
   const [error, setError] = useState('');

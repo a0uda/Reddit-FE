@@ -5,7 +5,7 @@ import newChat from '../../assets/newChat.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 type UserChatSidebar = {
   _id: string;
   otherUsername: string;
@@ -37,12 +37,17 @@ interface Message {
   updatedAt: string; // ISO 8601 date-time format
   __v: number; // version field, commonly used in MongoDB
 }
+
 const SideBar = ({
   newMessage,
   className,
+  openNavbar,
+  setOpenNavbar,
 }: {
   newMessage: Message;
   className: string;
+  openNavbar: boolean;
+  setOpenNavbar: Dispatch<SetStateAction<boolean>>;
 }) => {
   // const chats = [
   //   {
@@ -89,7 +94,7 @@ const SideBar = ({
     <>
       <div
         className={cn(
-          'h-[calc(100vh-var(--navbar-height))]  w-80 shadow-none border-r',
+          'h-[calc(100vh-var(--navbar-height))]  shadow-none border-r w-52 md:w-80',
           className
         )}
         // style={{ scrollbarWidth: 'none' }} // Hide scrollbar
@@ -128,7 +133,7 @@ const ChatItem = ({ lastMessage }: ListItemProps) => {
 
   return (
     <div
-      className={`p-3 flex gap-1 items-center cursor-pointer hover:bg-gray-200  w-[320px] ${username == lastMessage.lastMessageSender && 'bg-gray-200'} `}
+      className={`p-3 flex gap-1 items-center cursor-pointer hover:bg-gray-200  overflow-hidden whitespace-nowrap text-ellipsis w-full ${username == lastMessage.lastMessageSender && 'bg-gray-200'} `}
       onClick={() => {
         navigate(
           `/chat/u/${
@@ -146,21 +151,24 @@ const ChatItem = ({ lastMessage }: ListItemProps) => {
           lastMessage.otherProfilePicture ||
           'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
         }
-        style={{ width: '35px', height: '35px' }}
+        style={{ width: '30px', height: '30px' }}
       />
-      <div className='w-72 items-center justify-center '>
-        <div className='flex gap-[8.5rem] w-full'>
-          <Typography className='text-xs'>
+      <div className=' w-[88%] items-center justify-center '>
+        <div className='flex justify-between w-full '>
+          <Typography className='text-xs font-semibold'>
             {lastMessage.lastMessageSender == 'You'
               ? lastMessage.otherUsername
               : lastMessage.lastMessageSender}
           </Typography>
-          <Typography className='text-xs'>
+          <Typography className='text-xs '>
             {`${new Date(lastMessage.lastMessageTimestamp).toDateString()}`}
           </Typography>
         </div>
-        <Typography className='text-xs w-[16.5rem] overflow-hidden whitespace-nowrap text-ellipsis'>
-          {lastMessage.lastMessageSender + ': ' + lastMessage.lastMessageText}
+        <Typography className='text-xs flex-1 overflow-hidden whitespace-nowrap text-ellipsis'>
+          <strong className='font-semibold'>
+            {lastMessage.lastMessageSender + ': '}{' '}
+          </strong>
+          {lastMessage.lastMessageText}
         </Typography>
       </div>
     </div>

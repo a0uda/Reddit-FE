@@ -145,13 +145,13 @@ function Profile() {
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
+    // onError: (error) => {
+    //   const errorObj = JSON.parse(error.message);
 
-      setTrigger(!trigger);
-      setIsError(true);
-      setAlertMessage(errorObj.data);
-    },
+    //   setTrigger(!trigger);
+    //   setIsError(true);
+    //   setAlertMessage(errorObj.data);
+    // },
   });
   // console.log(data);
 
@@ -189,6 +189,12 @@ function Profile() {
     setNameInput('');
     setUsernameInput('');
   }, [enterLinkDetails]);
+
+  React.useEffect(() => {
+    setUsernameInput(
+      socialLinkType == 'facebook' ? 'https://www.facebook.com/' : ''
+    );
+  }, [socialLinkType]);
 
   return (
     <LoadingProvider error={error} isLoading={isLoading}>
@@ -267,7 +273,7 @@ function Profile() {
                         link.custom_url +
                         '/'
                   }
-                  //target='_blank'
+                  target='_blank'
                 >
                   <RoundedButton
                     buttonBorderColor='none'
@@ -282,7 +288,7 @@ function Profile() {
                           console.log(link);
                           postReq.mutate({
                             endPoint: 'users/delete-social-link',
-                            data: link,
+                            data: { id: link._id },
                           });
                         }}
                       />

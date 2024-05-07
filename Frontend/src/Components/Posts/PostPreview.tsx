@@ -692,9 +692,9 @@ const PostPreview = ({
     );
   };
   const handleHideUnhidePost = () => {
-    patchReq.mutate({
-      endPoint: 'posts/hide-unhide',
-      newSettings: {
+    postReq.mutate({
+      endPoint: 'users/hide-unhide-post',
+      data: {
         id: post._id,
       },
     });
@@ -895,7 +895,7 @@ const PostPreview = ({
                     {!(
                       post.moderator_details.removed_flag ||
                       post.moderator_details.spammed_flag ||
-                      post.moderator_details.spammed_flag
+                      post.moderator_details.reported_flag
                     ) &&
                       post.images?.[0] && (
                         <Tooltip

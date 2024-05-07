@@ -163,8 +163,7 @@ const Comment = ({
               <EditorContent editor={editor} />
             ) : (
               <EditPostComment
-                Id={comment._id}
-                currentText={comment.description}
+                post={comment}
                 isPost={false}
                 handleEdit={handleEditComment}
               />

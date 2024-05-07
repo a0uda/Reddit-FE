@@ -487,7 +487,11 @@ const Message = (props: {
   const [isExpandedAll, setIsExpandedAll] = React.useState(true);
   const [isExpandedMain, setIsExpandedMain] = React.useState(true);
 
-  const postReq = useMutation(postRequest);
+  const postReq = useMutation(postRequest, {
+    onSuccess: () => {
+      props.refetch();
+    },
+  });
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
   console.log('repliesarr', props.repliesArr);
   const handleThankyouModal = () => {
@@ -511,7 +515,7 @@ const Message = (props: {
         postReq.mutate(
           {
             endPoint: 'messages/mark-as-read',
-            data: { _id: props.messageId },
+            data: { Messages: [{ _id: props.messageId }] },
           },
           {
             onSuccess: () => {
@@ -640,12 +644,52 @@ const Message = (props: {
                   buttonColor='bg-blue-light'
                   buttonText='Accept'
                   buttonTextColor='text-white'
+                  onClick={() => {
+                    postReq.mutate(
+                      {
+                        endPoint: 'communities/accept-moderator-invitation',
+                        data: { _id: props.messageId },
+                      },
+                      {
+                        onSuccess: () => {
+                          postReq.mutate(
+                            {
+                              endPoint: 'messages/del-msg',
+                              data: {
+                                _id: props.messageId,
+                              },
+                            },
+                            {
+                              onSuccess: () => {
+                                props.refetch();
+                              },
+                            }
+                          );
+                        },
+                      }
+                    );
+                  }}
                 />
                 <RoundedButton
                   buttonBorderColor='border-blue-light'
                   buttonColor='bg-white'
                   buttonText='Discard'
                   buttonTextColor='text-blue-light'
+                  onClick={() => {
+                    postReq.mutate(
+                      {
+                        endPoint: 'messages/del-msg',
+                        data: {
+                          _id: props.messageId,
+                        },
+                      },
+                      {
+                        onSuccess: () => {
+                          props.refetch();
+                        },
+                      }
+                    );
+                  }}
                 />
               </div>
             )}
@@ -838,31 +882,36 @@ const Message = (props: {
                     'hiiiiii'
                   );
 
-                  postReq.mutate({
-                    endPoint: 'messages/reply',
-                    data: {
+                  postReq.mutate(
+                    {
+                      endPoint: 'messages/reply',
                       data: {
-                        sender_username: senderUsername,
-                        sender_type: senderType,
-                        senderVia: senderVia,
-                        receiver_username: recUsername,
-                        receiver_type: recType,
-                        message: reply,
-                        created_at: new Date(),
-                        deleted_at: null,
-                        unread_flag: false,
-                        isSent: true,
-                        isReply: true,
-                        parent_message_id:
-                          props.parentMessageId || props.messageId,
-                        subject: props.subject,
+                        data: {
+                          sender_username: senderUsername,
+                          sender_type: senderType,
+                          senderVia: senderVia,
+                          receiver_username: recUsername,
+                          receiver_type: recType,
+                          message: reply,
+                          created_at: new Date(),
+                          deleted_at: null,
+                          unread_flag: false,
+                          isSent: true,
+                          isReply: true,
+                          parent_message_id:
+                            props.parentMessageId || props.messageId,
+                          subject: props.subject,
+                        },
                       },
                     },
-                  });
-
-                  setReplyBool(false);
-                  setReply('');
-                  props.refetch();
+                    {
+                      onSuccess: () => {
+                        setReplyBool(false);
+                        setReply('');
+                        props.refetch();
+                      },
+                    }
+                  );
                 }}
                 className='rounded-sm bg-blue-light text-[1rem] px-4 py-1 uppercase'
               >

@@ -6,9 +6,15 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 import SearchDropdown from './SearchDropdown';
 import useSearch from '../../hooks/useSearch';
 
+type RecentSearchType = {
+  title: string;
+  icon?: string;
+};
+
 const SearchBar = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
+  const [recentSearch, setRecentSearch] = useState<RecentSearchType[]>([]);
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -60,6 +66,10 @@ const SearchBar = () => {
                 if (e.key === 'Enter') {
                   setIsFocused(false);
                   setSearch('');
+                  setRecentSearch((prev) => [
+                    { title: search },
+                    ...prev.filter((item) => item.title !== search),
+                  ]);
                   navigate(`/search/?q=${search}&type=link`);
                 }
               }}
@@ -71,6 +81,8 @@ const SearchBar = () => {
           </div>
           <div className='hidden z-50 max-w-[550px] w-full rounded-none rounded-b-xl lg:block'>
             <SearchDropdown
+              recent={recentSearch}
+              setRecent={setRecentSearch}
               setIsFocused={setIsFocused}
               searchQuery={search}
               setSearch={setSearch}
