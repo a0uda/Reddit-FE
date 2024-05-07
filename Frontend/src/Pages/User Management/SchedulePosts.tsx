@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ModSideBar from '../Rules and Removal reasons/ModSidebar';
 import axios from 'axios';
+import Button from '../../Components/Button';
+import RoundedButton from '../../Components/RoundedButton';
 
 // const scheduledpost = [
 //   {
@@ -153,6 +155,7 @@ const formatDate = (dateString) => {
 const SchedulePost = (props: {}) => {
   const { community_name } = useParams();
   const [posts, setPosts] = useState<PostDataType[]>([]);
+  const [submitPost, setSubmitPost] = useState('');
   const fetchPosts = async () => {
     // setIsLoading(true);
     // setIsError(false);
@@ -167,8 +170,29 @@ const SchedulePost = (props: {}) => {
           },
         }
       );
-      setPosts(res.data);
-      console.log(res.data, 'resss');
+      setPosts(res.data.recurring_posts);
+      console.log(res.data.recurring_posts, 'resss');
+    } catch (err) {
+      // setIsError(true);
+      console.error('Error fetching data:', err);
+    } finally {
+      // setIsLoading(false);
+    }
+  };
+  const submitPostRequest = async () => {
+    console.log(submitPost);
+    try {
+      const res = await axios.post(
+        `${process.env.VITE_BASE_URL}communities/submit-scheduled-post/${community_name}`,
+        { post_id: submitPost },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('token'),
+          },
+        }
+      );
+      console.log(submitPost);
     } catch (err) {
       // setIsError(true);
       console.error('Error fetching data:', err);
@@ -180,6 +204,10 @@ const SchedulePost = (props: {}) => {
   useEffect(() => {
     fetchPosts();
   }, []);
+  useEffect(() => {
+    submitPostRequest();
+    fetchPosts();
+  }, [submitPost]);
 
   return (
     <div className='Container'>
@@ -199,14 +227,32 @@ const SchedulePost = (props: {}) => {
           <div className='text-xl'>Scheduled posts</div>
           {posts.map((post) => (
             <div key={post._id} className=''>
-              <div className='border p-4 mt-2'>
-                <div className='text-font text-xs'>
-                  This post is scheduled for{' '}
-                  {formatDate(post.scheduling_details.schedule_date)}
+              <div className='border p-4 mt-2 flex flex-row space-x-2'>
+                <span>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth={1.5}
+                    stroke='currentColor'
+                    className='w-6 h-6 '
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
+                    />
+                  </svg>
+                </span>
+                <div>
+                  <div className='text-font text-xs'>
+                    This post is scheduled for{' '}
+                    {formatDate(post.scheduling_details.schedule_date)}
+                  </div>
+                  <div className=' text-xs'>Scheduled by {post.username}</div>
                 </div>
-                <div className=' text-xs'>Scheduled by {post.username}</div>
               </div>
-              <div className='border flex flex-row space-x-4 p-4'>
+              <div className='border flex flex-row space-x-4 p-4 text-xs'>
                 <div className='flex flex-col ms-4'>
                   <button className='text-gray-500 hover:text-blue-500 focus:outline-none'>
                     <svg
@@ -260,7 +306,14 @@ const SchedulePost = (props: {}) => {
                 <div className='flex flex-col font-bold'>
                   <span>{post.title}</span>
                   <span>{post.community_name}</span>
-                  <span>
+                  <div className='flex flex-row'>
+                    <RoundedButton
+                      buttonText='Submit now'
+                      buttonTextColor='text-gray-800 font-semibold text-[13px] text-xs'
+                      buttonBorderColor='border-white'
+                      buttonColor='bg-inherit hover:bg-gray-200 hover:!opacity-100'
+                      onClick={() => setSubmitPost(post._id)}
+                    />
                     <span>
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
@@ -268,7 +321,7 @@ const SchedulePost = (props: {}) => {
                         viewBox='0 0 24 24'
                         strokeWidth={1.5}
                         stroke='currentColor'
-                        className='w-5 h-5'
+                        className='w-4 h-4 mt-2'
                       >
                         <path
                           strokeLinecap='round'
@@ -277,7 +330,7 @@ const SchedulePost = (props: {}) => {
                         />
                       </svg>
                     </span>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>

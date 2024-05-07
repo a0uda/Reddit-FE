@@ -181,7 +181,7 @@ const NewPost: React.FC = () => {
             ScheduledMinutes
           ) {
             values = {
-              repetition_option: 'None',
+              repetition_option: 'none',
               submit_time: {
                 date: ScheduledDay,
                 hours: ScheduledHour,
