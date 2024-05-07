@@ -48,7 +48,8 @@ const SearchDropdown = ({
     queryKey: ['trending posts', url],
     queryFn: () => fetchRequest('posts/trending'),
     onSuccess: (data) => {
-      setPosts(data.data);
+      console.log('data.data: ', data.data);
+      setPosts(data.data.content);
     },
   });
 
