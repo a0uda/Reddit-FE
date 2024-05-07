@@ -4,27 +4,35 @@ import { postRequest } from '../API/User';
 import { saveToken } from '../utils/tokens_helper';
 
 function LoginWithGoogle(props: { handleOpen: () => void }) {
+  const clientId =
+    '178664293995-s6s92s28mme4eu54lg367sqhnj8bonff.apps.googleusercontent.com';
+
   const googleLogin = useGoogleLogin({
+    clientId: clientId,
     onSuccess: async (tokenResponse) => {
-      console.log('Google login successful', tokenResponse);
+      console.log('Google login successful', tokenResponse.access_token);
       try {
         const response = await postRequest({
           endPoint: 'users/signup-google',
-          data: tokenResponse,
+          data: {
+            access_token: tokenResponse.access_token,
+          },
         });
-        const { token } = response;
-        console.log('token', token);
-        saveToken(token);
-        props.handleOpen();
-        location.reload();
+
+        const token = response.token;
+        console.log('Token:', token);
+
+        if (token) {
+          saveToken(token);
+          props.handleOpen();
+          location.reload();
+        } else {
+          console.log('Token not found in response headers');
+        }
       } catch (error) {
-        console.log('errorrr');
+        console.log('Error:', error);
       }
     },
-    // onError: () => {
-    //   console.error('Google login failed');
-    // },
-    flow: 'auth-code',
   });
 
   return (
