@@ -18,6 +18,7 @@ import OvalButton from './OvalButton';
 import SchedulePostComponent from './schedulePost';
 import * as yup from 'yup';
 import { uploadImageFirebase } from '../../utils/helper_functions';
+import { useAlert } from '../../Providers/AlertProvider';
 
 // type FormSchema =
 //   | 'createPost'
@@ -48,6 +49,7 @@ const NewPost: React.FC = () => {
   const [ScheduledDay, setScheduledDay] = useState<string>('');
   const [ScheduledHour, setScheduledHour] = useState<string>('');
   const [ScheduledMinutes, setScheduledMinutes] = useState<string>('');
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
 
   const [inputArr, setInputArr] = useState([
     {
@@ -143,15 +145,18 @@ const NewPost: React.FC = () => {
 
   const mutateSchedulePost = useMutation(postRequest, {
     onSuccess: () => {
-      navigate(`/${community_name}`);
+      navigate(`/r/${community_name}`);
     },
-    onError: () => {
-      navigate('/${community_name}/submit');
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error);
+      navigate(`/r/${community_name}/submit`);
     },
   });
 
   const handleOnSubmit = (values: object) => {
-    if (community_name) {
+    if (community_name != '') {
       mutateSchedulePost.mutate({
         endPoint: `communities/schedule-post/${community_name}`,
         data: values,
