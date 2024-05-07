@@ -185,7 +185,7 @@ const SearchDropdown = ({
           {users.map((user) => (
             <div
               onClick={() => {
-                navigate(`/u/${user.username}`);
+                navigate(`/u/${user.username}/overview`);
                 setIsFocused(false);
               }}
               key={user._id}

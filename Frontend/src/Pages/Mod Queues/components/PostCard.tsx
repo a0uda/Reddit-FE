@@ -316,9 +316,9 @@ const PostOptions = ({
     );
   };
   const handleHideUnhidePost = () => {
-    patchReq.mutate({
-      endPoint: 'posts/hide-unhide',
-      newSettings: {
+    postReq.mutate({
+      endPoint: 'users/hide-unhide-post',
+      data: {
         id: post._id,
       },
     });

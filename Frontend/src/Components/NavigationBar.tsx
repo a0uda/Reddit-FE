@@ -184,7 +184,7 @@ const AvatarMenu = () => {
         <ListItem
           className='py-2 flex gap-2 items-center'
           onClick={() => {
-            navigate(`/u/${user?.username}/saved`);
+            navigate(`/u/${user?.username}/overview`);
             location.reload();
           }}
         >
