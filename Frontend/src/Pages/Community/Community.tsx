@@ -298,7 +298,8 @@ const Community = () => {
   // console.log(communityName);
   useQuery({
     queryKey: ['postsInCommunityPage', communityName, url],
-    queryFn: () => fetchRequest(`posts/${communityName}/`),
+    queryFn: () =>
+      fetchRequest(`communities/get-visible-posts/${communityName}?sortBy=new`),
     onSuccess: (data) => {
       setCommunityPosts(data.data);
       console.log('the comm posts are', communityPosts);
