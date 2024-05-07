@@ -137,7 +137,7 @@ const postRequest = async ({
       withCredentials: false,
     });
     // console.log(response, response.headers!.get('Authorization'));
-
+    console.log(response, 'reemresponse');
     return {
       ...response.data,
       token: response.headers['authorization'],
@@ -161,4 +161,44 @@ const postRequest = async ({
   }
 };
 
-export { fetchRequest, patchRequest, postRequest };
+const postRequestnew = async ({
+  endPoint,
+  data,
+}: {
+  endPoint: string;
+  data: unknown;
+}) => {
+  try {
+    const response = await axios.post(endPoint, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: localStorage.getItem('token'),
+      },
+      withCredentials: false,
+    });
+    // console.log(response, response.headers!.get('Authorization'));
+    console.log(response, 'reemresponse');
+    return {
+      data: response.data,
+      token: response.headers['authorization'],
+    };
+  } catch (error) {
+    // console.log(error, 'posttt');
+    // const errorMessage =
+    //   typeof error.response === 'object'
+    //     ? JSON.stringify(error.response)
+    //     : error.response;
+    if (error instanceof AxiosError) {
+      const errorMessage =
+        error.response?.data?.err?.message ||
+        error.response?.data?.error?.message ||
+        'Unknown error';
+      return Promise.reject(errorMessage);
+    }
+    // return Promise.reject(error.response.data.err.message);
+
+    // throw new Error(errorMessage);
+  }
+};
+
+export { fetchRequest, patchRequest, postRequest, postRequestnew };
