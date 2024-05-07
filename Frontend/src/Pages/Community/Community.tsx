@@ -539,8 +539,8 @@ const Community = () => {
                     >
                       <IoCloudUploadOutline className='m-50' size={30} />
                       <Typography className='text-gray-700 font-bold text-sm'>
-                        {/* Drag and drop or browse your device */}
-                        Drag and drop your profile image here
+                        Drag and drop or browse your device
+                        {/* Drag and drop your profile image here */}
                       </Typography>
                     </label>
                   </div>
@@ -669,8 +669,8 @@ const Community = () => {
                     >
                       <IoCloudUploadOutline className='m-50' size={30} />
                       <Typography className='text-gray-700 font-bold text-sm'>
-                        {/* Drag and drop or browse your device */}
-                        Drag and drop your banner image here
+                        Drag and drop or browse your device
+                        {/* Drag and drop your banner image here */}
                       </Typography>
                     </label>
                   </div>
@@ -730,7 +730,7 @@ const Community = () => {
                 <div className='relative'>
                   {bannerPicture && bannerPicture !== 'none' && (
                     <Avatar
-                      src={community.banner_picture}
+                      src={bannerPicture}
                       alt='banner image'
                       variant='rounded'
                       className='w-full h-32'
@@ -760,7 +760,7 @@ const Community = () => {
                   )}
                   {profilePicture && profilePicture !== 'none' && (
                     <Avatar
-                      src={community.profile_picture}
+                      src={profilePicture}
                       alt='profile picture'
                       variant='circular'
                       className='absolute hover:z-0 z-10 w-24 h-24 top-20 left-3 border-4 border-white'
