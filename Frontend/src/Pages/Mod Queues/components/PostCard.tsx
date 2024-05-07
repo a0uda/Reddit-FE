@@ -345,7 +345,7 @@ const PostOptions = ({
             Moderation
           </Typography>
           {!post.moderator_details.removed_flag &&
-            !post.moderator_details.reported_flag &&
+            // !post.moderator_details.reported_flag &&
             !post.moderator_details.spammed_flag && (
               <MenuItem
                 className='py-3 flex gap-2 items-center'
@@ -645,17 +645,17 @@ const PostBody = ({ post }: { post: PostType }) => {
     </div>
   );
 };
-const CommentBody = ({ comment }: { comment: CommentType }) => {
-  return (
-    <div>
-      <div>
-        <Typography variant='h5' className='text-gray-500 my-2'>
-          {comment.post_id}
-        </Typography>
-      </div>
-    </div>
-  );
-};
+// const CommentBody = ({ comment }: { comment: CommentType }) => {
+//   return (
+//     <div>
+//       <div>
+//         <Typography variant='h5' className='text-gray-500 my-2'>
+//           {comment.post_id}
+//         </Typography>
+//       </div>
+//     </div>
+//   );
+// };
 const PostFooter = ({
   post,
   isPost,
@@ -788,7 +788,7 @@ const PostFooter = ({
           </RoundedButt>
         )}
         {!post.moderator_details.removed_flag &&
-          !post.moderator_details.reported_flag &&
+          // !post.moderator_details.reported_flag &&
           !post.moderator_details.spammed_flag && (
             <RoundedButt
               onClick={() => {

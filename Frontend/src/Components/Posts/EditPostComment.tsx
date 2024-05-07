@@ -17,7 +17,7 @@ import { AiOutlineOrderedList } from 'react-icons/ai';
 import { useMutation, useQueryClient } from 'react-query';
 import { patchRequest, postRequest } from '../../API/User';
 import { tiptapConfig } from '../../utils/tiptap_config';
-import { PostType } from '../../types/types';
+import { CommentType, PostType } from '../../types/types';
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   const setLink = useCallback(() => {
@@ -205,7 +205,9 @@ const MenuFooter = ({
       },
       {
         onSuccess: () => {
+          
           post.description = content;
+          console.log('hellooooo', content, post.description);
           handleEdit();
         },
       }
@@ -272,7 +274,7 @@ export default function EditPostComment({
   isPost,
   handleEdit,
 }: {
-  post: PostType;
+  post: PostType | CommentType;
   isPost: boolean;
   handleEdit: () => void;
 }) {

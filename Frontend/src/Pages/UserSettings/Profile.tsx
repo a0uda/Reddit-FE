@@ -145,13 +145,13 @@ function Profile() {
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
+    // onError: (error) => {
+    //   const errorObj = JSON.parse(error.message);
 
-      setTrigger(!trigger);
-      setIsError(true);
-      setAlertMessage(errorObj.data);
-    },
+    //   setTrigger(!trigger);
+    //   setIsError(true);
+    //   setAlertMessage(errorObj.data);
+    // },
   });
   // console.log(data);
 
@@ -189,6 +189,12 @@ function Profile() {
     setNameInput('');
     setUsernameInput('');
   }, [enterLinkDetails]);
+
+  React.useEffect(() => {
+    setUsernameInput(
+      socialLinkType == 'facebook' ? 'https://www.facebook.com/' : ''
+    );
+  }, [socialLinkType]);
 
   return (
     <LoadingProvider error={error} isLoading={isLoading}>
