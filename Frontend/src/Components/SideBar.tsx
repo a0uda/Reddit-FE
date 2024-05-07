@@ -21,7 +21,7 @@ import { ReactNode, useState } from 'react';
 import { CommunityIcon } from '../assets/icons/Icons';
 import { cn } from '../utils/helper_functions';
 import { useQuery } from 'react-query';
-import { CommunityOverviewType, CommunityType } from '../types/types';
+import { CommunityOverviewType } from '../types/types';
 import { fetchRequest } from '../API/User';
 import CreateCommunity from '../Pages/Community/CreateCommunity';
 import useSession from '../hooks/auth/useSession';
@@ -80,7 +80,7 @@ const SideBar = ({ className }: { className?: string }) => {
     queryFn: () => fetchRequest(`users/communities/`),
     onSuccess: (data) => {
       setCommunities(
-        data.data?.map((community: CommunityOverviewType) => ({
+        data?.data?.map((community: CommunityOverviewType) => ({
           icon: (
             <>
               {community.profile_picture ? (
@@ -116,7 +116,7 @@ const SideBar = ({ className }: { className?: string }) => {
     queryFn: () => fetchRequest(`users/moderated-communities/`),
     onSuccess: (data) => {
       setModeratedCommunities(
-        data.data?.map((community: CommunityOverviewType) => ({
+        data?.data?.map((community: CommunityOverviewType) => ({
           icon: (
             <>
               {community.profile_picture ? (

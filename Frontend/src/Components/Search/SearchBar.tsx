@@ -43,6 +43,7 @@ const SearchBar = () => {
             className={cn(
               'flex items-center gap-2 px-3 py-2 rounded-full bg-neutral-muted absolute max-w-[550px] w-full'
             )}
+            data-testid='search-bar'
           >
             <HiMagnifyingGlass size={20} className='fill-black' />
             <span className='text-black/80 font-light'>Search Reddit</span>
@@ -56,6 +57,7 @@ const SearchBar = () => {
                 ? ' bg-white border-b-2 border-neutral-muted relative items-start rounded-none rounded-t-xl overflow-y-auto overflow-x-hidden'
                 : ''
             )}
+            data-testid='search-bar-input-container'
           >
             <HiMagnifyingGlass size={20} className='fill-black' />
             <input
@@ -77,6 +79,7 @@ const SearchBar = () => {
               onChange={(e) => setSearch(e.target.value)}
               ref={inputRef}
               onBlur={() => inputRef.current?.focus()}
+              data-testid='search-bar-input'
             />
           </div>
           <div className='hidden z-50 max-w-[550px] w-full rounded-none rounded-b-xl lg:block'>
@@ -88,6 +91,7 @@ const SearchBar = () => {
               setSearch={setSearch}
               communities={communities || []}
               users={users || []}
+              data-testid='search-dropdown'
             />
           </div>
         </MenuList>
