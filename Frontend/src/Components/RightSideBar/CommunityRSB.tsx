@@ -294,7 +294,9 @@ const ModeratorItem = ({
               variant='small'
               className='font-body font-thin -tracking-tight text-sm text-gray-900'
             >
-              u/{name}
+              <Link to={`/u/${name}/overview`} className='hover:underline'>
+                u/{name}
+              </Link>
             </Typography>
           </a>
         </div>

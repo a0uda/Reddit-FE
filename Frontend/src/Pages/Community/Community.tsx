@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import { PlusIcon } from '@heroicons/react/24/solid';
 import { HiEllipsisHorizontal } from 'react-icons/hi2';
 import { addPrefixToUsername } from '../../utils/helper_functions';
+import { uploadImageFirebase } from '../../utils/helper_functions';
 import {
   Avatar,
   Button,
@@ -34,6 +35,8 @@ import { CommunityIcon } from '../../assets/icons/Icons';
 
 const Community = () => {
   const { communityName } = useParams();
+  const postReq = useMutation(postRequest);
+  const patchReq = useMutation(patchRequest);
 
   //================================================ Community Info ======================================================//
 
@@ -95,7 +98,7 @@ const Community = () => {
     {
       onSuccess: () => {
         setIsJoined(false);
-        setIsModerator(false);
+        // setIsModerator(false);
       },
       onError: () => {
         console.log('Error');
@@ -120,7 +123,6 @@ const Community = () => {
       },
     }
   );
-  const patchReq = useMutation(patchRequest);
 
   const handleFavoriteFlag = () => {
     try {
@@ -145,6 +147,10 @@ const Community = () => {
     undefined
   );
 
+  const [imageBlob_profile, setImageBlob_profile] = useState<Blob | undefined>(
+    undefined
+  );
+
   // Function to handle file upload
   const profilePictureHandleFileUpload = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -153,6 +159,7 @@ const Community = () => {
     console.log('eventtttt', event);
     const file = event.target.files?.[0];
     if (file) {
+      setImageBlob_profile(file);
       setUploadedProfile(URL.createObjectURL(file));
     }
   };
@@ -162,29 +169,34 @@ const Community = () => {
     event.preventDefault();
     const file = event.dataTransfer.files?.[0];
     if (file) {
+      setImageBlob_profile(file);
       setUploadedProfile(URL.createObjectURL(file));
     }
   };
 
-  //TODO: post the uploaded profile picture after firebase integration
-  const addProfilePictureMutation = useMutation(
-    (communityName: string) =>
-      postRequest({
-        endPoint: 'communities/add-profile-picture',
-        data: {
-          community_name: communityName,
-          profile_picture: uploadedProfile,
-        },
-      }),
-    {
-      onSuccess: () => {
-        setProfilePicture(uploadedProfile);
-      },
-      onError: () => {
-        console.log('Error');
-      },
+  const handleProfileSave = async () => {
+    if (imageBlob_profile) {
+      try {
+        const imageUrl = await uploadImageFirebase(imageBlob_profile);
+        postReq.mutate(
+          {
+            endPoint: 'communities/add-profile-picture',
+            data: {
+              community_name: communityName,
+              profile_picture: imageUrl,
+            },
+          },
+          {
+            onSuccess: () => {
+              setProfilePicture(imageUrl);
+            },
+          }
+        );
+      } catch (error) {
+        console.error('Error uploading profile image:', error);
+      }
     }
-  );
+  };
 
   const deleteProfilePictureMutation = useMutation(
     (communityName: string) =>
@@ -195,12 +207,15 @@ const Community = () => {
     {
       onSuccess: () => {
         setProfilePicture(undefined);
+        setUploadedProfile(undefined);
       },
       onError: () => {
         console.log('Error');
       },
     }
   );
+  // console.log('profile picturee', profilePicture);
+  // console.log('community profile picture', community?.profile_picture);
 
   //================================================ Banner picture ======================================================//
   const [bannerPicture, setBannerPicture] = useState<string | undefined>(
@@ -211,12 +226,17 @@ const Community = () => {
     undefined
   );
 
+  const [imageBlob_banner, setImageBlob_banner] = useState<Blob | undefined>(
+    undefined
+  );
+
   // Function to handle file upload
   const bannerPictureHandleFileUpload = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (file) {
+      setImageBlob_banner(file);
       setUploadedBanner(URL.createObjectURL(file));
     }
   };
@@ -226,29 +246,35 @@ const Community = () => {
     event.preventDefault();
     const file = event.dataTransfer.files?.[0];
     if (file) {
+      setImageBlob_banner(file);
       setUploadedBanner(URL.createObjectURL(file));
     }
   };
 
-  //TODO: change the uploaded banner picture after firebase integration
-  const addBannerPictureMutation = useMutation(
-    (communityName: string) =>
-      postRequest({
-        endPoint: 'communities/add-banner-picture',
-        data: {
-          community_name: communityName,
-          banner_picture: uploadedBanner,
-        },
-      }),
-    {
-      onSuccess: () => {
-        setBannerPicture(uploadedBanner);
-      },
-      onError: () => {
-        console.log('Error');
-      },
+  const handleBannerSave = async () => {
+    if (imageBlob_banner) {
+      try {
+        const imageUrl = await uploadImageFirebase(imageBlob_banner);
+        postReq.mutate(
+          {
+            endPoint: 'communities/add-banner-picture',
+            data: {
+              community_name: communityName,
+              banner_picture: imageUrl,
+            },
+          },
+          {
+            onSuccess: () => {
+              setBannerPicture(imageUrl);
+              setUploadedBanner(undefined);
+            },
+          }
+        );
+      } catch (error) {
+        console.error('Error uploading banner image:', error);
+      }
     }
-  );
+  };
 
   const deleteBannerPictureMutation = useMutation(
     (communityName: string) =>
@@ -498,13 +524,13 @@ const Community = () => {
               <>
                 {!uploadedProfile && (
                   <div>
-                    {/* <input
+                    <input
                       type='file'
                       accept='image/*'
                       onChange={profilePictureHandleFileUpload}
                       className='hidden'
                       id='upload-button-profile'
-                    /> */}
+                    />
                     <label
                       htmlFor='upload-button-profile'
                       className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
@@ -515,8 +541,8 @@ const Community = () => {
                     >
                       <IoCloudUploadOutline className='m-50' size={30} />
                       <Typography className='text-gray-700 font-bold text-sm'>
-                        {/* Drag and drop or browse your device */}
-                        Drag and drop your profile image here
+                        Drag and drop or browse your device
+                        {/* Drag and drop your profile image here */}
                       </Typography>
                     </label>
                   </div>
@@ -546,9 +572,7 @@ const Community = () => {
                       <Button
                         variant='text'
                         className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
-                        onClick={() => {
-                          addProfilePictureMutation.mutate(communityName ?? '');
-                        }}
+                        onClick={handleProfileSave}
                       >
                         Save
                       </Button>
@@ -628,13 +652,13 @@ const Community = () => {
               <>
                 {!uploadedBanner && (
                   <div>
-                    {/* <input
+                    <input
                       type='file'
                       accept='image/*'
                       onChange={bannerPictureHandleFileUpload}
                       className='hidden'
                       id='upload-button-banner'
-                    /> */}
+                    />
                     <label
                       htmlFor='upload-button-banner'
                       className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
@@ -645,8 +669,8 @@ const Community = () => {
                     >
                       <IoCloudUploadOutline className='m-50' size={30} />
                       <Typography className='text-gray-700 font-bold text-sm'>
-                        {/* Drag and drop or browse your device */}
-                        Drag and drop your banner image here
+                        Drag and drop or browse your device
+                        {/* Drag and drop your banner image here */}
                       </Typography>
                     </label>
                   </div>
@@ -679,9 +703,7 @@ const Community = () => {
                       <Button
                         variant='text'
                         className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
-                        onClick={() => {
-                          addBannerPictureMutation.mutate(communityName ?? '');
-                        }}
+                        onClick={handleBannerSave}
                       >
                         Save
                       </Button>
@@ -706,7 +728,7 @@ const Community = () => {
                 <div className='relative'>
                   {bannerPicture && bannerPicture !== 'none' && (
                     <Avatar
-                      src={community.banner_picture}
+                      src={bannerPicture}
                       alt='banner image'
                       variant='rounded'
                       className='w-full h-32'
@@ -736,7 +758,7 @@ const Community = () => {
                   )}
                   {profilePicture && profilePicture !== 'none' && (
                     <Avatar
-                      src={community.profile_picture}
+                      src={profilePicture}
                       alt='profile picture'
                       variant='circular'
                       className='absolute hover:z-0 z-10 w-24 h-24 top-20 left-3 border-4 border-white'

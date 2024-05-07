@@ -65,7 +65,7 @@ export function RecentPosts() {
                   postId={post._id}
                   postTitle={post.title}
                   postDescription={post.description ?? ''}
-                  postMediaSrc={post.images?.[0]?.link ?? ''} // show the first image only
+                  postMediaSrc={(post.images ?? [])[0]?.path ?? ''} // show the first image only
                   upvotes={post.upvotes_count}
                   comments={post.comments_count}
                   username={post.username ?? ''}
