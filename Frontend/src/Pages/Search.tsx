@@ -111,12 +111,9 @@ const Search = () => {
       <ContentLayout
         header={
           <ContentLayout.Header>
-            <SearchTypes data-testid='search-types' />
+            <SearchTypes />
             {/* Sorting */}
-            <div
-              className='flex items-center gap-2 my-2'
-              data-testid='sort-options-container'
-            >
+            <div className='flex items-center gap-2 my-2'>
               <Typography variant='small' className=' text-xs shrink-0'>
                 Sort By:
               </Typography>
@@ -124,7 +121,6 @@ const Search = () => {
                 sortOptions={sortOptions}
                 sortOption={sortOption}
                 setSortOption={setSortOption}
-                data-testid='sort-options'
               />
               {/* Separator */}
               <div className='border-t-2 border-neutral-muted h-0.5 w-full'></div>
@@ -134,11 +130,7 @@ const Search = () => {
       >
         <ContentLayout.Main>
           {(isError || isLoading) && isFirstRender && (
-            <LoadingProvider
-              error={isError}
-              isLoading={isLoading}
-              data-testid='loading-provider'
-            >
+            <LoadingProvider error={isError} isLoading={isLoading}>
               {' '}
             </LoadingProvider>
           )}
@@ -149,11 +141,7 @@ const Search = () => {
                 <>
                   {/* <MemoProvider> */}
                   {posts.map((post) => (
-                    <div
-                      ref={lastPostElementRef}
-                      key={post._id}
-                      data-testid='post-overview'
-                    >
+                    <div ref={lastPostElementRef} key={post._id}>
                       <PostOverview post={post} />
                       <hr className='border-gray-300' />
                     </div>
@@ -161,10 +149,7 @@ const Search = () => {
                   {/* </MemoProvider> */}
                 </>
               ) : (
-                <div
-                  className='flex justify-center items-center h-96'
-                  data-testid='no-results-found'
-                >
+                <div className='flex justify-center items-center h-96'>
                   <Typography variant='h5' className='text-gray-500'>
                     No results found
                   </Typography>
@@ -174,20 +159,13 @@ const Search = () => {
               type === 'sr' &&
               (communities.length > 0 ? (
                 communities.map((community) => (
-                  <div
-                    ref={lastCommunityElementRef}
-                    key={community.id}
-                    data-testid='community-overview'
-                  >
+                  <div ref={lastCommunityElementRef} key={community.id}>
                     <CommunityOverview community={community} />
                     <hr className='border-gray-300' />
                   </div>
                 ))
               ) : (
-                <div
-                  className='flex justify-center items-center h-96'
-                  data-testid='no-results-found'
-                >
+                <div className='flex justify-center items-center h-96'>
                   <Typography variant='h5' className='text-gray-500'>
                     No results found
                   </Typography>
@@ -197,20 +175,13 @@ const Search = () => {
               type === 'comment' &&
               (comments.length > 0 ? (
                 comments.map((comment) => (
-                  <div
-                    ref={lastCommentElementRef}
-                    key={comment._id}
-                    data-testid='comment-overview'
-                  >
+                  <div ref={lastCommentElementRef} key={comment._id}>
                     <CommentOverview comment={comment} />
                     <hr className='border-gray-300' />
                   </div>
                 ))
               ) : (
-                <div
-                  className='flex justify-center items-center h-96'
-                  data-testid='no-results-found'
-                >
+                <div className='flex justify-center items-center h-96'>
                   <Typography variant='h5' className='text-gray-500'>
                     No results found
                   </Typography>
@@ -220,20 +191,13 @@ const Search = () => {
               type === 'user' &&
               (users.length > 0 ? (
                 users.map((user) => (
-                  <div
-                    ref={lastUserElementRef}
-                    key={user._id}
-                    data-testid='user-overview'
-                  >
+                  <div ref={lastUserElementRef} key={user._id}>
                     <UserOverview user={user} variant='small' />
                     <hr className='border-gray-300' />
                   </div>
                 ))
               ) : (
-                <div
-                  className='flex justify-center items-center h-96'
-                  data-testid='no-results-found'
-                >
+                <div className='flex justify-center items-center h-96'>
                   <Typography variant='h5' className='text-gray-500'>
                     No results found
                   </Typography>
@@ -243,11 +207,7 @@ const Search = () => {
         </ContentLayout.Main>
         <ContentLayout.RightSideBar>
           {type === 'link' && communities && users && (
-            <SearchRSB
-              communities={communities}
-              users={users}
-              data-testid='search-rsb'
-            />
+            <SearchRSB communities={communities} users={users} />
           )}
         </ContentLayout.RightSideBar>
       </ContentLayout>
