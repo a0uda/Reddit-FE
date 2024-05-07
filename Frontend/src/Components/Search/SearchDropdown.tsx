@@ -22,25 +22,21 @@ const SearchDropdown = ({
   searchQuery,
   communities,
   users,
+  recent,
   setIsFocused,
   setSearch,
+  setRecent,
 }: {
   searchQuery: string;
   communities: CommunityOverviewType[];
   users: UserType[];
   setIsFocused: (isFocused: boolean) => void;
   setSearch: (search: string) => void;
+  recent: { title: string; icon?: string }[];
+  setRecent: React.Dispatch<
+    React.SetStateAction<{ title: string; icon?: string }[]>
+  >;
 }) => {
-  const [recent, setRecent] = useState([
-    {
-      title: 'programming',
-      icon: 'https://www.redditstatic.com/avatars/avatar_default_07_24A0ED.png',
-    },
-    {
-      title: 'test',
-    },
-  ]);
-
   const [posts, setPosts] = useState<PostType[] | undefined>();
 
   const url = window.location.href;
@@ -85,7 +81,9 @@ const SearchDropdown = ({
                 <IconButton
                   variant='text'
                   onClick={() =>
-                    setRecent(recent.filter((_, i) => i !== index))
+                    setRecent((prev) =>
+                      prev.filter((_, i) => i !== recent.indexOf(item))
+                    )
                   }
                 >
                   <XCircleIcon className='h-6 w-6' />
