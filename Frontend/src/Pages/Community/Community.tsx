@@ -174,7 +174,7 @@ const Community = () => {
     }
   };
 
-  const handleProfileSave = async (event) => {
+  const handleProfileSave = async () => {
     if (imageBlob_profile) {
       try {
         const imageUrl = await uploadImageFirebase(imageBlob_profile);
@@ -207,6 +207,7 @@ const Community = () => {
     {
       onSuccess: () => {
         setProfilePicture(undefined);
+        setUploadedProfile(undefined);
       },
       onError: () => {
         console.log('Error');
@@ -250,7 +251,7 @@ const Community = () => {
     }
   };
 
-  const handleBannerSave = async (event) => {
+  const handleBannerSave = async () => {
     if (imageBlob_banner) {
       try {
         const imageUrl = await uploadImageFirebase(imageBlob_banner);
@@ -265,6 +266,7 @@ const Community = () => {
           {
             onSuccess: () => {
               setBannerPicture(imageUrl);
+              setUploadedBanner(undefined);
             },
           }
         );
@@ -570,9 +572,7 @@ const Community = () => {
                       <Button
                         variant='text'
                         className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
-                        onClick={(e) => {
-                          handleProfileSave(e);
-                        }}
+                        onClick={handleProfileSave}
                       >
                         Save
                       </Button>
@@ -703,9 +703,7 @@ const Community = () => {
                       <Button
                         variant='text'
                         className='h-10 px-16 font-bold flex items-center gap-1.5 bg-light-blue-900 text-white hover:bg-black'
-                        onClick={(e) => {
-                          handleBannerSave(e);
-                        }}
+                        onClick={handleBannerSave}
                       >
                         Save
                       </Button>
