@@ -28,6 +28,7 @@ import {
 import { useAlert } from './Providers/AlertProvider.tsx';
 import ChatMain from './Pages/Chatting/ChatMain.tsx';
 import { SocketContextProvider } from './Providers/SocketProvider.tsx';
+import SchedulePost from './Pages/User Management/SchedulePosts.tsx';
 
 function App() {
   const { status } = useSession();
@@ -102,7 +103,7 @@ function App() {
                 element={<HandleRoutes element={<User />} />}
               />
               <Route
-                path={'/:prefix?/:communityName?/submit'}
+                path={'/:prefix?/:community_name?/submit'}
                 element={<HandleRoutes element={<CreatePost />} />}
               />
               <Route
@@ -154,6 +155,10 @@ function App() {
               <Route
                 path='/r/:community_name/about/edit/community'
                 element={<HandleRoutes element={<GeneralSettings />} />}
+              />
+              <Route
+                path='/r/:community_name/about/scheduledposts'
+                element={<HandleRoutes element={<SchedulePost />} />}
               />
               <Route
                 path='/r/:community_name/about/edit/posts'

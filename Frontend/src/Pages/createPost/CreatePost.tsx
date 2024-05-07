@@ -18,12 +18,8 @@ import OvalButton from './OvalButton';
 import SchedulePostComponent from './schedulePost';
 import * as yup from 'yup';
 import { uploadImageFirebase } from '../../utils/helper_functions';
+import { useAlert } from '../../Providers/AlertProvider';
 
-// type FormSchema =
-//   | 'createPost'
-//   | 'createPostImageAndVideo'
-//   | 'createPostLink'
-//   | 'createPostPoll';
 type FormSchema = 'image_and_videos' | 'polls' | 'url' | 'text';
 
 interface Image {
@@ -45,8 +41,10 @@ const NewPost: React.FC = () => {
   const [Imageindex, setImageIndex] = useState(0);
   const navigate = useNavigate();
   const { community_name } = useParams();
-  const [setScheduledDate] = useState<string>('');
-  const [setScheduledTime] = useState<string>('');
+  const [ScheduledDay, setScheduledDay] = useState<string>('');
+  const [ScheduledHour, setScheduledHour] = useState<string>('');
+  const [ScheduledMinutes, setScheduledMinutes] = useState<string>('');
+  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
 
   const [inputArr, setInputArr] = useState([
     {
@@ -140,11 +138,30 @@ const NewPost: React.FC = () => {
     },
   });
 
+  const mutateSchedulePost = useMutation(postRequest, {
+    onSuccess: () => {
+      navigate(`/r/${community_name}/about/scheduledposts`);
+    },
+    onError: (error) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error);
+      navigate(`/r/${community_name}/submit`);
+    },
+  });
+
   const handleOnSubmit = (values: object) => {
-    mutation.mutate({
-      endPoint: 'posts/new-post',
-      data: values,
-    });
+    if (community_name != '') {
+      mutateSchedulePost.mutate({
+        endPoint: `communities/schedule-post/${community_name}`,
+        data: values,
+      });
+    } else {
+      mutation.mutate({
+        endPoint: 'posts/new-post',
+        data: values,
+      });
+    }
   };
 
   const handleImages = async (values: object) => {
@@ -173,8 +190,27 @@ const NewPost: React.FC = () => {
           if (values.type == 'image_and_videos') {
             await handleImages(values);
           }
+          if (
+            community_name &&
+            ScheduledDay &&
+            ScheduledHour &&
+            ScheduledMinutes
+          ) {
+            values = {
+              repetition_option: 'none',
+              submit_time: {
+                date: ScheduledDay,
+                hours: ScheduledHour,
+                minutes: ScheduledMinutes,
+              },
+              postInput: {
+                ...values,
+              },
+            };
+          }
           handleOnSubmit(values);
           setTimeout(() => {
+            console.log(JSON.stringify(values));
             // alert(JSON.stringify(values));
             setSubmitting(true);
             resetForm();
@@ -382,8 +418,9 @@ const NewPost: React.FC = () => {
               <SchedulePostComponent
                 handleOpen={() => setHandleOpenSchedule(!HandleOpenSchedule)}
                 open={HandleOpenSchedule}
-                setScheduledDate={() => setScheduledDate}
-                setScheduledTime={() => setScheduledTime}
+                setScheduledDate={setScheduledDay}
+                setScheduledHour={setScheduledHour}
+                setScheduledMinutes={setScheduledMinutes}
               />
 
               <DiscardPost

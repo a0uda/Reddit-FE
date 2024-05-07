@@ -7,7 +7,7 @@ interface Image {
   path: string;
   caption: string;
   link: string;
-  file: File;
+  // file: File;
 }
 type ImageUploadProps = {
   setFieldValue: (
@@ -51,13 +51,20 @@ export default function ImageUpload({
           path: imageUrl,
           caption: '',
           link: '',
-          file: file,
         });
         setIndex((prevIndex) => prevIndex + 1);
       });
 
       setImages([...images, ...newImages]);
       setFieldValue('images', [
+        ...images,
+        ...newImages.map(({ path, caption, link }) => ({
+          path,
+          caption,
+          link,
+        })),
+      ]);
+      console.log('aloooo000000000000000000000000000000000000000000', [
         ...images,
         ...newImages.map(({ path, caption, link }) => ({
           path,
