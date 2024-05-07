@@ -141,11 +141,27 @@ const NewPost: React.FC = () => {
     },
   });
 
+  const mutateSchedulePost = useMutation(postRequest, {
+    onSuccess: () => {
+      navigate(`/${community_name}`);
+    },
+    onError: () => {
+      navigate('/${community_name}/submit');
+    },
+  });
+
   const handleOnSubmit = (values: object) => {
-    mutation.mutate({
-      endPoint: 'posts/new-post',
-      data: values,
-    });
+    if (community_name) {
+      mutateSchedulePost.mutate({
+        endPoint: `communities/schedule-post/${community_name}`,
+        data: values,
+      });
+    } else {
+      mutation.mutate({
+        endPoint: 'posts/new-post',
+        data: values,
+      });
+    }
   };
 
   const handleImages = async (values: object) => {
@@ -194,6 +210,7 @@ const NewPost: React.FC = () => {
           }
           handleOnSubmit(values);
           setTimeout(() => {
+            console.log(JSON.stringify(values));
             alert(JSON.stringify(values));
             setSubmitting(true);
             resetForm();

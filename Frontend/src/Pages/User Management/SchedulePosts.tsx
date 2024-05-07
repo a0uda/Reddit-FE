@@ -170,8 +170,8 @@ const SchedulePost = (props: {}) => {
           },
         }
       );
-      setPosts(res.data.recurring_posts);
-      console.log(res.data.recurring_posts, 'resss');
+      setPosts(res.data.non_recurring_posts);
+      console.log(res.data.non_recurring_posts, 'resss');
     } catch (err) {
       // setIsError(true);
       console.error('Error fetching data:', err);
