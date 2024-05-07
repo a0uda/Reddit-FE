@@ -1635,7 +1635,13 @@ let postsListings = [
     deleted: false,
     type: "polls",
     link_url: null,
-    images: [],
+    images: [
+      {
+        path: "https://images.pexels.com/photos/14616449/pexels-photo-14616449.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        link: "https://images.pexels.com/photos/14616449/pexels-photo-14616449.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        caption: "Image 1",
+      },
+    ],
     videos: [],
     polls: [
       { options: "Option 1", votes: 10 },
@@ -3484,12 +3490,11 @@ app.post("/posts-or-comments/delete", (req, res) => {
   res.sendStatus(200);
 });
 
-let i = 0;
 app.get("/search/:type", (req, res) => {
   const { type } = req.params;
   const { query, sort, page, pageSize } = req.query;
-  console.log(query, type, sort, pageSize, i);
-  i++;
+  // console.log(query, type, sort, pageSize, i);
+
   let pageIndex = page ?? 0;
   let page_size = pageSize ?? 10;
 

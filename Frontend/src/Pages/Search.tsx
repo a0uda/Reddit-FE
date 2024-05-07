@@ -52,7 +52,7 @@ const Search = () => {
   const [comments, setComments] = useState<SearchCommentType[]>([]);
   const [users, setUsers] = useState<UserType[]>([]);
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const pageSize = 10;
   const [noMoreData, setNoMoreData] = useState(false);
   const url = window.location.href;
