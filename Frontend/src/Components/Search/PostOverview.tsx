@@ -36,12 +36,13 @@ const PostOverview = ({ post }: { post: PostType }) => {
               className='flex flex-row items-center justify-between gap-2 m-0 bg-inherit'
             >
               <div className='flex flex-row items-center justify-between gap-1 m-0'>
-                {post.username && <UserBadge username={post.username} />}
-                {post.community_name && (
+                {post.community_name ? (
                   <CommunityBadge
                     name={post.community_name ?? ''}
                     username={post.username}
                   />
+                ) : (
+                  <UserBadge username={post.username} />
                 )}
                 <span className='relative -top-0.5'>•</span>
                 <Typography variant='small' className='text-xs'>
