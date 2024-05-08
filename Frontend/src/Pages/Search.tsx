@@ -37,27 +37,18 @@ const Search = () => {
     setSortOption(sortOptions[0]);
   }
 
-  const isFirstRender = useRef(true);
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    navigate(`/search/?q=${q}&type=${type}&sort=${sortOption.toLowerCase()}`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortOption]);
-
   const [posts, setPosts] = useState<PostType[]>([]);
   const [communities, setCommunities] = useState<CommunityOverviewType[]>([]);
   const [comments, setComments] = useState<SearchCommentType[]>([]);
   const [users, setUsers] = useState<UserType[]>([]);
 
-  const [page, setPage] = useState(1);
+  const firstPage = 1;
+  const [page, setPage] = useState(firstPage);
   const pageSize = 10;
   const [noMoreData, setNoMoreData] = useState(false);
   const url = window.location.href;
   const { isLoading, isError } = useQuery({
-    queryKey: ['search results', q, type, sortOption, page, pageSize, url],
+    queryKey: ['search results', q, type, page, pageSize, url],
     queryFn: async () => {
       const res = await axios.get(
         `/search/${type === 'link' ? 'posts' : type === 'sr' ? 'communities' : type === 'comment' ? 'comments' : 'people'}?query=${q}&page=${page}&pageSize=${pageSize}`
@@ -105,6 +96,18 @@ const Search = () => {
     },
     enabled: type === 'link', // only run the query if type is 'link'
   });
+
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    navigate(`/search/?q=${q}&type=${type}&sort=${sortOption.toLowerCase()}`);
+    setPage(firstPage);
+    setPosts([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortOption, url]);
 
   return (
     <>
