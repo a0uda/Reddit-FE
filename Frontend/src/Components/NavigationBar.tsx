@@ -327,7 +327,7 @@ const NotificationMenu = () => {
   // console.log(data);
   // const [notifications, setNotifications] = useState(data?.data ?? []);
   const url = window.location.href;
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['notifications data in notifications menu', url],
     queryFn: async () => await fetchRequest(`notifications`),
     onSuccess: (data) => {
