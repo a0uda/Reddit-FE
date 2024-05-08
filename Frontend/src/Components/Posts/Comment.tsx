@@ -128,7 +128,7 @@ const Comment = ({
         >
           <div className='flex items-center justify-between gap-1 m-0'>
             <Link
-              to={`/u/${author?.username || comment.username}`}
+              to={`/u/${author?.username || comment.username}/overview`}
               className='flex flex-row items-center gap-2 m-0'
             >
               <Avatar
