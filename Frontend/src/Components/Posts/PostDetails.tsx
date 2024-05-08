@@ -126,7 +126,6 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                   __html: post.description || '',
                 }}
               >
-                <></>
                 {/* {post.description} */}
               </Typography>
               {post.images && post.images.length > 1 && (

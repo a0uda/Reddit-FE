@@ -84,7 +84,11 @@ function RoundedButt(props: {
   );
 }
 
-const AddRemovalModal = (props: { handleOpen: () => void; open: boolean }) => {
+const AddRemovalModal = (props: {
+  handleOpen: () => void;
+  open: boolean;
+  post: PostType;
+}) => {
   const [reason, setReason] = useState('');
   const [reasonMessage, setReasonMessage] = useState<string>('');
   const [modNote, setModNote] = useState<string>('');
@@ -213,10 +217,18 @@ const AddRemovalModal = (props: { handleOpen: () => void; open: boolean }) => {
               buttonTextColor='text-white'
               disabled={!reason}
               onClick={(e) => {
-                // postReq.mutate({
-                //   endPoint: 'users/disconnect-google',
-                //   data: { password: pwd },
-                // }); not implemented
+                postReq.mutate({
+                  endPoint: `object-item/${community_name}`,
+                  data: {
+                    item_id: props.post.post_id || props.post._id,
+                    item_type:
+                      props.post.post_in_community_flag != undefined
+                        ? 'post'
+                        : 'comment',
+                    objection_type: 'reported',
+                    objection_type_value: reason,
+                  },
+                }); //not implemented
                 e.stopPropagation();
 
                 setModNote('');
@@ -241,7 +253,7 @@ const PostOptions = ({
   post: PostType;
   isPost: boolean;
   handleModOps: (
-    option: 'approve' | 'remove' | 'spam' | 'report',
+    option: 'approve' | 'remove' | 'spammed' | 'reported',
     type: 'post' | 'comment'
   ) => void;
   setRepModal: (rep: boolean) => void;
@@ -254,7 +266,7 @@ const PostOptions = ({
 
   const handleSharePost = () => {
     navigator.clipboard.writeText(
-      `${window.location.origin}/r/${post.community_name}/comments/${post._id}/${post.title}/`
+      `${window.location.origin}/r/${post.community_name}/comments/${post.post_in_community_flag ? post._id : post.post_id}/${post.title || post.post_title}/`
     );
     setAlertMessage('Link is copied successfuly!');
     setIsError(false);
@@ -353,7 +365,7 @@ const PostOptions = ({
                   e.stopPropagation();
 
                   handleModOps(
-                    'spam',
+                    'spammed',
                     post.post_in_community_flag == undefined
                       ? 'comment'
                       : 'post'
@@ -611,7 +623,7 @@ const PostBody = ({ post }: { post: PostType }) => {
           variant='h5'
           className='text-gray-500 my-2 flex items-center gap-2'
         >
-          {post.title}
+          {post.title || post.post_title}
           {post.spoiler_flag && (
             <span className='border-[1px] border-gray-600 rounded-sm py-[1px] px-[2px] text-sm  '>
               spoiler
@@ -624,6 +636,9 @@ const PostBody = ({ post }: { post: PostType }) => {
           )}
         </Typography>
         {post.type == 'text' && post.description && (
+          <Typography className='text-black'>{post.description}</Typography>
+        )}
+        {post.post_in_community_flag == undefined && post.description && (
           <Typography className='text-black'>{post.description}</Typography>
         )}
         {post.type == 'url' && post.link_url && (
@@ -674,8 +689,8 @@ const PostFooter = ({
 
   const handleModOps = (
     option: 'approve' | 'remove' | 'spammed' | 'reported',
-    type: 'post' | 'comment',
-    page: 'edited' | 'removed' | 'unmoderated'
+    type: 'post' | 'comment'
+    // page: 'edited' | 'removed' | 'unmoderated'
   ) => {
     if (option == 'approve' || option == 'remove') {
       postReq.mutate(
@@ -692,31 +707,17 @@ const PostFooter = ({
             if (option == 'approve') {
               post.moderator_details.approved_flag = true;
               post.moderator_details.approved_by = user?.username;
-              post.moderator_details.approved_date = new Date();
+              post.moderator_details.approved_date = new Date().toISOString();
               post.moderator_details.removed_flag = false;
               post.moderator_details.spammed_flag = false;
               post.moderator_details.reported_flag = false;
             } else if (option == 'remove') {
               post.moderator_details.removed_flag = true;
               post.moderator_details.removed_by = user?.username;
-              post.moderator_details.removed_date = new Date();
+              post.moderator_details.removed_date = new Date().toISOString();
               post.moderator_details.approved_flag = false;
               // post.moderator_details.spammed_flag = false;
               // post.moderator_details.reported_flag = false;
-            } else if (option == 'report') {
-              post.moderator_details.reported_flag = true;
-              post.moderator_details.reported_by = user?.username;
-              // post.moderator_details.r = new Date();
-              post.moderator_details.removed_flag = true;
-              post.moderator_details.spammed_flag = false;
-              post.moderator_details.approved_flag = false;
-            } else {
-              post.moderator_details.spammed_flag = true;
-              post.moderator_details.spammed_by = user?.username;
-              // post.moderator_details.r = new Date();
-              post.moderator_details.removed_flag = true;
-              post.moderator_details.reported_flag = false;
-              post.moderator_details.approved_flag = false;
             }
           },
         }
@@ -728,7 +729,7 @@ const PostFooter = ({
           data: {
             item_id: post._id,
             item_type: type,
-            action: option,
+            objection_type: option,
           },
         },
         {
@@ -737,14 +738,14 @@ const PostFooter = ({
               post.moderator_details.reported_flag = true;
               post.moderator_details.reported_by = user?.username;
               // post.moderator_details.r = new Date();
-              post.moderator_details.removed_flag = true;
+              post.moderator_details.removed_flag = false;
               post.moderator_details.spammed_flag = false;
               post.moderator_details.approved_flag = false;
             } else {
               post.moderator_details.spammed_flag = true;
               post.moderator_details.spammed_by = user?.username;
-              // post.moderator_details.r = new Date();
-              post.moderator_details.removed_flag = true;
+              post.moderator_details.spammed_date = new Date().toISOString();
+              post.moderator_details.removed_flag = false;
               post.moderator_details.reported_flag = false;
               post.moderator_details.approved_flag = false;
             }
@@ -794,10 +795,25 @@ const PostFooter = ({
                   '',
                 'user'
               )}
-            </Link>
-
+            </Link>{' '}
+            {post.moderator_details.approved_flag &&
+              getTimeDifferenceAsString(
+                new Date(post.moderator_details.approved_date || '')
+              )}
+            {post.moderator_details.removed_flag &&
+              getTimeDifferenceAsString(
+                new Date(post.moderator_details.removed_date || '')
+              )}
+            {post.moderator_details.spammed_flag &&
+              getTimeDifferenceAsString(
+                new Date(post.moderator_details.spammed_date || '')
+              )}
+            {/* {post.moderator_details.spammed_flag && ' as spam'}
             {' ' +
-              getTimeDifferenceAsString(post.moderator_details.removed_date)}
+              getTimeDifferenceAsString(
+                post.moderator_details.spammed_date ||
+                  post.moderator_details.removed_date
+              )} */}
           </Typography>
         </div>
       )}
@@ -884,7 +900,9 @@ const PostCard = ({ post, page }: { post: PostType; page: string }) => {
       <div
         className='border-[1px] border-gray-500 rounded-md py-2 px-3 flex cursor-pointer hover:border-black'
         onClick={() => {
-          navigate(`/r/${post.community_name}/${post._id}/${post.title}`);
+          navigate(
+            `/r/${post.community_name}/comments/${post.post_id || post._id}/${post.title || post.post_title}`
+          );
         }}
       >
         <div className='flex gap-4 w-full'>

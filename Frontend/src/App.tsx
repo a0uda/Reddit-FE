@@ -55,16 +55,16 @@ function App() {
       queries: {
         refetchOnWindowFocus: false,
         refetchOnMount: false,
-        // onError: (error) => {
-        //   // const errorObj = JSON.parse(error);
-        //   // console.log(errorObj.Error.data, 'hiiiii');
-        //   console.log('hiiii query');
+        onError: (error) => {
+          // const errorObj = JSON.parse(error);
+          // console.log(errorObj.Error.data, 'hiiiii');
+          console.log('hiiii query');
 
-        //   setAlertMessage(error);
-        //   setIsError(true);
-        //   setTrigger(!trigger);
-        //   console.log(error);
-        // },
+          setAlertMessage(error);
+          setIsError(true);
+          setTrigger(!trigger);
+          console.log(error);
+        },
       },
       mutations: {
         onError: (error) => {

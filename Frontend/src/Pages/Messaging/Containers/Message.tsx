@@ -645,29 +645,17 @@ const Message = (props: {
                   buttonText='Accept'
                   buttonTextColor='text-white'
                   onClick={() => {
-                    postReq.mutate(
-                      {
-                        endPoint: 'communities/accept-moderator-invitation',
-                        data: { _id: props.messageId },
+                    postReq.mutate({
+                      endPoint: 'communities/accept-moderator-invitation',
+                      data: { _id: props.messageId },
+                    });
+                    postReq.mutate({
+                      endPoint: 'messages/del-msg',
+                      data: {
+                        _id: props.messageId,
                       },
-                      {
-                        onSuccess: () => {
-                          postReq.mutate(
-                            {
-                              endPoint: 'messages/del-msg',
-                              data: {
-                                _id: props.messageId,
-                              },
-                            },
-                            {
-                              onSuccess: () => {
-                                props.refetch();
-                              },
-                            }
-                          );
-                        },
-                      }
-                    );
+                    });
+                    props.refetch();
                   }}
                 />
                 <RoundedButton

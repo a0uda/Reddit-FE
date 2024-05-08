@@ -145,6 +145,7 @@ export type PostType = {
     removed_removal_reason?: string; // Reason for removal
     spammed_flag: boolean; // Flag if spammed
     spammed_by?: string; // Reference to the User who spammed
+    spammed_date?: string; // Reference to the User who spammed
     spammed_type?: string; // Type of spam
     spammed_removal_reason?: string; // Reason for spam removal
     reported_flag: boolean; // Flag if reported
