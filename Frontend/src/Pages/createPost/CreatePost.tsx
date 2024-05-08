@@ -19,6 +19,8 @@ import SchedulePostComponent from './schedulePost';
 import * as yup from 'yup';
 import { uploadImageFirebase } from '../../utils/helper_functions';
 import { useAlert } from '../../Providers/AlertProvider';
+import axios from 'axios';
+import useSession from '../../hooks/auth/useSession';
 
 type FormSchema = 'image_and_videos' | 'polls' | 'url' | 'text';
 
@@ -30,6 +32,7 @@ interface Image {
 }
 
 const NewPost: React.FC = () => {
+  const { user } = useSession();
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
   const [formType, setFormType] = useState<FormSchema>('text');
   const [HandleOpen, setHandleOpen] = useState(false);
@@ -45,6 +48,7 @@ const NewPost: React.FC = () => {
   const [ScheduledHour, setScheduledHour] = useState<string>('');
   const [ScheduledMinutes, setScheduledMinutes] = useState<string>('');
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+  const [isMod, setIsMod] = useState(false);
 
   const [inputArr, setInputArr] = useState([
     {
@@ -151,7 +155,7 @@ const NewPost: React.FC = () => {
   });
 
   const handleOnSubmit = (values: object) => {
-    if (community_name != '') {
+    if (isMod && ScheduledDay && ScheduledHour && ScheduledMinutes) {
       mutateSchedulePost.mutate({
         endPoint: `communities/schedule-post/${community_name}`,
         data: values,
@@ -178,6 +182,53 @@ const NewPost: React.FC = () => {
       }
     }
   };
+  const fetchMod = async () => {
+    try {
+      if (community_name) {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(
+          `${process.env.VITE_BASE_URL}communities/about/moderators/${community_name}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: token,
+            },
+            params: {
+              community_name: community_name,
+            },
+          }
+        );
+        console.log(
+          'llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll',
+          response.data
+        );
+        const exists = response.data.some(
+          (moderator) => moderator.username === user.username
+        );
+
+        setIsMod(exists);
+        console.log(
+          'oooooooooooooooooooooooooooooooooooooooooooooo',
+          isMod,
+          exists,
+          user.username
+        );
+        setIsMod(exists);
+      }
+    } catch (error) {
+      console.error(
+        'Errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr:',
+        error
+      );
+    }
+  };
+  useEffect(() => {
+    // console.log('moddddddddddddddddder', community_name);
+    if (community_name != '') {
+      console.log('moddddddddddddddddder', community_name, user);
+      fetchMod();
+    }
+  }, [user]);
 
   return (
     <Formik
@@ -190,12 +241,7 @@ const NewPost: React.FC = () => {
           if (values.type == 'image_and_videos') {
             await handleImages(values);
           }
-          if (
-            community_name &&
-            ScheduledDay &&
-            ScheduledHour &&
-            ScheduledMinutes
-          ) {
+          if (isMod && ScheduledDay && ScheduledHour && ScheduledMinutes) {
             values = {
               repetition_option: 'none',
               submit_time: {
@@ -211,7 +257,7 @@ const NewPost: React.FC = () => {
           handleOnSubmit(values);
           setTimeout(() => {
             console.log(JSON.stringify(values));
-            // alert(JSON.stringify(values));
+            alert(JSON.stringify(values));
             setSubmitting(true);
             resetForm();
             setOC(false);
@@ -338,7 +384,7 @@ const NewPost: React.FC = () => {
                   }}
                 />
 
-                {community_name ? (
+                {isMod ? (
                   <>
                     <OvalButton
                       buttonBorderColor='red'
