@@ -27,13 +27,13 @@ import CreateCommunity from '../Pages/Community/CreateCommunity';
 import useSession from '../hooks/auth/useSession';
 
 const SideBar = ({ className }: { className?: string }) => {
-  const moderation = [
-    {
-      title: 'r/Mod',
-      icon: <ShieldCheckIcon className='h-5 w-5' />,
-      link: '/r/Mod',
-    },
-  ];
+  // const moderation = [
+  //   {
+  //     title: 'r/Mod',
+  //     icon: <ShieldCheckIcon className='h-5 w-5' />,
+  //     link: '/r/Mod',
+  //   },
+  // ];
   const { status } = useSession();
   // BE
   // const recent = [
@@ -156,12 +156,16 @@ const SideBar = ({ className }: { className?: string }) => {
             title='Home'
             link='/'
           />
-          <hr className='my-2 border-blue-gray-50' />
-          <AccordionDropDown
-            title='Moderation'
-            list={moderation}
-            fetchedList={moderatedCommunities || []}
-          />
+          {moderatedCommunities && moderatedCommunities?.length > 0 && (
+            <>
+              <hr className='my-2 border-blue-gray-50' />
+              <AccordionDropDown
+                title='Moderation'
+                list={[]}
+                fetchedList={moderatedCommunities || []}
+              />
+            </>
+          )}
           {/* <hr className='my-2 border-blue-gray-50' />
           <AccordionDropDown title='Recent' list={recent} /> */}
           {status == 'authenticated' && (
@@ -196,7 +200,12 @@ const SideBar = ({ className }: { className?: string }) => {
             }}
           />
           <hr className='my-2 border-blue-gray-50' />
-          <AccordionDropDown title='Create Post' list={createPost} />
+          <ListItemComponent
+            title='Create Post'
+            icon={<DocumentTextIcon className='h-5 w-5' />}
+            link='/submit'
+          />
+          {/* <AccordionDropDown title='Create Post' list={createPost} /> */}
           <hr className='my-2 border-blue-gray-50' />
         </List>
       </div>

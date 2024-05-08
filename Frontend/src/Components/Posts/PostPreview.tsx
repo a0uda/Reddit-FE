@@ -533,6 +533,9 @@ const PostPreview = ({
         `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
       );
     },
+    onError: (error) => {
+      console.log(error);
+    },
   });
 
   const postReq = useMutation(postRequest);

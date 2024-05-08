@@ -17,12 +17,18 @@ const Sent = () => {
   // replyContent: string;
   // replyId: string;
 
+  const sortedReplies = data?.data.replies.sort((a, b) => {
+    const dateA = new Date(a['created_at']);
+    const dateB = new Date(b['created_at']);
+    return dateB - dateA; // descending order
+  });
+
   return (
     <LoadingProvider error={isError} isLoading={isLoading}>
       <ContentContainer length={data?.data.replies.length}>
         <div className=''>
-          {!!data?.data.replies &&
-            data?.data.replies.map((reply, i) => (
+          {sortedReplies &&
+            sortedReplies.map((reply, i) => (
               <PostReply
                 createDate={reply['created_at']}
                 senderUsername={reply['senderUsername']}

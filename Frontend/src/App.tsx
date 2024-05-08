@@ -116,42 +116,58 @@ function App() {
               />
               <Route
                 path='/r/:community_name/about/unmoderated'
-                element={<Main page='unmoderated' />}
+                element={<HandleRoutes element={<Main page='unmoderated' />} />}
               />
               <Route
                 path='/r/:community_name/about/edited'
-                element={<Main page='edited' />}
+                element={<HandleRoutes element={<Main page='edited' />} />}
               />
               <Route
                 path='/r/:community_name/about/spam'
-                element={<Main page='removed' />}
+                element={<HandleRoutes element={<Main page='removed' />} />}
               />
               <Route
                 path='/r/:community_name/about/contributors'
-                element={<UserManagement page='approved' />}
+                element={
+                  <HandleRoutes element={<UserManagement page='approved' />} />
+                }
               />
               <Route
                 path='/r/:community_name/about/moderators'
-                element={<UserManagement page='moderators' />}
+                element={
+                  <HandleRoutes
+                    element={<UserManagement page='moderators' />}
+                  />
+                }
               />
               <Route
                 path='/r/:community_name/about/banned'
-                element={<UserManagement page='banned' />}
+                element={
+                  <HandleRoutes element={<UserManagement page='banned' />} />
+                }
               />
               <Route
                 path='/r/:community_name/about/muted'
-                element={<UserManagement page='muted' />}
+                element={
+                  <HandleRoutes element={<UserManagement page='muted' />} />
+                }
               />
               <Route
                 path='/r/:community_name/about/rules/*'
                 element={<HandleRoutes element={<RuleRemoval />} />}
               />
-              <Route path='/search/*' element={<Search />} />
+              <Route
+                path='/search/*'
+                element={<HandleRoutes element={<Search />} />}
+              />
               <Route
                 path='/chat/u/:username'
-                element={<ChatMain page='chat' />}
+                element={<HandleRoutes element={<ChatMain page='chat' />} />}
               />
-              <Route path='/chat/create' element={<ChatMain page='create' />} />
+              <Route
+                path='/chat/create'
+                element={<HandleRoutes element={<ChatMain page='create' />} />}
+              />
               <Route
                 path='/r/:community_name/about/edit/community'
                 element={<HandleRoutes element={<GeneralSettings />} />}

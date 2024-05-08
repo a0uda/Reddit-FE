@@ -39,13 +39,18 @@ const Messages = () => {
   //   .filter((message) => message.parentMessageId === null)
   //   .map((message) => message._id);
   // console.log(, 'loading');
+  const sortedMessages = response.data?.data.messages.sort((a, b) => {
+    const dateA = new Date(a['created_at']);
+    const dateB = new Date(b['created_at']);
+    return dateB - dateA; // descending order
+  });
 
   return (
     <LoadingProvider error={response.isError} isLoading={response.isLoading}>
       <ContentContainer length={response.data?.data.messages.length}>
         <div className=''>
-          {!!response.data?.data.messages &&
-            response.data?.data.messages.map((mess) => {
+          {!!sortedMessages &&
+            sortedMessages.map((mess) => {
               console.log(parentChildrenMap, 'messs');
 
               if (mess.parentMessageId == null) {

@@ -55,6 +55,9 @@ const Community = () => {
       // // todo:set the banner
       // console.log('the comm', community);
     },
+    onError: () => {
+      console.error('Error occurred while fetching community data');
+    },
   });
 
   //================================================ Community Actions ======================================================//
