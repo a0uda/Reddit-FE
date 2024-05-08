@@ -33,7 +33,7 @@ const Notifications = () => {
   //   }
   // );
   const url = window.location.href;
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['notifications data in notifications page', url],
     queryFn: async () => await fetchRequest(`notifications`),
     onSuccess: (data) => {
