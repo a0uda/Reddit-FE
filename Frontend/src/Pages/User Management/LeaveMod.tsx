@@ -41,7 +41,7 @@ export default function LeaveMod(props: LeaveFormProps): JSX.Element {
 
   const handleOnSubmit = (values: valueDataType) => {
     mutation.mutate({
-      endPoint: `communities/moderator-leave/${user}`,
+      endPoint: `communities/moderator-leave/`,
       data: values,
     });
   };

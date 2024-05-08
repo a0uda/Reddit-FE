@@ -71,7 +71,10 @@ const UserRow = ({
           <div className='flex justify-between items-center w-[600px]'>
             <div className='flex gap-1 items-center'>
               <img
-                src={user.profile_picture}
+                src={
+                  user.profile_picture ||
+                  'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+                }
                 alt='prof'
                 className='w-12 h-12 rounded-md'
               />
@@ -171,8 +174,9 @@ const Moderators = () => {
   const { community_name } = useParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedData, setSelectedData] = useState<ModeratorUser[]>([]);
+  const url = window.location.href;
   const allModRes = useQuery(
-    'getModerators',
+    ['getModerators', url],
     () => fetchRequest(`communities/about/moderators/${community_name}`),
     {
       onSuccess: (data) => {
