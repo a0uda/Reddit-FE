@@ -74,9 +74,9 @@ const SideBar = ({ className }: { className?: string }) => {
   const [communities, setCommunities] = useState<ListItemProps[] | undefined>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-  // const url = window.location.href;
+  const url = window.location.href;
   useQuery({
-    queryKey: ['communities'],
+    queryKey: ['communities', url],
     queryFn: () => fetchRequest(`users/communities/`),
     onSuccess: (data) => {
       setCommunities(
@@ -112,7 +112,7 @@ const SideBar = ({ className }: { className?: string }) => {
     ListItemProps[] | undefined
   >();
   useQuery({
-    queryKey: ['moderatedCommunities'],
+    queryKey: ['moderatedCommunities', url],
     queryFn: () => fetchRequest(`users/moderated-communities/`),
     onSuccess: (data) => {
       setModeratedCommunities(
