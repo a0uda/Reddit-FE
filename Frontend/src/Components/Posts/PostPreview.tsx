@@ -372,7 +372,7 @@ const PostPreview = ({
               // members={community?.members_count}
               // description={community?.description}
             /> */}
-                {community && (
+                {community && page !== 'community' && (
                   <CommunityBadge
                     name={post.community_name ?? ''}
                     joined={community?.joined_flag}
@@ -386,7 +386,9 @@ const PostPreview = ({
                     // page='home'
                   />
                 )}
-                {!community && <UserBadge username={post.username} />}
+                {(!community || page === 'community') && (
+                  <UserBadge username={post.username} />
+                )}
                 <span className='relative -top-0.5'>•</span>
                 <Typography variant='small' className=''>
                   {dateDuration(new Date(post.created_at))}
