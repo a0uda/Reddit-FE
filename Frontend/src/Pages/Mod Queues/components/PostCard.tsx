@@ -874,6 +874,7 @@ const PostCard = ({ post, page }: { post: PostType; page: string }) => {
         handleOpen={() => {
           setRemModal(!remModal);
         }}
+        post={post}
       />
       <ReportModal
         handleOpen={() => {
@@ -885,7 +886,7 @@ const PostCard = ({ post, page }: { post: PostType; page: string }) => {
         id={post._id}
         open={repModal}
         senderType='user'
-        type='post'
+        type={post.post_in_community_flag != undefined ? 'post' : 'comment'}
         username={post.username}
         isPost={post.post_in_community_flag != undefined}
       />
