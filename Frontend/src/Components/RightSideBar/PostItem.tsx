@@ -25,6 +25,7 @@ interface PostItemProps {
 
 const PostItem: React.FC<PostItemProps> = (props) => {
   const url = window.location.href;
+
   const { isLoading, isError } = useQuery({
     queryKey: ['communitiesPostItemRecentPosts', props.communityName, url],
     queryFn: () =>
@@ -32,11 +33,11 @@ const PostItem: React.FC<PostItemProps> = (props) => {
     onSuccess: (data) => {
       setCommunity(data.data);
     },
-    // onError: () => {
-    //   // Handle error here
-    //   console.error('Error occurred while fetching community data');
-    //   return;
-    // },
+    onError: () => {
+      // Handle error here
+      console.error('Error occurred while fetching community data');
+      return;
+    },
   });
   const [Community, setCommunity] = useState<CommunityType | undefined>();
   const link = Community

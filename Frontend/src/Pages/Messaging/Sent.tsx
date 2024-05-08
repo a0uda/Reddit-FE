@@ -11,12 +11,18 @@ const Sent = () => {
   );
   console.log(data);
 
+  const sortedMessages = data?.data.messages.sort((a, b) => {
+    const dateA = new Date(a['created_at']);
+    const dateB = new Date(b['created_at']);
+    return dateB - dateA; // descending order
+  });
+
   return (
     <LoadingProvider error={isError} isLoading={isLoading}>
       <ContentContainer length={data?.data.messages.length}>
         <div className=''>
-          {!!data?.data.messages &&
-            data?.data.messages.map((mess) => (
+          {!!sortedMessages &&
+            sortedMessages.map((mess) => (
               <Message
                 unread={mess['unread_flag']}
                 type='sent'

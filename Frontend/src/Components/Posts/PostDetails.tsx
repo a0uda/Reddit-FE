@@ -36,6 +36,11 @@ const PostDetails = ({ post }: { post?: PostType }) => {
       console.log(community);
       setCommunity(community);
     },
+    onError: () => {
+      // Handle error here
+      console.error('Error occurred while fetching community data');
+      return;
+    },
   });
   const { id: postId } = useParams();
 

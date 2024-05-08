@@ -531,11 +531,11 @@ const Message = (props: {
           <div className='flex gap-3'>
             <div className='border-2 border-blue-light rounded-[10px] px-3 font-bold text-blue-light'>
               <Link
-                to={`/${props.senderType === 'user' ? 'u/' + props.senderUsername : addPrefixToUsername(props.senderUsername, props.senderType)}`}
+                to={`/${props.senderType === 'user' ? 'u/' + props.senderUsername + '/overview' : addPrefixToUsername(props.senderUsername, 'community')}`}
               >
                 {props.senderType === 'user'
                   ? 'u/' + props.senderUsername
-                  : addPrefixToUsername(props.senderVia, props.senderType)}
+                  : addPrefixToUsername(props.senderVia, 'community')}
                 {/* {addPrefixToUsername(props.senderUsername, props.senderType)} */}
               </Link>
             </div>
