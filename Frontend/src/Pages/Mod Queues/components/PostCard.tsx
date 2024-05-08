@@ -733,21 +733,7 @@ const PostFooter = ({
         },
         {
           onSuccess: () => {
-            if (option == 'approve') {
-              post.moderator_details.approved_flag = true;
-              post.moderator_details.approved_by = user?.username;
-              post.moderator_details.approved_date = new Date();
-              post.moderator_details.removed_flag = false;
-              post.moderator_details.spammed_flag = false;
-              post.moderator_details.reported_flag = false;
-            } else if (option == 'remove') {
-              post.moderator_details.removed_flag = true;
-              post.moderator_details.removed_by = user?.username;
-              post.moderator_details.removed_date = new Date();
-              post.moderator_details.approved_flag = false;
-              // post.moderator_details.spammed_flag = false;
-              // post.moderator_details.reported_flag = false;
-            } else if (option == 'report') {
+            if (option == 'reported') {
               post.moderator_details.reported_flag = true;
               post.moderator_details.reported_by = user?.username;
               // post.moderator_details.r = new Date();
