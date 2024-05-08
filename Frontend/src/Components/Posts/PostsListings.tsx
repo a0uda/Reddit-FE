@@ -37,7 +37,7 @@ const PostsListings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption]);
 
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const pageSize = 10;
   const [posts, setPosts] = useState<PostType[]>([]);
   const [noMorePosts, setNoMorePosts] = useState(false);

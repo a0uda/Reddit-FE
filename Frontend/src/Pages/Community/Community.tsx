@@ -921,7 +921,11 @@ const Community = () => {
                   <ContentLayout.Main>
                     {communityPosts.map((post) => (
                       <div key={post._id} className='w-full pr-4'>
-                        <PostPreview post={post} page='community' />
+                        <PostPreview
+                          post={post}
+                          page='community'
+                          isMyPost={isModerator}
+                        />
                       </div>
                     ))}
                   </ContentLayout.Main>
