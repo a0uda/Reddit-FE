@@ -315,16 +315,26 @@ const CampainLoggedIn = ({
 };
 
 const NotificationMenu = () => {
-  const { data, refetch } = useQuery(
-    'notifications data',
-    async () => await fetchRequest('notifications'),
-    {
-      onSuccess: (data) => {
-        setNotifications(data?.data ?? []);
-      },
-    }
-  );
-  console.log(data);
+  // const { data, refetch } = useQuery(
+  //   'notifications data',
+  //   async () => await fetchRequest('notifications'),
+  //   {
+  //     onSuccess: (data) => {
+  //       setNotifications(data?.data ?? []);
+  //     },
+  //   }
+  // );
+  // console.log(data);
+  // const [notifications, setNotifications] = useState(data?.data ?? []);
+  const url = window.location.href;
+  const { data } = useQuery({
+    queryKey: ['notifications data in notifications menu', url],
+    queryFn: async () => await fetchRequest(`notifications`),
+    onSuccess: (data) => {
+      setNotifications(data?.data ?? []);
+    },
+  });
+  // console.log('notification dataaaa', data);
   const [notifications, setNotifications] = useState(data?.data ?? []);
 
   // handle mark all as read
@@ -481,7 +491,7 @@ const NotificationMenu = () => {
                     src={notification.profile_picture}
                   />
                 )}
-                <CommunityIcon />
+                {!notification.profile_picture && <CommunityIcon />}
               </div>
             ) : (
               <div className='min-w-10'>
