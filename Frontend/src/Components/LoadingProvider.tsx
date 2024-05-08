@@ -7,14 +7,15 @@ function LoadingProvider(props: {
   isLoading: boolean;
   error: boolean;
 }) {
-  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+  const { setTrigger, setAlertMessage, setIsError } = useAlert();
   React.useEffect(() => {
     console.log(props.error);
     if (props.error) {
-      setTrigger(!trigger);
+      setTrigger((prev) => !prev);
       setIsError(true);
       setAlertMessage('Unable to fetch data');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.error]);
   return props.isLoading ? (
     <div className='w-full h-[30rem] flex items-center justify-center'>

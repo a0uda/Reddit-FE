@@ -10,6 +10,7 @@ import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline';
 import { useMutation } from 'react-query';
 import { postRequest } from '../../../API/User';
 import { useAlert } from '../../../Providers/AlertProvider';
+import NonEditableProvider from '../../../Providers/NonEditableProvider';
 
 const PostReply = (props: {
   createDate: Date;
@@ -182,9 +183,7 @@ const PostReply = (props: {
             <span>sent {getTimeDifferenceAsString(props.createDate)}</span>
           </p>
 
-          <p dangerouslySetInnerHTML={{ __html: props.replyContent }}>
-            {/* {props.replyContent} */}
-          </p>
+          <NonEditableProvider content={props.replyContent} />
 
           <ul className='flex gap-3 mt-3 text-xs text-[#888] font-bold'>
             <li>Full Comments ({props.commentsCount})</li>

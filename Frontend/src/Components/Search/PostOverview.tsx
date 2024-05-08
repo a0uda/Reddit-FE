@@ -9,6 +9,7 @@ import { cn, dateDuration, formatNumber } from '../../utils/helper_functions';
 import { PostType } from '../../types/types';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import UserBadge from '../UserBadge';
 
 const PostOverview = ({ post }: { post: PostType }) => {
   const navigate = useNavigate();
@@ -35,10 +36,13 @@ const PostOverview = ({ post }: { post: PostType }) => {
               className='flex flex-row items-center justify-between gap-2 m-0 bg-inherit'
             >
               <div className='flex flex-row items-center justify-between gap-1 m-0'>
-                <CommunityBadge
-                  name={post.community_name ?? ''}
-                  username={post.username}
-                />
+                {post.username && <UserBadge username={post.username} />}
+                {post.community_name && (
+                  <CommunityBadge
+                    name={post.community_name ?? ''}
+                    username={post.username}
+                  />
+                )}
                 <span className='relative -top-0.5'>•</span>
                 <Typography variant='small' className='text-xs'>
                   {dateDuration(new Date(post.created_at))}

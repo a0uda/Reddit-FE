@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const baseUrl = process.env.VITE_BASE_URL;
 
@@ -75,12 +75,13 @@ const fetchRequest = async (endPoint: string) => {
     //   typeof error.response === 'object'
     //     ? JSON.stringify(error.response)
     //     : error.response;
-    const errorMessage =
-      error.response?.data?.err?.message ||
-      error.response?.data?.error?.message ||
-      'Unknown error';
-    return Promise.reject(errorMessage);
-
+    if (error instanceof AxiosError) {
+      const errorMessage =
+        error.response?.data?.err?.message ||
+        error.response?.data?.error?.message ||
+        'Unknown error';
+      return Promise.reject(errorMessage);
+    }
     // throw new Error(errorMessage);
   }
 };
@@ -109,12 +110,13 @@ const patchRequest = async ({
     //   typeof error.response === 'object'
     //     ? JSON.stringify(error.response)
     //     : error.response;
-    const errorMessage =
-      error.response?.data?.err?.message ||
-      error.response?.data?.error?.message ||
-      'Unknown error';
-    return Promise.reject(errorMessage);
-
+    if (error instanceof AxiosError) {
+      const errorMessage =
+        error.response?.data?.err?.message ||
+        error.response?.data?.error?.message ||
+        'Unknown error';
+      return Promise.reject(errorMessage);
+    }
     // throw new Error(errorMessage);
   }
 };
@@ -146,11 +148,13 @@ const postRequest = async ({
     //   typeof error.response === 'object'
     //     ? JSON.stringify(error.response)
     //     : error.response;
-    const errorMessage =
-      error.response?.data?.err?.message ||
-      error.response?.data?.error?.message ||
-      'Unknown error';
-    return Promise.reject(errorMessage);
+    if (error instanceof AxiosError) {
+      const errorMessage =
+        error.response?.data?.err?.message ||
+        error.response?.data?.error?.message ||
+        'Unknown error';
+      return Promise.reject(errorMessage);
+    }
     // return Promise.reject(error.response.data.err.message);
 
     // throw new Error(errorMessage);
