@@ -79,6 +79,7 @@ export function addPrefixToUsername(
 }
 
 export function formatNumber(number: number) {
+  if (number === 0) return '0';
   const units = ['', 'K', 'M', 'B', 'T'];
   const unitIndex = Math.floor(Math.log10(Math.abs(number)) / 3);
   const formattedNumber = (number / Math.pow(1000, unitIndex)).toFixed(1);
