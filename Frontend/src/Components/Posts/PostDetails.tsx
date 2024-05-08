@@ -119,8 +119,15 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                   {post.title}
                 </Typography>
               </div>
-              <Typography variant='paragraph' className='text-black'>
-                {post.description}
+              <Typography
+                variant='paragraph'
+                className='text-black'
+                dangerouslySetInnerHTML={{
+                  __html: post.description || '',
+                }}
+              >
+                <></>
+                {/* {post.description} */}
               </Typography>
               {post.images && post.images.length > 1 && (
                 <>

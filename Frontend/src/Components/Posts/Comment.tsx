@@ -42,8 +42,8 @@ const Comment = ({
 }) => {
   const patchReq = useMutation(patchRequest);
   const [author, setAuthor] = useState<UserType | undefined>();
-  const [upvote, setUpvote] = useState(false);
-  const [downvote, setDownvote] = useState(false);
+  // const [upvote, setUpvote] = useState(false);
+  // const [downvote, setDownvote] = useState(false);
   const queryClient = useQueryClient();
   const [showAddReply, setShowAddReply] = useState(false);
   const [showEditComment, setShowEditComment] = useState(false);
@@ -180,20 +180,46 @@ const Comment = ({
                 <ButtonContainer
                   className={cn(
                     !false && 'bg-inherit',
-                    upvote ? 'bg-orange' : downvote ? 'bg-violet-muted' : ''
+                    comment.vote == 1
+                      ? 'bg-orange'
+                      : comment.vote == -1
+                        ? 'bg-violet-muted'
+                        : ''
                   )}
                 >
                   <IconButton
                     variant='text'
                     className={cn(
-                      upvote ? 'bg-orange' : '',
-                      upvote || downvote ? 'text-white' : ''
+                      comment.vote == 1 ? 'bg-orange' : '',
+                      comment.vote != 0 ? 'text-white' : ''
                     )}
                     onClick={() => {
-                      setUpvote(!upvote);
-                      downvote && mutate.mutate({ comment, rank: 1 });
-                      mutate.mutate({ comment, rank: upvote ? -1 : 1 });
-                      setDownvote(false);
+                      const lastVote = comment.vote;
+                      let newVote = comment.vote;
+                      if (comment.vote === 1) {
+                        // setVote(0);
+                        newVote = 0;
+                      } else {
+                        // setVote(1);
+                        newVote = 1;
+                      }
+
+                      mutate.mutate(
+                        {
+                          comment,
+                          rank: newVote,
+                        },
+                        {
+                          onSuccess: () => {
+                            comment.upvotes_count =
+                              comment.upvotes_count + newVote - lastVote;
+                            comment.vote = newVote;
+                          },
+                          onError: () => {
+                            comment.vote = lastVote;
+                          },
+                        }
+                      );
                     }}
                   >
                     <VoteArrow className='h-5 w-5 hover:fill-orange-muted' />
@@ -202,7 +228,7 @@ const Comment = ({
                     variant='lead'
                     className={cn(
                       'text-sm',
-                      upvote || downvote ? 'text-white' : ''
+                      comment.vote != 0 ? 'text-white' : ''
                     )}
                   >
                     {comment.upvotes_count - comment.downvotes_count}
@@ -210,14 +236,40 @@ const Comment = ({
                   <IconButton
                     variant='text'
                     className={cn(
-                      downvote ? 'bg-violet-muted' : '',
-                      upvote || downvote ? 'text-white' : ''
+                      comment.vote == -1 ? 'bg-violet-muted' : '',
+                      comment.vote != 0 ? 'text-white' : ''
                     )}
                     onClick={() => {
-                      setDownvote(!downvote);
-                      upvote && mutate.mutate({ comment, rank: -1 });
-                      mutate.mutate({ comment, rank: downvote ? 1 : -1 });
-                      setUpvote(false);
+                      const lastVote = comment.vote;
+                      let newVote = comment.vote;
+
+                      if (comment.vote === -1) {
+                        comment.vote = 0;
+                        newVote = 0;
+                      } else {
+                        comment.vote = -1;
+                        newVote = -1;
+                      }
+                      // const { id, isPost, rank } = req.body;
+                      console.log(newVote);
+
+                      mutate.mutate(
+                        {
+                          comment,
+                          rank: newVote,
+                        },
+                        {
+                          onSuccess: () => {
+                            // setDownVotes(totalVotes + (newVote == 0 ? 1 : -1));
+                            comment.downvotes_count =
+                              comment.downvotes_count - newVote + lastVote;
+                            comment.vote = newVote;
+                          },
+                          onError: () => {
+                            comment.vote = lastVote;
+                          },
+                        }
+                      );
                     }}
                   >
                     <VoteArrow className='h-5 w-5 hover:fill-violet rotate-180' />

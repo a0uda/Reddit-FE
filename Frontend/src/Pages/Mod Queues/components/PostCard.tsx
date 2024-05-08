@@ -661,61 +661,111 @@ const PostFooter = ({
   isPost,
   setRemModal,
   setRepModal,
+  page,
 }: {
   post: PostType;
   isPost: boolean;
   setRemModal: (rem: boolean) => void;
   setRepModal: (rep: boolean) => void;
+  page: string;
 }) => {
   const postReq = useMutation(postRequest);
   const { user } = useSession();
 
   const handleModOps = (
-    option: 'approve' | 'remove' | 'spam' | 'report',
-    type: 'post' | 'comment'
+    option: 'approve' | 'remove' | 'spammed' | 'reported',
+    type: 'post' | 'comment',
+    page: 'edited' | 'removed' | 'unmoderated'
   ) => {
-    postReq.mutate(
-      {
-        endPoint: `communities/${option}-item/${post.community_name}`,
-        data: {
-          item_id: post._id,
-          item_type: type,
+    if (option == 'approve' || option == 'remove') {
+      postReq.mutate(
+        {
+          endPoint: `communities/handle-unmoderated-item/${post.community_name}`,
+          data: {
+            item_id: post._id,
+            item_type: type,
+            action: option,
+          },
         },
-      },
-      {
-        onSuccess: () => {
-          if (option == 'approve') {
-            post.moderator_details.approved_flag = true;
-            post.moderator_details.approved_by = user?.username;
-            post.moderator_details.approved_date = new Date();
-            post.moderator_details.removed_flag = false;
-            post.moderator_details.spammed_flag = false;
-            post.moderator_details.reported_flag = false;
-          } else if (option == 'remove') {
-            post.moderator_details.removed_flag = true;
-            post.moderator_details.removed_by = user?.username;
-            post.moderator_details.removed_date = new Date();
-            post.moderator_details.approved_flag = false;
-            // post.moderator_details.spammed_flag = false;
-            // post.moderator_details.reported_flag = false;
-          } else if (option == 'report') {
-            post.moderator_details.reported_flag = true;
-            post.moderator_details.reported_by = user?.username;
-            // post.moderator_details.r = new Date();
-            post.moderator_details.removed_flag = true;
-            post.moderator_details.spammed_flag = false;
-            post.moderator_details.approved_flag = false;
-          } else {
-            post.moderator_details.spammed_flag = true;
-            post.moderator_details.spammed_by = user?.username;
-            // post.moderator_details.r = new Date();
-            post.moderator_details.removed_flag = true;
-            post.moderator_details.reported_flag = false;
-            post.moderator_details.approved_flag = false;
-          }
+        {
+          onSuccess: () => {
+            if (option == 'approve') {
+              post.moderator_details.approved_flag = true;
+              post.moderator_details.approved_by = user?.username;
+              post.moderator_details.approved_date = new Date();
+              post.moderator_details.removed_flag = false;
+              post.moderator_details.spammed_flag = false;
+              post.moderator_details.reported_flag = false;
+            } else if (option == 'remove') {
+              post.moderator_details.removed_flag = true;
+              post.moderator_details.removed_by = user?.username;
+              post.moderator_details.removed_date = new Date();
+              post.moderator_details.approved_flag = false;
+              // post.moderator_details.spammed_flag = false;
+              // post.moderator_details.reported_flag = false;
+            } else if (option == 'report') {
+              post.moderator_details.reported_flag = true;
+              post.moderator_details.reported_by = user?.username;
+              // post.moderator_details.r = new Date();
+              post.moderator_details.removed_flag = true;
+              post.moderator_details.spammed_flag = false;
+              post.moderator_details.approved_flag = false;
+            } else {
+              post.moderator_details.spammed_flag = true;
+              post.moderator_details.spammed_by = user?.username;
+              // post.moderator_details.r = new Date();
+              post.moderator_details.removed_flag = true;
+              post.moderator_details.reported_flag = false;
+              post.moderator_details.approved_flag = false;
+            }
+          },
+        }
+      );
+    } else {
+      postReq.mutate(
+        {
+          endPoint: `communities/object-item/${post.community_name}`,
+          data: {
+            item_id: post._id,
+            item_type: type,
+            action: option,
+          },
         },
-      }
-    );
+        {
+          onSuccess: () => {
+            if (option == 'approve') {
+              post.moderator_details.approved_flag = true;
+              post.moderator_details.approved_by = user?.username;
+              post.moderator_details.approved_date = new Date();
+              post.moderator_details.removed_flag = false;
+              post.moderator_details.spammed_flag = false;
+              post.moderator_details.reported_flag = false;
+            } else if (option == 'remove') {
+              post.moderator_details.removed_flag = true;
+              post.moderator_details.removed_by = user?.username;
+              post.moderator_details.removed_date = new Date();
+              post.moderator_details.approved_flag = false;
+              // post.moderator_details.spammed_flag = false;
+              // post.moderator_details.reported_flag = false;
+            } else if (option == 'report') {
+              post.moderator_details.reported_flag = true;
+              post.moderator_details.reported_by = user?.username;
+              // post.moderator_details.r = new Date();
+              post.moderator_details.removed_flag = true;
+              post.moderator_details.spammed_flag = false;
+              post.moderator_details.approved_flag = false;
+            } else {
+              post.moderator_details.spammed_flag = true;
+              post.moderator_details.spammed_by = user?.username;
+              // post.moderator_details.r = new Date();
+              post.moderator_details.removed_flag = true;
+              post.moderator_details.reported_flag = false;
+              post.moderator_details.approved_flag = false;
+            }
+          },
+        }
+      );
+    }
   };
   console.log(post.moderator_details.removed_removal_reason, 'remreason');
 
@@ -809,7 +859,7 @@ const PostFooter = ({
     </div>
   );
 };
-const PostCard = ({ post }: { post: PostType }) => {
+const PostCard = ({ post, page }: { post: PostType; page: string }) => {
   const [remModal, setRemModal] = useState(false);
   const [repModal, setRepModal] = useState(false);
   const [thankModal, setThankModal] = useState(false);
@@ -878,6 +928,7 @@ const PostCard = ({ post }: { post: PostType }) => {
               isPost={post.post_in_community_flag != undefined}
               setRemModal={setRemModal}
               setRepModal={setRepModal}
+              page={page}
             />
           </div>
         </div>

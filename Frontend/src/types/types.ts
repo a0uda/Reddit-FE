@@ -290,6 +290,7 @@ export type CommentType = {
   locked_flag: boolean;
   spoiler_flag: boolean;
   show_comment_flag: boolean;
+  vote: number;
   __v: number;
 };
 

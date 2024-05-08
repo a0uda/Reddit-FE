@@ -35,7 +35,7 @@ const Sent = () => {
                 commentsCount={reply['commentsCount']}
                 key={reply['_id']}
                 vote={reply['rank']}
-                is_username_mention={reply.is_username_mention}
+                is_username_mention={false}
                 query='postReplies'
                 refetch={refetch}
 
