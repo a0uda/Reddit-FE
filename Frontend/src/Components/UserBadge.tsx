@@ -43,7 +43,13 @@ const UserBadge = ({ username }: UserBadgeProps) => {
             variant='small'
             className='font-body -tracking-tight text-xs font-bold text-gray-600'
           >
-            <Link to={`/u/${username}/overview`} className='hover:underline'>
+            <Link
+              to={`/u/${username}/overview`}
+              className='hover:underline'
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
               {userNameWithPrefix}
             </Link>
           </Typography>

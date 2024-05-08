@@ -73,6 +73,9 @@ const CommunityBadge = ({
                 <Link
                   to={`/${communityNameWithPrefix}`}
                   className='hover:underline'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
                 >
                   {communityNameWithPrefix}
                 </Link>
