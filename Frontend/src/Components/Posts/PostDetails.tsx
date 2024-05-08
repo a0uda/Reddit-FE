@@ -9,7 +9,7 @@ import {
 } from '@material-tailwind/react';
 import CommunityBadge from '../CommunityBadge';
 import UserBadge from '../UserBadge';
-import { dateDuration } from '../../utils/helper_functions';
+import { cn, dateDuration } from '../../utils/helper_functions';
 import PostOptions from './PostOptions';
 import InteractionButtons from './InteractionButtons';
 import { useQuery } from 'react-query';
@@ -24,6 +24,11 @@ import { useParams } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 const PostDetails = ({ post }: { post?: PostType }) => {
+  const [showNsfw, setShowNsfw] = useState(!post?.nsfw_flag);
+  const [showSpoiler, setShowSpoiler] = useState(!post?.spoiler_flag);
+  console.log('post.nsfw_flag', post?.nsfw_flag);
+  console.log('post.spoiler_flag', post?.spoiler_flag);
+
   const [community, setCommunity] = useState<CommunityType | undefined>();
 
   const url = window.location.href;
@@ -127,11 +132,11 @@ const PostDetails = ({ post }: { post?: PostType }) => {
               <Typography
                 variant='paragraph'
                 className='text-black'
-                dangerouslySetInnerHTML={{
-                  __html: post.description || '',
-                }}
+                // dangerouslySetInnerHTML={{
+                //   __html: post.description || '',
+                // }}
               >
-                {/* {post.description} */}
+                {post.description}
               </Typography>
               {post.images && post.images.length > 1 && (
                 <>
@@ -184,19 +189,51 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                     {post.images.map((image, index) => (
                       <div
                         key={index}
-                        className='relative h-[50vh] flex justify-center rounded-sm bg-blue-gray-900'
+                        className='relative'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
                       >
-                        <img
-                          src={image.path}
-                          alt={image.caption ?? 'Post Image'}
-                          className='object-contain'
-                        />
-                        {image.caption && (
-                          <div className='absolute w-11/12 bottom-4 bg-neutral-black/50 p-1 px-2 mx-4 rounded-md'>
-                            <Typography variant='small' className='text-white'>
-                              {image.caption}
-                            </Typography>
-                          </div>
+                        <div className='relative h-[50vh] flex justify-center rounded-sm bg-blue-gray-900'>
+                          <img
+                            src={image.path}
+                            alt={image.caption ?? 'Post Image'}
+                            className='object-contain'
+                          />
+                          {image.caption && (
+                            <div className='absolute w-11/12 bottom-4 bg-neutral-black/50 p-1 px-2 mx-4 rounded-md'>
+                              <Typography
+                                variant='small'
+                                className='text-white'
+                              >
+                                {image.caption}
+                              </Typography>
+                            </div>
+                          )}
+                          <div
+                            className={cn(
+                              'absolute w-full h-full top-0',
+                              !showNsfw || !showSpoiler
+                                ? 'blur-sm bg-black/50'
+                                : ''
+                            )}
+                          ></div>
+                        </div>
+                        {!showNsfw && (
+                          <button
+                            className='absolute top-1/2 left-1/2 bg-neutral-black text-neutral-white rounded-full px-2 py-1'
+                            onClick={() => setShowNsfw(true)}
+                          >
+                            View NSFW
+                          </button>
+                        )}
+                        {!showSpoiler && (
+                          <button
+                            className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-neutral-black text-neutral-white rounded-full px-2 py-1'
+                            onClick={() => setShowSpoiler(true)}
+                          >
+                            View Spolier
+                          </button>
                         )}
                       </div>
                     ))}
@@ -205,18 +242,50 @@ const PostDetails = ({ post }: { post?: PostType }) => {
               )}
               {post.images && post.images.length === 1 && (
                 <>
-                  <div className='relative h-[50vh] flex justify-center rounded-sm bg-blue-gray-900'>
-                    <img
-                      src={post.images?.[0].path}
-                      alt={post.images?.[0].caption ?? 'Post Image'}
-                      className='object-contain'
-                    />
-                    {post.images?.[0].caption && (
-                      <div className='absolute w-full bottom-4 bg-neutral-black/50 p-1 mx-2'>
-                        <Typography variant='small' className='text-white'>
-                          {post.images?.[0].caption}
-                        </Typography>
-                      </div>
+                  <div
+                    className='relative'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    <div className='relative h-[50vh] flex justify-center rounded-sm bg-blue-gray-900'>
+                      <img
+                        src={post.images?.[0].path}
+                        alt={post.images?.[0].caption ?? 'Post Image'}
+                        className={cn(
+                          'object-contain rounded-md',
+                          !showNsfw || !showSpoiler ? 'blur-sm' : ''
+                        )}
+                      />
+                      {post.images?.[0].caption && (
+                        <div className='absolute w-11/12 bottom-4 bg-neutral-black/50 p-1 px-2 mx-4 rounded-md'>
+                          <Typography variant='small' className='text-white'>
+                            {post.images?.[0].caption}
+                          </Typography>
+                        </div>
+                      )}
+                    </div>
+                    <div
+                      className={cn(
+                        'absolute w-full h-full top-0',
+                        !showNsfw || !showSpoiler ? 'blur-sm bg-black/50' : ''
+                      )}
+                    ></div>
+                    {!showNsfw && (
+                      <button
+                        className='absolute top-1/2 left-1/2 bg-neutral-black text-neutral-white rounded-full px-2 py-1'
+                        onClick={() => setShowNsfw(true)}
+                      >
+                        View NSFW
+                      </button>
+                    )}
+                    {!showSpoiler && (
+                      <button
+                        className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-neutral-black text-neutral-white rounded-full px-2 py-1'
+                        onClick={() => setShowSpoiler(true)}
+                      >
+                        View Spolier
+                      </button>
                     )}
                   </div>
                 </>
