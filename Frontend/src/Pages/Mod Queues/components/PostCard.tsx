@@ -47,7 +47,7 @@ import {
   TrashIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
-import { PollPostContainer } from '../../../Components/Posts/PostPreview';
+import PollPostContainer from '../../../Components/Posts/PollPostContainer';
 import useSession from '../../../hooks/auth/useSession';
 import eighteenPic from '../../../assets/18Pic.svg';
 import { ReportModal, ThankYouModal } from '../../Messaging/Containers/Message';
