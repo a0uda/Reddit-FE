@@ -792,8 +792,8 @@ const Community = () => {
                   )}
                   {/* <div className='flex justify-between items-center'> */}
                   <Typography
-                    variant='h3'
-                    className='text-black gap-10 ml-28 mt-1 overflow-hidden whitespace-nowrap text-ellipsis'
+                    variant='h4'
+                    className='text-black gap-10 ml-28 mt-1 overflow-hidden whitespace-nowrap text-ellipsis max-w-96 md:max-w-full '
                   >
                     {communityNameWithPrefix}
                   </Typography>
