@@ -50,7 +50,7 @@ const SubNavBar = (props: {
     'history',
   ];
   return (
-    <div className='flex justify-between mb-2'>
+    <div className='flex gap-2 mb-2'>
       {props.buttonArray.map((butt, i) => (
         <NavButton
           key={`${i}${butt}`}
