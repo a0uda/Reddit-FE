@@ -78,8 +78,8 @@ function Posts() {
                   <div className='text-black m-2 text-sm'>
                     Lifetime Performance
                   </div>
-                  <div className='flex flex-row border-b-[1px]'>
-                    <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
+                  <div className='flex flex-row border-b-[1px] justify-between'>
+                    <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] my-2 mx-[2px] rounded justify-center items-center flex flex-col'>
                       <div className='text-black text-xl font-bold '>
                         {post.user_details.total_views === 0
                           ? 'N/A'
@@ -91,7 +91,7 @@ function Posts() {
                       </div>
                     </div>
 
-                    <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
+                    <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] my-2 mx-[2px] rounded justify-center items-center flex flex-col'>
                       <div className='text-black text-xl font-bold '>
                         {post.user_details.upvote_rate.toFixed(1)}%
                       </div>
@@ -101,7 +101,7 @@ function Posts() {
                       </div>
                     </div>
 
-                    <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
+                    <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] my-2 mx-[2px] rounded justify-center items-center flex flex-col'>
                       <div className='text-black text-xl font-bold '>
                         {post.comments_count}
                       </div>
@@ -114,7 +114,7 @@ function Posts() {
                       </div>
                     </div>
 
-                    <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] m-2 rounded justify-center items-center flex flex-col'>
+                    <div className='w-80 h-16 max-w-[8rem] border-neutral-400 border-[1px] my-2 mx-[2px] rounded justify-center items-center flex flex-col'>
                       <div className='text-black text-xl font-bold '>
                         {post.user_details.total_shares}
                       </div>

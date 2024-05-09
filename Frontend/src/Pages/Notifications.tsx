@@ -23,15 +23,23 @@ import ContentLayout from '../Components/ContentLayout';
 import { Link } from 'react-router-dom';
 
 const Notifications = () => {
-  const { data, refetch } = useQuery(
-    'notifications data',
-    async () => await fetchRequest('notifications'),
-    {
-      onSuccess: (data) => {
-        setNotifications(data?.data ?? []);
-      },
-    }
-  );
+  // const { data, refetch } = useQuery(
+  //   'notifications data',
+  //   async () => await fetchRequest('notifications'),
+  //   {
+  //     onSuccess: (data) => {
+  //       setNotifications(data?.data ?? []);
+  //     },
+  //   }
+  // );
+  const url = window.location.href;
+  const { data, refetch } = useQuery({
+    queryKey: ['notifications data in notifications page', url],
+    queryFn: async () => await fetchRequest(`notifications`),
+    onSuccess: (data) => {
+      setNotifications(data?.data ?? []);
+    },
+  });
   // console.log('notification dataaaa', data);
   const [notifications, setNotifications] = useState(data?.data ?? []);
 
@@ -189,7 +197,7 @@ const Notifications = () => {
                     src={notification.profile_picture}
                   />
                 )}
-                <CommunityIcon />
+                {!notification.profile_picture && <CommunityIcon />}
               </div>
             ) : (
               <div className='min-w-10'>

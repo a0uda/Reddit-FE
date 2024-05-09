@@ -26,7 +26,7 @@ const NavButton = (props: {
   return (
     <Link
       to={`/u/${props.username}/${props.buttonLink}`}
-      className={`${props.active ? 'bg-neutral-500' : ''}  text-black rounded-full p-[10px] mx-[5px]  hover:underline`}
+      className={`${props.active ? 'bg-neutral-500' : ''}  text-black rounded-full py-[10px] px-1 hover:underline`}
     >
       <div className={`text-black ${props.textSize}`}>{props.buttonName}</div>
     </Link>
@@ -50,7 +50,7 @@ const SubNavBar = (props: {
     'history',
   ];
   return (
-    <div className='flex mb-2'>
+    <div className='flex gap-2 mb-2'>
       {props.buttonArray.map((butt, i) => (
         <NavButton
           key={`${i}${butt}`}
@@ -100,7 +100,7 @@ function User() {
       <LoadingProvider error={error} isLoading={isLoading}>
         <ContentLayout>
           <ContentLayout.Main>
-            <Card className='shadow-none'>
+            <Card className='shadow-none mx-1'>
               <CardBody className='px-0'>
                 <div className='flex gap-2 mb-7'>
                   <div className='flex flex-col relative '>
@@ -112,7 +112,7 @@ function User() {
                       alt={username + "'s Profile"}
                       variant='circular'
                       size='sm'
-                      className='w-[70px] h-[70px] object-cover rounded-full'
+                      className='w-[70px] h-[70px] object-cover rounded-full mx-2'
                     />
                     {/* <img
                     src={profile_picture}

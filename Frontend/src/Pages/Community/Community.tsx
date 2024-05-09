@@ -790,130 +790,130 @@ const Community = () => {
                       <FaPen className='w-full text-xl' />
                     </button>
                   )}
-                  <div className='flex justify-between items-center'>
-                    <Typography
-                      variant='h3'
-                      className='text-black gap-10 ml-28 mt-4 overflow-hidden whitespace-nowrap text-ellipsis'
-                    >
-                      {communityNameWithPrefix}
-                    </Typography>
-                    {/* buttons above the RSB */}
-                    <div className='mr-2 flex justify-end items-center gap-2'>
-                      <Link to={`/${communityNameWithPrefix}/submit`}>
-                        <Button
-                          variant='text'
-                          className='font-bold flex items-center gap-1.5 border border-black'
-                        >
-                          <PlusIcon className='w-6 h-6' />
-                          Create a post
-                        </Button>
-                      </Link>
-                      {!isJoined && !isModerator && (
+                  {/* <div className='flex justify-between items-center'> */}
+                  <Typography
+                    variant='h4'
+                    className='text-black gap-10 ml-28 mt-1 overflow-hidden whitespace-nowrap text-ellipsis max-w-96 md:max-w-full '
+                  >
+                    {communityNameWithPrefix}
+                  </Typography>
+                  {/* buttons above the RSB */}
+                  <div className='mr-2 flex justify-end items-center gap-2'>
+                    <Link to={`/${communityNameWithPrefix}/submit`}>
+                      <Button
+                        variant='text'
+                        className='font-bold flex items-center gap-1.5 border border-black'
+                      >
+                        <PlusIcon className='w-6 h-6' />
+                        Create a post
+                      </Button>
+                    </Link>
+                    {!isJoined && !isModerator && (
+                      <Button
+                        variant='text'
+                        className='h-10 font-bold flex items-center gap-1.5 border border-black bg-light-blue-900 text-white hover:bg-black'
+                        onClick={() => {
+                          joinMutation.mutate(communityName ?? '');
+                        }}
+                        data-testid='join-button'
+                      >
+                        Join
+                      </Button>
+                    )}
+                    {isJoined && !isModerator && (
+                      <Button
+                        variant='text'
+                        className='h-10 font-bold flex items-center gap-1.5 border border-black'
+                        onClick={() => {
+                          leaveMutation.mutate(communityName ?? '');
+                        }}
+                        data-testid='leave-button'
+                      >
+                        Joined
+                      </Button>
+                    )}
+                    {isModerator && (
+                      <Link to={`/${communityNameWithPrefix}/about/spam`}>
                         <Button
                           variant='text'
                           className='h-10 font-bold flex items-center gap-1.5 border border-black bg-light-blue-900 text-white hover:bg-black'
-                          onClick={() => {
-                            joinMutation.mutate(communityName ?? '');
-                          }}
-                          data-testid='join-button'
                         >
-                          Join
+                          Mod Tools
                         </Button>
-                      )}
-                      {isJoined && !isModerator && (
+                      </Link>
+                    )}
+                    <Menu placement='bottom-end'>
+                      <MenuHandler>
                         <Button
+                          // onClick={(e) => {}}
                           variant='text'
-                          className='h-10 font-bold flex items-center gap-1.5 border border-black'
-                          onClick={() => {
-                            leaveMutation.mutate(communityName ?? '');
-                          }}
-                          data-testid='leave-button'
+                          className='p-2 z-10 border border-black'
                         >
-                          Joined
+                          <HiEllipsisHorizontal size={25} />
                         </Button>
-                      )}
-                      {isModerator && (
-                        <Link to={`/${communityNameWithPrefix}/about/spam`}>
-                          <Button
-                            variant='text'
-                            className='h-10 font-bold flex items-center gap-1.5 border border-black bg-light-blue-900 text-white hover:bg-black'
+                      </MenuHandler>
+                      <MenuList className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'>
+                        {isFavorite && (
+                          <MenuItem
+                            onClick={handleFavoriteFlag}
+                            className='p-4'
                           >
-                            Mod Tools
-                          </Button>
-                        </Link>
-                      )}
-                      <Menu placement='bottom-end'>
-                        <MenuHandler>
-                          <Button
-                            // onClick={(e) => {}}
-                            variant='text'
-                            className='p-2 z-10 border border-black'
+                            <span>Remove from favorites</span>
+                          </MenuItem>
+                        )}
+                        {!isFavorite && (
+                          <MenuItem
+                            onClick={handleFavoriteFlag}
+                            className='p-4'
                           >
-                            <HiEllipsisHorizontal size={25} />
-                          </Button>
-                        </MenuHandler>
-                        <MenuList className='p-0 text-foreground min-w-min w-max shadow-lg shadow-black/25'>
-                          {isFavorite && (
-                            <MenuItem
-                              onClick={handleFavoriteFlag}
-                              className='p-4'
-                            >
-                              <span>Remove from favorites</span>
-                            </MenuItem>
-                          )}
-                          {!isFavorite && (
-                            <MenuItem
-                              onClick={handleFavoriteFlag}
-                              className='p-4'
-                            >
-                              <span>Add to favorites</span>
-                            </MenuItem>
-                          )}
+                            <span>Add to favorites</span>
+                          </MenuItem>
+                        )}
 
-                          {isMuted && (
-                            <MenuItem
-                              onClick={() => {
-                                muteUnmuteMutation.mutate(communityName ?? '');
-                              }}
-                              className='p-4'
-                            >
-                              <span>Unmute {communityNameWithPrefix}</span>
-                            </MenuItem>
-                          )}
-                          {!isMuted && (
-                            <MenuItem
-                              onClick={() => {
-                                muteUnmuteMutation.mutate(communityName ?? '');
-                              }}
-                              className='p-4'
-                            >
-                              <span>Mute {communityNameWithPrefix}</span>
-                            </MenuItem>
-                          )}
-                          {!isJoined && isModerator && (
-                            <MenuItem
-                              onClick={() => {
-                                joinMutation.mutate(communityName ?? '');
-                              }}
-                              className='p-4'
-                            >
-                              <span>Join</span>
-                            </MenuItem>
-                          )}
-                          {isJoined && isModerator && (
-                            <MenuItem
-                              onClick={() => {
-                                leaveMutation.mutate(communityName ?? '');
-                              }}
-                              className='p-4'
-                            >
-                              <span>Leave</span>
-                            </MenuItem>
-                          )}
-                        </MenuList>
-                      </Menu>
-                    </div>
+                        {isMuted && (
+                          <MenuItem
+                            onClick={() => {
+                              muteUnmuteMutation.mutate(communityName ?? '');
+                            }}
+                            className='p-4'
+                          >
+                            <span>Unmute {communityNameWithPrefix}</span>
+                          </MenuItem>
+                        )}
+                        {!isMuted && (
+                          <MenuItem
+                            onClick={() => {
+                              muteUnmuteMutation.mutate(communityName ?? '');
+                            }}
+                            className='p-4'
+                          >
+                            <span>Mute {communityNameWithPrefix}</span>
+                          </MenuItem>
+                        )}
+                        {!isJoined && isModerator && (
+                          <MenuItem
+                            onClick={() => {
+                              joinMutation.mutate(communityName ?? '');
+                            }}
+                            className='p-4'
+                          >
+                            <span>Join</span>
+                          </MenuItem>
+                        )}
+                        {isJoined && isModerator && (
+                          <MenuItem
+                            onClick={() => {
+                              leaveMutation.mutate(communityName ?? '');
+                            }}
+                            className='p-4'
+                          >
+                            <span>Leave</span>
+                          </MenuItem>
+                        )}
+                      </MenuList>
+                    </Menu>
                   </div>
+                  {/* </div> */}
                   <CommunityAppearnace
                     mode={communityAppearance}
                     type={communityAppearanceType}
