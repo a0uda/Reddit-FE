@@ -20,7 +20,7 @@ import * as yup from 'yup';
 import { uploadImageFirebase } from '../../utils/helper_functions';
 import { useAlert } from '../../Providers/AlertProvider';
 import axios from 'axios';
-import useSession from '../../hooks/auth/useSession';
+import useSession, { User } from '../../hooks/auth/useSession';
 
 type FormSchema = 'image_and_videos' | 'polls' | 'url' | 'text';
 
@@ -146,7 +146,7 @@ const NewPost: React.FC = () => {
     onSuccess: () => {
       navigate(`/r/${community_name}/about/scheduledposts`);
     },
-    onError: (error) => {
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
       setAlertMessage(error);
@@ -168,7 +168,7 @@ const NewPost: React.FC = () => {
     }
   };
 
-  const handleImages = async (values: object) => {
+  const handleImages = async (values: { images: Image[] }) => {
     for (let i = 0; i < images.length; i++) {
       const image = images[i];
       try {
@@ -203,7 +203,7 @@ const NewPost: React.FC = () => {
           response.data
         );
         const exists = response.data.some(
-          (moderator) => moderator.username === user.username
+          (moderator: User) => moderator.username === user?.username
         );
 
         setIsMod(exists);
@@ -211,7 +211,7 @@ const NewPost: React.FC = () => {
           'oooooooooooooooooooooooooooooooooooooooooooooo',
           isMod,
           exists,
-          user.username
+          user?.username
         );
         setIsMod(exists);
       }

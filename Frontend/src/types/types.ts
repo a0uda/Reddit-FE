@@ -80,11 +80,13 @@
 
 export type PostType = {
   _id: string; // Unique identifier for the post
+  post_id?: string; // post_id is optional
   avatar: string; //metzweda
   saved: boolean; //metzweda
   user_id: string; // Reference to the User
   username: string; // Username
   title: string; // Title of the post
+  post_title?: string; // Title of the post, optional
   description?: string; // Description, optional
   created_at: Date; // When the post was created
   edited_at?: Date; // When the post was edited
@@ -466,4 +468,45 @@ export type CommunityOverviewType = {
   profile_picture: string;
   favorite_flag: boolean;
   members_count: number;
+};
+
+export type MessageType = {
+  _id: string;
+  sender_username: string;
+  sender_type: 'user' | 'moderator' | 'community';
+  receiver_username: string;
+  receiver_type: 'user' | 'moderator' | 'community';
+  senderVia: string | null;
+  message: string;
+  created_at: Date;
+  deleted_at: string | null;
+  unread_flag: boolean;
+  isSent: boolean;
+  parentMessageId: string | null;
+  subject: string;
+  isReply: boolean;
+  is_username_mention: boolean;
+  is_invitation: boolean;
+};
+
+export type PostReplyType = {
+  created_at: Date;
+  senderUsername: string;
+  postCreator: string;
+  postCreatorType: 'user' | 'moderator' | 'community';
+  postSubject: string;
+  replyContent: string;
+  _id: string;
+  unread: boolean;
+  commentsCount: number;
+  rank: number;
+  upvotes_count: number;
+  downvotes_count: number;
+  is_username_mention: boolean;
+};
+
+export type RemovalReasonType = {
+  removal_reason_title: string;
+  reason_message: string;
+  _id: string;
 };

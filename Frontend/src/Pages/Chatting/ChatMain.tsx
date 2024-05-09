@@ -3,44 +3,53 @@ import CreateChat from './CreateChat';
 import { useSocketContext } from '../../Providers/SocketProvider';
 import { useEffect, useState } from 'react';
 import Chat from './Chat';
-interface UserChatSidebar {
-  _id: string;
-  otherUsername: string;
-  lastMessageSender: string;
-  lastMessageText: string;
-  lastMessageTimestamp: string;
-}
 
-interface User {
-  _id: string;
-  username: string;
-  profile_picture: string;
-}
-
-interface MessageStatus {
-  flag: boolean;
-  reason: string | null;
-}
-
-interface Message {
-  reported: MessageStatus;
-  removed: MessageStatus;
-  _id: string;
-  senderId: User;
-  receiverId: User;
+type SocketMessageType = {
+  createdAt: string;
   message: string;
-  createdAt: string; // ISO 8601 date-time format
-  updatedAt: string; // ISO 8601 date-time format
-  __v: number; // version field, commonly used in MongoDB
-}
+  receiverId: string;
+  removed: {
+    flag: boolean;
+  };
+  reported: {
+    flag: boolean;
+    reason: null | string;
+  };
+  senderId: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+};
+
+// interface User {
+//   _id: string;
+//   username: string;
+//   profile_picture: string;
+// }
+
+// interface MessageStatus {
+//   flag: boolean;
+//   reason: string | null;
+// }
+
+// interface Message {
+//   reported: MessageStatus;
+//   removed: MessageStatus;
+//   _id: string;
+//   senderId: User;
+//   receiverId: User;
+//   message: string;
+//   createdAt: string; // ISO 8601 date-time format
+//   updatedAt: string; // ISO 8601 date-time format
+//   __v: number; // version field, commonly used in MongoDB
+// }
 const ChatMain = ({ page }: { page: 'create' | 'chat' }) => {
   const { socket } = useSocketContext();
-  const [newMessage, setNewMessage] = useState<Message>();
-  const [openNavbar, setOpenNavbar] = useState<boolean>(false);
+  const [newMessage, setNewMessage] = useState<SocketMessageType>();
 
   useEffect(() => {
-    socket?.on('newMessage', (newMessage) => {
-      newMessage.shouldShake = true;
+    socket?.on('newMessage', (newMessage: SocketMessageType) => {
+      // newMessage.shouldShake = true;
       console.log(newMessage, 'messfromabdo');
       setNewMessage(newMessage);
     });
@@ -49,20 +58,8 @@ const ChatMain = ({ page }: { page: 'create' | 'chat' }) => {
   }, [socket]);
   return (
     <div className='flex'>
-      <SideBar
-        newMessage={newMessage}
-        openNavbar={openNavbar}
-        setOpenNavbar={setOpenNavbar}
-      />
-      {page == 'create' ? (
-        <CreateChat />
-      ) : (
-        <Chat
-          newMessage={newMessage}
-          openNavbar={openNavbar}
-          setOpenNavbar={setOpenNavbar}
-        />
-      )}
+      <SideBar newMessage={newMessage} />
+      {page == 'create' ? <CreateChat /> : <Chat newMessage={newMessage} />}
     </div>
   );
 };

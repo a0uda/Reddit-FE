@@ -14,10 +14,11 @@ import {
   PhotoIcon,
 } from '@heroicons/react/24/outline';
 import { AiOutlineOrderedList } from 'react-icons/ai';
-import { useMutation, useQueryClient } from 'react-query';
-import { patchRequest, postRequest } from '../../API/User';
+import { useMutation } from 'react-query';
+import { patchRequest } from '../../API/User';
 import { tiptapConfig } from '../../utils/tiptap_config';
 import { CommentType, PostType } from '../../types/types';
+import { useAlert } from '../../Providers/AlertProvider';
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   const setLink = useCallback(() => {
@@ -170,10 +171,18 @@ const MenuFooter = ({
   //setFocused: Dispatch<SetStateAction<boolean>>;
   setError: Dispatch<SetStateAction<string>>;
   handleEdit: () => void;
-  post: PostType;
+  post: PostType | CommentType;
 }) => {
-  const patchReq = useMutation(patchRequest);
-  const queryClient = useQueryClient();
+  const { setAlertMessage, setIsError, trigger, setTrigger } = useAlert();
+
+  const patchReq = useMutation(patchRequest, {
+    onError: (error: string) => {
+      setAlertMessage(error);
+      setIsError(true);
+      setTrigger(!trigger);
+    },
+  });
+  // const queryClient = useQueryClient();
   // const addCommentMuation = useMutation(
   //   (content: string) =>
   //     patchRequest({
@@ -205,7 +214,6 @@ const MenuFooter = ({
       },
       {
         onSuccess: () => {
-          
           post.description = content;
           console.log('hellooooo', content, post.description);
           handleEdit();
@@ -278,7 +286,7 @@ export default function EditPostComment({
   isPost: boolean;
   handleEdit: () => void;
 }) {
-  const [content, setContent] = useState(post.description);
+  const [content] = useState(post.description);
   const editor = useEditor({
     ...tiptapConfig,
     content,

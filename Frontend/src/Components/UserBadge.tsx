@@ -20,7 +20,7 @@ const UserBadge = ({ username }: UserBadgeProps) => {
     queryKey: ['about data', username],
     queryFn: () => fetchRequest(`users/about/${username}`),
     onSuccess: (data) => {
-      setAboutData(data.data);
+      setAboutData(data?.data);
     },
   });
 

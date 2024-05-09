@@ -8,7 +8,7 @@ export default function RoundedButton(props: {
   buttonText: string;
   buttonTextColor: string;
   buttonShape?: string;
-  imgRight?: any;
+  imgRight?: string;
   children?: ReactNode;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;

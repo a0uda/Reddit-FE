@@ -1,12 +1,7 @@
 import React from 'react';
 import ContentContainer from './Containers/ContentContainer';
 import { Button } from '@material-tailwind/react';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { fetchRequest, postRequest } from '../../API/User';
 import { addPrefixToUsername } from '../../utils/helper_functions';
 import useSession from '../../hooks/auth/useSession';
@@ -20,7 +15,9 @@ const Compose = () => {
   const { to } = queryString.parse(location.search);
   const [from, setFrom] = React.useState(user?.username);
   const [fromFeedback, setFromFeedback] = React.useState('');
-  const [toString, setTo] = React.useState<string>(to == null ? '' : to);
+  const [toString, setTo] = React.useState<string | (string | null)[]>(
+    to == null ? '' : to
+  );
   const [subject, setSubject] = React.useState('');
   const [message, setMessage] = React.useState('');
   const [fromBool, setfromBool] = React.useState(false);
@@ -42,7 +39,7 @@ const Compose = () => {
     onSuccess: () => {
       queryClient.invalidateQueries('sentMessages');
     },
-    onError: (error) => {
+    onError: (error: string) => {
       setToFeedback(error);
       setToBool(true);
     },
@@ -82,25 +79,27 @@ const Compose = () => {
       setfromBool(true);
       return;
     }
-    const splitted = toString.split('/');
-    const recUsername = splitted[splitted.length - 1];
-    postReq.mutate({
-      endPoint: 'messages/compose/',
-      data: {
+    if (typeof toString === 'string') {
+      const splitted = toString.split('/');
+      const recUsername = splitted[splitted.length - 1];
+      postReq.mutate({
+        endPoint: 'messages/compose/',
         data: {
-          sender_username: from,
-          sender_type: senderType,
-          receiver_username: recUsername,
-          receiver_type: recType,
-          subject: subject,
-          message: message,
-          created_at: new Date(),
-          deleted_at: null,
-          unread_flag: false,
-          senderVia: from,
+          data: {
+            sender_username: from,
+            sender_type: senderType,
+            receiver_username: recUsername,
+            receiver_type: recType,
+            subject: subject,
+            message: message,
+            created_at: new Date(),
+            deleted_at: null,
+            unread_flag: false,
+            senderVia: from,
+          },
         },
-      },
-    });
+      });
+    }
   };
 
   return (
@@ -121,7 +120,7 @@ const Compose = () => {
               {addPrefixToUsername(user?.username || '', 'user')}
             </option>
             {getCommResponse.data?.data &&
-              getCommResponse.data?.data.map((com, i) => (
+              getCommResponse.data?.data.map((com: { name: string }) => (
                 <option key={com.name} value={com.name}>
                   {addPrefixToUsername(com.name, 'moderator')}
                 </option>
@@ -142,7 +141,7 @@ const Compose = () => {
             </span>
           </p>
           <input
-            value={toString}
+            value={toString as string}
             onChange={(e) => {
               setTo(e.target.value);
             }}

@@ -34,7 +34,7 @@ function App() {
   const { status } = useSession();
   const HandleRoutes = (props: { element: JSX.Element }) =>
     status !== 'authenticated' ? <Mainfeed /> : props.element;
-  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+  // const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
 
   const queryClient = new QueryClient({
     // mutationCache: new MutationCache({
@@ -55,29 +55,29 @@ function App() {
       queries: {
         refetchOnWindowFocus: false,
         refetchOnMount: false,
-        onError: (error) => {
-          // const errorObj = JSON.parse(error);
-          // console.log(errorObj.Error.data, 'hiiiii');
-          console.log('hiiii query');
+        // onError: (error) => {
+        //   // const errorObj = JSON.parse(error);
+        //   // console.log(errorObj.Error.data, 'hiiiii');
+        //   console.log('hiiii query');
 
-          setAlertMessage(error);
-          setIsError(true);
-          setTrigger(!trigger);
-          console.log(error);
-        },
+          // setAlertMessage(error);
+          // setIsError(true);
+          // setTrigger(!trigger);
+        //   console.log(error);
+        // },
       },
-      mutations: {
-        onError: (error) => {
-          // const errorObj = JSON.parse(error);
-          // console.log(errorObj.Error.data.err, 'midoo');
-          // console.log(error.data.err.message, 'hiiii mutate');
-          console.log('hiiii mutation');
+      // mutations: {
+      //   onError: (error) => {
+      //     // const errorObj = JSON.parse(error);
+      //     // console.log(errorObj.Error.data.err, 'midoo');
+      //     // console.log(error.data.err.message, 'hiiii mutate');
+      //     console.log('hiiii mutation');
 
-          setAlertMessage(error);
-          setIsError(true);
-          setTrigger(!trigger);
-        },
-      },
+      //     setAlertMessage(error);
+      //     setIsError(true);
+      //     setTrigger(!trigger);
+      //   },
+      // },
     },
   });
   return (

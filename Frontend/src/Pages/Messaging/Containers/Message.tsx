@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Button,
@@ -18,10 +18,11 @@ import {
 import { useMutation, useQueryClient } from 'react-query';
 import { postRequest } from '../../../API/User';
 import { useAlert } from '../../../Providers/AlertProvider';
+import { MessageType } from '../../../types/types';
 
 function Butt(props: {
   buttonText: string;
-  onClick?: () => void;
+  onClick?: (e: MouseEvent) => void;
   active: boolean;
 }) {
   return (
@@ -141,8 +142,8 @@ export const ReportModal = (props: {
               <Butt
                 key={rep + i}
                 buttonText={rep}
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={(event: MouseEvent) => {
+                  event.stopPropagation();
 
                   setChosenMsg(rep);
                 }}
@@ -354,10 +355,10 @@ const ReplyBody = (props: {
   recType: 'user' | 'moderator' | 'community';
   sendUsername: string;
   sendType: 'user' | 'moderator' | 'community';
-  sendVia: string;
+  sendVia: string | null;
   isSent: boolean;
   repId: string;
-  deleteDate: Date;
+  deleteDate: string | null;
   isExpandedAll: boolean;
   msgUnread: boolean;
 }) => {
@@ -461,17 +462,17 @@ const Message = (props: {
   type: string;
   isReply?: boolean;
   sendingDate: Date;
-  repliesArr?: object[];
+  repliesArr?: MessageType[];
   senderUsername: string;
   receiverUsername: string;
-  senderType: string;
-  receiverType: string;
+  senderType: 'user' | 'moderator' | 'community';
+  receiverType: 'user' | 'moderator' | 'community';
   subject: string;
   isSent: boolean;
-  senderVia?: string;
+  senderVia?: string | null;
   messageContent: string;
   messageId: string;
-  parentMessageId: string;
+  parentMessageId: string | null;
   is_invitation: boolean;
   refetch: () => void;
   query?: string;
@@ -917,9 +918,9 @@ const Message = (props: {
             </div>
           </div>
         )}
-        {props.repliesArr?.length > 0 && (
+        {props.repliesArr && props.repliesArr?.length > 0 && (
           <div className='flex flex-col gap-2 mt-3'>
-            {props.repliesArr.map((rep, i) => (
+            {props.repliesArr.map((rep: MessageType, i) => (
               <ReplyBody
                 key={`${rep}+${i}`}
                 recUsername={rep['receiver_username']}

@@ -6,7 +6,7 @@ import Card from '../UserSettings/Containers/Card';
 import Section from '../UserSettings/Containers/Section';
 import { useEffect, useState } from 'react';
 import { useAlert } from '../../Providers/AlertProvider';
-import { Radio, Typography } from '@material-tailwind/react';
+import { Typography } from '@material-tailwind/react';
 import { UserIcon, EyeIcon, LockClosedIcon } from '@heroicons/react/24/solid';
 import DropDownButton from '../UserSettings/Containers/DropDownButton';
 import LoadingProvider from '../../Components/LoadingProvider';
@@ -26,7 +26,7 @@ function GeneralSettings() {
   const [approvedAbility, setApprovedAbility] = useState('');
   const [restrictedd, setRestricted] = useState(false);
   const [privatee, setPrivate] = useState(false);
-  const handleOptionChange = (option) => {
+  const handleOptionChange = (option: string) => {
     setSelectedOption(option);
     if (option == 'Restricted') {
       setRestricted(true);
@@ -42,9 +42,8 @@ function GeneralSettings() {
     }
   };
 
-  const { data, isError, isLoading, refetch } = useQuery(
-    'general settings',
-    () => fetchRequest(`communities/get-general-settings/${community_name}`)
+  const { data, isError, isLoading } = useQuery('general settings', () =>
+    fetchRequest(`communities/get-general-settings/${community_name}`)
   );
   useEffect(() => {
     if (data?.data) {
@@ -74,10 +73,10 @@ function GeneralSettings() {
       setIsError(false);
       setAlertMessage('General Settings Updated Successfully');
     },
-    onError: (error) => {
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(error);
     },
   });
   const handleSaveChanges = () => {

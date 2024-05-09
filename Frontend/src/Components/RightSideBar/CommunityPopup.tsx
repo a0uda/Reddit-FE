@@ -5,6 +5,7 @@ import { postRequest } from '../../API/User';
 import { useMutation } from 'react-query';
 import { CommunityIcon } from '../../assets/icons/Icons';
 import { Link } from 'react-router-dom';
+import { useAlert } from '../../Providers/AlertProvider';
 
 interface CommunityPopupItemProps {
   //community data
@@ -25,7 +26,7 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
       setJustJoined(true);
     }
   }, [isJoined]);
-
+  const { setAlertMessage, setIsError, trigger, setTrigger } = useAlert();
   const joinMutation = useMutation(
     (communityName: string) =>
       postRequest({
@@ -36,8 +37,10 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
       onSuccess: () => {
         setIsJoined(true);
       },
-      onError: () => {
-        console.log('Error Joining Community');
+      onError: (error: string) => {
+        setAlertMessage(error);
+        setIsError(true);
+        setTrigger(!trigger);
       },
     }
   );
@@ -53,8 +56,10 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
         setJustJoined(false);
         setIsJoined(false);
       },
-      onError: () => {
-        console.log('Error Leaving Community');
+      onError: (error: string) => {
+        setAlertMessage(error);
+        setIsError(true);
+        setTrigger(!trigger);
       },
     }
   );

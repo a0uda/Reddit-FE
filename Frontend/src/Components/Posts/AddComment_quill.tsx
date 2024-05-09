@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const AddComment = ({ postId }: { postId: string }) => {
+const AddComment = () => {
   //   const [comment, setComment] = useState('');
 
   //   const handleCommentChange = (value: string) => {

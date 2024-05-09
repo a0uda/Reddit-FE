@@ -31,7 +31,7 @@ const PostItem: React.FC<PostItemProps> = (props) => {
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${props.communityName}/`),
     onSuccess: (data) => {
-      setCommunity(data.data);
+      setCommunity(data?.data);
     },
     onError: () => {
       // Handle error here

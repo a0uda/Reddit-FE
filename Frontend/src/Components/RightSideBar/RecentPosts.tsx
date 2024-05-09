@@ -2,30 +2,34 @@ import { useEffect, useState } from 'react';
 import { Card, Typography } from '@material-tailwind/react';
 import PostItem from './PostItem';
 // import postList from './PostList.ts';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import { PostType } from '../../types/types';
 import useSession from '../../hooks/auth/useSession';
+import { useAlert } from '../../Providers/AlertProvider';
 
 export function RecentPosts() {
   const [isContentVisible, setContentVisible] = useState(true);
   const [response, setResponse] = useState<PostType[]>();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState(false);
   const fetchReq = useMutation(fetchRequest);
   const { user } = useSession();
+  const { setAlertMessage, setIsError, trigger, setTrigger } = useAlert();
+
   useEffect(() => {
     if (user?.username) {
-      setIsLoading(true);
+      // setIsLoading(true);
       fetchReq.mutate(`users/posts/${user.username}?page=1`, {
         onSuccess: (data) => {
-          setIsLoading(false);
-          console.log('reem', data.data);
-          setResponse(data.data.slice(0, 5) ?? []);
+          // setIsLoading(false);
+          console.log('reem', data?.data);
+          setResponse(data?.data.slice(0, 5) ?? []);
         },
-        onError: (err) => {
-          setIsLoading(false); // Set loading state to false on error
-          setError(true); // Set error state
+        onError: () => {
+          setAlertMessage('Unable to fetch recent posts');
+          setIsError(true);
+          setTrigger(!trigger);
         },
       });
     }

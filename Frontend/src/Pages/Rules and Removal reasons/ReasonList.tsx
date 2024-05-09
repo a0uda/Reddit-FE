@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import RoundedButton from '../../Components/RoundedButton';
 import AddRemovalReason from './AddRemovalReason';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
 
 interface reasonDataType {
   removal_reason_title: string;
@@ -12,7 +10,6 @@ interface reasonDataType {
 
 export default function ReasonList({
   fetchDataReasons,
-  setReasonsList,
   reasonsList,
 }: {
   fetchDataReasons: () => void;
@@ -21,7 +18,6 @@ export default function ReasonList({
 }) {
   const [openAddRule, setOpenAddRule] = useState(false);
   // const [reasonsList, setReasonsList] = useState<reasonDataType[]>([]);
-  const { community_name } = useParams();
   const [initialValues, setInitialValues] = useState({
     community_name: '',
     removal_reason_title: '',

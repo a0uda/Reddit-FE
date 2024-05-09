@@ -4,15 +4,15 @@ import {
   DialogFooter,
   DialogHeader,
 } from '@material-tailwind/react';
-import React, { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import RoundedButton from '../RoundedButton';
 import ShareOption from './ShareOption';
 import { postRequest } from '../../API/User';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 export default function SharePostModal(props: {
-  handleOpen;
-  open;
+  handleOpen: () => void;
+  open: boolean;
   postId: string;
 }) {
   const [text, setText] = useState('');
@@ -22,7 +22,7 @@ export default function SharePostModal(props: {
     setPostInCommunityFlag(communityFlag);
     setCommunityName(communityName);
   };
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const newText = event.target.value;
     setText(newText);
   };

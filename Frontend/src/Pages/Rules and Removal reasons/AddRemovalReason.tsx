@@ -84,7 +84,7 @@ export default function AddRemovalReason(props: RuleFormProps): JSX.Element {
   };
 
   return (
-    <Dialog size='sm' open={props.open}>
+    <Dialog size='sm' open={props.open} handler={props.handleOpen}>
       <DialogHeader className='!block relative flex justify-between'>
         <div className='block relative border-b border-lines-color flex justify-between'>
           <h2 className='text-left'>
