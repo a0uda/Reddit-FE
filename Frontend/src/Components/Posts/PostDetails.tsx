@@ -123,7 +123,11 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                   {post.title}
                 </Typography>
               </div>
-              <NonEditableProvider content={post.description} />
+              {!(
+                post.moderator_details.removed_flag ||
+                post.moderator_details.reported_flag ||
+                post.moderator_details.spammed_flag
+              ) && <NonEditableProvider content={post.description} />}
 
               <div className='w-full'>
                 {post.moderator_details.removed_flag ||
