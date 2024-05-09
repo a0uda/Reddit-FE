@@ -32,8 +32,8 @@ const SearchDropdown = ({
   users: UserType[];
   setIsFocused: (isFocused: boolean) => void;
   setSearch: (search: string) => void;
-  recent: { title: string; icon?: string }[];
-  setRecent: React.Dispatch<
+  recent?: { title: string; icon?: string }[];
+  setRecent?: React.Dispatch<
     React.SetStateAction<{ title: string; icon?: string }[]>
   >;
 }) => {
@@ -44,8 +44,8 @@ const SearchDropdown = ({
     queryKey: ['trending posts', url],
     queryFn: () => fetchRequest('posts/trending'),
     onSuccess: (data) => {
-      console.log('data.data: ', data.data);
-      setPosts(data.data.content);
+      console.log('data.data: ', data?.data);
+      setPosts(data?.data.content);
     },
   });
 
@@ -55,6 +55,7 @@ const SearchDropdown = ({
     <List className='p-0'>
       {/* Recent */}
       {searchQuery.length === 0 &&
+        recent &&
         (recent.length > 0 ? (
           recent.map((item, index) => (
             <ListItem ripple={false} key={index}>

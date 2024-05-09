@@ -27,14 +27,14 @@ const SearchTypes = () => {
 
   return (
     <>
-      <div className='flex items-center gap-1 my-2 font-semibold'>
+      <div className='flex items-center gap-1 my-2 font-semibold w-0 min-w-full'>
         <Typography
           variant='small'
           className='font-semibold text-xs uppercase mr-4 shrink-0'
         >
           Search Results
         </Typography>
-        <div className='flex items-center gap-1 overflow-auto w-full'>
+        <div className='flex items-center gap-1 overflow-x-auto'>
           {searchTypes.map((searchType) => (
             <Link
               key={searchType.buttonName}
