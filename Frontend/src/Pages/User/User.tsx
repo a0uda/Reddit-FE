@@ -50,7 +50,7 @@ const SubNavBar = (props: {
     'history',
   ];
   return (
-    <div className='flex gap-2 mb-2'>
+    <div className='flex gap-2 mb-2 overflow-x-auto w-0 min-w-full'>
       {props.buttonArray.map((butt, i) => (
         <NavButton
           key={`${i}${butt}`}
@@ -144,7 +144,7 @@ function User() {
                 </div>
                 {myData ? (
                   <>
-                    <div className='overflow-auto'>
+                    <div className=''>
                       <SubNavBar
                         buttonArray={[
                           'Overview',
