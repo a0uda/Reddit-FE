@@ -26,7 +26,7 @@ const NavButton = (props: {
   return (
     <Link
       to={`/u/${props.username}/${props.buttonLink}`}
-      className={`${props.active ? 'bg-neutral-500' : ''}  text-black rounded-full py-[10px] px-1 hover:underline`}
+      className={`${props.active ? 'bg-neutral-500' : ''}  text-black font-semibold rounded-full py-[10px] px-2 hover:underline`}
     >
       <div className={`text-black ${props.textSize}`}>{props.buttonName}</div>
     </Link>
@@ -50,7 +50,7 @@ const SubNavBar = (props: {
     'history',
   ];
   return (
-    <div className='flex gap-2 mb-2 overflow-x-auto w-0 min-w-full'>
+    <div className='flex gap-3 mb-2 overflow-x-auto w-0 min-w-full'>
       {props.buttonArray.map((butt, i) => (
         <NavButton
           key={`${i}${butt}`}
@@ -100,7 +100,7 @@ function User() {
       <LoadingProvider error={error} isLoading={isLoading}>
         <ContentLayout>
           <ContentLayout.Main>
-            <Card className='shadow-none mx-1'>
+            <Card className='shadow-none mx-1 ml-3'>
               <CardBody className='px-0'>
                 <div className='flex gap-2 mb-7'>
                   <div className='flex flex-col relative '>
@@ -199,7 +199,7 @@ function User() {
                         buttonArray={['Overview', 'Posts', 'Comments']}
                         active={page}
                         username={username}
-                        textSize='text-lg'
+                        textSize='text-sm'
                       />
                     </div>
 
