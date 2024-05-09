@@ -142,7 +142,7 @@ export function CommunityRSB({
             <div className='px-4'>
               <Typography
                 variant='h6'
-                className='p-0 font-body font-semibold -tracking-tight text-black'
+                className='p-0 font-body font-semibold -tracking-tight text-black overflow-hidden whitespace-nowrap text-ellipsis w-72'
               >
                 {communityName}
               </Typography>
