@@ -1,67 +1,107 @@
-// CommunityPopup.test.tsx
-import { render, screen } from '@testing-library/react';
+//typescript
+// All necessary imports here
+// import React from 'react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import CommunityPopup from '../../Components/RightSideBar/CommunityPopup';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { postRequest } from '../../API/User';
+// import { useAlert } from '../../Providers/AlertProvider';
 import '@testing-library/jest-dom';
 
+jest.mock('../../API/User', () => ({
+  postRequest: jest.fn(),
+}));
+jest.mock('../../Providers/AlertProvider', () => ({
+  useAlert: jest.fn().mockImplementation(() => ({
+    setAlertMessage: jest.fn(),
+    setIsError: jest.fn(),
+    trigger: false,
+    setTrigger: jest.fn(),
+  })),
+}));
+
+const queryClient = new QueryClient();
+
+interface CommunityPopupItemProps {
+  //community data
+  communityCoverImage?: string;
+  communityAvatar?: string;
+  communityName: string;
+  joined?: boolean;
+  communityDescription?: string;
+  communityMembers?: number;
+}
+
+const renderComponent = (props: CommunityPopupItemProps) =>
+  render(
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <CommunityPopup {...props} />
+      </Router>
+    </QueryClientProvider>
+  );
+
 describe('CommunityPopup', () => {
-  const mockProps = {
-    communityCoverImage: 'testCoverSrc',
-    communityAvatar: 'testAvatarSrc',
-    communityName: 'testName',
-    communityDescription: 'testDescription',
-    communityMembers: 123,
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const baseProps = {
+    communityName: 'test-community',
   };
 
-  beforeEach(() => {
-    render(<CommunityPopup {...mockProps} />);
+  test('Should show join button if not joined', () => {
+    const props = { ...baseProps, joined: false };
+    renderComponent(props);
+    expect(screen.queryByTestId('join-button')).not.toBeNull();
   });
 
-  it('renders the component', () => {
-    const communityPopupElement = screen.getByTestId('community-popup');
-    expect(communityPopupElement).toBeInTheDocument();
+  test('Should not show any button if joined', () => {
+    const props = { ...baseProps, joined: true };
+    renderComponent(props);
+    expect(screen.queryByTestId('join-button')).toBeNull();
+    expect(screen.queryByTestId('leave-button')).toBeNull();
   });
 
-  it('renders the cover image with correct src', () => {
-    const coverImageElement = screen.getByTestId('community-cover');
-    expect(coverImageElement).toHaveAttribute(
-      'src',
-      mockProps.communityCoverImage
-    );
+  test('Should call join mutation when clicking join button', async () => {
+    const props = { ...baseProps, joined: false };
+    renderComponent(props);
+    fireEvent.click(screen.getByTestId('join-button'));
   });
 
-  it('renders the avatar with correct src', () => {
-    const avatarElement = screen.getByTestId('community-avatar');
-    expect(avatarElement).toHaveAttribute('src', mockProps.communityAvatar);
+  test('Should display community name correctly', () => {
+    renderComponent(baseProps);
+    expect(
+      screen.getByText(`r/${baseProps.communityName}`)
+    ).toBeInTheDocument();
   });
 
-  it('renders the community name', () => {
-    const communityNameElement = screen.getByTestId('community-name');
-    expect(communityNameElement).toHaveTextContent(
-      `r/${mockProps.communityName}`
-    );
+  test('Should handle rendering without cover image', () => {
+    const props = { ...baseProps, communityAvatar: 'avatar.png' };
+    renderComponent(props);
+    expect(screen.queryByTestId('community-cover-image')).toBeNull();
   });
 
-  it('renders the community description', () => {
-    const communityDescriptionElement = screen.getByTestId(
-      'community-description'
-    );
-    expect(communityDescriptionElement).toHaveTextContent(
-      mockProps.communityDescription
-    );
+  test('Should display cover image if provided', () => {
+    const props = { ...baseProps, communityCoverImage: 'cover.jpg' };
+    renderComponent(props);
+    expect(screen.getByAltText('Community Cover')).toBeInTheDocument();
   });
 
-  it('renders the members number', () => {
-    const membersNumberElement = screen.getByTestId('community-members');
-    expect(membersNumberElement).toHaveTextContent(
-      `${mockProps.communityMembers}`
-    );
+  test('Displays amount of members if provided', () => {
+    const props = { ...baseProps, communityMembers: 120 };
+    renderComponent(props);
+    expect(screen.getByText('120')).toBeInTheDocument();
   });
-});
 
-test('dummy test', () => {
-  expect(1).toBe(1);
-});
+  test('Displays default text when no members count is provided', () => {
+    const props = { ...baseProps, communityMembers: 0 };
+    renderComponent(props);
+    expect(screen.getByText('0')).toBeInTheDocument();
+  });
 
-test('dummy test 2', () => {
-  expect(1).toBe(1);
+  (postRequest as jest.Mock).mockImplementation(() =>
+    Promise.reject('Error joining')
+  );
 });

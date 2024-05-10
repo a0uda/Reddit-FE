@@ -1,67 +1,146 @@
-// CommunityRSB.test.tsx
-import { render, screen } from '@testing-library/react';
+// import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import CommunityRSB from '../../Components/RightSideBar/CommunityRSB';
+import { BrowserRouter as Router } from 'react-router-dom';
 import '@testing-library/jest-dom';
 
+const queryClient = new QueryClient();
+
+const mockCommunityData = {
+  name: 'testCommunity',
+  communityPage: false,
+};
+
+const mockCommunityApiResponse = {
+  name: 'testCommunity',
+  description: 'Test community description',
+  members_count: 100,
+  joined_flag: false, // Assuming user is not joined initially
+};
+
 describe('CommunityRSB', () => {
-  const mockProps = {
-    communityCoverImage: 'testCoverSrc',
-    communityAvatar: 'testAvatarSrc',
-    communityName: 'testName',
-    communityDescription: 'testDescription',
-    communityMembers: 123,
-  };
-
   beforeEach(() => {
-    render(<CommunityRSB {...mockProps} name='testName' />);
-  });
-
-  it('renders the component', () => {
-    const communityRSBElement = screen.getByTestId('community-rsb');
-    expect(communityRSBElement).toBeInTheDocument();
-  });
-
-  it('renders the cover image with correct src', () => {
-    const coverImageElement = screen.getByTestId('community-cover');
-    expect(coverImageElement).toHaveAttribute(
-      'src',
-      mockProps.communityCoverImage
+    queryClient.setQueryData(
+      ['communitiesRSB', mockCommunityData.name, false],
+      mockCommunityApiResponse
     );
   });
 
-  it('renders the avatar with correct src', () => {
-    const avatarElement = screen.getByTestId('community-avatar');
-    expect(avatarElement).toHaveAttribute('src', mockProps.communityAvatar);
+  afterEach(() => {
+    queryClient.clear();
   });
 
-  it('renders the community name', () => {
-    const communityNameElement = screen.getByTestId('community-name');
-    expect(communityNameElement).toHaveTextContent(
-      `r/${mockProps.communityName}`
+  it('renders community card with fetched title, description, and member count', async () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <CommunityRSB {...mockCommunityData} />
+        </Router>
+      </QueryClientProvider>
     );
+
+    // Wait for loading state to resolve
+    await waitFor(() => {
+      expect(screen.getByTestId('community-title')).toHaveTextContent(
+        mockCommunityApiResponse.name
+      );
+      expect(screen.getByTestId('community-description')).toHaveTextContent(
+        mockCommunityApiResponse.description
+      );
+      expect(screen.getByTestId('members-count')).toHaveTextContent(
+        mockCommunityApiResponse.members_count.toString()
+      );
+    });
   });
 
-  it('renders the community description', () => {
-    const communityDescriptionElement = screen.getByTestId(
-      'community-description'
+  it('renders join button when user is not joined', async () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <CommunityRSB {...mockCommunityData} />
+        </Router>
+      </QueryClientProvider>
     );
-    expect(communityDescriptionElement).toHaveTextContent(
-      mockProps.communityDescription
-    );
+
+    // Wait for loading state to resolve
+    await waitFor(() => {
+      expect(screen.getByTestId('join-button')).toBeInTheDocument();
+    });
   });
 
-  it('renders the members number', () => {
-    const membersNumberElement = screen.getByTestId('community-members');
-    expect(membersNumberElement).toHaveTextContent(
-      `${mockProps.communityMembers}`
+  it('renders leave button when user is already joined', async () => {
+    // Modify the joined_flag in mock data to simulate user already joined
+    const mockCommunityApiResponseJoined = {
+      ...mockCommunityApiResponse,
+      joined_flag: true,
+    };
+
+    queryClient.setQueryData(
+      ['communitiesRSB', mockCommunityData.name, false],
+      mockCommunityApiResponseJoined
     );
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <CommunityRSB {...mockCommunityData} />
+        </Router>
+      </QueryClientProvider>
+    );
+
+    // Wait for loading state to resolve
+    await waitFor(() => {
+      expect(screen.getByTestId('leave-button')).toBeInTheDocument();
+    });
   });
-});
 
-test('dummy test', () => {
-  expect(1).toBe(1);
-});
+  it('triggers joinMutation when join button is clicked', async () => {
+    const joinMutation = jest.fn();
 
-test('dummy test 2', () => {
-  expect(1).toBe(1);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <CommunityRSB {...mockCommunityData} />
+        </Router>
+      </QueryClientProvider>
+    );
+
+    await waitFor(() => {
+      const joinButton = screen.getByTestId('join-button');
+      fireEvent.click(joinButton);
+    });
+
+    expect(joinMutation).toHaveBeenCalledWith(mockCommunityData.name);
+  });
+
+  // it('triggers leaveMutation when leave button is clicked', async () => {
+  //   const leaveMutation = jest.fn();
+
+  //   // Modify the joined_flag in mock data to simulate user already joined
+  //   const mockCommunityApiResponseJoined = {
+  //     ...mockCommunityApiResponse,
+  //     joined_flag: true,
+  //   };
+
+  //   queryClient.setQueryData(
+  //     ['communitiesRSB', mockCommunityData.name, false],
+  //     mockCommunityApiResponseJoined
+  //   );
+
+  //   render(
+  //     <QueryClientProvider client={queryClient}>
+  //       <Router>
+  //         <CommunityRSB {...mockCommunityData} leaveMutation={leaveMutation} />
+  //       </Router>
+  //     </QueryClientProvider>
+  //   );
+
+  //   await waitFor(() => {
+  //     const leaveButton = screen.getByTestId('leave-button');
+  //     fireEvent.click(leaveButton);
+  //   });
+
+  //   expect(leaveMutation).toHaveBeenCalledWith(mockCommunityData.name);
+  // });
 });

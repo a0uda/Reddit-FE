@@ -1,6 +1,5 @@
-// RecentPosts.test.tsx
 import { render, screen } from '@testing-library/react';
-import RecentPosts from '../../Components/RightSideBar/RecentPosts';
+import { RecentPosts } from '../../Components/RightSideBar/RecentPosts';
 import '@testing-library/jest-dom';
 
 describe('RecentPosts', () => {
@@ -31,25 +30,24 @@ describe('RecentPosts', () => {
   };
 
   beforeEach(() => {
-    render(<RecentPosts {...mockProps} />);
+    render(<RecentPosts />);
   });
 
-  it('renders the component', () => {
+  it('renders the component with correct post items', () => {
     const recentPostsElement = screen.getByTestId('recent-posts-container');
     expect(recentPostsElement).toBeInTheDocument();
-  });
 
-  it('renders the post items', () => {
-    const postItemElement1 = screen.getByTestId('post-item-0');
-    expect(postItemElement1).toBeInTheDocument();
-    expect(postItemElement1).toHaveTextContent('testTitle1');
-    expect(postItemElement1).toHaveTextContent('testDescription1');
+    // Check if the correct number of post items are rendered
+    const postItems = screen.getAllByTestId(/^post-item-\d+$/);
+    expect(postItems.length).toBe(mockProps.response.length);
 
-    const postItemElement2 = screen.getByTestId('post-item-1');
-    expect(postItemElement2).toBeInTheDocument();
-    expect(postItemElement2).toHaveTextContent('testTitle2');
-    expect(postItemElement2).toHaveTextContent('testDescription2');
-    // Add more assertions as needed
+    // Check if each post item renders the correct title and description
+    mockProps.response.forEach((post, index) => {
+      const postItemElement = screen.getByTestId(`post-item-${index}`);
+      expect(postItemElement).toBeInTheDocument();
+      expect(postItemElement).toHaveTextContent(post.title);
+      expect(postItemElement).toHaveTextContent(post.description);
+    });
   });
 
   it('renders the clear button', () => {

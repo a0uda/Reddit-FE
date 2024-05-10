@@ -211,7 +211,7 @@ interface Rule {
   full_description: string;
 }
 
-const CommunityRules = ({ name: communityName }: CommunityProps) => {
+export const CommunityRules = ({ name: communityName }: CommunityProps) => {
   const url = window.location.href;
   useQuery({
     queryKey: ['communities/rules/', communityName, url],
@@ -232,7 +232,7 @@ const CommunityRules = ({ name: communityName }: CommunityProps) => {
       >
         RULES
       </Typography>
-      {rulesList.map((rule: Rule, index: number) => (
+      {rulesList?.map((rule: Rule, index: number) => (
         <AccordionDropDown
           key={rule.rule_order}
           order={index + 1}
@@ -245,7 +245,9 @@ const CommunityRules = ({ name: communityName }: CommunityProps) => {
   );
 };
 
-const CommunityModerators = ({ name: communityName }: CommunityProps) => {
+export const CommunityModerators = ({
+  name: communityName,
+}: CommunityProps) => {
   const url = window.location.href;
   useQuery({
     queryKey: ['communities/about/moderators', communityName, url],
@@ -260,7 +262,7 @@ const CommunityModerators = ({ name: communityName }: CommunityProps) => {
   return (
     // <LoadingProvider error={isError} isLoading={isLoading}>
     <>
-      {moderatorsList.map((community: ModeratorProps, index: number) => (
+      {moderatorsList?.map((community: ModeratorProps, index: number) => (
         <ModeratorItem
           key={index}
           profile_picture={community.profile_picture}
