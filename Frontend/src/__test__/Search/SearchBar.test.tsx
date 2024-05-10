@@ -102,8 +102,10 @@ describe('SearchBar Component', () => {
       </QueryClientProvider>,
       { wrapper: MemoryRouter }
     );
-    const searchInput = screen.getByTestId('search-bar');
-    fireEvent.change(searchInput, { target: { value: 'testQuery' } });
+    const searchInput = screen.getByTestId('search-bar') as HTMLInputElement;
+    // fireEvent.change(searchInput, { value: 'testQuery' });
+    // expect(searchInput.value).toBe('testQuery');
+
     fireEvent.keyDown(searchInput, { key: 'Enter', code: 'Enter' });
     expect(mockNavigate).toHaveBeenCalledWith('/search/?q=testQuery&type=link');
   });
@@ -117,9 +119,9 @@ describe('SearchBar Component', () => {
   //   );
   //   const searchbar = screen.getByTestId('search-bar');
   //   fireEvent.click(searchbar);
-  //   const searchInput = screen.getByTestId('search-input');
-  //   fireEvent.focus(searchInput);
-  //   await userEvent.type(searchInput, 'hi');
+  //   const searchInput = screen.getByTestId('search-input') as HTMLInputElement;
+  //   fireEvent.change(searchInput, { value: '1' });
+  //   expect(searchInput.value).toBe('1');
   //   await waitFor(() => {
   //     const searchDropdown = screen.getByTestId('search-dropdown');
   //     expect(searchDropdown).toHaveTextContent('community1');
