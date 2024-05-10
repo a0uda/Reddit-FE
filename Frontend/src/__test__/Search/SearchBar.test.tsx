@@ -108,23 +108,24 @@ describe('SearchBar Component', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/search/?q=testQuery&type=link');
   });
 
-  //   it('should display communities and users from search', async () => {
-  //     render(
-  //       <QueryClientProvider client={queryClient}>
-  //         <SearchBar />
-  //       </QueryClientProvider>,
-  //       { wrapper: MemoryRouter }
-  //     );
-  //     const searchbar = screen.getByTestId('search-bar');
-  //     fireEvent.click(searchbar);
-  //     const searchInput = screen.getByTestId('search-input');
-  //     await userEvent.type(searchInput, 'hi');
-  //     await waitFor(() => {
-  //       const searchDropdown = screen.getByTestId('search-dropdown');
-  //       expect(searchDropdown).toHaveTextContent('community1');
-  //       expect(searchDropdown).toHaveTextContent('user1');
-  //     });
+  // it('should display communities and users from search', async () => {
+  //   render(
+  //     <QueryClientProvider client={queryClient}>
+  //       <SearchBar />
+  //     </QueryClientProvider>,
+  //     { wrapper: MemoryRouter }
+  //   );
+  //   const searchbar = screen.getByTestId('search-bar');
+  //   fireEvent.click(searchbar);
+  //   const searchInput = screen.getByTestId('search-input');
+  //   fireEvent.focus(searchInput);
+  //   await userEvent.type(searchInput, 'hi');
+  //   await waitFor(() => {
+  //     const searchDropdown = screen.getByTestId('search-dropdown');
+  //     expect(searchDropdown).toHaveTextContent('community1');
+  //     expect(searchDropdown).toHaveTextContent('user1');
   //   });
+  // });
 
   it('should handle empty data', () => {
     render(
