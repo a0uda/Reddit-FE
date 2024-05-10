@@ -58,7 +58,11 @@ const SearchDropdown = ({
         recent &&
         (recent.length > 0 ? (
           recent.map((item, index) => (
-            <ListItem ripple={false} key={index}>
+            <ListItem
+              ripple={false}
+              key={index}
+              data-testid={`recent-item-${index}`}
+            >
               <button
                 className='flex w-full h-full'
                 onClick={() => {
@@ -94,7 +98,10 @@ const SearchDropdown = ({
             </ListItem>
           ))
         ) : (
-          <ListItem className='p-0 flex flex-col items-center justify-center text-center hover:bg-transparent focus:bg-transparent'>
+          <ListItem
+            className='p-0 flex flex-col items-center justify-center text-center hover:bg-transparent focus:bg-transparent'
+            data-testid='no-recent-searches'
+          >
             <img
               className='max-h-[150px] mb-xl'
               role='presentation'
@@ -116,6 +123,7 @@ const SearchDropdown = ({
           <ListItem
             ripple={false}
             className='px-4 mt-2 border-t-2 border-neutral-muted rounded-none'
+            data-testid='trending-today'
           >
             <Typography
               variant='small'
@@ -136,7 +144,11 @@ const SearchDropdown = ({
       {/* Communities */}
       {searchQuery.length > 0 && communities.length > 0 && (
         <>
-          <Typography variant='small' className='mx-4 mt-2 font-medium'>
+          <Typography
+            variant='small'
+            className='mx-4 mt-2 font-medium'
+            data-testid='communities-heading'
+          >
             Communities
           </Typography>
           {communities.map((community, index) => (
@@ -146,6 +158,7 @@ const SearchDropdown = ({
                 setIsFocused(false);
               }}
               key={community.id + index}
+              data-testid={`community-item-${index}`}
             >
               <ListItem ripple={false} className='px-4'>
                 <ListItemPrefix>
@@ -180,7 +193,11 @@ const SearchDropdown = ({
       {/* People */}
       {searchQuery.length > 0 && users.length > 0 && (
         <>
-          <Typography variant='small' className='mx-4 mt-2 font-medium'>
+          <Typography
+            variant='small'
+            className='mx-4 mt-2 font-medium'
+            data-testid='people-heading'
+          >
             People
           </Typography>
           {users.map((user) => (
@@ -190,6 +207,7 @@ const SearchDropdown = ({
                 setIsFocused(false);
               }}
               key={user._id}
+              data-testid={`user-item-${user._id}`}
             >
               <ListItem ripple={false} className='px-4'>
                 <ListItemPrefix>
@@ -225,6 +243,7 @@ const SearchDropdown = ({
         <ListItem
           ripple={false}
           className='p-4 border-t-2 border-neutral-muted rounded-none'
+          data-testid='search-query'
         >
           <ListItemPrefix>
             <HiMagnifyingGlass className='h-6 w-6' />
