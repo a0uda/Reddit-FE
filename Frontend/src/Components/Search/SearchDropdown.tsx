@@ -52,7 +52,7 @@ const SearchDropdown = ({
   const navigate = useNavigate();
 
   return (
-    <List className='p-0'>
+    <List className='p-0' data-testid='search-dropdown'>
       {/* Recent */}
       {searchQuery.length === 0 &&
         recent &&
@@ -81,11 +81,12 @@ const SearchDropdown = ({
               <ListItemSuffix>
                 <IconButton
                   variant='text'
-                  onClick={() =>
-                    setRecent((prev) =>
-                      prev.filter((_, i) => i !== recent.indexOf(item))
-                    )
-                  }
+                  onClick={() => {
+                    if (setRecent)
+                      setRecent((prev) =>
+                        prev.filter((_, i) => i !== recent.indexOf(item))
+                      );
+                  }}
                 >
                   <XCircleIcon className='h-6 w-6' />
                 </IconButton>

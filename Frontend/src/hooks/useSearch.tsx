@@ -2,7 +2,11 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
-function useSearch(endpoint: string) {
+function useSearch(endpoint: string): {
+  data: unknown;
+  isLoading: boolean;
+  error: string;
+} {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
