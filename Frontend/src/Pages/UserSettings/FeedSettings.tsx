@@ -7,12 +7,25 @@ import { fetchRequest, patchRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
 import { useState } from 'react';
+type CommunityContentSortType = {
+  type: string;
+  duration: string;
+  sort_remember_per_community: boolean;
+};
+type GlobalViewType = {
+  global_content_view: string;
+  global_remember_per_community: boolean;
+};
 
 function FeedSettings() {
   const [Adult_content_flag, setAdult_content_flag] = useState(false);
   const [autoplay_media, setAutoplay_media] = useState(false);
-  const [community_content_sort, setCommunity_content_sort] = useState(false);
-  const [global_content, setGlobal_content] = useState(false);
+  const [community_content_sort, setCommunity_content_sort] = useState<
+    CommunityContentSortType | undefined
+  >();
+  const [global_content, setGlobal_content] = useState<
+    GlobalViewType | undefined
+  >();
   const [Open_posts_in_new_tab, setOpen_posts_in_new_tab] = useState(false);
   const [community_themes, setCommunity_themes] = useState(false);
 
@@ -24,15 +37,15 @@ function FeedSettings() {
         const {
           Adult_content_flag,
           autoplay_media,
-          community_content_sort,
+          communitiy_content_sort,
           global_content,
           Open_posts_in_new_tab,
           community_themes,
         } = data?.data || {};
-        console.log('Adult_content_flag', community_content_sort);
+        console.log('Adult_content_flag', communitiy_content_sort);
         setAdult_content_flag(Adult_content_flag);
         setAutoplay_media(autoplay_media);
-        setCommunity_content_sort(community_content_sort);
+        setCommunity_content_sort(communitiy_content_sort);
         setGlobal_content(global_content);
         setOpen_posts_in_new_tab(Open_posts_in_new_tab);
         setCommunity_themes(community_themes);
@@ -120,7 +133,9 @@ function FeedSettings() {
           description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
         >
           <SwitchButton
-            checked={community_content_sort?.sort_remember_per_community}
+            checked={
+              community_content_sort?.sort_remember_per_community || false
+            }
             onChange={(value) =>
               handleToggleSwitch({
                 community_content_sort: {
@@ -152,7 +167,7 @@ function FeedSettings() {
           description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
         >
           <SwitchButton
-            checked={global_content?.global_remember_per_community}
+            checked={global_content?.global_remember_per_community || false}
             onChange={(value) =>
               handleToggleSwitch({
                 global_content: {
