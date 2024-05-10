@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import RoundedButton from '../../Components/RoundedButton';
 import AddRemovalReason from './AddRemovalReason';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
 
 interface reasonDataType {
   removal_reason_title: string;
@@ -12,7 +10,6 @@ interface reasonDataType {
 
 export default function ReasonList({
   fetchDataReasons,
-  setReasonsList,
   reasonsList,
 }: {
   fetchDataReasons: () => void;
@@ -21,7 +18,6 @@ export default function ReasonList({
 }) {
   const [openAddRule, setOpenAddRule] = useState(false);
   // const [reasonsList, setReasonsList] = useState<reasonDataType[]>([]);
-  const { community_name } = useParams();
   const [initialValues, setInitialValues] = useState({
     community_name: '',
     removal_reason_title: '',
@@ -56,13 +52,13 @@ export default function ReasonList({
   const handleSelectRule = (reasonData: reasonDataType) => {
     console.log('Reason Data:', reasonData);
 
-    const { removal_reason_title, reason_message, _id } = reasonData;
-    console.log('Extracted Data:', removal_reason_title, reason_message, _id);
+    // const { removal_reason_title, reason_message, _id } = reasonData;
+    // console.log('Extracted Data:', removal_reason_title, reason_message, _id);
 
-    const removal_reason_id = _id;
+    const removal_reason_id = reasonData._id;
     let removal_reason;
-    if (reason_message) {
-      removal_reason = reason_message;
+    if (reasonData.removal_reason) {
+      removal_reason = reasonData.removal_reason;
     } else {
       removal_reason = '';
     }
@@ -70,7 +66,7 @@ export default function ReasonList({
 
     setInitialValues({
       community_name,
-      removal_reason_title,
+      removal_reason_title: reasonData.removal_reason_title,
       removal_reason,
       removal_reason_id,
     });

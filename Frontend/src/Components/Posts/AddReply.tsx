@@ -17,6 +17,7 @@ import { AiOutlineOrderedList } from 'react-icons/ai';
 import { useMutation, useQueryClient } from 'react-query';
 import { postRequest } from '../../API/User';
 import { tiptapConfig } from '../../utils/tiptap_config';
+import { useAlert } from '../../Providers/AlertProvider';
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   const setLink = useCallback(() => {
@@ -166,6 +167,7 @@ const MenuFooter = ({
   setError: Dispatch<SetStateAction<string>>;
 }) => {
   const queryClient = useQueryClient();
+  const { setAlertMessage, setIsError, trigger, setTrigger } = useAlert();
   const addCommentMuation = useMutation(
     (content: string) =>
       postRequest({
@@ -177,10 +179,11 @@ const MenuFooter = ({
         // Invalidate or refetch a query on success
         queryClient.invalidateQueries('comments');
       },
-      // onError: () => {
-      //   // Perform any actions on error, like showing an error message
-      //   console.log('Error');
-      // },
+      onError: (error: string) => {
+        setAlertMessage(error);
+        setIsError(true);
+        setTrigger(!trigger);
+      },
     }
   );
 

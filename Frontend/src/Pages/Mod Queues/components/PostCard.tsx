@@ -1,9 +1,8 @@
-import React, { MouseEventHandler, ReactNode, useState } from 'react';
-import { CommentType, PostType } from '../../../types/types';
+import { MouseEventHandler, ReactNode, useState } from 'react';
+import { PostType, RemovalReasonType } from '../../../types/types';
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  CheckBadgeIcon,
   CheckIcon,
   EyeSlashIcon,
   LockClosedIcon,
@@ -25,7 +24,6 @@ import {
   DialogHeader,
   IconButton,
   DialogBody,
-  Input,
   DialogFooter,
   Select,
   Option,
@@ -37,16 +35,7 @@ import {
   getTimeDifferenceAsString,
 } from '../../../utils/helper_functions';
 import { HiEllipsisHorizontal } from 'react-icons/hi2';
-import {
-  BookmarkIcon,
-  BookmarkSlashIcon,
-  EyeIcon,
-  // EyeSlashIcon,
-  FlagIcon,
-  PencilIcon,
-  TrashIcon,
-  ExclamationTriangleIcon,
-} from '@heroicons/react/24/outline';
+import { FlagIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import PollPostContainer from '../../../Components/Posts/PollPostContainer';
 import useSession from '../../../hooks/auth/useSession';
 import eighteenPic from '../../../assets/18Pic.svg';
@@ -63,7 +52,7 @@ function RoundedButt(props: {
     <Button
       onClick={(e) => {
         e.stopPropagation();
-        props.onClick();
+        props.onClick(e);
       }}
       style={{
         //backgroundColor: props.buttonColor,
@@ -106,12 +95,10 @@ const AddRemovalModal = (props: {
       // setIsError(false);
       // setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
-
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(errorObj.data);
+      setAlertMessage(error);
     },
   });
 
@@ -155,21 +142,23 @@ const AddRemovalModal = (props: {
                 label='REASON FOR REMOVAL'
                 className='font-semibold'
               >
-                {removalReasonsRes.data?.data.map((reason, i) => (
-                  <Option
-                    className='font-semibold'
-                    value={reason.removal_reason_title}
-                    key={reason._id}
-                    onClick={(e) => {
-                      e.stopPropagation();
+                {removalReasonsRes.data?.data.map(
+                  (reason: RemovalReasonType, i: number) => (
+                    <Option
+                      className='font-semibold'
+                      value={reason.removal_reason_title}
+                      key={reason._id}
+                      onClick={(e) => {
+                        e.stopPropagation();
 
-                      setReason(reason.removal_reason_title);
-                      setReasonMessage(reason.reason_message);
-                    }}
-                  >
-                    {i + 1 + '. ' + reason.removal_reason_title}
-                  </Option>
-                ))}
+                        setReason(reason.removal_reason_title);
+                        setReasonMessage(reason.reason_message);
+                      }}
+                    >
+                      {i + 1 + '. ' + reason.removal_reason_title}
+                    </Option>
+                  )
+                )}
                 {/* <Option>hi</Option> */}
               </Select>
             </div>
@@ -467,7 +456,7 @@ const Vote = (props: {
   // const [vote, setVote] = React.useState(props.post.vote);
   //   const [lastVote, setLastVote] = React.useState(0);
   // const [voteCount, setVoteCount] = React.useState(props.voteCount);
-  const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
+  // const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
   const postReq = useMutation(postRequest);
   //   console.log(props.vote, 'aaaa');
 
@@ -563,8 +552,8 @@ const PostHeader = ({
   isPost,
 }: {
   avatar: string;
-  communityNameWithPrefix: string;
-  usernameWithPrefix: string;
+  communityNameWithPrefix: string | null;
+  usernameWithPrefix: string | null;
   createdAt: Date;
   isPost: boolean;
 }) => {
@@ -575,7 +564,6 @@ const PostHeader = ({
           {avatar ? (
             <Avatar
               variant='circular'
-              alt={name}
               src={
                 avatar ||
                 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
@@ -676,7 +664,6 @@ const PostFooter = ({
   isPost,
   setRemModal,
   setRepModal,
-  page,
 }: {
   post: PostType;
   isPost: boolean;
@@ -707,14 +694,14 @@ const PostFooter = ({
             if (option == 'approve') {
               post.moderator_details.approved_flag = true;
               post.moderator_details.approved_by = user?.username;
-              post.moderator_details.approved_date = new Date().toISOString();
+              post.moderator_details.approved_date = new Date();
               post.moderator_details.removed_flag = false;
               post.moderator_details.spammed_flag = false;
               post.moderator_details.reported_flag = false;
             } else if (option == 'remove') {
               post.moderator_details.removed_flag = true;
               post.moderator_details.removed_by = user?.username;
-              post.moderator_details.removed_date = new Date().toISOString();
+              post.moderator_details.removed_date = new Date();
               post.moderator_details.approved_flag = false;
               // post.moderator_details.spammed_flag = false;
               // post.moderator_details.reported_flag = false;

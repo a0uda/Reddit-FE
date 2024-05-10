@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ModSideBar from '../Rules and Removal reasons/ModSidebar';
 import axios from 'axios';
-import Button from '../../Components/Button';
 import RoundedButton from '../../Components/RoundedButton';
 
 interface SchedulingDetails {
@@ -30,7 +29,11 @@ interface PostDataType {
   link_url: string | null;
   images: string[];
   videos: string[];
-  polls: any[];
+  polls: {
+    options: string;
+    votes: number;
+    _id: string;
+  }[];
   polls_voting_length: number;
   polls_voting_is_expired_flag: boolean;
   post_in_community_flag: boolean;
@@ -52,7 +55,7 @@ interface PostDataType {
   username: string;
   __v: number;
 }
-const formatDate = (dateString) => {
+const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   const options = {
     month: 'short',
@@ -64,7 +67,7 @@ const formatDate = (dateString) => {
   return date.toLocaleString('en-US', options);
 };
 
-const SchedulePost = (props: {}) => {
+const SchedulePost = () => {
   const { community_name } = useParams();
   const [posts, setPosts] = useState<PostDataType[]>([]);
   const [submitPost, setSubmitPost] = useState('');
@@ -95,7 +98,7 @@ const SchedulePost = (props: {}) => {
   const submitPostRequest = async () => {
     console.log(submitPost);
     try {
-      const res = await axios.post(
+      await axios.post(
         `${process.env.VITE_BASE_URL}communities/submit-scheduled-post/${community_name}`,
         { post_id: submitPost },
         {
@@ -117,7 +120,7 @@ const SchedulePost = (props: {}) => {
   const submitDeleteRequest = async () => {
     console.log(submitPost);
     try {
-      const res = await axios.post(
+      await axios.post(
         `${process.env.VITE_BASE_URL}communities/cancel-scheduled-post/${community_name}`,
         { post_id: deletePost },
         {

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ButtonList from './components/ButtonList';
 import SearchBar from './components/SearchBar';
 import { getTimeDifferenceAsString } from '../../utils/helper_functions';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PencilIcon } from '@heroicons/react/24/outline';
 import { useParams } from 'react-router-dom';
 import { fetchRequest } from '../../API/User';
 import { useQuery } from 'react-query';
@@ -138,7 +138,7 @@ const UsersList = ({
     </ul>
   );
 };
-const Moderators = () => {
+const Moderators = ({ page }: { page: string }) => {
   const buttArr = [
     {
       text: 'Invite user as mod',
@@ -176,14 +176,17 @@ const Moderators = () => {
   const [selectedData, setSelectedData] = useState<ModeratorUser[]>([]);
   const url = window.location.href;
   const allModRes = useQuery(
-    ['getModerators', url],
+    ['getModerators', url, page],
     () => fetchRequest(`communities/about/moderators/${community_name}`),
     {
       onSuccess: (data) => {
-        setSelectedData(data.data);
+        setSelectedData(data?.data);
       },
     }
   );
+  useEffect(() => {
+    allModRes.refetch();
+  }, []);
   const editableListRes = useQuery('getEditableModerators', () =>
     fetchRequest(`communities/about/editable-moderators/${community_name}`)
   );
@@ -197,7 +200,7 @@ const Moderators = () => {
     } else {
       const queryLowerCase = searchQuery.toLowerCase();
       setSelectedData(
-        allModRes.data?.data.filter((item) =>
+        allModRes.data?.data.filter((item: { username: string }) =>
           item.username.toLowerCase().includes(queryLowerCase)
         )
       );

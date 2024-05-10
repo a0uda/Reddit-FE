@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import { Switch } from '@material-tailwind/react';
 
 export default function SwitchButton(props: {
@@ -13,7 +13,7 @@ export default function SwitchButton(props: {
       setVal(props.checked);
     }
   }, [props.checked]);
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.checked;
     setVal(newValue);
     props.onChange(newValue);

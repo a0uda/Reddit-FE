@@ -24,15 +24,15 @@ function ContentControls() {
 
   ///
   const [inputRequirePostTitle, setinputRequirePostTitle] = useState('');
-  const [selectedRequiredPostTitle, setselectedRequiredPostTitle] = useState(
-    []
-  );
-  const handleRequirePostTitleSelect = (word) => {
+  const [selectedRequiredPostTitle, setselectedRequiredPostTitle] = useState<
+    string[]
+  >([]);
+  const handleRequirePostTitleSelect = (word: string) => {
     setinputRequirePostTitle('');
     setselectedRequiredPostTitle([...selectedRequiredPostTitle, word]);
   };
 
-  const handleRequirePostTitleDelete = (word) => {
+  const handleRequirePostTitleDelete = (word: string) => {
     setselectedRequiredPostTitle(
       selectedRequiredPostTitle.filter((w) => w !== word)
     );
@@ -40,13 +40,15 @@ function ContentControls() {
   const currentRequirePostTitle = selectedRequiredPostTitle.length;
   ////
   const [inputBanPostTitle, setinputBanPostTitle] = useState('');
-  const [selectedBanPostTitle, setselectedBanPostTitle] = useState([]);
-  const handleBanPostTitleSelect = (word) => {
+  const [selectedBanPostTitle, setselectedBanPostTitle] = useState<string[]>(
+    []
+  );
+  const handleBanPostTitleSelect = (word: string) => {
     setinputBanPostTitle('');
     setselectedBanPostTitle([...selectedBanPostTitle, word]);
   };
 
-  const handleBanPostTitleDelete = (word) => {
+  const handleBanPostTitleDelete = (word: string) => {
     setselectedBanPostTitle(selectedBanPostTitle.filter((w) => w !== word));
   };
   const [isTypingRequired, setisTypingRequired] = useState(false);
@@ -54,13 +56,13 @@ function ContentControls() {
   const currentBanPostTitle = selectedBanPostTitle.length;
   /////
   const [inputBanPostBody, setinputBanPostBody] = useState('');
-  const [selectedBanPostBody, setselectedBanPostBody] = useState([]);
-  const handleBanPostBodySelect = (word) => {
+  const [selectedBanPostBody, setselectedBanPostBody] = useState<string[]>([]);
+  const handleBanPostBodySelect = (word: string) => {
     setinputBanPostBody('');
     setselectedBanPostBody([...selectedBanPostBody, word]);
   };
 
-  const handleBanPostBodyDelete = (word) => {
+  const handleBanPostBodyDelete = (word: string) => {
     setselectedBanPostBody(selectedBanPostBody.filter((w) => w !== word));
   };
   const [isTypingBanBody, setisTypingBanBody] = useState(false);
@@ -68,13 +70,13 @@ function ContentControls() {
   /////
 
   const [inputBanLink, setinputBanLink] = useState('');
-  const [selectedBanLink, setselectedBanLink] = useState([]);
-  const handleBanLinkSelect = (word) => {
+  const [selectedBanLink, setselectedBanLink] = useState<string[]>([]);
+  const handleBanLinkSelect = (word: string) => {
     setinputBanLink('');
     setselectedBanLink([...selectedBanLink, word]);
   };
 
-  const handleBanLinkDelete = (word) => {
+  const handleBanLinkDelete = (word: string) => {
     setselectedBanLink(selectedBanLink.filter((w) => w !== word));
   };
   const [isTypingBanLink, setisTypingBanLink] = useState(false);
@@ -84,9 +86,8 @@ function ContentControls() {
   const remainingCharacters = maxLength - guidelineText.length;
   ////
   const { community_name } = useParams();
-  const { data, isError, isLoading, refetch } = useQuery(
-    'general settings',
-    () => fetchRequest(`communities/get-content-controls/${community_name}`)
+  const { data, isError, isLoading } = useQuery('general settings', () =>
+    fetchRequest(`communities/get-content-controls/${community_name}`)
   );
   useEffect(() => {
     if (data) {
@@ -132,10 +133,10 @@ function ContentControls() {
       setIsError(false);
       setAlertMessage('General Settings Updated Successfully');
     },
-    onError: (error) => {
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(error);
     },
   });
   const handleSaveChanges = () => {

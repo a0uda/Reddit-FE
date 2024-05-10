@@ -10,7 +10,6 @@ import {
   BookmarkIcon,
   BookmarkSlashIcon,
   EyeIcon,
-  EyeSlashIcon,
   FlagIcon,
   PencilIcon,
   TrashIcon,

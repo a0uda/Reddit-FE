@@ -5,7 +5,25 @@ import newChat from '../../assets/newChat.svg';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect } from 'react';
+
+type SocketMessageType = {
+  createdAt: string;
+  message: string;
+  receiverId: string;
+  removed: {
+    flag: boolean;
+  };
+  reported: {
+    flag: boolean;
+    reason: null | string;
+  };
+  senderId: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+};
+
 type UserChatSidebar = {
   _id: string;
   otherUsername: string;
@@ -15,39 +33,12 @@ type UserChatSidebar = {
   otherProfilePicture: string;
 };
 
-interface User {
-  _id: string;
-  username: string;
-  profile_picture: string;
-}
-
-interface MessageStatus {
-  flag: boolean;
-  reason: string | null;
-}
-
-interface Message {
-  reported: MessageStatus;
-  removed: MessageStatus;
-  _id: string;
-  senderId: User;
-  receiverId: User;
-  message: string;
-  createdAt: string; // ISO 8601 date-time format
-  updatedAt: string; // ISO 8601 date-time format
-  __v: number; // version field, commonly used in MongoDB
-}
-
 const SideBar = ({
   newMessage,
   className,
-  openNavbar,
-  setOpenNavbar,
 }: {
-  newMessage: Message;
-  className: string;
-  openNavbar: boolean;
-  setOpenNavbar: Dispatch<SetStateAction<boolean>>;
+  newMessage: SocketMessageType | undefined;
+  className?: string;
 }) => {
   // const chats = [
   //   {
@@ -70,15 +61,15 @@ const SideBar = ({
   //     username: 'User3',
   //   },
   // ];
-  const [response, setResponse] = useState<UserChatSidebar[]>([]);
-  const { data, isLoading, isError, refetch } = useQuery(
+  // const [response, setResponse] = useState<UserChatSidebar[]>([]);
+  const { data, refetch } = useQuery(
     'chatsSidebar',
-    () => fetchRequest('chats/'),
-    {
-      onSuccess: (data) => {
-        setResponse(data.data);
-      },
-    }
+    () => fetchRequest('chats/')
+    // {
+    //   onSuccess: (data) => {
+    //     setResponse(data?.data);
+    //   },
+    // }
   );
   const navigate = useNavigate();
   const username = useParams();
@@ -88,18 +79,20 @@ const SideBar = ({
     if (newMessage) {
       refetch();
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newMessage]);
 
   return (
     <>
       <div
         className={cn(
-          'h-[calc(100vh-var(--navbar-height))]  shadow-none border-r w-52 md:w-80',
+          'h-[calc(100vh - var(--navbar-height))]  shadow-none border-r w-52 md:w-80',
           className
         )}
         // style={{ scrollbarWidth: 'none' }} // Hide scrollbar
       >
-        <div className='flex justify-between items-center p-3'>
+        <div className='flex justify-between items-center p-3 h-14'>
           <Typography variant='h5'>Chats</Typography>
           <div
             onClick={() => {
@@ -110,13 +103,18 @@ const SideBar = ({
             <img src={newChat} alt='new chat' className='w-5 h-5' />
           </div>
         </div>
-        {data?.data.map((chat: UserChatSidebar, i) => (
-          <ChatItem
-            lastMessage={chat}
-            key={chat.lastMessageTimestamp}
-            // isSelected={username == chat.username.toLowerCase()}
-          />
-        ))}
+        <div
+          className='overflow-y-auto'
+          style={{ height: 'calc(100vh - var(--navbar-height) - 3.5rem)' }}
+        >
+          {data?.data.map((chat: UserChatSidebar) => (
+            <ChatItem
+              lastMessage={chat}
+              key={chat.lastMessageTimestamp}
+              // isSelected={username == chat.username.toLowerCase()}
+            />
+          ))}
+        </div>
       </div>
     </>
   );
@@ -133,7 +131,7 @@ const ChatItem = ({ lastMessage }: ListItemProps) => {
 
   return (
     <div
-      className={`p-3 flex gap-1 items-center cursor-pointer hover:bg-gray-200  overflow-hidden whitespace-nowrap text-ellipsis w-full ${username == lastMessage.lastMessageSender && 'bg-gray-200'} `}
+      className={`p-3 flex gap-1 items-center  cursor-pointer hover:bg-gray-200  overflow-hidden whitespace-nowrap text-ellipsis w-full ${username == lastMessage.lastMessageSender && 'bg-gray-200'} `}
       onClick={() => {
         navigate(
           `/chat/u/${
@@ -161,7 +159,7 @@ const ChatItem = ({ lastMessage }: ListItemProps) => {
               : lastMessage.lastMessageSender}
           </Typography>
           <Typography className='text-xs '>
-            {`${new Date(lastMessage.lastMessageTimestamp).toDateString()}`}
+            {`${new Date(lastMessage.lastMessageTimestamp).toLocaleDateString()}`}
           </Typography>
         </div>
         <Typography className='text-xs flex-1 overflow-hidden whitespace-nowrap text-ellipsis'>

@@ -32,6 +32,7 @@ import AddReply from './AddReply';
 import useSession from '../../hooks/auth/useSession';
 
 import EditPostComment from './EditPostComment';
+import { useAlert } from '../../Providers/AlertProvider';
 
 const Comment = ({
   comment,
@@ -40,7 +41,15 @@ const Comment = ({
   comment: CommentType;
   showButton: boolean;
 }) => {
-  const patchReq = useMutation(patchRequest);
+  const { setAlertMessage, setIsError, trigger, setTrigger } = useAlert();
+
+  const patchReq = useMutation(patchRequest, {
+    onError: (error: string) => {
+      setAlertMessage(error);
+      setIsError(true);
+      setTrigger(!trigger);
+    },
+  });
   const [author, setAuthor] = useState<UserType | undefined>();
   // const [upvote, setUpvote] = useState(false);
   // const [downvote, setDownvote] = useState(false);
@@ -52,13 +61,13 @@ const Comment = ({
   const handleButtonClick = () => {
     setShowAddReply((prevState) => !prevState);
   };
-  const [isSaved, setIsSaved] = useState(comment.saved);
+  // const [isSaved, setIsSaved] = useState(comment.saved);
 
-  const handleSave = () => {
-    setIsSaved(!isSaved);
-    console.log('saved trigger', isSaved);
-    handleSaveUnsaveComment();
-  };
+  // const handleSave = () => {
+  //   setIsSaved(!isSaved);
+  //   console.log('saved trigger', isSaved);
+  //   handleSaveUnsaveComment();
+  // };
   const mutate = useMutation(
     ({ comment, rank }: { comment: CommentType; rank: number }) =>
       postRequest({
@@ -90,7 +99,7 @@ const Comment = ({
     queryKey: ['users/about/comment', comment.username, url],
     queryFn: () => fetchRequest(`users/about/${comment.username}`),
     onSuccess: (data) => {
-      setAuthor(data.data);
+      setAuthor(data?.data);
     },
   });
 

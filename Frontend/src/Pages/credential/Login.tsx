@@ -6,9 +6,6 @@ import { Dialog, DialogBody, IconButton } from '@material-tailwind/react';
 import { IoMdClose } from 'react-icons/io';
 import { useMutation } from 'react-query';
 import { saveToken } from '../../utils/tokens_helper';
-import { object } from 'yup';
-import { MdCatchingPokemon } from 'react-icons/md';
-import axios from 'axios';
 
 export default function Login(props: {
   open: boolean;

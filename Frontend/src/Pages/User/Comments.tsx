@@ -38,14 +38,16 @@ function Comments() {
       fetchReq.mutate(`users/comments/${username}?page=${page}`, {
         onSuccess: (data) => {
           setIsLoading(false);
-          if (data.data.length === 0) {
+          if (data?.data.length === 0) {
             setNoMoreData(true);
             return;
           }
-          console.log('reem', data.data);
-          setResponse((prev) => [...prev, ...data.data]);
+          console.log('reem', data?.data);
+          if (data?.data) {
+            setResponse((prev) => [...prev, ...data.data]);
+          }
         },
-        onError: (err) => {
+        onError: () => {
           setIsLoading(false); // Set loading state to false on error
           setError(true); // Set error state
         },

@@ -8,7 +8,11 @@ import {
 import io, { Socket } from 'socket.io-client';
 import useSession from '../hooks/auth/useSession';
 
-const SocketContext = createContext();
+type SocketContextType = {
+  socket: Socket | undefined;
+};
+
+const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
 export const useSocketContext = () => {
   return useContext(SocketContext);

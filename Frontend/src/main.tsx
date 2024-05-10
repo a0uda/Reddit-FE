@@ -4,7 +4,6 @@ import App from './App.tsx';
 import './index.css';
 import { ThemeProvider } from '@material-tailwind/react';
 import { theme } from './utils/theme_config.ts';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { AlertProvider } from './Providers/AlertProvider.tsx';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './Providers/AuthProvider.tsx';

@@ -31,9 +31,8 @@ function PostsCommentsSettings() {
   const [commentScores, setCommentScores] = useState(0);
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
   const { community_name } = useParams();
-  const { data, isError, isLoading, refetch } = useQuery(
-    'posts comments settings',
-    () => fetchRequest(`communities/get-posts-and-comments/${community_name}`)
+  const { data, isError, isLoading } = useQuery('posts comments settings', () =>
+    fetchRequest(`communities/get-posts-and-comments/${community_name}`)
   );
   useEffect(() => {
     if (data) {
@@ -64,10 +63,10 @@ function PostsCommentsSettings() {
       setIsError(false);
       setAlertMessage('General Settings Updated Successfully');
     },
-    onError: (error) => {
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(error.message);
+      setAlertMessage(error);
     },
   });
   const handleSaveChanges = () => {

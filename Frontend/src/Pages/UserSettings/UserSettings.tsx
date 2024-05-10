@@ -1,11 +1,8 @@
-import React, { ReactNode } from 'react';
-
 import './Settings.css';
 import { Link, useParams } from 'react-router-dom';
 import Account from './Account';
 import Notifications from './Notifications';
 import SafetyPrivacy from './SafetyPrivacy';
-import InputBox from './Containers/InputWButton';
 import Profile from './Profile';
 import Email from './Email';
 import FeedSettings from './FeedSettings';

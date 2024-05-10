@@ -1,9 +1,9 @@
-import React from 'react';
 import Message from './Containers/Message';
 import ContentContainer from './Containers/ContentContainer';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
+import { MessageType } from '../../types/types';
 
 const Sent = () => {
   const { data, isError, isLoading, refetch } = useQuery('sentMessages', () =>
@@ -11,20 +11,22 @@ const Sent = () => {
   );
   console.log(data);
 
-  const sortedMessages = data?.data.messages.sort((a, b) => {
-    const dateA = new Date(a['created_at']);
-    const dateB = new Date(b['created_at']);
-    return dateB - dateA; // descending order
-  });
+  const sortedMessages = data?.data.messages.sort(
+    (a: MessageType, b: MessageType) => {
+      const dateA = new Date(a['created_at']);
+      const dateB = new Date(b['created_at']);
+      return dateB.getTime() - dateA.getTime(); // descending order
+    }
+  );
 
   return (
     <LoadingProvider error={isError} isLoading={isLoading}>
       <ContentContainer length={data?.data.messages.length}>
         <div className=''>
           {!!sortedMessages &&
-            sortedMessages.map((mess) => (
+            sortedMessages.map((mess: MessageType) => (
               <Message
-                unread={mess['unread_flag']}
+                unread={false}
                 type='sent'
                 isSent
                 messageContent={mess.message}
@@ -35,7 +37,7 @@ const Sent = () => {
                 sendingDate={new Date(mess['created_at'])}
                 subject={mess['subject']}
                 isReply={mess['isReply']}
-                repliesArr={mess['replies'] || null}
+                repliesArr={undefined}
                 messageId={mess['_id']}
                 key={mess['_id']}
                 senderVia={mess['senderVia']}

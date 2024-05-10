@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import ContentLayout from '../../Components/ContentLayout';
 import { CommunityRSB } from '../../Components/RightSideBar/CommunityRSB';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, DragEvent } from 'react';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useQuery, useMutation } from 'react-query';
 import { fetchRequest, postRequest, patchRequest } from '../../API/User';
@@ -31,7 +31,7 @@ import {
   ListItem,
   Typography,
 } from '@material-tailwind/react';
-import { CommunityIcon } from '../../assets/icons/Icons';
+// import { CommunityIcon } from '../../assets/icons/Icons';
 
 const Community = () => {
   const { communityName } = useParams();
@@ -48,7 +48,7 @@ const Community = () => {
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${communityName}/`),
     onSuccess: (data) => {
-      setCommunity(data.data);
+      setCommunity(data?.data);
 
       // setIsJoined(data.data.joined_flag);
       // setProfilePicture(data.data.profile_picture);
@@ -168,7 +168,7 @@ const Community = () => {
   };
 
   // Function to handle drag and drop
-  const profilePictureHandleDrop = (event) => {
+  const profilePictureHandleDrop = (event: DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
     const file = event.dataTransfer.files?.[0];
     if (file) {
@@ -245,7 +245,7 @@ const Community = () => {
   };
 
   // Function to handle drag and drop
-  const bannerPictureHandleDrop = (event) => {
+  const bannerPictureHandleDrop = (event: DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
     const file = event.dataTransfer.files?.[0];
     if (file) {
@@ -304,7 +304,7 @@ const Community = () => {
     queryFn: () =>
       fetchRequest(`communities/get-visible-posts/${communityName}?sortBy=new`),
     onSuccess: (data) => {
-      setCommunityPosts(data.data);
+      setCommunityPosts(data?.data);
       console.log('the comm posts are', communityPosts);
     },
   });

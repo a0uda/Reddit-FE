@@ -3,31 +3,36 @@ import ContentContainer from './Containers/ContentContainer';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { MessageType } from '../../types/types';
 
 const Messages = () => {
-  const [parentChildrenMap, setParentChildrenMap] = useState([]);
+  const [parentChildrenMap, setParentChildrenMap] =
+    useState<Record<string, MessageType[]>>();
   const response = useQuery(
     'getAllMessages',
     () => fetchRequest('messages/read-all-messages'),
     {
       onSuccess: (data) => {
-        console.log(data.data.messages, 'felonsuccess');
+        console.log(data?.data.messages, 'felonsuccess');
 
         setParentChildrenMap(
-          data?.data.messages.reduce((acc, message) => {
-            if (
-              message.parentMessageId != null ||
-              message.parentMessageId != undefined
-            ) {
-              if (acc[message.parentMessageId]) {
-                acc[message.parentMessageId].push(message);
-              } else {
-                acc[message.parentMessageId] = [message];
+          data?.data.messages.reduce(
+            (acc: Record<string, MessageType[]>, message: MessageType) => {
+              if (
+                message.parentMessageId != null ||
+                message.parentMessageId != undefined
+              ) {
+                if (acc[message.parentMessageId]) {
+                  acc[message.parentMessageId].push(message);
+                } else {
+                  acc[message.parentMessageId] = [message];
+                }
               }
-            }
-            return acc;
-          }, {})
+              return acc;
+            },
+            {} as Record<string, MessageType[]>
+          )
         );
         console.log(parentChildrenMap, 'parentChildrenMap');
         // console.log(parentChildrenMap['663669e084f87cfbd0848f24'], 'middd');
@@ -39,18 +44,20 @@ const Messages = () => {
   //   .filter((message) => message.parentMessageId === null)
   //   .map((message) => message._id);
   // console.log(, 'loading');
-  const sortedMessages = response.data?.data.messages.sort((a, b) => {
-    const dateA = new Date(a['created_at']);
-    const dateB = new Date(b['created_at']);
-    return dateB - dateA; // descending order
-  });
+  const sortedMessages = response.data?.data.messages.sort(
+    (a: MessageType, b: MessageType) => {
+      const dateA = new Date(a['created_at']);
+      const dateB = new Date(b['created_at']);
+      return dateB.getTime() - dateA.getTime(); // descending order
+    }
+  );
 
   return (
     <LoadingProvider error={response.isError} isLoading={response.isLoading}>
       <ContentContainer length={response.data?.data.messages.length}>
         <div className=''>
           {!!sortedMessages &&
-            sortedMessages.map((mess) => {
+            sortedMessages.map((mess: MessageType) => {
               console.log(parentChildrenMap, 'messs');
 
               if (mess.parentMessageId == null) {

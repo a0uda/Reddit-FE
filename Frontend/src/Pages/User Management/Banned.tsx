@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ButtonList from './components/ButtonList';
 import SearchBar from './components/SearchBar';
 import { getTimeDifferenceAsString } from '../../utils/helper_functions';
@@ -84,7 +84,8 @@ const UserRow = ({
                   {' (' +
                     (user.permanent_flag
                       ? 'Permenant'
-                      : getTimeDifferenceAsString(
+                      : user.banned_until &&
+                        getTimeDifferenceAsString(
                           new Date(user.banned_until)
                         )) +
                     ')'}
@@ -158,7 +159,7 @@ const UsersList = ({
     </ul>
   );
 };
-const Banned = () => {
+const Banned = ({ page }: { page: string }) => {
   const buttArr = [
     {
       text: 'Ban user',
@@ -248,22 +249,24 @@ const Banned = () => {
   const [selectedData, setSelectedData] = useState<BannedUser[]>([]);
   const url = window.location.href;
   const { data, isLoading, isError, refetch } = useQuery(
-    ['getBannedUsers', url],
+    ['getBannedUsers', url, page],
     () => fetchRequest(`communities/about/banned/${community_name}`),
     {
       onSuccess: (data) => {
-        setSelectedData(data.data);
+        setSelectedData(data?.data);
       },
     }
   );
-
+  useEffect(() => {
+    refetch();
+  }, []);
   const handleSearch = () => {
     if (searchQuery.trim().length === 0) {
       return setSelectedData(data?.data);
     } else {
       const queryLowerCase = searchQuery.toLowerCase();
       setSelectedData(
-        data?.data.filter((item) =>
+        data?.data.filter((item: { username: string }) =>
           item.username.toLowerCase().includes(queryLowerCase)
         )
       );

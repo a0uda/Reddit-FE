@@ -26,7 +26,7 @@ interface InviteModProps {
       manage_posts_and_comments: boolean;
     };
   };
-  refetch: () => void;
+  refetch?: () => void;
 }
 
 interface FormData {

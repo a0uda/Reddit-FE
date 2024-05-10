@@ -5,7 +5,7 @@ import Card from './Containers/Card';
 import DropDownButton from './Containers/DropDownButton';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { useMutation, useQuery } from 'react-query';
-import { fetchRequest, patchRequest, postRequest } from '../../API/User';
+import { fetchRequest, patchRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
 import {
   DeleteAccountModal,
@@ -40,41 +40,33 @@ function Account() {
   const toggleGoogleModal = () => {
     setDisconnectGoogleModal(!disconnectGoogleModal);
   };
-  const { data, error, isLoading, refetch } = useQuery('accountSettings', () =>
-    fetchRequest('users/account-settings')
+  const { data, isError, isLoading, refetch } = useQuery(
+    'accountSettings',
+    () => fetchRequest('users/account-settings')
   );
   console.log(data, 'accountsettings');
   const getReq = useMutation(fetchRequest);
   const patchReq = useMutation(patchRequest, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       refetch();
       setTrigger(!trigger);
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
-
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(errorObj.data);
+      setAlertMessage(error);
     },
   });
-  const handleChange = (endPoint, newSettings) => {
+  const handleChange = (endPoint: string, newSettings: unknown) => {
     patchReq.mutate({ endPoint: endPoint, newSettings: newSettings });
   };
-  const {
-    email,
-    verified_email_flag,
-    connected_google,
-    gmail,
-    gender,
-    country,
-    hasPassword,
-  } = data?.data || {};
+  const { email, connected_google, gender, country, hasPassword } =
+    data?.data || {};
 
   return (
-    <LoadingProvider error={error} isLoading={isLoading}>
+    <LoadingProvider error={isError} isLoading={isLoading}>
       <ChangeEmailModal
         handleOpen={toggleEmailModal}
         open={changeEmailModal}
