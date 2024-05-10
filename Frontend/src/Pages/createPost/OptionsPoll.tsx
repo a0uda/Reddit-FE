@@ -1,7 +1,7 @@
 import { useState, MouseEvent, ChangeEvent } from 'react';
 import RoundedButton from '../../Components/RoundedButton';
 import Input from '../../Components/Input';
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const generateUniqueID = () => {
   return `option_${Date.now()}`;
 };
@@ -21,7 +21,7 @@ function OptionsPoll({ setFieldValue }: OptionsPollProps) {
     { key: '1', options: '' },
   ]);
   const addOptionField = (): void => {
-    setOptions([...options, { key: generateUniqueID(), options: '' }]);
+    setOptions([...options, { key: options.length.toString(), options: '' }]);
   };
 
   const removeOptionField = (key: string): void => {
@@ -78,7 +78,12 @@ function OptionsPoll({ setFieldValue }: OptionsPollProps) {
                     : opt
                 );
                 setOptions(updatedOptions);
-                setFieldValue(`polls[${option.key}].options`, e.target.value);
+                console.log(
+                  'llllllllllllllllllllllllllllllllllllll',
+                  e.target.value,
+                  `polls[${option.key}].options`
+                );
+                setFieldValue(`polls[${index}].options`, e.target.value);
               }}
             />
             {index > 1 ? (

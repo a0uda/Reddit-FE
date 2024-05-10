@@ -71,6 +71,7 @@ const NewPost: React.FC = () => {
     nsfw_flag: false,
     post_in_community_flag: true,
     images: [],
+    type: '',
   });
 
   useEffect(() => {
@@ -198,28 +199,17 @@ const NewPost: React.FC = () => {
             },
           }
         );
-        console.log(
-          'llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll',
-          response.data
-        );
+        console.log('llllllllllll', response.data);
         const exists = response.data.some(
           (moderator: User) => moderator.username === user?.username
         );
 
         setIsMod(exists);
-        console.log(
-          'oooooooooooooooooooooooooooooooooooooooooooooo',
-          isMod,
-          exists,
-          user?.username
-        );
+        console.log('oooooooooooooo', isMod, exists, user?.username);
         setIsMod(exists);
       }
     } catch (error) {
-      console.error(
-        'Errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr:',
-        error
-      );
+      console.error('Errorrrrrrrrrrrrrrrrrrrrrrrrrrr:', error);
     }
   };
   useEffect(() => {
@@ -242,7 +232,7 @@ const NewPost: React.FC = () => {
             await handleImages(values);
           }
           if (isMod && ScheduledDay && ScheduledHour && ScheduledMinutes) {
-            values = {
+            const value1 = {
               repetition_option: 'none',
               submit_time: {
                 date: ScheduledDay,
@@ -253,8 +243,10 @@ const NewPost: React.FC = () => {
                 ...values,
               },
             };
+            handleOnSubmit(value1);
+          } else {
+            handleOnSubmit(values);
           }
-          handleOnSubmit(values);
           setTimeout(() => {
             console.log(JSON.stringify(values));
             alert(JSON.stringify(values));
@@ -304,8 +296,9 @@ const NewPost: React.FC = () => {
                     />
                     {inp.size ? (
                       <div className='count ml-auto text-gray-400 text-xs font-semibold absolute right-3 top-3/4 -translate-y-1/2'>
-                        {formik.values[inp.id as keyof typeof formik.values]
-                          ?.length || 0}
+                        {formik.values[
+                          inp.id as keyof typeof formik.values
+                        ].toString().length || 0}
                         /300
                       </div>
                     ) : (
