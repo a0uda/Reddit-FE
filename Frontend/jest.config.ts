@@ -11,6 +11,6 @@ const config: Config.InitialOptions = {
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
   collectCoverage: false,
   collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.d.ts'],
-  coverageDirectory: 'coverage',
+  coverageDirectory: '/src/__tests__/coverage',
 };
 export default config;

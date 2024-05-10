@@ -23,10 +23,12 @@ const CommunityOverview = ({
               'flex m-0 p-0',
               variant === 'large' ? 'gap-5' : 'gap-3  '
             )}
+            data-testid='card-body'
           >
             <div className='mt-1'>
               {community.profile_picture ? (
                 <Avatar
+                  data-testid='default-icon'
                   variant='circular'
                   alt={community.name}
                   src={
