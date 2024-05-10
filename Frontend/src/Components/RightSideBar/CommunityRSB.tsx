@@ -112,6 +112,7 @@ export function CommunityRSB({
                 <Typography
                   variant='h5'
                   className='p-0 font-body font-semibold -tracking-tight text-black overflow-hidden whitespace-nowrap text-ellipsis'
+                  data-testid='community-title'
                 >
                   r/{communityName}
                 </Typography>
@@ -149,12 +150,16 @@ export function CommunityRSB({
               <Typography
                 variant='small'
                 className='p-0 font-body font-normal -tracking-tight text-xs text-gray-600'
+                data-testid='community-description'
               >
                 {Community?.description}
               </Typography>
               <footer className=' flex items-center justify-between gap-8 border-blue-gray-50 pt-4'>
                 <div className='flex flex-col'>
-                  <p className='font-body font-bold -tracking-tight text-sm text-black'>
+                  <p
+                    className='font-body font-bold -tracking-tight text-sm text-black'
+                    data-testid='members-count'
+                  >
                     {Community?.members_count}
                   </p>
                   <p className='flex items-center gap-1 font-body font-thin -tracking-tight text-xs text-gray-600'>
@@ -172,6 +177,7 @@ export function CommunityRSB({
               <Typography
                 variant='small'
                 className='font-body font-semibold -tracking-tight text-xs text-gray-600 py-2 mt-3'
+                data-testid='moderators-title'
               >
                 MODERATORS
               </Typography>
@@ -222,6 +228,7 @@ const CommunityRules = ({ name: communityName }: CommunityProps) => {
       <Typography
         variant='small'
         className='font-body font-semibold -tracking-tight text-xs text-gray-600 py-2 mt-3'
+        data-testid='rules-title'
       >
         RULES
       </Typography>
@@ -286,6 +293,7 @@ const ModeratorItem = ({
               'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
             }
             style={{ width: '35px', height: '35px' }}
+            data-testid='moderator-avatar'
           />
         </ListItemPrefix>
         <div>
@@ -293,6 +301,7 @@ const ModeratorItem = ({
             <Typography
               variant='small'
               className='font-body font-thin -tracking-tight text-sm text-gray-900'
+              data-testid='moderator-username'
             >
               <Link to={`/u/${name}/overview`} className='hover:underline'>
                 u/{name}
@@ -325,7 +334,10 @@ const AccordionDropDown = ({
         icon={
           <ChevronDownIcon
             strokeWidth={2.5}
-            className={`mx-auto h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`}
+            className={`mx-auto h-4 w-4 transition-transform ${
+              open ? 'rotate-180' : ''
+            }`}
+            data-testid='accordion-icon'
           />
         }
       >
@@ -349,6 +361,7 @@ const AccordionDropDown = ({
             <Typography
               variant='small'
               className='font-body font-normal -tracking-tight text-xs text-gray-600 px-4 py-2'
+              data-testid='accordion-description'
             >
               {description}
             </Typography>
@@ -358,3 +371,5 @@ const AccordionDropDown = ({
     </>
   );
 };
+
+export default CommunityRSB;

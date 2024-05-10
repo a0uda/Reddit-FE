@@ -45,18 +45,21 @@ const PostItem: React.FC<PostItemProps> = (props) => {
     : `/u/${props.username}/comments/${props.postId}/${props.postTitle.split(' ').splice(0, 10).join('_')}/`;
 
   return (
-    <div>
+    <div data-testid='post-item'>
       <Card
         color='transparent'
         shadow={false}
         className='w-full max-w-[26rem] px-4'
       >
-        <Link to={link} reloadDocument>
+        <Link to={link} reloadDocument data-testid='post-link'>
           <CardBody
             color='transparent'
             className='mx-0 flex justify-between items-start gap-4 pt-0 pb-2 p-0 m-0'
           >
-            <div className='flex flex-col justify-start gap-2 pt-0 m-0'>
+            <div
+              className='flex flex-col justify-start gap-2 pt-0 m-0'
+              data-testid='card-body'
+            >
               {Community && (
                 <LoadingProvider error={isError} isLoading={isLoading}>
                   <CommunityBadge
@@ -69,11 +72,17 @@ const PostItem: React.FC<PostItemProps> = (props) => {
                     // online={Community.communityOnline}
                     username={props.username}
                     page='home'
+                    data-testid='community-badge'
                   />
                 </LoadingProvider>
               )}
-              {!Community && <UserBadge username={props.username} />}
-              <p className='font-body font-bold -tracking-tight text-xs text-gray-700 line-clamp-2 overflow-hidden text-ellipsis'>
+              {!Community && (
+                <UserBadge username={props.username} data-testid='user-badge' />
+              )}
+              <p
+                className='font-body font-bold -tracking-tight text-xs text-gray-700 line-clamp-2 overflow-hidden text-ellipsis'
+                data-testid='post-title'
+              >
                 {props.postTitle}
               </p>
             </div>
@@ -83,14 +92,19 @@ const PostItem: React.FC<PostItemProps> = (props) => {
                 alt='candice'
                 src={props.postMediaSrc}
                 style={{ width: '80px', height: '80px' }}
+                data-testid='post-media'
               />
             )}
           </CardBody>
           <CardFooter
             color='transparent'
             className='mx-0 flex items-center gap-4 p-0'
+            data-testid='card-footer'
           >
-            <p className='font-body font-thin -tracking-tight text-xs text-gray-600 py-2'>
+            <p
+              className='font-body font-thin -tracking-tight text-xs text-gray-600 py-2'
+              data-testid='post-info'
+            >
               {props.upvotes} upvotes . {props.comments} comments
             </p>
           </CardFooter>

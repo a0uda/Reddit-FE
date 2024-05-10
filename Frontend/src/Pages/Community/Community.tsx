@@ -922,13 +922,17 @@ const Community = () => {
 
                 <div className='flex justify-between'>
                   <ContentLayout.Main>
-                    {communityPosts.map((post) => (
+                    {communityPosts.map((post, index) => (
                       <div key={post._id} className='w-full pr-4'>
+                        {index === 0 && (
+                          <div className='w-100 min-h-px bg-gray-300'></div>
+                        )}
                         <PostPreview
                           post={post}
                           page='community'
                           isMyPost={isModerator}
                         />
+                        <div className='w-100 min-h-px bg-gray-300'></div>
                       </div>
                     ))}
                   </ContentLayout.Main>

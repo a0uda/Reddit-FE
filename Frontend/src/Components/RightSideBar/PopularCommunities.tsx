@@ -33,17 +33,19 @@ export function PopularCommunities() {
   return (
     <div
       style={{ maxHeight: '88vh', overflowY: 'auto', scrollbarWidth: 'thin' }}
+      data-testid='popular-communities-container'
     >
       <Card className='w-[19rem] bg-gray-100 rounded-2xl shadow-none p-2 pt-4 pb-4 min-w-0'>
         <Typography
           variant='small'
           className='p-2 font-body font-semibold uppercase -tracking-tight text-xs text-gray-600'
+          data-testid='popular-communities-title'
         >
           POPULAR COMMUNITIES
         </Typography>
         <LoadingProvider error={isError} isLoading={isLoading}>
           <div>
-            <List>
+            <List data-testid='community-list'>
               {displayedCommunities.map(
                 (community: CommunityItemProps, index: number) => (
                   <CommunityItem
@@ -51,6 +53,7 @@ export function PopularCommunities() {
                     src={community.profile_picture}
                     name={community.name}
                     membersNumber={community.members_count}
+                    data-testid={`community-item-${index}`}
                   />
                 )
               )}
@@ -60,6 +63,7 @@ export function PopularCommunities() {
                 style={{ width: '75px', height: '35px' }}
                 className='hover:bg-gray-300 rounded-full font-body font-thin -tracking-tight text-xs text-gray-900'
                 onClick={() => setShowAll(true)}
+                data-testid='see-more-button'
               >
                 See more
               </button>
@@ -69,6 +73,7 @@ export function PopularCommunities() {
                 style={{ width: '75px', height: '35px' }}
                 className='hover:bg-gray-300 rounded-full font-body font-thin -tracking-tight text-xs text-gray-900'
                 onClick={() => setShowAll(false)}
+                data-testid='see-less-button'
               >
                 See less
               </button>
