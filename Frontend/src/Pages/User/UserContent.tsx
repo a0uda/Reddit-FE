@@ -45,11 +45,13 @@ function UserContent(props: { endpoint: string; queryName: string }) {
       console.log(props.endpoint, 'props.queryName');
 
       const res = await fetchRequest(`${props.endpoint}?page=${page}`);
-      if (res.data.length === 0) {
+      if (res?.data.length === 0) {
         setNoMoreData(true);
         return;
       }
-      setData((prev) => [...prev, ...res.data]);
+      if (res?.data) {
+        setData((prev) => [...prev, ...res.data]);
+      }
     }
   );
   // let moderatedCommunityNames: string[] = [];

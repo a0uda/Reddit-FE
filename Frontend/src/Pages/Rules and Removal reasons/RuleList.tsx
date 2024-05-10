@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, useEffect, useState } from 'react';
 import AddRule from './AddRule';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
 interface ruleData {
   _id: string;
   rule_title: string;
   applies_to: string;
   report_reason: string;
   full_description: string;
+  selected?: boolean;
   __v: number;
 }
 
@@ -17,11 +16,10 @@ export default function RuleList({
   rulesList,
 }: {
   fetchDataRules: () => void;
-  setRulesList: (x: ruleData[]) => void;
+  setRulesList: Dispatch<React.SetStateAction<ruleData[]>>;
   rulesList: ruleData[];
 }) {
   const [openAddRule, setOpenAddRule] = useState(false);
-  const { community_name } = useParams();
   // const [rulesList, setRulesList] = useState<ruleData[]>([]);
   // const fetchData = async () => {
   //   setRulesList([]);
@@ -74,7 +72,7 @@ export default function RuleList({
     setOpenAddRule(true);
   };
   const handleSelectDetails = (index: number) => {
-    setRulesList((prevRulesList: any) => {
+    setRulesList((prevRulesList: ruleData[]) => {
       const updatedRulesList = [...prevRulesList];
       updatedRulesList[index] = {
         ...updatedRulesList[index],

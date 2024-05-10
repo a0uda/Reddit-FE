@@ -25,7 +25,6 @@ import {
   QueryClient,
   QueryClientProvider,
 } from 'react-query';
-import { useAlert } from './Providers/AlertProvider.tsx';
 import ChatMain from './Pages/Chatting/ChatMain.tsx';
 import { SocketContextProvider } from './Providers/SocketProvider.tsx';
 import SchedulePost from './Pages/User Management/SchedulePosts.tsx';
@@ -60,9 +59,9 @@ function App() {
         //   // console.log(errorObj.Error.data, 'hiiiii');
         //   console.log('hiiii query');
 
-          // setAlertMessage(error);
-          // setIsError(true);
-          // setTrigger(!trigger);
+        // setAlertMessage(error);
+        // setIsError(true);
+        // setTrigger(!trigger);
         //   console.log(error);
         // },
       },

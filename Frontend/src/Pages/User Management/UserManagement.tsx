@@ -24,13 +24,13 @@ const UserManagement = (props: { page: string }) => {
         <div className='p-5'>
           <Navbar page={props.page} />
           {props.page == 'approved' ? (
-            <Contributors />
+            <Contributors page={props.page} />
           ) : props.page == 'moderators' ? (
-            <Moderators />
+            <Moderators page={props.page} />
           ) : props.page == 'banned' ? (
-            <Banned />
+            <Banned page={props.page} />
           ) : props.page == 'muted' ? (
-            <Muted />
+            <Muted page={props.page} />
           ) : (
             <></>
           )}

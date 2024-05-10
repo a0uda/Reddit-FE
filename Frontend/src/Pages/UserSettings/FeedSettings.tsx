@@ -1,18 +1,56 @@
-import React from 'react';
 import Section from './Containers/Section';
 import Card from './Containers/Card';
 import SwitchButton from '../../Components/SwitchButton';
 import DropDownButton from './Containers/DropDownButton';
-import { Spinner } from '@material-tailwind/react';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
+import { useState } from 'react';
+type CommunityContentSortType = {
+  type: string;
+  duration: string;
+  sort_remember_per_community: boolean;
+};
+type GlobalViewType = {
+  global_content_view: string;
+  global_remember_per_community: boolean;
+};
 
 function FeedSettings() {
-  const { data, error, isLoading, refetch } = useQuery(
+  const [Adult_content_flag, setAdult_content_flag] = useState(false);
+  const [autoplay_media, setAutoplay_media] = useState(false);
+  const [community_content_sort, setCommunity_content_sort] = useState<
+    CommunityContentSortType | undefined
+  >();
+  const [global_content, setGlobal_content] = useState<
+    GlobalViewType | undefined
+  >();
+  const [Open_posts_in_new_tab, setOpen_posts_in_new_tab] = useState(false);
+  const [community_themes, setCommunity_themes] = useState(false);
+
+  const { data, isError, isLoading, refetch } = useQuery(
     'feed settings data',
-    () => fetchRequest('users/feed-settings')
+    () => fetchRequest('users/feed-settings'),
+    {
+      onSuccess: (data) => {
+        const {
+          Adult_content_flag,
+          autoplay_media,
+          communitiy_content_sort,
+          global_content,
+          Open_posts_in_new_tab,
+          community_themes,
+        } = data?.data || {};
+        console.log('Adult_content_flag', communitiy_content_sort);
+        setAdult_content_flag(Adult_content_flag);
+        setAutoplay_media(autoplay_media);
+        setCommunity_content_sort(communitiy_content_sort);
+        setGlobal_content(global_content);
+        setOpen_posts_in_new_tab(Open_posts_in_new_tab);
+        setCommunity_themes(community_themes);
+      },
+    }
   );
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
   console.log(data, 'feeeed');
@@ -24,12 +62,10 @@ function FeedSettings() {
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
-
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(errorObj.data);
+      setAlertMessage(error);
     },
   });
 
@@ -39,18 +75,9 @@ function FeedSettings() {
       newSettings: { feed_settings: newSettings },
     });
   };
-  const {
-    Adult_content_flag,
-    autoplay_media,
-    community_content_sort,
-    global_content,
-    Open_posts_in_new_tab,
-    community_themes,
-  } = data?.data || {};
-  console.log('Adult_content_flag', community_content_sort);
 
   return (
-    <LoadingProvider error={error} isLoading={isLoading}>
+    <LoadingProvider error={isError} isLoading={isLoading}>
       <h2 className='text-xl my-8 font-semibold'>Feed Settings</h2>
       <Section sectionTitle='CONTENT PREFERENCES'>
         <Card
@@ -106,7 +133,9 @@ function FeedSettings() {
           description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
         >
           <SwitchButton
-            checked={community_content_sort?.sort_remember_per_community}
+            checked={
+              community_content_sort?.sort_remember_per_community || false
+            }
             onChange={(value) =>
               handleToggleSwitch({
                 community_content_sort: {
@@ -138,7 +167,7 @@ function FeedSettings() {
           description='Enable if you would like each community to remember and use the last content sort you selected for that community.'
         >
           <SwitchButton
-            checked={global_content?.global_remember_per_community}
+            checked={global_content?.global_remember_per_community || false}
             onChange={(value) =>
               handleToggleSwitch({
                 global_content: {

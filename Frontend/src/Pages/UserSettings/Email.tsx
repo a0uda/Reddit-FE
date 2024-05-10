@@ -1,15 +1,13 @@
-import React from 'react';
 import SwitchButton from '../../Components/SwitchButton';
 import Card from './Containers/Card';
 import Section from './Containers/Section';
 import { fetchRequest, patchRequest } from '../../API/User';
 import { useMutation, useQuery } from 'react-query';
-import { Spinner } from '@material-tailwind/react';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
 
 function Email() {
-  const { data, error, isLoading, refetch } = useQuery('email data', () =>
+  const { data, isError, isLoading, refetch } = useQuery('email data', () =>
     fetchRequest('users/email-settings')
   );
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
@@ -22,16 +20,14 @@ function Email() {
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
-
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(errorObj.data);
+      setAlertMessage(error);
     },
   });
 
-  const handleToggleSwitch = (settingName, value) => {
+  const handleToggleSwitch = (settingName: string, value: string | boolean) => {
     const notificationsSettings = data?.data || {};
     const newSettings = {
       email_settings: {
@@ -52,7 +48,7 @@ function Email() {
   } = data?.data || {};
 
   return (
-    <LoadingProvider error={error} isLoading={isLoading}>
+    <LoadingProvider error={isError} isLoading={isLoading}>
       <div>
         <h2 className='text-xl my-8 font-semibold'>Manage Emails</h2>
         <Section sectionTitle='MESSAGES'>

@@ -41,18 +41,20 @@ function Overview() {
       fetchReq.mutate(`users/overview/${username}?page=${page}&pageSize=5`, {
         onSuccess: (data) => {
           setIsLoading(false);
-          const tmp = [...data.data.posts, ...data.data.comments];
-          if (tmp.length === 0) {
-            setNoMoreData(true);
-            return;
-          } else {
-            setNoMoreData(false);
-          }
-          //console.log('upvote', data.data.posts.upvote_rate,data.data.posts.up);
-          setResponse((prev) => [...prev, ...tmp]);
-          // setResponse(data.data);
-          if (username == user?.username) {
-            setMyData(true);
+          if (data?.data) {
+            const tmp = [...data.data.posts, ...data.data.comments];
+            if (tmp.length === 0) {
+              setNoMoreData(true);
+              return;
+            } else {
+              setNoMoreData(false);
+            }
+            //console.log('upvote', data.data.posts.upvote_rate,data.data.posts.up);
+            setResponse((prev) => [...prev, ...tmp]);
+            // setResponse(data.data);
+            if (username == user?.username) {
+              setMyData(true);
+            }
           }
         },
         onError: () => {
@@ -107,7 +109,7 @@ function Overview() {
                   //uncomment when deployed reem
                   <Comment
                     key={content._id}
-                    comment={content}
+                    comment={content as CommentType}
                     showButton={true}
                   />
 
