@@ -11,7 +11,6 @@ import * as Yup from 'yup';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import { postRequest } from '../../API/User';
-import useSession from '../../hooks/auth/useSession';
 
 interface LeaveFormProps {
   handleOpen: () => void;
@@ -23,7 +22,6 @@ interface valueDataType {
 }
 export default function LeaveMod(props: LeaveFormProps): JSX.Element {
   const { community_name } = useParams();
-  const { user } = useSession();
   const navigate = useNavigate();
   const initialValues: valueDataType = {
     community_name: '',

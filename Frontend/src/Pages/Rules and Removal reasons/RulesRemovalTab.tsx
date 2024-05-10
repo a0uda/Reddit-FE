@@ -7,7 +7,6 @@ import ModSideBar from './ModSidebar';
 import RuleList from './RuleList';
 import ReasonList from './ReasonList';
 import axios from 'axios';
-import LoadingProvider from '../../Components/LoadingProvider';
 interface reasonDataType {
   removal_reason_title: string;
   removal_reason: string;
@@ -25,8 +24,6 @@ export default function RuleRemoval() {
   const [buttonSelect, setButtonSelect] = useState(0);
   const { community_name } = useParams();
   const [openAddRule, setOpenAddRule] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
 
   const [rulesList, setRulesList] = useState<ruleData[]>([]);
   const [reasonsList, setReasonsList] = useState<reasonDataType[]>([]);
@@ -46,8 +43,6 @@ export default function RuleRemoval() {
     removal_reason: '',
   };
   const fetchDataRules = async () => {
-    setIsLoading(true);
-    setIsError(false);
     setRulesList([]);
     try {
       const res = await axios.get(
@@ -62,18 +57,15 @@ export default function RuleRemoval() {
           },
         }
       );
-      setRulesList(res.data.map((item) => ({ ...item, selected: false })));
+      setRulesList(
+        res.data.map((item: ruleData) => ({ ...item, selected: false }))
+      );
       console.log(res.data, 'resss');
     } catch (err) {
-      setIsError(true);
       console.error('Error fetching data:', err);
-    } finally {
-      setIsLoading(false);
     }
   };
   const fetchDataReasons = async () => {
-    setIsLoading(true);
-    setIsError(false);
     setReasonsList([]);
     try {
       const res = await axios.get(
@@ -91,10 +83,7 @@ export default function RuleRemoval() {
       setReasonsList(res.data);
       console.log(res.data, 'resss');
     } catch (err) {
-      setIsError(true);
       console.error('Error fetching data:', err);
-    } finally {
-      setIsLoading(false);
     }
   };
   return (

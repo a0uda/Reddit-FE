@@ -125,7 +125,7 @@ export const ChangeEmailModalError = (props: {
 export const ChangeEmailModal = (props: {
   handleOpen: () => void;
   open: boolean;
-  refetch;
+  refetch: () => void;
   email: string;
 }) => {
   const [modalNum, setModalNum] = React.useState(0);
@@ -140,12 +140,12 @@ export const ChangeEmailModal = (props: {
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
+    onError: (error: string) => {
+      // const errorObj = JSON.parse(error);
 
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(errorObj.data);
+      setAlertMessage(error);
     },
   });
 
@@ -211,6 +211,7 @@ export const ChangeEmailModal = (props: {
                     setPwd(e.target.value);
                     setShowError(true);
                   }}
+                  crossOrigin={undefined}
                 />
                 <div>
                   <Input
@@ -227,7 +228,7 @@ export const ChangeEmailModal = (props: {
                       showError
                     }
                     // error={true}
-                    // crossOrigin={undefined}
+                    crossOrigin={undefined}
                   />
                   {(!validateEmail(email) || email == props.email) &&
                     showError && (
@@ -290,9 +291,9 @@ export const ChangeEmailModal = (props: {
 };
 
 export const DisconnectGoogleModal = (props: {
-  handleOpen;
-  open;
-  refetch();
+  handleOpen: () => void;
+  open: boolean;
+  refetch: () => void;
 }) => {
   const [pwd, setPwd] = React.useState('');
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
@@ -304,12 +305,10 @@ export const DisconnectGoogleModal = (props: {
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
-
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(errorObj.data);
+      setAlertMessage(error);
     },
   });
 
@@ -362,6 +361,7 @@ export const DisconnectGoogleModal = (props: {
             type='password'
             value={pwd}
             onChange={(e) => setPwd(e.target.value)}
+            crossOrigin={undefined}
           />
         </DialogBody>
         <DialogFooter className='p-5 gap-2'>
@@ -394,10 +394,9 @@ export const DisconnectGoogleModal = (props: {
 };
 
 export const DeleteAccountModal = (props: {
-  handleOpen;
-  open;
-  refetch;
-  email: string;
+  handleOpen: () => void;
+  open: boolean;
+  refetch: () => void;
 }) => {
   const [pwd, setPwd] = React.useState('');
   const [username, setUsername] = React.useState('');
@@ -410,12 +409,10 @@ export const DeleteAccountModal = (props: {
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
-
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(errorObj.data);
+      setAlertMessage(error);
     },
   });
 
@@ -448,7 +445,7 @@ export const DeleteAccountModal = (props: {
           </IconButton>
         </DialogHeader>
         <DialogBody className='flex gap-6 p-5 flex-col'>
-          We're sorry to see you go
+          We are sorry to see you go
           <br />
           <br />
           Once you delete your account, your profile and username are
@@ -464,6 +461,7 @@ export const DeleteAccountModal = (props: {
               type='password'
               value={pwd}
               onChange={(e) => setPwd(e.target.value)}
+              crossOrigin={undefined}
             />
             <div>
               <Input
@@ -471,7 +469,7 @@ export const DeleteAccountModal = (props: {
                 type='text'
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                // className='!border-danger-red'
+                crossOrigin={undefined} // className='!border-danger-red'
                 // error={!validateEmail(email) || email == props.email}
                 // error={true}
                 // crossOrigin={undefined}
@@ -512,7 +510,11 @@ export const DeleteAccountModal = (props: {
   );
 };
 
-export const ChangePasswordModal = (props: { handleOpen; open; refetch }) => {
+export const ChangePasswordModal = (props: {
+  handleOpen: () => void;
+  open: boolean;
+  refetch: () => void;
+}) => {
   const [disableButt, setDisableButt] = React.useState(true);
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
 
@@ -523,12 +525,10 @@ export const ChangePasswordModal = (props: { handleOpen; open; refetch }) => {
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
-
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(errorObj.data);
+      setAlertMessage(error);
     },
   });
 
@@ -545,7 +545,10 @@ export const ChangePasswordModal = (props: { handleOpen; open; refetch }) => {
   type formikInputs = 'password' | 'newPassword' | 'confirmNewPassword';
   const validateSchema = Validation('changePassword');
 
-  const handleSubmit = (values) => {
+  const handleSubmit = (values: {
+    password: string;
+    confirmNewPassword: string;
+  }) => {
     console.log(values);
 
     patchReq.mutate({
@@ -602,7 +605,7 @@ export const ChangePasswordModal = (props: { handleOpen; open; refetch }) => {
                 onSubmit={formik.handleSubmit}
                 onFocus={() => setDisableButt(false)}
               >
-                {inpArr.map((inp, i) => (
+                {inpArr.map((inp) => (
                   <div key={inp.id}>
                     <Input
                       label={inp.label}

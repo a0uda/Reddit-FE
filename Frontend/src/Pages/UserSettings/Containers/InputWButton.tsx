@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
-
 import { Button, Input } from '@material-tailwind/react';
 
 function InputWButton(props: {
   label: string;
   buttonText: string;
-  onClick;
-  inputValue;
-  setInputValue;
+  onClick: () => void;
+  inputValue: string;
+  setInputValue: (value: string) => void;
 }) {
   return (
     <>

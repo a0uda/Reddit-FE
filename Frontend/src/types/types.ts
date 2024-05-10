@@ -136,7 +136,7 @@ export type PostType = {
     | 'Controversial'
     | 'New'; // Suggested sorting option
   scheduled_flag: boolean; // Scheduled post flag
-
+  is_post?: boolean; // If the post is a post
   moderator_details: {
     approved_flag: boolean;
     approved_by?: string; // Reference to the User who approved
@@ -388,20 +388,16 @@ export type AboutType = {
   connected_google: boolean;
   display_name: string;
   about: string;
-  social_links: {
-    icon: string;
-    username: string;
-    displayName?: string;
-  }[];
+  social_links: SocialLink[];
   profile_picture: string;
   banner_picture: string;
   gender: string;
 };
 
 export type SocialLink = {
-  type: string;
   username: string;
-  display_text?: string; // Optional property
+  display_text: string;
+  type: string;
   custom_url: string;
   _id: string;
 };
@@ -509,4 +505,13 @@ export type RemovalReasonType = {
   removal_reason_title: string;
   reason_message: string;
   _id: string;
+};
+
+export type ModeratedCommunityType = {
+  id: string;
+  name: string;
+  profile_picture: string;
+  favorite_flag: boolean;
+  members_count: number;
+  joined: boolean;
 };

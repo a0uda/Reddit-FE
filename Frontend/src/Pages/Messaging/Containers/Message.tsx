@@ -306,8 +306,8 @@ export const ThankYouModal = (props: {
                   console.log(value);
                   postReq.mutate(
                     {
-                      endPoint: `users/block-unblock-user?blocked_username=${props.senderUsername}&block=${value}`,
-                      data: {},
+                      endPoint: `users/block-unblock-user`,
+                      data: { blocked_username: props.senderUsername },
                     },
                     {
                       onSuccess: () => {
@@ -770,8 +770,8 @@ const Message = (props: {
                       onClick={() => {
                         postReq.mutate(
                           {
-                            endPoint: `users/block-unblock-user?blocked_username=${props.senderUsername}&block=${true}`,
-                            data: {},
+                            endPoint: `users/block-unblock-user`,
+                            data: { blocked_username: props.senderUsername },
                           },
                           {
                             onSuccess: () => {

@@ -26,7 +26,7 @@ const Sent = () => {
           {!!sortedMessages &&
             sortedMessages.map((mess: MessageType) => (
               <Message
-                unread={mess['unread_flag']}
+                unread={false}
                 type='sent'
                 isSent
                 messageContent={mess.message}

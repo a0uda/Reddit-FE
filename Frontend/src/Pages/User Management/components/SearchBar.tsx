@@ -1,5 +1,3 @@
-import { Input } from '@material-tailwind/react';
-import React, { useState } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 const SearchBar = ({
   handleSearch,

@@ -1,4 +1,3 @@
-import React from 'react';
 import RoundedButton from '../../../Components/RoundedButton';
 
 const ButtonList = ({

@@ -11,10 +11,10 @@ import instagramIcon from '../../../assets/instagramIcon.svg';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 const SocialLinksModal = (props: {
-  handleOpen;
-  open;
-  setSocialLinkType;
-  handleOpenNextModal;
+  handleOpen: () => void;
+  open: boolean;
+  setSocialLinkType: (value: string) => void;
+  handleOpenNextModal: () => void;
 }) => {
   return (
     <>
@@ -81,12 +81,12 @@ const SocialLinksModal = (props: {
 };
 
 export const EnterLinkDetails = (props: {
-  handleOpen;
-  open;
+  handleOpen: () => void;
+  open: boolean;
   children: React.ReactNode;
-  openBackModal;
+  openBackModal: () => void;
   saveDisabled: boolean;
-  handleSaveButton: Function;
+  handleSaveButton: () => void;
 }) => {
   return (
     <>

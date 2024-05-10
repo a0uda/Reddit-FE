@@ -80,7 +80,7 @@ function User() {
       fetchReq.mutate(`users/about/${username}`, {
         onSuccess: (data) => {
           setIsLoading(false);
-          setResponse(data.data);
+          setResponse(data?.data);
           if (user?.username == username) {
             setMyData(true);
           }
