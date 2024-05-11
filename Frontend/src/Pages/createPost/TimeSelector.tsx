@@ -1,8 +1,8 @@
 import React from 'react';
 
 interface Props {
-  selectedTime?: string | null; // Prop for setting the selected time value
-  setSelectedTime?: (time: string) => void; // Function to set the selected time
+  selectedTime?: string | null;
+  setSelectedTime?: (time: string) => void;
 }
 
 const TimeSelector: React.FC<Props> = ({ selectedTime, setSelectedTime }) => {
@@ -12,12 +12,6 @@ const TimeSelector: React.FC<Props> = ({ selectedTime, setSelectedTime }) => {
       setSelectedTime(newTime);
     }
   };
-
-  // const handleClick = () => {
-  //   // Programmatically focus on the input field when the icon is clicked
-  //   const inputElement = document.getElementById('time') as HTMLInputElement;
-  //   inputElement.focus();
-  // };
 
   return (
     <form className='max-w-[8.5rem] mx-auto text-black ms-2'>
@@ -29,10 +23,9 @@ const TimeSelector: React.FC<Props> = ({ selectedTime, setSelectedTime }) => {
           min='09:00'
           max='18:00'
           defaultValue={selectedTime || '00:00'}
-          onChange={handleChange} // Call handleChange function on input change
+          onChange={handleChange}
           required
         />
-        {/* Wrap the icon inside a button and attach onClick event handler */}
       </div>
     </form>
   );

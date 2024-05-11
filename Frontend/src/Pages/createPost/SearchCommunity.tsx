@@ -11,7 +11,7 @@ interface Suggestion {
 }
 
 interface Props {
-  setFieldValue: (fieldName: string, value) => void;
+  setFieldValue: (fieldName: string, value: unknown) => void;
 }
 
 const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
@@ -60,12 +60,13 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
     setFieldValue('post_in_community_flag', true);
   };
   const handleOptionClickUser = (user: {
+    name: string;
     username: string;
-    imageUrl: string;
+    profile_picture?: string;
   }) => {
     setSearchQuery(user.username);
     setImageQuery(
-      user.imageUrl ||
+      user.profile_picture ||
         'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
     );
     setShowSuggestions(false);
@@ -154,9 +155,9 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
                 <div className='flex flex-row gap-2'>
                   <Avatar
                     variant='circular'
-                    alt={user.imageUrl}
+                    alt='userImage'
                     src={
-                      user.imageUrl ||
+                      user?.profile_picture ||
                       'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
                     }
                     className='w-8 h-8'
