@@ -47,6 +47,7 @@ const SharedPostContainer = (props: {
     if (sharedPost) {
       console.log(sharedPost, props.sharedPostId, 'Updated SharedPost'); // Check if `sharedPost` is updated
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sharedPost]);
   console.log(sharedPost, props.sharedPostId, 'Updated SharedPost barra'); // Check if `sharedPost` is updated
   const navigate = useNavigate();

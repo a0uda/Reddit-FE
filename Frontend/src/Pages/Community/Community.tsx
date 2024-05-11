@@ -73,8 +73,8 @@ const Community = () => {
         );
       }
 
-      // setIsJoined(data.data.joined_flag);
-      // setProfilePicture(data.data.profile_picture);
+      // setIsJoined(data?.data?.joined_flag);
+      // setProfilePicture(data?.data?.profile_picture);
       // // todo:set the banner
       // console.log('the comm', community);
     },
@@ -567,7 +567,7 @@ const Community = () => {
                     <label
                       htmlFor='upload-button-profile'
                       className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
-                      onDrop={profilePictureHandleDrop}
+                      onDrop={(e) => profilePictureHandleDrop(e)}
                       onDragOver={(e) => {
                         e.preventDefault();
                       }}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { Card, Typography } from '@material-tailwind/react';
 import PostItem from './PostItem';
@@ -33,6 +34,7 @@ export function RecentPosts() {
         },
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.username]);
 
   return (

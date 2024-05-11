@@ -4,13 +4,15 @@ import {
   DialogFooter,
   DialogHeader,
 } from '@material-tailwind/react';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import RoundedButton from '../RoundedButton';
 import ShareOption from './ShareOption';
 import { postRequest } from '../../API/User';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
 export default function SharePostModal(props: {
+  handleOpen: () => void;
+  open: boolean;
   handleOpen: () => void;
   open: boolean;
   postId: string;
@@ -21,10 +23,6 @@ export default function SharePostModal(props: {
   const setFieldValue = (communityFlag: boolean, communityName: string) => {
     setPostInCommunityFlag(communityFlag);
     setCommunityName(communityName);
-  };
-  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const newText = event.target.value;
-    setText(newText);
   };
   const handleSaveButton = () => {
     postRequest({
@@ -60,7 +58,7 @@ export default function SharePostModal(props: {
           <textarea
             placeholder='Title'
             className=' resize-none !border rounded border-[#EDEFF1] bg-white text-gray-900  shadow-none ring-4 ring-transparent placeholder:text-gray-500 w-full p-2 pt-3 h-20'
-            onChange={handleChange}
+            onChange={(event) => setText(event.target.value)}
             maxLength={400}
             value={text}
           />

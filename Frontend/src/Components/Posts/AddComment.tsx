@@ -168,7 +168,6 @@ const MenuFooter = ({
   setFocused: Dispatch<SetStateAction<boolean>>;
   setError: Dispatch<SetStateAction<string>>;
 }) => {
-  // const [htmlk, setHtml] = useState('');
   const extractUsername = (html: string): string | null => {
     // Regular expression to match username mention in the form u/name
     console.log('hiree');
@@ -217,6 +216,7 @@ const MenuFooter = ({
       }),
     {
       onSuccess: (data) => {
+        usernamemention(editor?.getHTML() || '', data?.data);
         usernamemention(editor?.getHTML() || '', data?.data);
         queryClient.invalidateQueries('comments');
       },

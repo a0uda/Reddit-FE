@@ -320,7 +320,7 @@ export default function EditPostComment({
             //setFocused={setFocused}
             setError={setError}
             handleEdit={handleEdit}
-            post={post}
+            post={post as PostType}
           />
         </div>
       </div>
