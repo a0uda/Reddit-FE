@@ -1,4 +1,9 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from 'react-router-dom';
 import './assets/css/Layout.css';
 import UserSettings from './Pages/UserSettings/UserSettings';
 import NavigationBar from './Components/NavigationBar.tsx';
@@ -34,7 +39,8 @@ import ResetPasswordPage from './Pages/credential/ResetPasswordPage.tsx';
 function App() {
   const { status } = useSession();
   const HandleRoutes = (props: { element: JSX.Element }) =>
-    status !== 'authenticated' ? <Mainfeed /> : props.element;
+    // eslint-disable-next-line react/prop-types
+    status !== 'authenticated' ? Navigate({ to: '/best' }) : props.element;
   // const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
 
   const queryClient = new QueryClient({
