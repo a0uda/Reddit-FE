@@ -5,8 +5,9 @@ import Card from './Containers/Card';
 import DropDownButton from './Containers/DropDownButton';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { useMutation, useQuery } from 'react-query';
-import { fetchRequest, patchRequest } from '../../API/User';
+import { fetchRequest, patchRequest, postRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
+import { useGoogleLogin } from '@react-oauth/google';
 import {
   DeleteAccountModal,
   ChangeEmailModal,
@@ -64,7 +65,20 @@ function Account() {
   };
   const { email, connected_google, gender, country, hasPassword } =
     data?.data || {};
-
+  const postReq = useMutation(postRequest);
+  const connectToGoogle = useGoogleLogin({
+    clientId:
+      '178664293995-s6s92s28mme4eu54lg367sqhnj8bonff.apps.googleusercontent.com',
+    onSuccess: async (tokenResponse) => {
+      console.log('Google login successful', tokenResponse.access_token);
+      postReq.mutate({
+        endPoint: 'users/connect-to-google',
+        data: {
+          access_token: tokenResponse.access_token,
+        },
+      });
+    },
+  });
   return (
     <LoadingProvider error={isError} isLoading={isLoading}>
       <ChangeEmailModal
@@ -168,11 +182,7 @@ function Account() {
               buttonText='Connect to Google'
               buttonTextColor='text-black'
               onClick={() => {
-                getReq.mutate('users/signup-google', {
-                  onSuccess: () => {
-                    console.log('connected successfully');
-                  },
-                });
+                connectToGoogle();
               }}
             >
               <img

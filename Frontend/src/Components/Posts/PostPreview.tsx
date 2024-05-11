@@ -566,7 +566,7 @@ const PostPreview = ({
                       isReposted={post.is_reposted_flag}
                     />
                     {page != 'home' && isMyPost && (
-                      <div className=' flex justify-end items-center gap-4'>
+                      <div className=' flex justify-end items-center gap-2'>
                         {post.moderator_details.approved_flag == false &&
                           post.moderator_details.spammed_flag == false &&
                           post.moderator_details.reported_flag == false &&
@@ -606,7 +606,7 @@ const PostPreview = ({
                               content={`At ${post.moderator_details.approved_date}`}
                             >
                               <div className='flex items-center gap-2'>
-                                <div className='text-sm'>
+                                <div className='text-sm text-center'>
                                   Approved{' '}
                                   {getTimeDifferenceAsString(
                                     new Date(
@@ -626,7 +626,7 @@ const PostPreview = ({
                                 'user'
                               )}
                             >
-                              <div className='text-sm'>Removed</div>
+                              <div className='text-sm text-center'>Removed</div>
                             </Tooltip>
                           </div>
                         ) : post.moderator_details.spammed_flag === true ? (
@@ -637,7 +637,7 @@ const PostPreview = ({
                                 'user'
                               )}
                             >
-                              <div className='text-sm'>Removed</div>
+                              <div className='text-sm text-center'>Removed</div>
                             </Tooltip>
                           </div>
                         ) : post.moderator_details.removed_flag === true ? (
@@ -647,7 +647,7 @@ const PostPreview = ({
                                 'At ' + post.moderator_details.removed_date
                               }
                             >
-                              <div className='text-sm'>
+                              <div className='text-sm text-center'>
                                 Removed{' '}
                                 {getTimeDifferenceAsString(
                                   new Date(

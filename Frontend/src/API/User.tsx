@@ -79,6 +79,8 @@ const fetchRequest = async (endPoint: string) => {
       const errorMessage =
         error.response?.data?.err?.message ||
         error.response?.data?.error?.message ||
+        error.response?.data?.err ||
+        error.response?.data?.error ||
         'Unknown error';
       return Promise.reject(errorMessage);
     }
@@ -114,6 +116,8 @@ const patchRequest = async ({
       const errorMessage =
         error.response?.data?.err?.message ||
         error.response?.data?.error?.message ||
+        error.response?.data?.err ||
+        error.response?.data?.error ||
         'Unknown error';
       return Promise.reject(errorMessage);
     }
@@ -152,6 +156,8 @@ const postRequest = async ({
       const errorMessage =
         error.response?.data?.err?.message ||
         error.response?.data?.error?.message ||
+        error.response?.data?.err ||
+        error.response?.data?.error ||
         'Unknown error';
       return Promise.reject(errorMessage);
     }
@@ -192,6 +198,8 @@ const postRequestnew = async ({
       const errorMessage =
         error.response?.data?.err?.message ||
         error.response?.data?.error?.message ||
+        error.response?.data?.err ||
+        error.response?.data?.error ||
         'Unknown error';
       return Promise.reject(errorMessage);
     }

@@ -41,6 +41,7 @@ export default function RecoverUsername(props: {
     onSuccess: (response) => {
       setSuccessMessage(response.message);
       seterrorMessage('');
+      props.handleOpen();
     },
     onError: () => {
       seterrorMessage('Invalid in sending Email');
