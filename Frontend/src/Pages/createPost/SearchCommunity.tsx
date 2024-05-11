@@ -176,15 +176,13 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
             </>
           ) : null}
 
-          <div className='m-2  ps-4 text-xs text-gray-600'>
-            YOUR COMMUNITIES
-          </div>
+          <div className='m-2 ps-4 text-xs text-gray-600'>YOUR COMMUNITIES</div>
           {Array.isArray(suggestions) &&
             suggestions.map((suggestion, index) => (
               <li
                 key={index}
                 onClick={() => handleOptionClick(suggestion)}
-                className='flex items-start gap-4 p-2 m-0  hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer'
+                className='flex items-start gap-4 border p-2 m-0  hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer'
               >
                 <div className='flex flex-row gap-2'>
                   {suggestion.profile_picture ? (

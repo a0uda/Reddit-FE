@@ -137,7 +137,10 @@ const NewPost: React.FC = () => {
     onSuccess: () => {
       navigate('/');
     },
-    onError: () => {
+    onError: (error: string) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error);
       navigate('/submit');
     },
   });

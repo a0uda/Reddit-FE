@@ -127,19 +127,17 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 post.moderator_details.removed_flag ||
                 post.moderator_details.reported_flag ||
                 post.moderator_details.spammed_flag
-              ) && <NonEditableProvider content={post.description} />}
+              ) &&
+                post.description &&
+                post.type != 'polls' && (
+                  <NonEditableProvider content={post.description} />
+                )}
 
               <div className='w-full'>
                 {post.moderator_details.removed_flag ||
                 post.moderator_details.reported_flag ||
                 post.moderator_details.spammed_flag ? (
                   '[removed]'
-                ) : post.type == 'text' ? (
-                  <div className='flex justify-between gap-7'>
-                    <div className='flex items-center'>
-                      <NonEditableProvider content={post.description} />
-                    </div>
-                  </div>
                 ) : post.type == 'polls' ? (
                   <PollPostContainer post={post} />
                 ) : post.type == 'url' ? (
