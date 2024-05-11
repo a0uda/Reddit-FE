@@ -65,10 +65,10 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
   );
 
   return (
-    <Card className='shadow-none'>
+    <Card className='shadow-none' data-testid='community-popup'>
       {/* the content of popup only and you should handle PopoverHandler outside this component*/}
       {props.communityCoverImage && (
-        <div className='relative w-full'>
+        <div className='relative w-full' data-testid='community-cover-image'>
           <img
             src={props.communityCoverImage}
             alt='Community Cover'
@@ -76,9 +76,15 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
           />
         </div>
       )}
-      <CardBody className=''>
-        <div className='mb-2 flex items-center justify-between gap-4'>
-          <div className='flex justify-start items-center gap-2 pt-0'>
+      <CardBody className='' data-testid='card-body'>
+        <div
+          className='mb-2 flex items-center justify-between gap-4'
+          data-testid='community-info'
+        >
+          <div
+            className='flex justify-start items-center gap-2 pt-0'
+            data-testid='community-avatar'
+          >
             {props.communityAvatar ? (
               <Avatar
                 variant='circular'
@@ -92,6 +98,7 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
             <Typography
               variant='small'
               className='font-body font-bold -tracking-tight text-lg text-black overflow-hidden whitespace-nowrap text-ellipsis'
+              data-testid='community-name'
             >
               <Link
                 to={`/r/${props.communityName}`}
@@ -107,6 +114,7 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
               onClick={() => {
                 joinMutation.mutate(props.communityName);
               }}
+              data-testid='join-button'
             >
               Join
             </button>
@@ -117,6 +125,7 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
               onClick={() => {
                 leaveMutation.mutate(props.communityName);
               }}
+              data-testid='leave-button'
             >
               Leave
             </button>
@@ -126,36 +135,25 @@ const CommunityPopup: React.FC<CommunityPopupItemProps> = (props) => {
           variant='small'
           color='gray'
           className='font-norma text-xs relative w-80'
+          data-testid='community-description'
         >
           {props.communityDescription}
         </Typography>
-        <footer className='mt-6 flex items-center gap-8 border-t border-blue-gray-50 pt-4'>
+        <footer
+          className='mt-6 flex items-center gap-8 border-t border-blue-gray-50 pt-4'
+          data-testid='community-footer'
+        >
           <div className='flex flex-col'>
-            <p className='font-body font-bold -tracking-tight text-sm'>
+            <p
+              className='font-body font-bold -tracking-tight text-sm'
+              data-testid='community-members'
+            >
               {props.communityMembers}
             </p>
             <p className='flex items-center gap-1 font-body font-thin -tracking-tight text-xs text-gray-600'>
               Members
             </p>
           </div>
-          {/* <div className='flex flex-col'>
-            <p className='font-body font-bold -tracking-tight text-sm'>
-              {props.communityOnline}
-            </p>
-            <p className='flex items-center gap-1 font-body font-thin -tracking-tight text-xs text-gray-600'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='currentColor'
-                viewBox='0 0 24 24'
-                width='10'
-                height='10'
-              >
-               
-                <circle cx='12' cy='12' r='10' fill='#4caf50' />
-              </svg>
-              Online
-            </p>
-          </div> */}
         </footer>
       </CardBody>
     </Card>

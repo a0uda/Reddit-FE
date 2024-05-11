@@ -17,7 +17,7 @@ export default function NavBarCreatePost({
     <div className='border-collapse'>
       <div className='flex'>
         <div
-          className={`p-2 cursor-pointer w-1/3 border-b-2 flex items-center justify-center${
+          className={`p-2 cursor-pointer w-1/3 border-b-2 gap-1 flex items-center justify-center${
             activeIndex === 0 ? ' border-blue-light text-blue-light' : ''
           }`}
           onClick={() => {
@@ -43,7 +43,7 @@ export default function NavBarCreatePost({
         </div>
         <div className='border-r'></div>
         <div
-          className={`p-2 cursor-pointer w-1/3 border-b-2 flex items-center justify-center ${
+          className={`p-2 cursor-pointer w-1/3 border-b-2 gap-2 flex items-center justify-center ${
             activeIndex === 1 ? 'border-blue-light text-blue-light' : ''
           }`}
           onClick={() => {
@@ -69,7 +69,7 @@ export default function NavBarCreatePost({
         </div>
         <div className='border-r'></div>
         <div
-          className={`p-2 cursor-pointer w-1/3 border-b-2 flex items-center justify-center ${
+          className={`p-2 cursor-pointer w-1/3 border-b-2 gap-1 flex items-center justify-center ${
             activeIndex === 2 ? ' border-blue-light text-blue-light' : ''
           }`}
           onClick={() => {
@@ -95,7 +95,7 @@ export default function NavBarCreatePost({
         </div>
         <div className='border-r'></div>
         <div
-          className={`p-2 cursor-pointer w-1/3 border-b-2 flex items-center justify-center ${
+          className={`p-2 cursor-pointer w-1/3 border-b-2 gap-2 flex items-center justify-center ${
             activeIndex === 3 ? 'border-blue-light text-blue-light' : ''
           }`}
           onClick={() => {

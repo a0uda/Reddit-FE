@@ -118,13 +118,20 @@ const UsersList = ({
   );
 };
 
-const Contributors = ({ page }: { page: string }) => {
+const Contributors = ({
+  page,
+  userPerm,
+}: {
+  page: string;
+  userPerm: boolean;
+}) => {
   const buttArr = [
     {
       text: 'Approve user',
       onClick: () => {
         setAppMod(true);
       },
+      disabled: !userPerm,
     },
   ];
   const [appMod, setAppMod] = useState(false);

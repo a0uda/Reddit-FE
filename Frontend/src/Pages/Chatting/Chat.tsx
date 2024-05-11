@@ -158,7 +158,7 @@ function Chat({ newMessage }: { newMessage?: SocketMessageType }) {
     }
   }, [newMessage]);
   return (
-    <div className='w-full xl:grid-cols-layout '>
+    <div className='w-[80%]'>
       <div className='hidden xl:block'></div>
       <div className='container pt-4 flex flex-col h-full'>
         <div className='border-b'> {username}</div>
@@ -197,7 +197,12 @@ function Chat({ newMessage }: { newMessage?: SocketMessageType }) {
                         style={{ width: '25px', height: '25px' }}
                         className='ms-2'
                       />
-                      {message.senderId?.username}
+                      <span className='flex gap-4'>
+                        <span>{message.senderId?.username}</span>
+                        <span className='font-normal'>
+                          {new Date(message.createdAt).toLocaleTimeString()}
+                        </span>
+                      </span>
                     </div>
                   ) : null}{' '}
                   <div className='ms-10'>{message.message}</div>

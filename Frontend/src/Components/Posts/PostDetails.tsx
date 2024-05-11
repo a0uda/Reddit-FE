@@ -65,6 +65,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
         window.history.back();
       }
     };
+    commentsResponse.refetch();
 
     document.addEventListener('keydown', handleEscape);
 
@@ -127,19 +128,17 @@ const PostDetails = ({ post }: { post?: PostType }) => {
                 post.moderator_details.removed_flag ||
                 post.moderator_details.reported_flag ||
                 post.moderator_details.spammed_flag
-              ) && <NonEditableProvider content={post.description} />}
+              ) &&
+                post.description &&
+                post.type != 'polls' && (
+                  <NonEditableProvider content={post.description} />
+                )}
 
               <div className='w-full'>
                 {post.moderator_details.removed_flag ||
                 post.moderator_details.reported_flag ||
                 post.moderator_details.spammed_flag ? (
                   '[removed]'
-                ) : post.type == 'text' ? (
-                  <div className='flex justify-between gap-7'>
-                    <div className='flex items-center'>
-                      <NonEditableProvider content={post.description} />
-                    </div>
-                  </div>
                 ) : post.type == 'polls' ? (
                   <PollPostContainer post={post} />
                 ) : post.type == 'url' ? (
@@ -172,28 +171,24 @@ const PostDetails = ({ post }: { post?: PostType }) => {
         </>
       )}
       {/* Add Comment */}
-      <div className='my-2'>
+      <div className='m-2'>
         <AddComment postId={postId!} />
       </div>
-      <LoadingProvider
-        error={commentsResponse.isError}
-        isLoading={commentsResponse.isLoading}
-      >
-        <>
-          {comments &&
-            comments.map((comment) => {
-              return (
-                !comment.is_reply && (
-                  <Comment
-                    key={comment._id}
-                    comment={comment}
-                    showButton={true}
-                  />
-                )
-              );
-            })}
-        </>
-      </LoadingProvider>
+
+      <div className='m-2'>
+        {comments &&
+          comments.map((comment) => {
+            return (
+              !comment.is_reply && (
+                <Comment
+                  key={comment._id}
+                  comment={comment}
+                  showButton={true}
+                />
+              )
+            );
+          })}
+      </div>
     </>
   );
 };

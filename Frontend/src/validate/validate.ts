@@ -19,6 +19,10 @@ type FormSchema = {
     username: yup.Schema<string>;
     email: yup.Schema<string>;
   };
+  resetPasswordPage: {
+    newPassword: yup.Schema<string>;
+    confirmNewPassword: yup.Schema<string>;
+  };
   changePassword: {
     password: yup.Schema<string>;
     newPassword: yup.Schema<string>;
@@ -85,6 +89,10 @@ const Validation = (type: keyof FormSchema) => {
     resetPassword: {
       username: validationSchema['username'],
       email: validationSchema['email'],
+    },
+    resetPasswordPage: {
+      newPassword: validationSchema['newPassword'],
+      confirmNewPassword: validationSchema['confirmNewPassword'],
     },
     changePassword: {
       password: validationSchema['password'],

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { Card, Typography } from '@material-tailwind/react';
 import PostItem from './PostItem';
@@ -33,6 +34,7 @@ export function RecentPosts() {
         },
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.username]);
 
   return (
@@ -41,15 +43,22 @@ export function RecentPosts() {
         <div
           style={{
             maxHeight: '88vh',
-            overflowY: 'auto',
+            overflowY: 'hidden',
             scrollbarWidth: 'thin',
+            maxWidth: '100%',
+            overflowX: 'hidden',
           }}
+          data-testid='recent-posts-container'
         >
-          <Card className='w-[19rem] bg-gray-100 rounded-2xl shadow-none p-0 pt-3 pb-3 min-w-0 mb-3'>
+          <Card
+            className='max-w-[19rem] overflow-hidden bg-gray-100 rounded-2xl shadow-none p-0 pt-3 pb-3 min-w-0 mb-3'
+            data-testid='recent-posts-card'
+          >
             <div className='flex flex-row justify-between p-4 py-3'>
               <Typography
                 variant='small'
                 className='p-0 font-body font-semibold uppercase -tracking-tight text-xs text-gray-600'
+                data-testid='recent-posts-title'
               >
                 RECENT POSTS
               </Typography>
@@ -57,13 +66,14 @@ export function RecentPosts() {
                 // style={{ width: '75px', height: '35px' }}
                 className='rounded-full font-body font-thin -tracking-tight text-sm text-blue-900 mx-2'
                 onClick={() => setContentVisible(false)}
+                data-testid='clear-button'
               >
                 Clear
               </button>
             </div>
             {/* <LoadingProvider error={isError} isLoading={isLoading}> */}
             {response?.map((post, index) => (
-              <div key={index}>
+              <div key={index} data-testid={`post-item-${index}`}>
                 <PostItem
                   communityName={post.community_name ?? ''}
                   postId={post._id}

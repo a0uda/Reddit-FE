@@ -12,6 +12,7 @@ import DropDownButton from '../UserSettings/Containers/DropDownButton';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useParams } from 'react-router-dom';
 import ModSideBar from '../Rules and Removal reasons/ModSidebar';
+import useSession from '../../hooks/auth/useSession';
 
 function GeneralSettings() {
   const { community_name } = useParams();
@@ -45,6 +46,25 @@ function GeneralSettings() {
   const { data, isError, isLoading } = useQuery('general settings', () =>
     fetchRequest(`communities/get-general-settings/${community_name}`)
   );
+  const { user } = useSession();
+  const [settingsPerm, setSettingsPerm] = useState(false);
+  useQuery({
+    queryKey: ['access', community_name],
+    queryFn: async () =>
+      await fetchRequest(
+        `communities/about/moderators-sorted/${community_name}`
+      ),
+    onSuccess: (data) => {
+      const perm = data?.data.find(
+        (moderator: { username: string }) =>
+          moderator.username === user?.username
+      );
+      console.log(perm, 'perm');
+      setSettingsPerm(
+        perm?.has_access.everything || perm?.has_access.manage_settings
+      );
+    },
+  });
   useEffect(() => {
     if (data?.data) {
       setCommunityDescription(data.data.description);
@@ -79,23 +99,29 @@ function GeneralSettings() {
       setAlertMessage(error);
     },
   });
+  const [errorMessage, setErrorMessage] = useState(false);
   const handleSaveChanges = () => {
-    postReq.mutate({
-      endPoint: `communities/change-general-settings/${community_name}`,
-      data: {
-        title: communityTitle,
-        welcome_message: {
-          send_welcome_message_flag: sendWelcomeMessage,
-          message: welcomeMessage,
+    if (sendWelcomeMessage && welcomeMessage == '') {
+      setErrorMessage(true);
+    } else {
+      setErrorMessage(false);
+      postReq.mutate({
+        endPoint: `communities/change-general-settings/${community_name}`,
+        data: {
+          title: communityTitle,
+          welcome_message: {
+            send_welcome_message_flag: sendWelcomeMessage,
+            message: welcomeMessage,
+          },
+          description: communityDescription,
+          type: selectedOption,
+          nsfw_flag: nsfw,
+          approved_users_have_the_ability_to: approvedAbility,
+          accepting_new_requests_to_post: postRequestt,
+          accepting_requests_to_join: joinRequest,
         },
-        description: communityDescription,
-        type: selectedOption,
-        nsfw_flag: nsfw,
-        approved_users_have_the_ability_to: approvedAbility,
-        accepting_new_requests_to_post: postRequestt,
-        accepting_requests_to_join: joinRequest,
-      },
-    });
+      });
+    }
   };
 
   ///character length validation
@@ -135,9 +161,15 @@ function GeneralSettings() {
                 buttonColor='bg-[#0079D3]'
                 buttonTextColor='white'
                 onClick={handleSaveChanges}
+                disabled={!settingsPerm}
               ></RoundedButton>
             </div>
             <div className='w-[900px]'>
+              {errorMessage && (
+                <h2 className='text-2xl mx-5 font-semibold pl-80 pb-1 text-red-600'>
+                  Error! please fill in required words
+                </h2>
+              )}
               <h2 className='text-xl my-4 font-semibold'>Community settings</h2>
               <Section sectionTitle='Community Profile'>
                 <Card title='Community name' description=''></Card>

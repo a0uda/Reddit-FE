@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Avatar, Input } from '@material-tailwind/react';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
-import useSession from '../../hooks/auth/useSession';
+import useSession, { User } from '../../hooks/auth/useSession';
 import { CommunityIcon } from '../../assets/icons/Icons';
 
 interface Suggestion {
@@ -55,12 +55,9 @@ const ShareOption: React.FC<Props> = ({ setFieldValue }) => {
     setShowSuggestions(false);
     setFieldValue(true, suggestion.name);
   };
-  const handleOptionClickUser = (user: {
-    username: string;
-    imageUrl: string;
-  }) => {
+  const handleOptionClickUser = (user: User) => {
     setSearchQuery(user.username);
-    setImageQuery(user.imageUrl);
+    setImageQuery(user.profile_picture!);
     setShowSuggestions(false);
     setFieldValue(false, '');
   };
@@ -149,9 +146,9 @@ const ShareOption: React.FC<Props> = ({ setFieldValue }) => {
                 <div className='flex flex-row gap-2'>
                   <Avatar
                     variant='circular'
-                    alt={user.imageUrl}
+                    alt={user.profile_picture}
                     src={
-                      user.imageUrl ||
+                      user.profile_picture ||
                       'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
                     }
                     className='w-8 h-8'

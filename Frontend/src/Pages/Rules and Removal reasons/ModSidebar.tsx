@@ -19,6 +19,7 @@ import { useParams } from 'react-router-dom';
 
 const ModSideBar = ({ className }: { className?: string }) => {
   const { community_name } = useParams();
+
   const overviews = [
     {
       title: 'Queue',
@@ -193,7 +194,7 @@ const ModSideBar = ({ className }: { className?: string }) => {
                 </svg>
               }
               title='Exit Mod tools'
-              link='/'
+              link={`/r/${community_name}`}
             />
           </span>
           <hr className='text-black  my-2 border-blue-gray-50' />

@@ -7,7 +7,7 @@ import {
   addPrefixToUsername,
   dateDuration,
 } from '../../utils/helper_functions';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SpoilerContainer } from './PostPreview';
 import { useEffect, useState } from 'react';
 import { fetchRequest } from '../../API/User';
@@ -25,7 +25,7 @@ const SharedPostContainer = (props: {
 
   const [name, setName] = useState<string>();
   const url = window.location.href;
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['post', props.sharedPostId, url],
     queryFn: () => fetchRequest(`posts/get-post?id=${props.sharedPostId}`),
     onSuccess: (data) => {
@@ -40,12 +40,17 @@ const SharedPostContainer = (props: {
     },
   });
   useEffect(() => {
+    refetch();
+  }, []);
+
+  useEffect(() => {
     if (sharedPost) {
       console.log(sharedPost, props.sharedPostId, 'Updated SharedPost'); // Check if `sharedPost` is updated
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sharedPost]);
   console.log(sharedPost, props.sharedPostId, 'Updated SharedPost barra'); // Check if `sharedPost` is updated
-
+  const navigate = useNavigate();
   return (
     <>
       <div>
@@ -85,7 +90,15 @@ const SharedPostContainer = (props: {
           ))}
       </div>
       {data?.data && (
-        <div className='bg-white rounded-lg flex flex-col p-2 border-2 border-lines-color mb-1'>
+        <div
+          onClick={() => {
+            console.log('dost sah');
+            navigate(
+              `/${addPrefixToUsername(data?.data?.community_name || data?.data?.username, data?.data?.community_name ? 'community' : 'user')}/comments/${data?.data?._id}/${data?.data?.title}/`
+            );
+          }}
+          className='bg-white rounded-lg flex flex-col p-2 border-2 border-lines-color mb-1'
+        >
           {data?.data?.spoiler_flag && sharedPostSpoiler && (
             <div className='flex flex-col justify-start pt-0'>
               <div className='flex gap-2'>
@@ -93,7 +106,7 @@ const SharedPostContainer = (props: {
                   variant='small'
                   className='font-body -tracking-tight text-gray-600'
                 >
-                  <Link to={`/r/${name}`} className='hover:underline'>
+                  <Link to={`/${name}/overview`} className='hover:underline'>
                     {name}
                   </Link>
                 </Typography>
@@ -152,7 +165,10 @@ const SharedPostContainer = (props: {
                           variant='small'
                           className='font-body -tracking-tight text-gray-600'
                         >
-                          <Link to={`/r/${name}`} className='hover:underline'>
+                          <Link
+                            to={`/${name}/overview`}
+                            className='hover:underline'
+                          >
                             {name}
                           </Link>
                         </Typography>

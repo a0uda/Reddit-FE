@@ -78,7 +78,7 @@ const InteractionButtons = ({
     <>
       <div
         className={cn(
-          'flex flex-row items-center gap-4 text-black z-10',
+          'flex flex-row items-center gap-2 text-black z-10',
           !isPost ? 'gap-0' : '',
           className
         )}

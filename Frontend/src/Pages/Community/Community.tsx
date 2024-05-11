@@ -31,27 +31,50 @@ import {
   ListItem,
   Typography,
 } from '@material-tailwind/react';
+import useSession from '../../hooks/auth/useSession';
 // import { CommunityIcon } from '../../assets/icons/Icons';
 
 const Community = () => {
   const { communityName } = useParams();
   const postReq = useMutation(postRequest);
   const patchReq = useMutation(patchRequest);
+  const fetchReq = useMutation(fetchRequest);
 
   //================================================ Community Info ======================================================//
 
   const [community, setCommunity] = useState<CommunityType | undefined>();
+  const [accessPerm, setAccessPerm] = useState<boolean>();
+  const { user } = useSession();
   console.log(' comm name in comm page', communityName);
   const url = window.location.href;
-  const { isLoading, isError } = useQuery({
+  const { isLoading, isError, refetch } = useQuery({
     queryKey: ['communityPage', communityName, url],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${communityName}/`),
     onSuccess: (data) => {
       setCommunity(data?.data);
+      if (data?.data.moderator_flag) {
+        fetchReq.mutate(
+          `communities/about/moderators-sorted/${communityName}`,
+          {
+            onSuccess: (data) => {
+              console.log(data?.data, 'moderators');
+              const perm = data?.data.find(
+                (moderator: { username: string }) =>
+                  moderator.username === user?.username
+              );
+              console.log(perm, 'perm');
+              setAccessPerm(
+                perm?.has_access.everything ||
+                  perm?.has_access.manage_posts_and_comments
+              );
+            },
+          }
+        );
+      }
 
-      // setIsJoined(data.data.joined_flag);
-      // setProfilePicture(data.data.profile_picture);
+      // setIsJoined(data?.data?.joined_flag);
+      // setProfilePicture(data?.data?.profile_picture);
       // // todo:set the banner
       // console.log('the comm', community);
     },
@@ -59,6 +82,10 @@ const Community = () => {
       console.error('Error occurred while fetching community data');
     },
   });
+  useEffect(() => {
+    refetch();
+    comPosts.refetch();
+  }, []);
 
   //================================================ Community Actions ======================================================//
 
@@ -66,6 +93,7 @@ const Community = () => {
   const [isModerator, setIsModerator] = useState(community?.moderator_flag);
   const [isMuted, setIsMuted] = useState(community?.muted_flag);
   const [isFavorite, setIsFavorite] = useState(community?.favorite_flag);
+  const [comType, setComType] = useState(community?.type);
 
   useEffect(() => {
     setIsJoined(community?.joined_flag);
@@ -74,6 +102,7 @@ const Community = () => {
     setIsModerator(community?.moderator_flag);
     setIsMuted(community?.muted_flag);
     setIsFavorite(community?.favorite_flag);
+    setComType(community?.type);
   }, [community]);
 
   const joinMutation = useMutation(
@@ -299,7 +328,7 @@ const Community = () => {
 
   const [communityPosts, setCommunityPosts] = useState<PostType[]>([]);
   // console.log(communityName);
-  useQuery({
+  const comPosts = useQuery({
     queryKey: ['postsInCommunityPage', communityName, url],
     queryFn: () =>
       fetchRequest(`communities/get-visible-posts/${communityName}?sortBy=new`),
@@ -538,7 +567,7 @@ const Community = () => {
                     <label
                       htmlFor='upload-button-profile'
                       className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
-                      onDrop={profilePictureHandleDrop}
+                      onDrop={(e) => profilePictureHandleDrop(e)}
                       onDragOver={(e) => {
                         e.preventDefault();
                       }}
@@ -728,7 +757,7 @@ const Community = () => {
         <LoadingProvider error={isError} isLoading={isLoading}>
           {community && (
             <>
-              <ContentLayout.Main>
+              <ContentLayout.Header>
                 <div className='relative'>
                   {bannerPicture && bannerPicture !== 'none' && (
                     <Avatar
@@ -799,15 +828,18 @@ const Community = () => {
                   </Typography>
                   {/* buttons above the RSB */}
                   <div className='mr-2 flex justify-end items-center gap-2'>
-                    <Link to={`/${communityNameWithPrefix}/submit`}>
-                      <Button
-                        variant='text'
-                        className='font-bold flex items-center gap-1.5 border border-black'
-                      >
-                        <PlusIcon className='w-6 h-6' />
-                        Create a post
-                      </Button>
-                    </Link>
+                    {isModerator ||
+                      (isJoined && (
+                        <Link to={`/${communityNameWithPrefix}/submit`}>
+                          <Button
+                            variant='text'
+                            className='font-bold flex items-center gap-1.5 border border-black'
+                          >
+                            <PlusIcon className='w-6 h-6' />
+                            Create a post
+                          </Button>
+                        </Link>
+                      ))}
                     {!isJoined && !isModerator && (
                       <Button
                         variant='text'
@@ -922,15 +954,31 @@ const Community = () => {
 
                 <div className='flex justify-between'>
                   <ContentLayout.Main>
-                    {communityPosts.map((post) => (
-                      <div key={post._id} className='w-full pr-4'>
-                        <PostPreview
-                          post={post}
-                          page='community'
-                          isMyPost={isModerator}
-                        />
+                    {comType == 'Public' || isModerator || isJoined ? (
+                      communityPosts.length > 0 ? (
+                        communityPosts.map((post, index) => (
+                          <div key={post._id} className='w-full pr-4'>
+                            {index === 0 && (
+                              <div className='w-100 min-h-px bg-gray-300'></div>
+                            )}
+                            <PostPreview
+                              post={post}
+                              page='community'
+                              isMyPost={accessPerm}
+                            />
+                            <div className='w-100 min-h-px bg-gray-300'></div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className='flex justify-center items-center p-5 border-t'>
+                          No available posts
+                        </div>
+                      )
+                    ) : (
+                      <div className='flex justify-center items-center p-5 border-t'>
+                        Community is {comType}
                       </div>
-                    ))}
+                    )}
                   </ContentLayout.Main>
                   <ContentLayout.RightSideBar>
                     <CommunityRSB
@@ -939,7 +987,7 @@ const Community = () => {
                     />
                   </ContentLayout.RightSideBar>
                 </div>
-              </ContentLayout.Main>
+              </ContentLayout.Header>
             </>
           )}
         </LoadingProvider>

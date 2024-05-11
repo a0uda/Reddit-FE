@@ -35,7 +35,7 @@ export default function SwitchButton(props: {
       //   console.log(e.currentTarget.checked, 'val');
       //   console.log(props.checked, 'checked');
       // }}
-      onChange={handleChange}
+      onChange={(e) => handleChange(e)}
     />
   );
 }

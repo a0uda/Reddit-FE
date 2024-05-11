@@ -40,6 +40,7 @@ import LinkPostContainer from './LinkPostContainer';
 import PollPostContainer from './PollPostContainer';
 import NonEditableProvider from '../../Providers/NonEditableProvider';
 import SharedPostContainer from './SharedPostContainer';
+import { useAlert } from '../../Providers/AlertProvider';
 
 export const SpoilerContainer = (props: {
   handleViewSpoiler: () => void;
@@ -151,7 +152,7 @@ const PostPreview = ({
   };
   useEffect(() => {
     handleCanEditPost();
-  }, []);
+  });
   const url = window.location.href;
   useQuery({
     queryKey: ['communityPostPreview', post.community_name, url],
@@ -229,6 +230,7 @@ const PostPreview = ({
   //     },
   //   });
   // };
+  const { setAlertMessage, setIsError, setTrigger, trigger } = useAlert();
   const handleReportPost = () => {
     postReq.mutate(
       {
@@ -236,14 +238,18 @@ const PostPreview = ({
         data: {
           id: post._id,
         },
+      },
+      {
+        onSuccess: () => {
+          setAlertMessage('Post Reported');
+          setIsError(false);
+          setTrigger(!trigger);
+
+          // post.moderator_details.approved_flag = true;
+          // post.moderator_details.approved_by = user?.username;
+          // post.moderator_details.approved_date = new Date();
+        },
       }
-      // {
-      //   onSuccess: () => {
-      //     // post.moderator_details.approved_flag = true;
-      //     // post.moderator_details.approved_by = user?.username;
-      //     // post.moderator_details.approved_date = new Date();
-      //   },
-      // }
     );
   };
   const handleNSFWFlag = () => {
@@ -328,13 +334,25 @@ const PostPreview = ({
   //     }
   //   );
   // };
+  const [hidden, setHidden] = useState(false);
   const handleHideUnhidePost = () => {
-    postReq.mutate({
-      endPoint: 'users/hide-unhide-post',
-      data: {
-        id: post._id,
+    postReq.mutate(
+      {
+        endPoint: 'users/hide-unhide-post',
+        data: {
+          id: post._id,
+        },
       },
-    });
+      {
+        onSuccess: () => {
+          setAlertMessage(hidden ? 'Post Unhidden' : 'Post Hidden');
+          setIsError(false);
+          setTrigger(!trigger);
+          setHidden(!hidden);
+        },
+        // post.hidden_flag = !post.hidden_flag;
+      }
+    );
   };
 
   // const link = community
@@ -345,7 +363,7 @@ const PostPreview = ({
     <>
       {!showEditPost ? (
         <div
-          className='relative'
+          className='relative '
           onClick={() => {
             navigate(link);
           }}
@@ -468,7 +486,7 @@ const PostPreview = ({
                     />
                   </>
                 ) : (
-                  <div className='flex gap-7 justify-between pb-2'>
+                  <div className='flex gap-7 justify-between pb-2 w-[97%] overflow-hidden'>
                     <div className='flex flex-col justify-start space-y-2 overflow-hidden w-full'>
                       <div>
                         <Typography
@@ -566,7 +584,7 @@ const PostPreview = ({
                       isReposted={post.is_reposted_flag}
                     />
                     {page != 'home' && isMyPost && (
-                      <div className=' flex justify-end items-center gap-4'>
+                      <div className=' flex justify-end items-center gap-2'>
                         {post.moderator_details.approved_flag == false &&
                           post.moderator_details.spammed_flag == false &&
                           post.moderator_details.reported_flag == false &&
@@ -606,7 +624,7 @@ const PostPreview = ({
                               content={`At ${post.moderator_details.approved_date}`}
                             >
                               <div className='flex items-center gap-2'>
-                                <div className='text-sm'>
+                                <div className='text-sm text-center'>
                                   Approved{' '}
                                   {getTimeDifferenceAsString(
                                     new Date(
@@ -626,7 +644,7 @@ const PostPreview = ({
                                 'user'
                               )}
                             >
-                              <div className='text-sm'>Removed</div>
+                              <div className='text-sm text-center'>Removed</div>
                             </Tooltip>
                           </div>
                         ) : post.moderator_details.spammed_flag === true ? (
@@ -637,7 +655,7 @@ const PostPreview = ({
                                 'user'
                               )}
                             >
-                              <div className='text-sm'>Removed</div>
+                              <div className='text-sm text-center'>Removed</div>
                             </Tooltip>
                           </div>
                         ) : post.moderator_details.removed_flag === true ? (
@@ -647,7 +665,7 @@ const PostPreview = ({
                                 'At ' + post.moderator_details.removed_date
                               }
                             >
-                              <div className='text-sm'>
+                              <div className='text-sm text-center'>
                                 Removed{' '}
                                 {getTimeDifferenceAsString(
                                   new Date(
