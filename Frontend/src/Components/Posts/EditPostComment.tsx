@@ -18,6 +18,7 @@ import { useMutation } from 'react-query';
 import { patchRequest } from '../../API/User';
 import { tiptapConfig } from '../../utils/tiptap_config';
 import { CommentType, PostType } from '../../types/types';
+import { useAlert } from '../../Providers/AlertProvider';
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   const setLink = useCallback(() => {
@@ -170,10 +171,41 @@ const MenuFooter = ({
   //setFocused: Dispatch<SetStateAction<boolean>>;
   setError: Dispatch<SetStateAction<string>>;
   handleEdit: () => void;
-  post: PostType;
+  post: PostType | CommentType;
 }) => {
-  const patchReq = useMutation(patchRequest);
+  const { setAlertMessage, setIsError, trigger, setTrigger } = useAlert();
 
+  const patchReq = useMutation(patchRequest, {
+    onError: (error: string) => {
+      setAlertMessage(error);
+      setIsError(true);
+      setTrigger(!trigger);
+    },
+  });
+  // const queryClient = useQueryClient();
+  // const addCommentMuation = useMutation(
+  //   (content: string) =>
+  //     patchRequest({
+  //       endPoint: 'posts-or-comments/edit-text',
+  //       newSettings: { is_post: isPost, id: Id, edited_text: content },
+  //     }),
+  //   {
+  //     onSuccess: () => {
+  //       // Invalidate or refetch a query on success
+  //       queryClient.invalidateQueries('comments');
+  //       queryClient.invalidateQueries(['downvoted']);
+  //       queryClient.invalidateQueries(['upvoted']);
+  //       queryClient.invalidateQueries(['hidden']);
+  //       queryClient.invalidateQueries(['saved']);
+  //       queryClient.invalidateQueries(['post']);
+  //       queryClient.invalidateQueries(['posts']);
+  //     },
+  //     onError: () => {
+  //       // Perform any actions on error, like showing an error message
+  //       console.log('Error');
+  //     },
+  //   }
+  // );
   const handleEditPC = (content: string) => {
     patchReq.mutate(
       {
@@ -254,7 +286,7 @@ export default function EditPostComment({
   isPost: boolean;
   handleEdit: () => void;
 }) {
-  const content = post.description;
+  const [content] = useState(post.description);
   const editor = useEditor({
     ...tiptapConfig,
     content,

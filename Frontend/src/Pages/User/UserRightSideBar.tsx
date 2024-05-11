@@ -10,7 +10,6 @@ import {
 import {
   PlusCircleIcon,
   PlusIcon,
-  ShieldCheckIcon,
   MinusCircleIcon,
   ChatBubbleOvalLeftEllipsisIcon,
 } from '@heroicons/react/24/outline';
@@ -47,13 +46,13 @@ function UserRightSideBar() {
     if (user?.username) {
       fetchReq.mutate(`users/about/${username}`, {
         onSuccess: (data) => {
-          console.log('reemn', data.data);
-          setAboutData(data.data);
-          setModeratedCommunities(data.data.moderatedCommunities);
-          if (data.data.moderatedCommunities) {
+          console.log('reemn', data?.data);
+          setAboutData(data?.data);
+          setModeratedCommunities(data?.data.moderatedCommunities);
+          if (data?.data.moderatedCommunities) {
             setJoinStates(
-              data.data.moderatedCommunities.map(
-                (community) => community.joined
+              data?.data.moderatedCommunities.map(
+                (community: ModeratedCommunity) => community.joined
               )
             );
           } else {
@@ -65,7 +64,7 @@ function UserRightSideBar() {
           if (user?.username != username) {
             fetchReq.mutate(`users/following`, {
               onSuccess: (data) => {
-                const userList = data.data;
+                const userList = data?.data;
                 for (const user of userList) {
                   console.log(user.username, 'tasneem');
 

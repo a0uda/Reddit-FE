@@ -318,8 +318,8 @@ const PostReply = (props: {
                   onClick={() => {
                     postReq.mutate(
                       {
-                        endPoint: `users/block-unblock-user?blocked_username=${props.senderUsername}&block=${true}`,
-                        data: {},
+                        endPoint: `users/block-unblock-user`,
+                        data: { blocked_username: props.senderUsername },
                       },
                       { onSuccess: props.refetch }
                     );

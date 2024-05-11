@@ -1,5 +1,5 @@
 import { Avatar, Typography } from '@material-tailwind/react';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchRequest } from '../../API/User';
 import { useMutation } from 'react-query';
@@ -38,33 +38,26 @@ const CreateChat = () => {
   const [query, setQuery] = useState('');
   const fetchReq = useMutation(fetchRequest);
 
-  const suggestionsArr = [
-    { profile_picture: 'asasas', username: 'User1' },
-    { profile_picture: 'asasas', username: 'User2' },
-    { profile_picture: 'asasas', username: 'User3' },
-  ];
-
-  const handleSearch = (e) => {
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
     const searchQuery = e.target.value;
     if (searchQuery.trim().length === 0) {
       return setSelectedData([]);
     } else {
-      const res = fetchReq.mutate(
-        `search/people?page=1&pageSize=10&query=${searchQuery}`,
-        {
-          onSuccess: (data) => {
-            // setSelectedData(data.data)
-            const filteredArr = data.data.map((user) => {
+      fetchReq.mutate(`search/people?page=1&pageSize=10&query=${searchQuery}`, {
+        onSuccess: (data) => {
+          // setSelectedData(data.data)
+          const filteredArr = data?.data.map(
+            (user: { username: string; profile_picture: string }) => {
               return {
                 username: user.username,
                 profile_picture: user.profile_picture,
               };
-            });
-            setSelectedData(filteredArr);
-          },
-        }
-      );
+            }
+          );
+          setSelectedData(filteredArr);
+        },
+      });
 
       // setSelectedData(
       //   suggestionsArr.filter((item) =>

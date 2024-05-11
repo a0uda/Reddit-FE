@@ -13,6 +13,8 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 export default function SharePostModal(props: {
   handleOpen: () => void;
   open: boolean;
+  handleOpen: () => void;
+  open: boolean;
   postId: string;
 }) {
   const [text, setText] = useState('');

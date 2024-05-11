@@ -4,9 +4,7 @@ import Card from './Containers/Card';
 import InputWButton from './Containers/InputWButton';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, postRequest } from '../../API/User';
-import { AxiosPromise } from 'axios';
 import moment from 'moment';
-import { Typography } from '@material-tailwind/react';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
 
@@ -14,27 +12,27 @@ const ListCard = (props: {
   avatar: string;
   name: string;
   date: Date;
-  id: number;
+  id: string;
   endPoint: string;
   data: object;
-  refetch?;
+  refetch?: () => void;
 }) => {
   // const [timeDifference, setTimeDifference] = React.useState('');
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
 
   const postReq = useMutation(postRequest, {
     onSuccess: () => {
-      props.refetch();
+      if (props.refetch) {
+        props.refetch();
+      }
       setTrigger(!trigger);
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
-
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(errorObj.data);
+      setAlertMessage(error);
     },
   });
   const momDate = moment(props.date);
@@ -48,7 +46,13 @@ const ListCard = (props: {
   return (
     <div className='flex justify-between w-full'>
       <div className='flex gap-2 items-center'>
-        <img src={props.avatar} className='w-4 h-4' />
+        <img
+          src={
+            props.avatar ||
+            'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
+          }
+          className='w-4 h-4'
+        />
 
         <div className='text-base'>{props.name}</div>
         <div className='text-xs text-gray-light'>{timeDifference}</div>
@@ -67,13 +71,23 @@ function SafetyPrivacy() {
   const [blockVal, setBlockVal] = React.useState('');
   const [muteComm, setMuteComm] = React.useState('');
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
-
-  const { data, error, isLoading, refetch } = useQuery('safety', () =>
-    fetchRequest('users/safety-settings')
+  const [blocked_users, setBlockedUsers] = React.useState([]);
+  const [muted_communities, setMutedCommunities] = React.useState([]);
+  const { data, isError, isLoading, refetch } = useQuery(
+    'safety',
+    () => fetchRequest('users/safety-settings'),
+    {
+      onSuccess: (data) => {
+        setBlockedUsers(
+          data?.data.content.safety_and_privacy_settings.blocked_users
+        );
+        setMutedCommunities(
+          data?.data.content.safety_and_privacy_settings.muted_communities
+        );
+        console.log(data?.data, 'dataaaa');
+      },
+    }
   );
-
-  const blocked_users = data?.data?.blocked_users ?? [];
-  const muted_communities = data?.data?.muted_communities ?? [];
 
   const postReq = useMutation(postRequest, {
     onSuccess: () => {
@@ -82,21 +96,19 @@ function SafetyPrivacy() {
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
-
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(errorObj.data);
+      setAlertMessage(error);
     },
   });
-  const handleAddButton = (endPoint, data) => {
+  const handleAddButton = (endPoint: string, data: unknown) => {
     postReq.mutate({ endPoint: endPoint, data: data });
   };
   console.log(!data);
 
   return (
-    <LoadingProvider error={error} isLoading={isLoading}>
+    <LoadingProvider error={isError} isLoading={isLoading}>
       <h2 className='text-xl my-8 font-semibold'>Safety & Privacy</h2>
       <Section sectionTitle='SAFETY'>
         <Card
@@ -110,26 +122,35 @@ function SafetyPrivacy() {
             inputValue={blockVal}
             setInputValue={setBlockVal}
             onClick={() => {
-              handleAddButton(
-                `users/block-unblock-user?blocked_username=${blockVal}&block=${true}`,
-                {}
-              );
+              handleAddButton(`users/block-unblock-user`, {
+                blocked_username: blockVal,
+              });
               setBlockVal('');
             }}
           />
           <div className='mt-4 flex flex-col gap-2 w-full'>
-            {blocked_users.map((user, i) => (
-              <ListCard
-                avatar={user.profile_picture}
-                date={user.blocked_date}
-                id={user.id}
-                name={user.username}
-                endPoint={`users/block-unblock-user?blocked_username=${user.username}&block=${false}`}
-                data={{ blocked_username: user.username, block: false }}
-                key={user.id + user.username + i}
-                refetch={refetch}
-              />
-            ))}
+            {blocked_users.map(
+              (
+                user: {
+                  profile_picture: string;
+                  blocked_date: Date;
+                  id: string;
+                  username: string;
+                },
+                i: number
+              ) => (
+                <ListCard
+                  avatar={user.profile_picture}
+                  date={user.blocked_date}
+                  id={user.id}
+                  name={user.username}
+                  endPoint={`users/block-unblock-user`}
+                  data={{ blocked_username: user.username }}
+                  key={user.id + user.username + i}
+                  refetch={refetch}
+                />
+              )
+            )}
           </div>
         </div>
         <Card
@@ -144,28 +165,37 @@ function SafetyPrivacy() {
             setInputValue={setMuteComm}
             onClick={() => {
               handleAddButton('users/mute-unmute-community', {
-                mute: true,
-                'community-title': muteComm,
+                community_name: muteComm,
               });
               setMuteComm('');
             }}
           />
           <div className='mt-4 flex flex-col gap-2 w-full'>
-            {muted_communities.map((comm, i) => (
-              <ListCard
-                avatar={comm.profile_picture}
-                date={comm.muted_date}
-                id={comm.id}
-                name={comm['community-title']}
-                data={{
-                  'community-title': comm['community-title'],
-                  mute: false,
-                }}
-                endPoint='users/mute-unmute-community'
-                key={comm.id + comm.community_title + i}
-                refetch={refetch}
-              />
-            ))}
+            {muted_communities.map(
+              (
+                comm: {
+                  profile_picture: string;
+                  muted_date: Date;
+                  id: string;
+                  name: string;
+                },
+                i: number
+              ) => (
+                <ListCard
+                  avatar={comm.profile_picture}
+                  date={comm.muted_date}
+                  id={comm.id}
+                  name={comm.name}
+                  data={{
+                    community_name: comm.name,
+                    mute: false,
+                  }}
+                  endPoint='users/mute-unmute-community'
+                  key={comm.id + comm.name + i}
+                  refetch={refetch}
+                />
+              )
+            )}
           </div>
         </div>
       </Section>

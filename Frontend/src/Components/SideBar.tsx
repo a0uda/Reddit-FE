@@ -50,23 +50,6 @@ const SideBar = ({ className }: { className?: string }) => {
   //     link: '/r/AhayEveryDay',
   //   },
   // ];
-  // const createPost = [
-  //   {
-  //     title: 'Input Text',
-  //     icon: <DocumentTextIcon className='h-5 w-5' />,
-  //     link: '/submit?type=text',
-  //   },
-  //   {
-  //     title: 'Image & Video',
-  //     icon: <PhotoIcon className='h-5 w-5' />,
-  //     link: '/submit?type=media',
-  //   },
-  //   {
-  //     title: 'Link',
-  //     icon: <LinkIcon className='h-5 w-5' />,
-  //     link: '/submit?type=link',
-  //   },
-  // ];
 
   const [communities, setCommunities] = useState<ListItemProps[] | undefined>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -196,12 +179,16 @@ const SideBar = ({ className }: { className?: string }) => {
               setCreateCommunityModal(!isCreateCommunityModal);
             }}
           />
-          <hr className='my-2 border-blue-gray-50' />
-          <ListItemComponent
-            title='Create Post'
-            icon={<DocumentTextIcon className='h-5 w-5' />}
-            link='/submit'
-          />
+          {status == 'authenticated' && (
+            <>
+              <hr className='my-2 border-blue-gray-50' />
+              <ListItemComponent
+                title='Create Post'
+                icon={<DocumentTextIcon className='h-5 w-5' />}
+                link='/submit'
+              />
+            </>
+          )}
           {/* <AccordionDropDown title='Create Post' list={createPost} /> */}
           <hr className='my-2 border-blue-gray-50' />
         </List>

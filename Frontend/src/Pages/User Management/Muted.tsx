@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ButtonList from './components/ButtonList';
 import SearchBar from './components/SearchBar';
 import { getTimeDifferenceAsString } from '../../utils/helper_functions';
@@ -132,13 +132,14 @@ const UsersList = ({
   );
 };
 
-const Muted = () => {
+const Muted = ({ page, userPerm }: { page: string; userPerm: boolean }) => {
   const buttArr = [
     {
       text: 'Mute user',
       onClick: () => {
         setMuteMod(true);
       },
+      disabled: !userPerm,
     },
   ];
   const [muteMod, setMuteMod] = useState(false);
@@ -167,22 +168,24 @@ const Muted = () => {
   const [selectedData, setSelectedData] = useState<MutedUser[]>([]);
   const url = window.location.href;
   const { data, isLoading, isError, refetch } = useQuery(
-    ['getMutedUsers', url],
+    ['getMutedUsers', url, page],
     () => fetchRequest(`communities/about/muted/${community_name}`),
     {
       onSuccess: (data) => {
-        setSelectedData(data.data);
+        setSelectedData(data?.data);
       },
     }
   );
-
+  useEffect(() => {
+    refetch();
+  }, []);
   const handleSearch = () => {
     if (searchQuery.trim().length === 0) {
       return setSelectedData(data?.data);
     } else {
       const queryLowerCase = searchQuery.toLowerCase();
       setSelectedData(
-        data?.data.filter((item) =>
+        data?.data.filter((item: { username: string }) =>
           item.username.toLowerCase().includes(queryLowerCase)
         )
       );

@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import DropDownButton from './components/DropDownButton';
 import PostCard from './components/PostCard';
-import useSession from '../../hooks/auth/useSession';
-import { useMutation } from 'react-query';
-import { PostType } from '../../types/types';
-import { fetchRequest } from '../../API/User';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import LoadingProvider from '../../Components/LoadingProvider';
+import { PostType } from '../../types/types';
 
-const Removed = ({ page }: { page: string }) => {
+const Removed = ({ page, postPerm }: { page: string; postPerm: boolean }) => {
   const [sortList, setSortList] = useState<string>('Newest First');
   const [selList, setSelList] = useState<string>('Posts and Comments');
   const { community_name } = useParams();
@@ -77,8 +74,13 @@ const Removed = ({ page }: { page: string }) => {
       <LoadingProvider error={error} isLoading={isLoading}>
         <div className='flex flex-col gap-4'>
           {response && response.length > 0 ? (
-            response.map((post) => (
-              <PostCard key={post._id} post={post} page={page} />
+            response.map((post: PostType) => (
+              <PostCard
+                key={post._id}
+                post={post}
+                page={page}
+                postPerm={postPerm}
+              />
             ))
           ) : (
             <div className='border-[1px] rounded-md flex items-center justify-center font-semibold text-xl text-gray-600 p-10'>

@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import PostReply from './Containers/PostReply';
 import LoadingProvider from '../../Components/LoadingProvider';
+import { MessageType, PostReplyType } from '../../types/types';
 
 const Sent = () => {
   const { data, isError, isLoading, refetch } = useQuery('inbox', () =>
@@ -11,64 +12,61 @@ const Sent = () => {
   );
 
   // Sort messages by created_at in descending order
-  const sortedMessages = data?.data.messages.sort((a, b) => {
-    const dateA = new Date(a['created_at']);
-    const dateB = new Date(b['created_at']);
-    return dateB - dateA; // descending order
-  });
+  const sortedMessages = data?.data.messages.sort(
+    (a: MessageType, b: MessageType) => {
+      const dateA = new Date(a['created_at']);
+      const dateB = new Date(b['created_at']);
+      return dateB.getTime() - dateA.getTime(); // descending order
+    }
+  );
 
   return (
     <LoadingProvider error={isError} isLoading={isLoading}>
       <ContentContainer length={sortedMessages?.length}>
         <div className=''>
-          {sortedMessages?.map((mess) => {
-            console.log(mess.postCreator, 'mess.postCreator');
-
-            if (
-              mess.postCreator == undefined &&
-              mess.postSubject == undefined
-            ) {
+          {sortedMessages?.map((mess: never) => {
+            if ('postCreator' in mess && 'postSubject' in mess) {
+              const postReply = mess as PostReplyType;
               return (
-                <Message
-                  unread={mess['unread_flag']}
-                  type='received'
-                  isSent={false}
-                  messageContent={mess.message}
-                  senderType={mess['sender_type']}
-                  receiverType={mess['receiver_type']}
-                  receiverUsername={mess['receiver_username']}
-                  senderUsername={mess['sender_username']}
-                  sendingDate={new Date(mess['created_at'])}
-                  subject={mess['subject']}
-                  isReply={mess['isReply']}
-                  repliesArr={mess['replies'] || null}
-                  messageId={mess['_id']}
-                  key={mess['_id']}
-                  senderVia={mess['senderVia']}
-                  refetch={refetch}
-                  parentMessageId={mess['parentMessageId']}
-                  is_invitation={mess['is_invitation']}
+                <PostReply
+                  createDate={postReply.created_at}
+                  senderUsername={postReply.senderUsername}
+                  postCreator={postReply.postCreator}
+                  postCreatorType={postReply.postCreatorType}
+                  postSubject={postReply.postSubject}
+                  replyContent={postReply.replyContent}
+                  replyId={postReply._id}
+                  unread={false}
+                  commentsCount={postReply.commentsCount}
+                  key={postReply._id}
+                  is_username_mention={postReply.is_username_mention}
                   query='inbox'
+                  vote={postReply.rank}
+                  refetch={refetch}
                 />
               );
             } else {
+              const message = mess as MessageType;
               return (
-                <PostReply
-                  createDate={mess['created_at']}
-                  senderUsername={mess['senderUsername']}
-                  postCreator={mess['postCreator']}
-                  postCreatorType={mess['postCreatorType']}
-                  postSubject={mess['postSubject']}
-                  replyContent={mess['replyContent']}
-                  replyId={mess['_id']}
-                  unread={mess['unread']}
-                  commentsCount={mess['commentsCount']}
-                  key={mess['_id']}
-                  vote={mess['vote']}
-                  is_username_mention={mess.is_username_mention}
-                  query='inbox'
-                  vote={mess['rank']}
+                <Message
+                  unread={message.unread_flag}
+                  type='received'
+                  isSent={false}
+                  messageContent={message.message}
+                  senderType={message.sender_type}
+                  receiverType={message.receiver_type}
+                  receiverUsername={message.receiver_username}
+                  senderUsername={message.sender_username}
+                  sendingDate={new Date(message.created_at)}
+                  subject={message.subject}
+                  isReply={message.isReply}
+                  messageId={message._id}
+                  key={message._id}
+                  senderVia={message.senderVia}
                   refetch={refetch}
+                  parentMessageId={message.parentMessageId}
+                  is_invitation={message.is_invitation}
+                  query='inbox'
                 />
               );
             }

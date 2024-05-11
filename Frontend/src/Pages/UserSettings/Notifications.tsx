@@ -1,15 +1,13 @@
-import React from 'react';
 import Section from './Containers/Section';
 import Card from './Containers/Card';
 import SwitchButton from '../../Components/SwitchButton';
 import { useMutation, useQuery } from 'react-query';
 import { fetchRequest, patchRequest } from '../../API/User';
-import { Spinner } from '@material-tailwind/react';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useAlert } from '../../Providers/AlertProvider';
 
 function Notifications() {
-  const { data, error, isLoading, refetch } = useQuery(
+  const { data, isError, isLoading, refetch } = useQuery(
     'notifications settings',
     () => fetchRequest('users/notification-settings')
   );
@@ -22,16 +20,14 @@ function Notifications() {
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
-
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(errorObj.data);
+      setAlertMessage(error);
     },
   });
 
-  const handleToggleSwitch = (settingName, value) => {
+  const handleToggleSwitch = (settingName: string, value: boolean | string) => {
     const newSettings = {
       notifications_settings: {
         [settingName]: value,
@@ -58,7 +54,7 @@ function Notifications() {
   } = data?.data || {};
 
   return (
-    <LoadingProvider error={error} isLoading={isLoading}>
+    <LoadingProvider error={isError} isLoading={isLoading}>
       <h2 className='text-xl my-8 font-semibold'>Notification settings</h2>
       <Section sectionTitle='MESSAGES'>
         <Card title='Private Messages' description=''>

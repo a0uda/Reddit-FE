@@ -19,6 +19,7 @@ import { postRequest, postRequestnew } from '../../API/User';
 import { tiptapConfig } from '../../utils/tiptap_config';
 import useSession from '../../hooks/auth/useSession';
 import Credentials from '../../Pages/credential/Credentials';
+import { useAlert } from '../../Providers/AlertProvider';
 
 const MenuBar = ({ editor }: { editor: Editor | null }) => {
   const setLink = useCallback(() => {
@@ -179,7 +180,14 @@ const MenuFooter = ({
       return null;
     }
   };
-  const postReq = useMutation(postRequest);
+  const { setAlertMessage, setIsError, trigger, setTrigger } = useAlert();
+  const postReq = useMutation(postRequest, {
+    onError: (error: string) => {
+      setAlertMessage(error);
+      setIsError(true);
+      setTrigger(!trigger);
+    },
+  });
   const usernamemention = (html: string, commentid: string) => {
     const username = extractUsername(html);
     console.log(html);
@@ -209,7 +217,13 @@ const MenuFooter = ({
     {
       onSuccess: (data) => {
         usernamemention(editor?.getHTML() || '', data?.data);
+        usernamemention(editor?.getHTML() || '', data?.data);
         queryClient.invalidateQueries('comments');
+      },
+      onError: (error: string) => {
+        setAlertMessage(error);
+        setIsError(true);
+        setTrigger(!trigger);
       },
     }
   );

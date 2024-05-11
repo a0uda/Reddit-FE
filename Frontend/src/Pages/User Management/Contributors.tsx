@@ -3,10 +3,10 @@ import SearchBar from './components/SearchBar';
 import { getTimeDifferenceAsString } from '../../utils/helper_functions';
 import RoundedButton from '../../Components/RoundedButton';
 import useSession from '../../hooks/auth/useSession';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
+import { useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddApprovedUser from './AddApprovedUser';
 import RemoveApprovedUser from './RemoveApprovedUser';
 import LoadingProvider from '../../Components/LoadingProvider';
@@ -118,13 +118,20 @@ const UsersList = ({
   );
 };
 
-const Contributors = () => {
+const Contributors = ({
+  page,
+  userPerm,
+}: {
+  page: string;
+  userPerm: boolean;
+}) => {
   const buttArr = [
     {
       text: 'Approve user',
       onClick: () => {
         setAppMod(true);
       },
+      disabled: !userPerm,
     },
   ];
   const [appMod, setAppMod] = useState(false);
@@ -173,22 +180,24 @@ const Contributors = () => {
   const [selectedData, setSelectedData] = useState<ApprovedUser[]>([]);
   const url = window.location.href;
   const { data, isLoading, isError, refetch } = useQuery(
-    ['getApprovedUsers', url],
+    ['getApprovedUsers', url, page],
     () => fetchRequest(`communities/about/approved/${community_name}`),
     {
       onSuccess: (data) => {
-        setSelectedData(data.data);
+        setSelectedData(data?.data);
       },
     }
   );
-
+  useEffect(() => {
+    refetch();
+  }, []);
   const handleSearch = () => {
     if (searchQuery.trim().length === 0) {
       return setSelectedData(data?.data);
     } else {
       const queryLowerCase = searchQuery.toLowerCase();
       setSelectedData(
-        data?.data.filter((item) =>
+        data?.data.filter((item: { username: string }) =>
           item.username.toLowerCase().includes(queryLowerCase)
         )
       );

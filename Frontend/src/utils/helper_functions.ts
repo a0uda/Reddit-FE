@@ -64,7 +64,7 @@ export function getTimeDifferenceAsString(date: Date) {
 }
 
 export function addPrefixToUsername(
-  username: string,
+  username: string | undefined | null,
   userType: 'moderator' | 'community' | 'user'
 ) {
   console.log(username, userType);

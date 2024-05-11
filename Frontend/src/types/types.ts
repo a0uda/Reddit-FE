@@ -80,11 +80,13 @@
 
 export type PostType = {
   _id: string; // Unique identifier for the post
+  post_id?: string; // post_id is optional
   avatar: string; //metzweda
   saved: boolean; //metzweda
   user_id: string; // Reference to the User
   username: string; // Username
   title: string; // Title of the post
+  post_title?: string; // Title of the post, optional
   description?: string; // Description, optional
   created_at: Date; // When the post was created
   edited_at?: Date; // When the post was edited
@@ -134,7 +136,7 @@ export type PostType = {
     | 'Controversial'
     | 'New'; // Suggested sorting option
   scheduled_flag: boolean; // Scheduled post flag
-
+  is_post?: boolean; // If the post is a post
   moderator_details: {
     approved_flag: boolean;
     approved_by?: string; // Reference to the User who approved
@@ -152,7 +154,7 @@ export type PostType = {
     reported_by?: string; // Reference to the User who reported
     reported_type?: string; // Type of reporting
   };
-
+  userVote?: string;
   user_details: {
     total_views: number; // Total views for the user
     upvote_rate: number; // Upvote rate for the user
@@ -386,20 +388,16 @@ export type AboutType = {
   connected_google: boolean;
   display_name: string;
   about: string;
-  social_links: {
-    icon: string;
-    username: string;
-    displayName?: string;
-  }[];
+  social_links: SocialLink[];
   profile_picture: string;
   banner_picture: string;
   gender: string;
 };
 
 export type SocialLink = {
-  type: string;
   username: string;
-  display_text?: string; // Optional property
+  display_text: string;
+  type: string;
   custom_url: string;
   _id: string;
 };
@@ -466,4 +464,54 @@ export type CommunityOverviewType = {
   profile_picture: string;
   favorite_flag: boolean;
   members_count: number;
+};
+
+export type MessageType = {
+  _id: string;
+  sender_username: string;
+  sender_type: 'user' | 'moderator' | 'community';
+  receiver_username: string;
+  receiver_type: 'user' | 'moderator' | 'community';
+  senderVia: string | null;
+  message: string;
+  created_at: Date;
+  deleted_at: string | null;
+  unread_flag: boolean;
+  isSent: boolean;
+  parentMessageId: string | null;
+  subject: string;
+  isReply: boolean;
+  is_username_mention: boolean;
+  is_invitation: boolean;
+};
+
+export type PostReplyType = {
+  created_at: Date;
+  senderUsername: string;
+  postCreator: string;
+  postCreatorType: 'user' | 'moderator' | 'community';
+  postSubject: string;
+  replyContent: string;
+  _id: string;
+  unread: boolean;
+  commentsCount: number;
+  rank: number;
+  upvotes_count: number;
+  downvotes_count: number;
+  is_username_mention: boolean;
+};
+
+export type RemovalReasonType = {
+  removal_reason_title: string;
+  reason_message: string;
+  _id: string;
+};
+
+export type ModeratedCommunityType = {
+  id: string;
+  name: string;
+  profile_picture: string;
+  favorite_flag: boolean;
+  members_count: number;
+  joined: boolean;
 };

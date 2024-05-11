@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import Section from './Containers/Section';
 import Card from './Containers/Card';
@@ -26,8 +26,11 @@ function ImageInput(props: {
 }) {
   const [selectedImage, setSelectedImage] = React.useState(props.image);
   const postReq = useMutation(postRequest);
-  const handleImageChange = async (event, type: 'profile' | 'banner') => {
-    const file = event.target.files[0]; // Get the selected file
+  const handleImageChange = async (
+    event: ChangeEvent<HTMLInputElement>,
+    type: 'profile' | 'banner'
+  ) => {
+    const file = event.target.files?.[0]; // Get the selected file
 
     if (file) {
       try {
@@ -118,7 +121,7 @@ function ImageInput(props: {
 }
 
 function Profile() {
-  const { data, error, isLoading, refetch } = useQuery('profile data', () =>
+  const { data, isError, isLoading, refetch } = useQuery('profile data', () =>
     fetchRequest('users/profile-settings')
   );
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
@@ -130,12 +133,10 @@ function Profile() {
       setIsError(false);
       setAlertMessage('User Settings Updated Successfully');
     },
-    onError: (error) => {
-      const errorObj = JSON.parse(error.message);
-
+    onError: (error: string) => {
       setTrigger(!trigger);
       setIsError(true);
-      setAlertMessage(errorObj.data);
+      setAlertMessage(error);
     },
   });
   const patchReq = useMutation(patchRequest, {
@@ -197,7 +198,7 @@ function Profile() {
   }, [socialLinkType]);
 
   return (
-    <LoadingProvider error={error} isLoading={isLoading}>
+    <LoadingProvider error={isError} isLoading={isLoading}>
       <h2 className='text-xl my-8 font-semibold'>Customize profile</h2>
       <Section sectionTitle='PROFILE INFORMATION'>
         <Card
@@ -263,7 +264,7 @@ function Profile() {
             social_links.map((link: SocialLink, i: number) => {
               return (
                 <Link
-                  key={link + i}
+                  key={link._id + i}
                   to={
                     link.custom_url.includes('www')
                       ? link.custom_url

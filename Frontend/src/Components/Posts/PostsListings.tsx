@@ -37,6 +37,13 @@ const PostsListings = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption]);
 
+  useEffect(() => {
+    setPage(1);
+    setPosts([]);
+    setNoMorePosts(false);
+    response.refetch();
+  }, []);
+
   const [page, setPage] = useState(1);
   const pageSize = 10;
   const [posts, setPosts] = useState<PostType[]>([]);
@@ -54,7 +61,9 @@ const PostsListings = () => {
         setNoMorePosts(true);
         return;
       }
-      setPosts((prevPosts) => [...prevPosts, ...(res?.data || [])]);
+      if (res?.data) {
+        setPosts((prevPosts) => [...prevPosts, ...res.data]);
+      }
     },
   });
 

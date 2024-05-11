@@ -3,6 +3,7 @@ import ContentContainer from './Containers/ContentContainer';
 import { useQuery } from 'react-query';
 import { fetchRequest } from '../../API/User';
 import LoadingProvider from '../../Components/LoadingProvider';
+import { PostReplyType } from '../../types/types';
 
 const Sent = () => {
   const { data, isError, isLoading, refetch } = useQuery(
@@ -24,7 +25,7 @@ const Sent = () => {
       <ContentContainer length={data?.data.mentions.length}>
         <div className=''>
           {!!data?.data &&
-            data?.data.mentions.map((reply, i) => (
+            data?.data.mentions.map((reply: PostReplyType) => (
               <PostReply
                 createDate={reply['created_at']}
                 senderUsername={reply['senderUsername']}
