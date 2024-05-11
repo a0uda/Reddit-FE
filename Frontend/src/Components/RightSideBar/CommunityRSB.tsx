@@ -42,7 +42,7 @@ export function CommunityRSB({
 
   const [Community, setCommunity] = useState<CommunityType | undefined>();
   const url = window.location.href;
-  const { isLoading, isError } = useQuery({
+  const { isLoading, isError, refetch } = useQuery({
     queryKey: ['communitiesRSB', communityName, page, url],
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${communityName}/`),
@@ -91,6 +91,7 @@ export function CommunityRSB({
 
   useEffect(() => {
     setIsJoined(Community?.joined_flag);
+    refetch();
   }, [Community, communityName]);
 
   return (
