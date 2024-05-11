@@ -14,6 +14,7 @@ const CommentOverview = ({ comment }: { comment: SearchCommentType }) => {
   return (
     <>
       <Link
+        data-testid='comment-overview-link'
         to={`/u/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`}
       >
         <Card
@@ -31,7 +32,12 @@ const CommentOverview = ({ comment }: { comment: SearchCommentType }) => {
                   name={post.community_name ?? ''}
                   username={post.username}
                 />
-                <span className='relative -top-0.5'>•</span>
+                <span
+                  className='relative -top-0.5'
+                  data-testid='comment-overview-dot'
+                >
+                  •
+                </span>
                 <Typography variant='small' className='text-xs'>
                   {dateDuration(new Date(post.created_at))}
                 </Typography>

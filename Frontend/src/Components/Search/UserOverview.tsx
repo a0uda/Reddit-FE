@@ -16,6 +16,7 @@ const UserOverview = ({
         <Card
           className='relative w-full min-w-0 p-4 bg-transparent hover:bg-neutral-200'
           shadow={false}
+          data-testid='user-card'
         >
           <CardBody className='flex gap-5 m-0 p-0'>
             <div className='mt-1'>
@@ -28,6 +29,7 @@ const UserOverview = ({
                 variant='circular'
                 size='sm'
                 className={variant === 'large' ? 'h-10 w-10' : 'h-8 w-8'}
+                data-testid='user-avatar'
               />
             </div>
 

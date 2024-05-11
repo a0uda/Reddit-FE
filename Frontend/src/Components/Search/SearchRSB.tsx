@@ -33,7 +33,7 @@ const SearchRSB = ({
       <div>
         <Card
           className='w-80 bg-gray-50 rounded-xl shadow-none p-4 min-w-0 overflow-y-auto overflow-x-hidden'
-          data-testid='community-card'
+          data-testid='search-rsb-card'
         >
           {communities && communities.length > 0 && (
             <div className='pb-4'>
@@ -53,6 +53,7 @@ const SearchRSB = ({
                 to={`/search/?q=${q}&type=sr`}
                 reloadDocument
                 className={`text-blue text-xs hover:underline`}
+                data-testid='see-more-communities-link'
               >
                 See more communities
               </Link>
@@ -80,6 +81,7 @@ const SearchRSB = ({
                   to={`/search/?q=${q}&type=user`}
                   reloadDocument
                   className={`text-blue text-xs hover:underline`}
+                  data-testid='see-more-people-link'
                 >
                   See more people
                 </Link>
