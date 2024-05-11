@@ -21,7 +21,9 @@ const PostOverview = ({ post }: { post: PostType }) => {
         className='w-full'
         onClick={() =>
           navigate(
-            `/r/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+            post.community_name
+              ? `/r/${post.community_name}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
+              : `/u/${post.username}/comments/${post._id}/${post.title.split(' ').splice(0, 10).join('_')}/`
           )
         }
       >
