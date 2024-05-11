@@ -31,16 +31,20 @@ import {
   ListItem,
   Typography,
 } from '@material-tailwind/react';
+import useSession from '../../hooks/auth/useSession';
 // import { CommunityIcon } from '../../assets/icons/Icons';
 
 const Community = () => {
   const { communityName } = useParams();
   const postReq = useMutation(postRequest);
   const patchReq = useMutation(patchRequest);
+  const fetchReq = useMutation(fetchRequest);
 
   //================================================ Community Info ======================================================//
 
   const [community, setCommunity] = useState<CommunityType | undefined>();
+  const [accessPerm, setAccessPerm] = useState<boolean>();
+  const { user } = useSession();
   console.log(' comm name in comm page', communityName);
   const url = window.location.href;
   const { isLoading, isError } = useQuery({
@@ -49,6 +53,24 @@ const Community = () => {
       fetchRequest(`communities/get-community-view/${communityName}/`),
     onSuccess: (data) => {
       setCommunity(data?.data);
+      if (data?.data.moderator_flag) {
+        fetchReq.mutate(
+          `communities/about/moderators-sorted/${communityName}`,
+          {
+            onSuccess: (data) => {
+              console.log(data?.data, 'moderators');
+              const perm = data?.data.find(
+                (moderator: { username: string }) =>
+                  moderator.username === user?.username
+              );
+              console.log(perm, 'perm');
+              setAccessPerm(
+                perm?.has_access.everything || perm?.has_access.manage_posts_and_comments
+              );
+            },
+          }
+        );
+      }
 
       // setIsJoined(data.data.joined_flag);
       // setProfilePicture(data.data.profile_picture);
@@ -930,7 +952,7 @@ const Community = () => {
                         <PostPreview
                           post={post}
                           page='community'
-                          isMyPost={isModerator}
+                          isMyPost={accessPerm}
                         />
                         <div className='w-100 min-h-px bg-gray-300'></div>
                       </div>

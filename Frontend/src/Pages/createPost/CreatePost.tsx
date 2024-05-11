@@ -257,7 +257,7 @@ const NewPost: React.FC = () => {
           handleOnSubmit(values);
           setTimeout(() => {
             console.log(JSON.stringify(values));
-            alert(JSON.stringify(values));
+            // alert(JSON.stringify(values));
             setSubmitting(true);
             resetForm();
             setOC(false);

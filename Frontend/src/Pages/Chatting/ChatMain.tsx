@@ -3,6 +3,7 @@ import CreateChat from './CreateChat';
 import { useSocketContext } from '../../Providers/SocketProvider';
 import { useEffect, useState } from 'react';
 import Chat from './Chat';
+import { Socket } from 'socket.io-client';
 
 type SocketMessageType = {
   createdAt: string;
@@ -19,6 +20,9 @@ type SocketMessageType = {
   updatedAt: string;
   __v: number;
   _id: string;
+};
+type SocketContextType = {
+  socket: Socket | undefined;
 };
 
 // interface User {
@@ -44,7 +48,7 @@ type SocketMessageType = {
 //   __v: number; // version field, commonly used in MongoDB
 // }
 const ChatMain = ({ page }: { page: 'create' | 'chat' }) => {
-  const { socket } = useSocketContext();
+  const { socket } = useSocketContext() as SocketContextType;
   const [newMessage, setNewMessage] = useState<SocketMessageType>();
 
   useEffect(() => {
@@ -54,7 +58,7 @@ const ChatMain = ({ page }: { page: 'create' | 'chat' }) => {
       setNewMessage(newMessage);
     });
 
-    return () => socket?.off('newMessage');
+    // return () => socket?.off('newMessage');
   }, [socket]);
   return (
     <div className='flex'>

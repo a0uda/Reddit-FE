@@ -16,7 +16,7 @@ interface Props {
 
 const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [imageQuery, setImageQuery] = useState('');
+  const [imageQuery, setImageQuery] = useState<string>('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 
@@ -29,7 +29,9 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
   );
 
   useEffect(() => {
-    if (data && Array.isArray(data)) {
+    console.log(data, 'sugg');
+
+    if (data && Array.isArray(data.data)) {
       setSuggestions(data.data);
     } else {
       setSuggestions([]);
@@ -51,21 +53,18 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
 
   const handleOptionClick = (suggestion: Suggestion) => {
     setSearchQuery(suggestion.name);
-    setImageQuery(
-      suggestion.profile_picture ||
-        'https://upload.wikimedia.org/wikipedia/commons/4/49/A_black_image.jpg'
-    );
+    setImageQuery(suggestion.profile_picture || 'x');
     setShowSuggestions(false);
     setFieldValue('community_name', suggestion.name);
     setFieldValue('post_in_community_flag', true);
   };
   const handleOptionClickUser = (user: {
     username: string;
-    imageUrl: string;
+    profile_picture: string;
   }) => {
     setSearchQuery(user.username);
     setImageQuery(
-      user.imageUrl ||
+      user.profile_picture ||
         'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
     );
     setShowSuggestions(false);
@@ -102,14 +101,16 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
             >
               <path d='M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23 s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92 c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17 s-17-7.626-17-17S14.61,6,23.984,6z' />
             </svg>
-          ) : (
+          ) : searchQuery == user?.username ? (
             <Avatar
               variant='circular'
               alt={searchQuery}
               src={imageQuery}
               style={{ width: '25px', height: '25px' }}
-              className='absolute top-2 ms-2 z-10'
+              className='absolute top-2 ms-2 z-10 '
             />
+          ) : (
+            <CommunityIcon className='h-[25px] w-[25px] absolute top-2 ms-2 z-10' />
           )}
         </div>
 
@@ -119,9 +120,15 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
           value={searchQuery}
           onChange={handleChange}
           onFocus={() => setShowSuggestions(true)}
-          className='w-full border ps-10 h-12 shadow rounded-lg bg-white'
+          className='w-full border ps-10 h-12 shadow rounded-lg bg-white focus:border-none'
           placeholder='Search'
           crossOrigin={undefined}
+          labelProps={{
+            className: 'before:content-none after:content-none',
+          }}
+          containerProps={{
+            className: 'min-w-0',
+          }}
         />
         <button>
           <svg
@@ -131,7 +138,7 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
             viewBox='0 0 24 24'
             strokeWidth={1.5}
             stroke='currentColor'
-            onClick={() => setShowSuggestions(true)}
+            onClick={() => setShowSuggestions(!showSuggestions)}
           >
             <path
               strokeLinecap='round'
@@ -143,20 +150,20 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
       </div>
 
       {showSuggestions && (
-        <ul className='absolute z-10 mt-12 w-full bg-white divide-y divide-gray-200 rounded-lg shadow-lg dark:bg-gray-700 dark:divide-gray-600'>
+        <ul className='absolute z-10 mt-12 w-full bg-white rounded-lg shadow-lg dark:bg-gray-700 dark:divide-gray-600'>
           {user ? (
             <>
               <div className='m-2 ps-4 text-xs text-gray-600'>YOUR PROFILE</div>
               <li
                 onClick={() => handleOptionClickUser(user)}
-                className='flex items-start gap-4 p-2 m-0 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer'
+                className='flex items-start gap-4 p-2 m-0 hover:bg-gray-100 dark:hover:bg-gray-600 border-[1px] border-lines-color cursor-pointer'
               >
                 <div className='flex flex-row gap-2'>
                   <Avatar
                     variant='circular'
-                    alt={user.imageUrl}
+                    alt={user.profile_picture}
                     src={
-                      user.imageUrl ||
+                      user.profile_picture ||
                       'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_4.png'
                     }
                     className='w-8 h-8'
@@ -169,13 +176,15 @@ const SearchBar: React.FC<Props> = ({ setFieldValue }) => {
             </>
           ) : null}
 
-          <div className='m-2 ps-4 text-xs text-gray-600'>YOUR COMMUNITIES</div>
+          <div className='m-2  ps-4 text-xs text-gray-600'>
+            YOUR COMMUNITIES
+          </div>
           {Array.isArray(suggestions) &&
             suggestions.map((suggestion, index) => (
               <li
                 key={index}
                 onClick={() => handleOptionClick(suggestion)}
-                className='flex items-start gap-4 p-2 m-0 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer'
+                className='flex items-start gap-4 p-2 m-0  hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer'
               >
                 <div className='flex flex-row gap-2'>
                   {suggestion.profile_picture ? (

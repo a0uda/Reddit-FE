@@ -12,6 +12,7 @@ import DropDownButton from '../UserSettings/Containers/DropDownButton';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { useParams } from 'react-router-dom';
 import ModSideBar from '../Rules and Removal reasons/ModSidebar';
+import useSession from '../../hooks/auth/useSession';
 
 function GeneralSettings() {
   const { community_name } = useParams();
@@ -45,6 +46,23 @@ function GeneralSettings() {
   const { data, isError, isLoading } = useQuery('general settings', () =>
     fetchRequest(`communities/get-general-settings/${community_name}`)
   );
+  const { user } = useSession();
+  const [settingsPerm, setSettingsPerm] = useState(false);
+  useQuery({
+    queryKey: ['access', community_name],
+    queryFn: async () =>
+      await fetchRequest(
+        `communities/about/moderators-sorted/${community_name}`
+      ),
+    onSuccess: (data) => {
+      const perm = data?.data.find(
+        (moderator: { username: string }) =>
+          moderator.username === user?.username
+      );
+      console.log(perm, 'perm');
+      setSettingsPerm(perm?.has_access.everything || perm?.has_access.manage_settings);
+    },
+  });
   useEffect(() => {
     if (data?.data) {
       setCommunityDescription(data.data.description);
@@ -135,6 +153,7 @@ function GeneralSettings() {
                 buttonColor='bg-[#0079D3]'
                 buttonTextColor='white'
                 onClick={handleSaveChanges}
+                disabled={!settingsPerm}
               ></RoundedButton>
             </div>
             <div className='w-[900px]'>

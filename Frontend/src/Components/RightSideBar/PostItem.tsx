@@ -49,12 +49,12 @@ const PostItem: React.FC<PostItemProps> = (props) => {
       <Card
         color='transparent'
         shadow={false}
-        className='w-full max-w-[26rem] px-4'
+        className='w-full  max-w-[26rem] px-4'
       >
         <Link to={link} reloadDocument data-testid='post-link'>
           <CardBody
             color='transparent'
-            className='mx-0 flex justify-between items-start gap-4 pt-0 pb-2 p-0 m-0'
+            className='mx-0 flex justify-between items-start overflow-hidden text-ellipsis gap-4 pt-0 pb-2 p-0 m-0'
           >
             <div
               className='flex flex-col justify-start gap-2 pt-0 m-0'

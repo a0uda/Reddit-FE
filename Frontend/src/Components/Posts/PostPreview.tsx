@@ -345,7 +345,7 @@ const PostPreview = ({
     <>
       {!showEditPost ? (
         <div
-          className='relative'
+          className='relative '
           onClick={() => {
             navigate(link);
           }}
@@ -468,7 +468,7 @@ const PostPreview = ({
                     />
                   </>
                 ) : (
-                  <div className='flex gap-7 justify-between pb-2'>
+                  <div className='flex gap-7 justify-between pb-2 w-[97%] overflow-hidden'>
                     <div className='flex flex-col justify-start space-y-2 overflow-hidden w-full'>
                       <div>
                         <Typography

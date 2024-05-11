@@ -6,7 +6,13 @@ import axios from 'axios';
 import LoadingProvider from '../../Components/LoadingProvider';
 import { PostType } from '../../types/types';
 
-const Unmoderated = ({ page }: { page: string }) => {
+const Unmoderated = ({
+  page,
+  postPerm,
+}: {
+  page: string;
+  postPerm: boolean;
+}) => {
   const [sortList, setSortList] = useState<string>('Newest First');
   const [selList] = useState<string>('posts');
   const { community_name } = useParams();
@@ -63,7 +69,12 @@ const Unmoderated = ({ page }: { page: string }) => {
         <div className='flex flex-col gap-4'>
           {response && response.length > 0 ? (
             response.map((post: PostType) => (
-              <PostCard key={post._id} post={post} page={page} />
+              <PostCard
+                key={post._id}
+                post={post}
+                page={page}
+                postPerm={postPerm}
+              />
             ))
           ) : (
             <div className='border-[1px] rounded-md flex items-center justify-center font-semibold text-xl text-gray-600 p-10'>
