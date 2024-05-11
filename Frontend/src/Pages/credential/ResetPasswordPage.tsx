@@ -56,7 +56,7 @@ export default function ResetPasswordPage() {
         data: {
           new_password: values.newPassword,
           verified_password: values.confirmNewPassword,
-          token: token,
+          token: 'Bearer ' + token,
         },
       },
       {
