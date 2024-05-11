@@ -137,7 +137,10 @@ const NewPost: React.FC = () => {
     onSuccess: () => {
       navigate('/');
     },
-    onError: () => {
+    onError: (error: string) => {
+      setTrigger(!trigger);
+      setIsError(true);
+      setAlertMessage(error);
       navigate('/submit');
     },
   });
@@ -257,7 +260,7 @@ const NewPost: React.FC = () => {
           handleOnSubmit(values);
           setTimeout(() => {
             console.log(JSON.stringify(values));
-            alert(JSON.stringify(values));
+            // alert(JSON.stringify(values));
             setSubmitting(true);
             resetForm();
             setOC(false);

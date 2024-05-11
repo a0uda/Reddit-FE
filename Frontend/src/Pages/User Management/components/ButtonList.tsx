@@ -3,7 +3,7 @@ import RoundedButton from '../../../Components/RoundedButton';
 const ButtonList = ({
   buttArr,
 }: {
-  buttArr: { text: string; onClick: () => void }[];
+  buttArr: { text: string; onClick: () => void; disabled?: boolean }[];
 }) => {
   return (
     <div className='flex justify-start flex-row-reverse gap-2'>
@@ -15,6 +15,7 @@ const ButtonList = ({
           buttonText={butt.text}
           buttonTextColor={i == 0 ? 'text-white' : 'text-blue-light'}
           onClick={butt.onClick}
+          disabled={butt.disabled}
         />
       ))}
     </div>

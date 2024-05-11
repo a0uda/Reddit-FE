@@ -154,7 +154,7 @@ export type PostType = {
     reported_by?: string; // Reference to the User who reported
     reported_type?: string; // Type of reporting
   };
-
+  userVote?: string;
   user_details: {
     total_views: number; // Total views for the user
     upvote_rate: number; // Upvote rate for the user

@@ -132,13 +132,14 @@ const UsersList = ({
   );
 };
 
-const Muted = ({ page }: { page: string }) => {
+const Muted = ({ page, userPerm }: { page: string; userPerm: boolean }) => {
   const buttArr = [
     {
       text: 'Mute user',
       onClick: () => {
         setMuteMod(true);
       },
+      disabled: !userPerm,
     },
   ];
   const [muteMod, setMuteMod] = useState(false);

@@ -138,13 +138,20 @@ const UsersList = ({
     </ul>
   );
 };
-const Moderators = ({ page }: { page: string }) => {
+const Moderators = ({
+  page,
+  userPerm,
+}: {
+  page: string;
+  userPerm: boolean;
+}) => {
   const buttArr = [
     {
       text: 'Invite user as mod',
       onClick: () => {
         setInvMod(true);
       },
+      disabled: !userPerm,
     },
     {
       text: 'Leave as mod',

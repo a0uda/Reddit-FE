@@ -24,9 +24,11 @@ type BannedUser = {
 const UserRow = ({
   user,
   refetch,
+  userPerm,
 }: {
   user: BannedUser;
   refetch: () => void;
+  userPerm: boolean;
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showMod, setShowMod] = useState(false);
@@ -37,6 +39,7 @@ const UserRow = ({
       onClick: () => {
         setShowMod(!showMod);
       },
+      disabled: !userPerm,
     },
     {
       text: 'More Details',
@@ -114,6 +117,7 @@ const UserRow = ({
                   )
                 }
                 onClick={butt.onClick}
+                disabled={butt.disabled}
               />
             ))}
           </div>
@@ -146,26 +150,34 @@ const UserRow = ({
 const UsersList = ({
   userArr,
   refetch,
+  userPerm,
 }: {
   userArr: BannedUser[];
   refetch: () => void;
+  userPerm: boolean;
 }) => {
   return (
     <ul className='last:rounded-b-md'>
       {userArr &&
         userArr.map((user) => (
-          <UserRow key={user._id} user={user} refetch={refetch} />
+          <UserRow
+            key={user._id}
+            user={user}
+            refetch={refetch}
+            userPerm={userPerm}
+          />
         ))}
     </ul>
   );
 };
-const Banned = ({ page }: { page: string }) => {
+const Banned = ({ page, userPerm }: { page: string; userPerm: boolean }) => {
   const buttArr = [
     {
       text: 'Ban user',
       onClick: () => {
         setShowMod(!showMod);
       },
+      disabled: !userPerm,
     },
   ];
   const [showMod, setShowMod] = useState(false);
@@ -300,7 +312,11 @@ const Banned = ({ page }: { page: string }) => {
       <SearchBar handleSearch={handleSearch} setSearchQuery={setSearchQuery} />
       <LoadingProvider isLoading={isLoading} error={isError}>
         {data?.data.length > 0 ? (
-          <UsersList userArr={selectedData} refetch={refetch} />
+          <UsersList
+            userArr={selectedData}
+            refetch={refetch}
+            userPerm={userPerm}
+          />
         ) : (
           <div className='border-[1px] rounded-md flex items-center justify-center font-semibold text-xl text-gray-600 p-10'>
             Banned list is empty

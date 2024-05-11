@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode, useState } from 'react';
+import { MouseEventHandler, ReactNode, useEffect, useState } from 'react';
 import { PostType, RemovalReasonType } from '../../../types/types';
 import {
   ArrowDownIcon,
@@ -345,26 +345,27 @@ const PostOptions = ({
           <Typography className='px-4 pt-2 flex gap-2 items-center focus-visible:outline-none'>
             Moderation
           </Typography>
-          {!post.moderator_details.removed_flag &&
-            // !post.moderator_details.reported_flag &&
-            !post.moderator_details.spammed_flag && (
-              <MenuItem
-                className='py-3 flex gap-2 items-center'
-                onClick={(e) => {
-                  e.stopPropagation();
+          {!(
+            post.moderator_details.approved_flag ||
+            post.moderator_details.spammed_flag ||
+            post.moderator_details.reported_flag ||
+            post.moderator_details.removed_flag
+          ) && (
+            <MenuItem
+              className='py-3 flex gap-2 items-center'
+              onClick={(e) => {
+                e.stopPropagation();
 
-                  handleModOps(
-                    'spammed',
-                    post.post_in_community_flag == undefined
-                      ? 'comment'
-                      : 'post'
-                  );
-                }}
-              >
-                <XMarkIcon className='w-5 h-5' />
-                <span>Remove as Spam</span>
-              </MenuItem>
-            )}
+                handleModOps(
+                  'spammed',
+                  post.post_in_community_flag == undefined ? 'comment' : 'post'
+                );
+              }}
+            >
+              <XMarkIcon className='w-5 h-5' />
+              <span>Remove as Spam</span>
+            </MenuItem>
+          )}
           <MenuItem
             className='py-3 flex gap-2 items-center'
             onClick={(e) => {
@@ -453,31 +454,42 @@ const Vote = (props: {
   // voteCount: number;
   isPost: boolean;
 }) => {
-  // const [vote, setVote] = React.useState(props.post.vote);
+  const [vote, setVote] = useState(0);
   //   const [lastVote, setLastVote] = React.useState(0);
   // const [voteCount, setVoteCount] = React.useState(props.voteCount);
   // const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
   const postReq = useMutation(postRequest);
   //   console.log(props.vote, 'aaaa');
+  useEffect(() => {
+    if (props.post.userVote === 'up') {
+      setVote(1);
+    } else if (props.post.userVote === 'down') {
+      console.log(props.post.userVote, 'vote');
 
+      setVote(-1);
+      console.log(props.post.vote, 'vote');
+    } else {
+      setVote(0);
+    }
+  }, []);
   return (
     <div className=' flex flex-col items-center'>
       <ArrowUpIcon
         strokeWidth={6.5}
-        className={`w-[25px] cursor-pointer ${props.post.vote === 1 ? 'text-orange' : 'text-[#888]'}`}
+        className={`w-[25px] cursor-pointer ${vote === 1 ? 'text-orange' : 'text-[#888]'}`}
         onClick={(e) => {
           e.stopPropagation();
 
-          const lastVote = props.post.vote;
-          let newVote = props.post.vote;
-          if (props.post.vote === 1) {
+          const lastVote = vote;
+          let newVote = vote;
+          if (vote === 1) {
             // setVote(0);
             newVote = 0;
           } else {
             // setVote(1);
             newVote = 1;
           }
-
+          console.log(newVote, 'newVote');
           postReq.mutate(
             {
               endPoint: 'posts-or-comments/vote',
@@ -486,33 +498,28 @@ const Vote = (props: {
             {
               onSuccess: () => {
                 props.post.upvotes_count =
-                  props.post.upvotes_count + newVote - props.post.vote;
-                props.post.vote = newVote;
+                  props.post.upvotes_count + newVote - vote;
+                setVote(newVote);
               },
               onError: () => {
-                props.post.vote = lastVote;
+                setVote(lastVote);
               },
             }
           );
         }}
       />
-      <Typography
-        variant='paragraph'
-        className={`${props.post.vote === -1 ? 'text-violet' : props.post.vote === 1 ? 'text-orange' : 'text-black'}`}
-      >
-        {props.post.upvotes_count - props.post.downvotes_count}
-      </Typography>
+
       <ArrowDownIcon
-        color={props.post.vote === -1 ? 'violet' : '#888'}
+        color={vote === -1 ? 'violet' : '#888'}
         strokeWidth={6.5}
-        className={`w-[25px] cursor-pointer ${props.post.vote === -1 ? 'text-violet' : 'text-[#888]'}`}
+        className={`w-[25px] mt-3 cursor-pointer ${vote === -1 ? 'text-violet' : 'text-[#888]'}`}
         onClick={(e) => {
           e.stopPropagation();
 
-          let newVote = props.post.vote;
-          const lastVote = props.post.vote;
+          let newVote = vote;
+          const lastVote = vote;
 
-          if (props.post.vote === -1) {
+          if (vote === -1) {
             // setVote(0);
             newVote = 0;
           } else {
@@ -520,7 +527,8 @@ const Vote = (props: {
             newVote = -1;
           }
           // const { id, isPost, rank } = req.body;
-          console.log(newVote);
+          // console.log(newVote);
+          console.log(newVote, 'newVote');
 
           postReq.mutate(
             {
@@ -530,12 +538,12 @@ const Vote = (props: {
             {
               onSuccess: () => {
                 // console.log(voteCount, newVote, props.post.vote, 'midooo');
-                props.post.upvotes_count =
-                  props.post.upvotes_count + newVote - props.post.vote;
-                props.post.vote = newVote;
+                // props.post.upvotes_count =
+                //   props.post.upvotes_count + newVote - props.post.vote;
+                setVote(newVote);
               },
               onError: () => {
-                props.post.vote = lastVote;
+                setVote(lastVote);
               },
             }
           );
@@ -664,12 +672,14 @@ const PostFooter = ({
   isPost,
   setRemModal,
   setRepModal,
+  postPerm,
 }: {
   post: PostType;
   isPost: boolean;
   setRemModal: (rem: boolean) => void;
   setRepModal: (rep: boolean) => void;
   page: string;
+  postPerm: boolean;
 }) => {
   const postReq = useMutation(postRequest);
   const { user } = useSession();
@@ -804,31 +814,40 @@ const PostFooter = ({
           </Typography>
         </div>
       )}
-      <div className='flex gap-3'>
-        {post.moderator_details.removed_flag === true &&
-          !post.moderator_details.removed_removal_reason && (
+      {postPerm && (
+        <div className='flex gap-3'>
+          {post.moderator_details.removed_flag === true &&
+            !post.moderator_details.removed_removal_reason && (
+              <RoundedButt
+                onClick={(e) => {
+                  setRemModal(true);
+                  e.stopPropagation();
+                }}
+              >
+                Add Removal Reason
+              </RoundedButt>
+            )}
+          {!(
+            post.moderator_details.approved_flag ||
+            post.moderator_details.spammed_flag ||
+            post.moderator_details.reported_flag ||
+            post.moderator_details.removed_flag
+          ) && (
             <RoundedButt
-              onClick={(e) => {
-                setRemModal(true);
-                e.stopPropagation();
+              onClick={() => {
+                handleModOps('approve', isPost ? 'post' : 'comment');
               }}
             >
-              Add Removal Reason
+              <CheckIcon className='w-4' />
+              Approve
             </RoundedButt>
           )}
-        {!post.moderator_details.approved_flag && (
-          <RoundedButt
-            onClick={() => {
-              handleModOps('approve', isPost ? 'post' : 'comment');
-            }}
-          >
-            <CheckIcon className='w-4' />
-            Approve
-          </RoundedButt>
-        )}
-        {!post.moderator_details.removed_flag &&
-          // !post.moderator_details.reported_flag &&
-          !post.moderator_details.spammed_flag && (
+          {!(
+            post.moderator_details.approved_flag ||
+            post.moderator_details.spammed_flag ||
+            post.moderator_details.reported_flag ||
+            post.moderator_details.removed_flag
+          ) && (
             <RoundedButt
               onClick={() => {
                 handleModOps('remove', isPost ? 'post' : 'comment');
@@ -838,17 +857,26 @@ const PostFooter = ({
               Remove
             </RoundedButt>
           )}
-        <PostOptions
-          post={post}
-          isPost={post.post_in_community_flag != undefined}
-          handleModOps={handleModOps}
-          setRepModal={setRepModal}
-        />
-      </div>
+          <PostOptions
+            post={post}
+            isPost={post.post_in_community_flag != undefined}
+            handleModOps={handleModOps}
+            setRepModal={setRepModal}
+          />
+        </div>
+      )}
     </div>
   );
 };
-const PostCard = ({ post, page }: { post: PostType; page: string }) => {
+const PostCard = ({
+  post,
+  page,
+  postPerm,
+}: {
+  post: PostType;
+  page: string;
+  postPerm: boolean;
+}) => {
   const [remModal, setRemModal] = useState(false);
   const [repModal, setRepModal] = useState(false);
   const [thankModal, setThankModal] = useState(false);
@@ -921,6 +949,7 @@ const PostCard = ({ post, page }: { post: PostType; page: string }) => {
               setRemModal={setRemModal}
               setRepModal={setRepModal}
               page={page}
+              postPerm={postPerm}
             />
           </div>
         </div>
