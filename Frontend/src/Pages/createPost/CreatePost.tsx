@@ -272,7 +272,10 @@ const NewPost: React.FC = () => {
             <h1 className='text-2xl lg:text-xl xl:text-xl border-b-2 border-white max-w-3xl mb-4 pb-4'>
               Create a post
             </h1>
-            <SearchBar setFieldValue={formik.setFieldValue} />
+            <SearchBar
+              data-testid='search-bar'
+              setFieldValue={formik.setFieldValue}
+            />
 
             <div className='bg-white editor w-full flex flex-col text-gray-800 border border-gray-300 p-2 shadow-lg max-w-3xl '>
               <NavBarCreatePost

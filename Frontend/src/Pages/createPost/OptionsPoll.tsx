@@ -1,10 +1,10 @@
 import { useState, MouseEvent, ChangeEvent } from 'react';
 import RoundedButton from '../../Components/RoundedButton';
 import Input from '../../Components/Input';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const generateUniqueID = () => {
-  return `option_${Date.now()}`;
-};
+
+// const generateUniqueID = () => {
+//   return `option_${Date.now()}`;
+// };
 
 interface Option {
   key: string;

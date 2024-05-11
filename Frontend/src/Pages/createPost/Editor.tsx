@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
-// import 'react-quill/dist/quill.snow.css';
 
 interface TextEditorProps {
   setFieldValue: (field: string, value: unknown) => void;
@@ -25,7 +24,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ setFieldValue }) => {
             value={editorHtml}
             onChange={handleEditorChange}
             className='w-full h-40 sm:h-20 md:h-40 lg:h-144 xl:h-160 mb-4'
-            placeholder='Text (optional) '
+            placeholder='Text (optional)'
           />
         </div>
       </div>
