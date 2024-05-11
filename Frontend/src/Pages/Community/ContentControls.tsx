@@ -159,38 +159,52 @@ function ContentControls() {
       setAlertMessage(error);
     },
   });
+
+  const [errorMessage, setErrorMessage] = useState(false);
   const handleSaveChanges = () => {
-    console.log('list', selectedRequiredPostTitle);
-    postReq.mutate({
-      endPoint: `communities/change-content-controls/${community_name}`,
-      data: {
-        providing_members_with_posting_guidlines: {
-          flag: postGuidelines,
-          guidline_text: guidelineText,
+    if (postGuidelines && guidelineText == '') {
+      setErrorMessage(true);
+    } else if (requirePostTitle && selectedRequiredPostTitle.length == 0) {
+      setErrorMessage(true);
+    } else if (banPostTitle && selectedBanPostTitle.length == 0) {
+      setErrorMessage(true);
+    } else if (banPostBody && selectedBanPostBody.length == 0) {
+      setErrorMessage(true);
+    } else if (banLinks && selectedBanLink.length == 0) {
+      setErrorMessage(true);
+    } else {
+      setErrorMessage(false);
+      postReq.mutate({
+        endPoint: `communities/change-content-controls/${community_name}`,
+        data: {
+          providing_members_with_posting_guidlines: {
+            flag: postGuidelines,
+            guidline_text: guidelineText,
+          },
+          require_words_in_post_title: {
+            flag: requirePostTitle,
+            add_required_words: selectedRequiredPostTitle,
+          },
+          ban_words_from_post_title: {
+            flag: banPostTitle,
+            add_banned_words: selectedBanPostTitle,
+          },
+          ban_words_from_post_body: {
+            flag: banPostBody,
+            add_banned_words: selectedBanPostBody,
+          },
+          require_or_ban_links_from_specific_domains: {
+            flag: banLinks,
+            restriction_type: selectedOption,
+            require_or_block_link_posts_with_these_domains: selectedBanLink,
+          },
+          restrict_how_often_the_same_link_can_be_posted: {
+            flag: restrictSameLinkPost,
+            number_of_days: restrictionDays,
+          },
         },
-        require_words_in_post_title: {
-          flag: requirePostTitle,
-          add_required_words: selectedRequiredPostTitle,
-        },
-        ban_words_from_post_title: {
-          flag: banPostTitle,
-          add_banned_words: selectedBanPostTitle,
-        },
-        ban_words_from_post_body: {
-          flag: banPostBody,
-          add_banned_words: selectedBanPostBody,
-        },
-        require_or_ban_links_from_specific_domains: {
-          flag: banLinks,
-          restriction_type: selectedOption,
-          require_or_block_link_posts_with_these_domains: selectedBanLink,
-        },
-        restrict_how_often_the_same_link_can_be_posted: {
-          flag: restrictSameLinkPost,
-          number_of_days: restrictionDays,
-        },
-      },
-    });
+      });
+    }
   };
 
   return (
@@ -221,6 +235,11 @@ function ContentControls() {
               ></RoundedButton>
             </div>
             <div className='w-[900px]'>
+              {errorMessage && (
+                <h2 className='text-2xl mx-5 font-semibold pl-80 pb-1 text-red-600'>
+                  Error! please fill in required words
+                </h2>
+              )}
               <h2 className='text-xl my-4 font-semibold'>Content controls</h2>
               <h3 className='text-base my-4 '>
                 Set requirements and restrictions for how people post and
