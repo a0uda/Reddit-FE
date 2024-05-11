@@ -65,6 +65,7 @@ const PostDetails = ({ post }: { post?: PostType }) => {
         window.history.back();
       }
     };
+    commentsResponse.refetch();
 
     document.addEventListener('keydown', handleEscape);
 
@@ -170,28 +171,24 @@ const PostDetails = ({ post }: { post?: PostType }) => {
         </>
       )}
       {/* Add Comment */}
-      <div className='my-2'>
+      <div className='m-2'>
         <AddComment postId={postId!} />
       </div>
-      <LoadingProvider
-        error={commentsResponse.isError}
-        isLoading={commentsResponse.isLoading}
-      >
-        <>
-          {comments &&
-            comments.map((comment) => {
-              return (
-                !comment.is_reply && (
-                  <Comment
-                    key={comment._id}
-                    comment={comment}
-                    showButton={true}
-                  />
-                )
-              );
-            })}
-        </>
-      </LoadingProvider>
+
+      <div className='m-2'>
+        {comments &&
+          comments.map((comment) => {
+            return (
+              !comment.is_reply && (
+                <Comment
+                  key={comment._id}
+                  comment={comment}
+                  showButton={true}
+                />
+              )
+            );
+          })}
+      </div>
     </>
   );
 };

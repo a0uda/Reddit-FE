@@ -72,7 +72,7 @@ const SideBar = ({
     // }
   );
   const navigate = useNavigate();
-  const username = useParams();
+  const { username } = useParams();
   console.log(username);
 
   useEffect(() => {
@@ -108,11 +108,7 @@ const SideBar = ({
           style={{ height: 'calc(100vh - var(--navbar-height) - 3.5rem)' }}
         >
           {data?.data.map((chat: UserChatSidebar) => (
-            <ChatItem
-              lastMessage={chat}
-              key={chat.lastMessageTimestamp}
-              // isSelected={username == chat.username.toLowerCase()}
-            />
+            <ChatItem lastMessage={chat} key={chat.lastMessageTimestamp} />
           ))}
         </div>
       </div>
@@ -131,7 +127,7 @@ const ChatItem = ({ lastMessage }: ListItemProps) => {
 
   return (
     <div
-      className={`p-3 flex gap-1 items-center  cursor-pointer hover:bg-gray-200  overflow-hidden whitespace-nowrap text-ellipsis w-full ${username == lastMessage.lastMessageSender && 'bg-gray-200'} `}
+      className={`p-3 flex gap-1 items-center  cursor-pointer hover:bg-gray-200  overflow-hidden whitespace-nowrap text-ellipsis w-full ${username == lastMessage.otherUsername && 'bg-gray-200'} `}
       onClick={() => {
         navigate(
           `/chat/u/${
