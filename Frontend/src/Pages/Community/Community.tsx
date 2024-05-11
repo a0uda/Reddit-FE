@@ -750,7 +750,7 @@ const Community = () => {
         <LoadingProvider error={isError} isLoading={isLoading}>
           {community && (
             <>
-              <ContentLayout.Main>
+              <ContentLayout.Header>
                 <div className='relative'>
                   {bannerPicture && bannerPicture !== 'none' && (
                     <Avatar
@@ -965,7 +965,7 @@ const Community = () => {
                     />
                   </ContentLayout.RightSideBar>
                 </div>
-              </ContentLayout.Main>
+              </ContentLayout.Header>
             </>
           )}
         </LoadingProvider>
