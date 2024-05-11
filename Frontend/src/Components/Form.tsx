@@ -25,6 +25,10 @@ type FormSchema = {
     userName: string;
     email: string;
   };
+  resetPasswordPage: {
+    newPassword: string;
+    confirmNewPassword: string;
+  };
 };
 
 interface InputProps {
@@ -38,7 +42,7 @@ interface InputProps {
     id: string;
     style?: React.CSSProperties;
   }>;
-  children: React.ReactElement<
+  children?: React.ReactElement<
     JSX.IntrinsicElements[keyof JSX.IntrinsicElements]
   >;
   ButtArr?: {
@@ -77,6 +81,7 @@ const MyForm: React.FC<InputProps> = ({
 }) => {
   const validateSchema = Validation(type || 'login');
   const [clicked, setClicked] = useState(0);
+  console.log(validateSchema, 'validateSchema');
 
   return (
     <Formik
@@ -230,6 +235,7 @@ MyForm.propTypes = {
     'signup',
     'recoverUsername',
     'resetPassword',
+    'resetPasswordPage',
   ]),
   initVal: PropTypes.object,
   title: PropTypes.string.isRequired,
