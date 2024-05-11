@@ -49,12 +49,12 @@ const PostsListings = () => {
       const res = await fetchRequest(
         `listing/posts/${sortOption.toLowerCase()}?page=${page}&pageSize=${pageSize}`
       );
-      console.log('res.data', res.data);
-      if (res.data.length === 0) {
+      console.log('res.data', res?.data);
+      if (res?.data.length === 0) {
         setNoMorePosts(true);
         return;
       }
-      setPosts((prevPosts) => [...prevPosts, ...res.data]);
+      setPosts((prevPosts) => [...prevPosts, ...(res?.data || [])]);
     },
   });
 

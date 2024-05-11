@@ -151,7 +151,7 @@ const PostPreview = ({
   };
   useEffect(() => {
     handleCanEditPost();
-  }, []);
+  });
   const url = window.location.href;
   useQuery({
     queryKey: ['communityPostPreview', post.community_name, url],

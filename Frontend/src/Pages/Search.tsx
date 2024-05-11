@@ -103,9 +103,12 @@ const Search = () => {
       isFirstRender.current = false;
       return;
     }
-    navigate(`/search/?q=${q}&type=${type}&sort=${sortOption.toLowerCase()}`);
     setPage(firstPage);
     setPosts([]);
+    setCommunities([]);
+    setComments([]);
+    setUsers([]);
+    navigate(`/search/?q=${q}&type=${type}&sort=${sortOption.toLowerCase()}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortOption, url]);
 

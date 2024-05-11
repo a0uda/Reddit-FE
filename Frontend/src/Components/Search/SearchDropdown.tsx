@@ -81,11 +81,12 @@ const SearchDropdown = ({
               <ListItemSuffix>
                 <IconButton
                   variant='text'
-                  onClick={() =>
-                    setRecent((prev) =>
-                      prev.filter((_, i) => i !== recent.indexOf(item))
-                    )
-                  }
+                  onClick={() => {
+                    if (setRecent)
+                      setRecent((prev) =>
+                        prev.filter((_, i) => i !== recent.indexOf(item))
+                      );
+                  }}
                 >
                   <XCircleIcon className='h-6 w-6' />
                 </IconButton>

@@ -27,12 +27,12 @@ export default function Alert(props: {
   message: string;
   isError: boolean;
   trigger: boolean;
-  setMessage;
+  setMessage: (message: string) => void;
 }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    let timeoutId;
+    let timeoutId: NodeJS.Timeout;
     // console.log(props.trigger);
     if (props.message) {
       setOpen(true);
@@ -47,6 +47,7 @@ export default function Alert(props: {
     return () => {
       clearTimeout(timeoutId); // Clear the timeout on component unmount or when error changes
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.trigger]);
 
   return (

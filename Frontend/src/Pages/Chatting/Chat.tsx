@@ -1,4 +1,10 @@
-import { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import {
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+  FormEvent,
+} from 'react';
 import axios from 'axios';
 import Input from '../../Components/Input';
 import { Avatar, IconButton } from '@material-tailwind/react';
@@ -72,7 +78,7 @@ function Chat({
     setMessages([]);
     FetchMessages();
   }, [username]);
-  function handlesend(e: any) {
+  function handlesend(e: FormEvent<HTMLFormElement>) {
     console.log('AOUDA');
     e.preventDefault();
     postReq.mutate(

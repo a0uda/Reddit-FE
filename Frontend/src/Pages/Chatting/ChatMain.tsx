@@ -3,13 +3,13 @@ import CreateChat from './CreateChat';
 import { useSocketContext } from '../../Providers/SocketProvider';
 import { useEffect, useState } from 'react';
 import Chat from './Chat';
-interface UserChatSidebar {
-  _id: string;
-  otherUsername: string;
-  lastMessageSender: string;
-  lastMessageText: string;
-  lastMessageTimestamp: string;
-}
+// interface UserChatSidebar {
+//   _id: string;
+//   otherUsername: string;
+//   lastMessageSender: string;
+//   lastMessageText: string;
+//   lastMessageTimestamp: string;
+// }
 
 interface User {
   _id: string;

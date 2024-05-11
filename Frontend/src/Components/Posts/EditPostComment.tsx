@@ -14,8 +14,8 @@ import {
   PhotoIcon,
 } from '@heroicons/react/24/outline';
 import { AiOutlineOrderedList } from 'react-icons/ai';
-import { useMutation, useQueryClient } from 'react-query';
-import { patchRequest, postRequest } from '../../API/User';
+import { useMutation } from 'react-query';
+import { patchRequest } from '../../API/User';
 import { tiptapConfig } from '../../utils/tiptap_config';
 import { CommentType, PostType } from '../../types/types';
 
@@ -173,30 +173,7 @@ const MenuFooter = ({
   post: PostType;
 }) => {
   const patchReq = useMutation(patchRequest);
-  const queryClient = useQueryClient();
-  // const addCommentMuation = useMutation(
-  //   (content: string) =>
-  //     patchRequest({
-  //       endPoint: 'posts-or-comments/edit-text',
-  //       newSettings: { is_post: isPost, id: Id, edited_text: content },
-  //     }),
-  //   {
-  //     onSuccess: () => {
-  //       // Invalidate or refetch a query on success
-  //       queryClient.invalidateQueries('comments');
-  //       queryClient.invalidateQueries(['downvoted']);
-  //       queryClient.invalidateQueries(['upvoted']);
-  //       queryClient.invalidateQueries(['hidden']);
-  //       queryClient.invalidateQueries(['saved']);
-  //       queryClient.invalidateQueries(['post']);
-  //       queryClient.invalidateQueries(['posts']);
-  //     },
-  //     onError: () => {
-  //       // Perform any actions on error, like showing an error message
-  //       console.log('Error');
-  //     },
-  //   }
-  // );
+
   const handleEditPC = (content: string) => {
     patchReq.mutate(
       {
@@ -205,7 +182,6 @@ const MenuFooter = ({
       },
       {
         onSuccess: () => {
-          
           post.description = content;
           console.log('hellooooo', content, post.description);
           handleEdit();
@@ -278,7 +254,7 @@ export default function EditPostComment({
   isPost: boolean;
   handleEdit: () => void;
 }) {
-  const [content, setContent] = useState(post.description);
+  const content = post.description;
   const editor = useEditor({
     ...tiptapConfig,
     content,
@@ -312,7 +288,7 @@ export default function EditPostComment({
             //setFocused={setFocused}
             setError={setError}
             handleEdit={handleEdit}
-            post={post}
+            post={post as PostType}
           />
         </div>
       </div>

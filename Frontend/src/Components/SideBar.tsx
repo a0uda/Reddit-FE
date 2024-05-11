@@ -11,17 +11,14 @@ import {
 import {
   HomeIcon,
   ChevronDownIcon,
-  ShieldCheckIcon,
   PlusIcon,
   DocumentTextIcon,
-  PhotoIcon,
-  LinkIcon,
 } from '@heroicons/react/24/solid';
 import { ReactNode, useState } from 'react';
 import { CommunityIcon } from '../assets/icons/Icons';
 import { cn } from '../utils/helper_functions';
 import { useQuery } from 'react-query';
-import { CommunityOverviewType, CommunityType } from '../types/types';
+import { CommunityOverviewType } from '../types/types';
 import { fetchRequest } from '../API/User';
 import CreateCommunity from '../Pages/Community/CreateCommunity';
 import useSession from '../hooks/auth/useSession';
@@ -53,23 +50,23 @@ const SideBar = ({ className }: { className?: string }) => {
   //     link: '/r/AhayEveryDay',
   //   },
   // ];
-  const createPost = [
-    {
-      title: 'Input Text',
-      icon: <DocumentTextIcon className='h-5 w-5' />,
-      link: '/submit?type=text',
-    },
-    {
-      title: 'Image & Video',
-      icon: <PhotoIcon className='h-5 w-5' />,
-      link: '/submit?type=media',
-    },
-    {
-      title: 'Link',
-      icon: <LinkIcon className='h-5 w-5' />,
-      link: '/submit?type=link',
-    },
-  ];
+  // const createPost = [
+  //   {
+  //     title: 'Input Text',
+  //     icon: <DocumentTextIcon className='h-5 w-5' />,
+  //     link: '/submit?type=text',
+  //   },
+  //   {
+  //     title: 'Image & Video',
+  //     icon: <PhotoIcon className='h-5 w-5' />,
+  //     link: '/submit?type=media',
+  //   },
+  //   {
+  //     title: 'Link',
+  //     icon: <LinkIcon className='h-5 w-5' />,
+  //     link: '/submit?type=link',
+  //   },
+  // ];
 
   const [communities, setCommunities] = useState<ListItemProps[] | undefined>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -80,7 +77,7 @@ const SideBar = ({ className }: { className?: string }) => {
     queryFn: () => fetchRequest(`users/communities/`),
     onSuccess: (data) => {
       setCommunities(
-        data.data?.map((community: CommunityOverviewType) => ({
+        data?.data?.map((community: CommunityOverviewType) => ({
           icon: (
             <>
               {community.profile_picture ? (
@@ -116,7 +113,7 @@ const SideBar = ({ className }: { className?: string }) => {
     queryFn: () => fetchRequest(`users/moderated-communities/`),
     onSuccess: (data) => {
       setModeratedCommunities(
-        data.data?.map((community: CommunityOverviewType) => ({
+        data?.data?.map((community: CommunityOverviewType) => ({
           icon: (
             <>
               {community.profile_picture ? (

@@ -52,13 +52,7 @@ const Comment = ({
   const handleButtonClick = () => {
     setShowAddReply((prevState) => !prevState);
   };
-  const [isSaved, setIsSaved] = useState(comment.saved);
 
-  const handleSave = () => {
-    setIsSaved(!isSaved);
-    console.log('saved trigger', isSaved);
-    handleSaveUnsaveComment();
-  };
   const mutate = useMutation(
     ({ comment, rank }: { comment: CommentType; rank: number }) =>
       postRequest({
@@ -90,7 +84,7 @@ const Comment = ({
     queryKey: ['users/about/comment', comment.username, url],
     queryFn: () => fetchRequest(`users/about/${comment.username}`),
     onSuccess: (data) => {
-      setAuthor(data.data);
+      setAuthor(data?.data);
     },
   });
 

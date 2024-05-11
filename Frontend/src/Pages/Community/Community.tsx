@@ -31,7 +31,6 @@ import {
   ListItem,
   Typography,
 } from '@material-tailwind/react';
-import { CommunityIcon } from '../../assets/icons/Icons';
 
 const Community = () => {
   const { communityName } = useParams();
@@ -48,10 +47,10 @@ const Community = () => {
     queryFn: () =>
       fetchRequest(`communities/get-community-view/${communityName}/`),
     onSuccess: (data) => {
-      setCommunity(data.data);
+      setCommunity(data?.data);
 
-      // setIsJoined(data.data.joined_flag);
-      // setProfilePicture(data.data.profile_picture);
+      // setIsJoined(data?.data?.joined_flag);
+      // setProfilePicture(data?.data?.profile_picture);
       // // todo:set the banner
       // console.log('the comm', community);
     },
@@ -304,7 +303,7 @@ const Community = () => {
     queryFn: () =>
       fetchRequest(`communities/get-visible-posts/${communityName}?sortBy=new`),
     onSuccess: (data) => {
-      setCommunityPosts(data.data);
+      setCommunityPosts(data?.data);
       console.log('the comm posts are', communityPosts);
     },
   });
@@ -538,7 +537,7 @@ const Community = () => {
                     <label
                       htmlFor='upload-button-profile'
                       className='flex flex-col items-center justify-center w-full h-56 cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg mb-4'
-                      onDrop={profilePictureHandleDrop}
+                      onDrop={(e) => profilePictureHandleDrop(e)}
                       onDragOver={(e) => {
                         e.preventDefault();
                       }}

@@ -16,11 +16,10 @@ import {
   ArrowPathRoundedSquareIcon,
 } from '@heroicons/react/24/outline';
 import { postRequest } from '../../API/User';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation } from 'react-query';
 import { useState } from 'react';
 import { cn } from '../../utils/helper_functions';
 import { Link } from 'react-router-dom';
-import { PostType } from '../../types/types';
 import SharePostModal from './SharePostModal';
 
 const InteractionButtons = ({
