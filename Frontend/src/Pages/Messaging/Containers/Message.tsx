@@ -94,7 +94,14 @@ export const ReportModal = (props: {
     Spam: 'Repeated, unwanted, or unsolicited manual or automated actions that negatively affect redditors, communities, and the Reddit platform.',
   };
   const [chosenMsg, setChosenMsg] = React.useState('');
-  const postReq = useMutation(postRequest);
+  const { setAlertMessage, setIsError, setTrigger, trigger } = useAlert();
+  const postReq = useMutation(postRequest, {
+    onError: (error: string) => {
+      setAlertMessage(error);
+      setIsError(true);
+      setTrigger(!trigger);
+    },
+  });
 
   return (
     <>
@@ -491,6 +498,12 @@ const Message = (props: {
   const postReq = useMutation(postRequest, {
     onSuccess: () => {
       props.refetch();
+    },
+
+    onError: (error: string) => {
+      setAlertMessage(error);
+      setIsError(true);
+      setTrigger(!trigger);
     },
   });
   const { trigger, setTrigger, setAlertMessage, setIsError } = useAlert();
