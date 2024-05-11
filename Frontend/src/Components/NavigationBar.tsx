@@ -31,7 +31,7 @@ import { getTimeDifference } from '../utils/helper_functions';
 import { CommunityIcon } from '../assets/icons/Icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from 'react-query';
-import { fetchRequest, patchRequest } from './../API/User';
+import { fetchRequest, patchRequest, postRequest } from './../API/User';
 import useSession from '../hooks/auth/useSession';
 import SearchBar from './Search/SearchBar';
 import MobileSearchBar from './Search/MobileSearchBar';
@@ -392,6 +392,23 @@ const NotificationMenu = () => {
     }
   };
 
+  const [isMuted, setIsMuted] = useState(false);
+  const muteUnmuteMutation = useMutation(
+    (communityName: string) =>
+      postRequest({
+        endPoint: 'users/mute-unmute-community',
+        data: { community_name: communityName },
+      }),
+    {
+      onSuccess: () => {
+        setIsMuted(true);
+      },
+      onError: () => {
+        console.log('Error');
+      },
+    }
+  );
+
   type Notification = {
     // to avoid the any type error
     id: string;
@@ -545,11 +562,20 @@ const NotificationMenu = () => {
                     Hide this notification
                   </Typography>
                 </MenuItem>
-                <MenuItem className='py-3 flex gap-2 items-center'>
-                  <Typography variant='small' color='blue-gray'>
-                    Disable updates from this community
-                  </Typography>
-                </MenuItem>
+                {notification.is_in_community && !isMuted && (
+                  <MenuItem
+                    onClick={() => {
+                      muteUnmuteMutation.mutate(
+                        notification.community_name ?? ''
+                      );
+                    }}
+                    className='py-3 flex gap-2 items-center'
+                  >
+                    <Typography variant='small' color='blue-gray'>
+                      Disable updates from this community
+                    </Typography>
+                  </MenuItem>
+                )}
               </MenuList>
             </Menu>
           </div>
