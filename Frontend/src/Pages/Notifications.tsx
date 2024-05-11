@@ -4,7 +4,7 @@ import { Cog8ToothIcon } from '@heroicons/react/24/outline';
 import { getTimeDifference } from '../utils/helper_functions';
 import { CommunityIcon } from '../assets/icons/Icons';
 import { useQuery, useMutation } from 'react-query';
-import { fetchRequest, patchRequest } from './../API/User';
+import { fetchRequest, patchRequest, postRequest } from './../API/User';
 import {
   Button,
   Menu,
@@ -97,6 +97,23 @@ const Notifications = () => {
       console.error('Failed to hide notification:', error);
     }
   };
+
+  const [isMuted, setIsMuted] = useState(false);
+  const muteUnmuteMutation = useMutation(
+    (communityName: string) =>
+      postRequest({
+        endPoint: 'users/mute-unmute-community',
+        data: { community_name: communityName },
+      }),
+    {
+      onSuccess: () => {
+        setIsMuted(true);
+      },
+      onError: () => {
+        console.log('Error');
+      },
+    }
+  );
 
   type Notification = {
     // to avoid the any type error
@@ -251,11 +268,20 @@ const Notifications = () => {
                     Hide this notification
                   </Typography>
                 </MenuItem>
-                <MenuItem className='py-3 flex gap-2 items-center'>
-                  <Typography variant='small' color='blue-gray'>
-                    Disable updates from this community
-                  </Typography>
-                </MenuItem>
+                {notification.is_in_community && !isMuted && (
+                  <MenuItem
+                    onClick={() => {
+                      muteUnmuteMutation.mutate(
+                        notification.community_name ?? ''
+                      );
+                    }}
+                    className='py-3 flex gap-2 items-center'
+                  >
+                    <Typography variant='small' color='blue-gray'>
+                      Disable updates from this community
+                    </Typography>
+                  </MenuItem>
+                )}
               </MenuList>
             </Menu>
           </div>
