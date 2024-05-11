@@ -828,18 +828,17 @@ const Community = () => {
                   </Typography>
                   {/* buttons above the RSB */}
                   <div className='mr-2 flex justify-end items-center gap-2'>
-                    {isModerator ||
-                      (isJoined && (
-                        <Link to={`/${communityNameWithPrefix}/submit`}>
-                          <Button
-                            variant='text'
-                            className='font-bold flex items-center gap-1.5 border border-black'
-                          >
-                            <PlusIcon className='w-6 h-6' />
-                            Create a post
-                          </Button>
-                        </Link>
-                      ))}
+                    {(isModerator || isJoined) && (
+                      <Link to={`/${communityNameWithPrefix}/submit`}>
+                        <Button
+                          variant='text'
+                          className='font-bold flex items-center gap-1.5 border border-black'
+                        >
+                          <PlusIcon className='w-6 h-6' />
+                          Create a post
+                        </Button>
+                      </Link>
+                    )}
                     {!isJoined && !isModerator && (
                       <Button
                         variant='text'

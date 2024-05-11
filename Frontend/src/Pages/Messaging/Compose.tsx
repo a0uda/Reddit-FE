@@ -114,7 +114,7 @@ const Compose = () => {
               setFrom(e.target.value);
             }}
             // defaultValue={user?.username}
-            className='w-[27rem] p-1 text-lg border-[1px] border-gray-500'
+            className='md:w-[27rem] w-full p-1 text-lg border-[1px] border-gray-500'
           >
             <option value={user?.username}>
               {addPrefixToUsername(user?.username || '', 'user')}
@@ -146,7 +146,7 @@ const Compose = () => {
               setTo(e.target.value);
             }}
             type='text'
-            className='w-[27rem] p-1 text-lg border-[1px] border-gray-500'
+            className='md:w-[27rem] w-full p-1 text-lg border-[1px] border-gray-500'
           />
           {toBool && <p className='text-danger-red text-sm'>{toFeedback}</p>}
         </div>
@@ -158,7 +158,7 @@ const Compose = () => {
               setSubject(e.target.value);
             }}
             type='text'
-            className='w-[27rem] p-1 text-lg border-[1px] border-gray-500'
+            className='md:w-[27rem] w-full p-1 text-lg border-[1px] border-gray-500'
           />
           {subjectBool && (
             <p className='text-danger-red text-sm'>Please Enter a Subject</p>
@@ -171,7 +171,7 @@ const Compose = () => {
             onChange={(e) => {
               setMessage(e.target.value);
             }}
-            className='w-[27rem] min-h-[7rem] p-1 text-lg border-[1px] border-gray-500'
+            className='md:w-[27rem] w-full min-h-[7rem] p-1 text-lg border-[1px] border-gray-500'
           />
           {messageBool && (
             <p className='text-danger-red text-sm'>We Need Something Here</p>

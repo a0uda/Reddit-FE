@@ -9,7 +9,10 @@ const ContentContainer = (props: {
   return (
     <div className='bg-[#edeff1] min-h-screen p-5 text-[#373c3f] flex justify-center'>
       {props.length ? (
-        <div className='bg-white w-[60rem]' style={{ height: 'fit-content' }}>
+        <div
+          className='bg-white  md:w-[60rem] w-full'
+          style={{ height: 'fit-content' }}
+        >
           {props.children}
         </div>
       ) : (
