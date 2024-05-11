@@ -44,7 +44,11 @@ const PostReply = (props: {
   const handleReportModal = () => {
     setReportModal(!reportModal);
   };
-  const postReq = useMutation(postRequest);
+  const postReq = useMutation(postRequest, {
+    onSuccess: () => {
+      props.refetch();
+    },
+  });
   //   React.useEffect(() => {
   //     setIsExpandedMain(isExpandedAll);
   //   }, [isExpandedAll]);
@@ -251,8 +255,8 @@ const PostReply = (props: {
                     onClick={() => {
                       postReq.mutate(
                         {
-                          endPoint: 'posts-or-comments/delete',
-                          data: { id: props.replyId, is_post: false },
+                          endPoint: 'comments/delete',
+                          data: { id: props.replyId },
                         },
                         {
                           onSuccess: () => {
